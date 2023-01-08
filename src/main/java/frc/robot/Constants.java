@@ -34,18 +34,16 @@ public final class Constants {
     public static final DifferentialDriveKinematics kDriveKinematics =
         new DifferentialDriveKinematics(kTrackwidthMeters);
 
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
-
-    // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
-    public static final double kRamseteB = 2;
-    public static final double kRamseteZeta = 0.7;
-
     public static final double kEncoderConversionFactor = 1; //find out experimentally or some other way
   }
 
   public static class TrajectoryConstants {
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
     
+    // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
   }
 
 }
