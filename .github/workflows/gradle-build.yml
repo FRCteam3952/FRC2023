@@ -33,6 +33,6 @@ jobs:
       name: Set gradlew as executable
       
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@2.3.3
+      uses: gradle/gradle-build-action@2
       with:
         arguments: build
