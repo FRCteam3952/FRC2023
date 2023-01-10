@@ -28,11 +28,6 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 
-
-/**
- * self explanatory
- */
-
 public class DriveTrain extends SubsystemBase {
 
   private static CANSparkMax frontLeftMotor;
@@ -77,7 +72,7 @@ public class DriveTrain extends SubsystemBase {
     frontLeftMotor.setInverted(true);
     rearLeftMotor.setInverted(true);
 
-    odometry = new DifferentialDriveOdometry(null, 0, 0);
+    odometry = new DifferentialDriveOdometry(new Rotation2d(Gyro.getGyroAngle()), 0, 0);
 
     tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
     // m_dDrive.setSafetyEnabled(false);
@@ -90,6 +85,10 @@ public class DriveTrain extends SubsystemBase {
     // if (RobotContainer.primaryJoystick.joystick.getRawButtonPressed(Constants.resetGyroButtonNumber)) {
     //   Gyro.resetGyroAngle();
     // }
+  }
+
+  public void tankDriveAndMecanumDriveHaveAHorrificAmalgationOfAChild() {
+
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
