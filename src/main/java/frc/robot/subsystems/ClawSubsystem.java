@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.PortConstants;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.commands.ClawCommands.ClawGripCommand;
