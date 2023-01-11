@@ -15,7 +15,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int RIGHT_JOYSTICK_PORT = 0;
   }
 
   public static class DriveConstants {
@@ -28,22 +28,22 @@ public final class Constants {
     public static final double ksVolts = 0.22;
     public static final double kvVoltSecondsPerMeter = 1.98;
     public static final double kaVoltSecondsSquaredPerMeter = 0.2;
-    public static final double kPDriveVel = 8.5;
+    public static final double P_DRIVE_VEL = 8.5;
 
-    public static final double kTrackwidthMeters = 0.69;
-    public static final DifferentialDriveKinematics kDriveKinematics =
-        new DifferentialDriveKinematics(kTrackwidthMeters);
+    public static final double TRACKWIDTH_METERS = 0.69;
+    public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
+        new DifferentialDriveKinematics(TRACKWIDTH_METERS);
 
-    public static final double kEncoderConversionFactor = 1; //find out experimentally or some other way
+    public static final double ENCODER_CONVERSION_FACTOR = 1; //find out experimentally or some other way
   }
 
   public static class TrajectoryConstants {
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+    public static final double MAX_SPEED_METERS_PER_SECOND = 3;
+    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
     
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
-    public static final double kRamseteB = 2;
-    public static final double kRamseteZeta = 0.7;
+    public static final double RAMSETE_B = 2;
+    public static final double RAMSETE_ZETA = 0.7;
   }
 
 }

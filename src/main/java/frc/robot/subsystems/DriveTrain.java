@@ -28,6 +28,8 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 
+import java.util.List;
+
 public class DriveTrain extends SubsystemBase {
 
   private final CANSparkMax frontLeftMotor;
@@ -58,10 +60,10 @@ public class DriveTrain extends SubsystemBase {
     this.rearLeftEncoder = rearLeftMotor.getEncoder();
     this.rearRightEncoder = rearRightMotor.getEncoder();
 
-    this.frontLeftEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
-    this.frontRightEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
-    this.rearLeftEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
-    this.rearRightEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
+    this.frontLeftEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
+    this.frontRightEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
+    this.rearLeftEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
+    this.rearRightEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
 
     this.leftMotorGroup = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
     this.rightMotorGroup = new MotorControllerGroup(frontRightMotor, rearRightMotor);
@@ -79,6 +81,15 @@ public class DriveTrain extends SubsystemBase {
 
   }
 
+  /**
+   * Runs whatever the real drive method is
+   * @param xSpeed
+   * @param zRotation
+   */
+  public void drive(double xSpeed, double zRotation) {
+    tankDrive(xSpeed, zRotation);
+  }
+
   public void tankDrive(double xSpeed, double zRotation) {
     tankDrive.arcadeDrive(xSpeed, zRotation, false);
     // if (RobotContainer.primaryJoystick.joystick.getRawButtonPressed(Constants.resetGyroButtonNumber)) {
@@ -86,7 +97,7 @@ public class DriveTrain extends SubsystemBase {
     // }
   }
 
-  public void tankDriveAndMecanumDriveHaveAHorrificAmalgationOfAChild() {
+  public void tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild() {
 
   }
 
@@ -160,37 +171,37 @@ public class DriveTrain extends SubsystemBase {
                     DriveConstants.ksVolts,
                     DriveConstants.kvVoltSecondsPerMeter,
                     DriveConstants.kaVoltSecondsSquaredPerMeter),
-            DriveConstants.kDriveKinematics,
+            DriveConstants.DRIVE_KINEMATICS,
             10);
 
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
-            TrajectoryConstants.kMaxSpeedMetersPerSecond,
-            TrajectoryConstants.kMaxAccelerationMetersPerSecondSquared)
+            TrajectoryConstants.MAX_SPEED_METERS_PER_SECOND,
+            TrajectoryConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
             // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics)
+            .setKinematics(DriveConstants.DRIVE_KINEMATICS)
             // Apply the voltage constraint
             .addConstraint(autoVoltageConstraint);
 
     // A trajectory to follow. All units in meters.
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             startPoint,
-            null,
+            List.of(),
             endPoint,
             config);
 
     RamseteCommand ramseteCommand = new RamseteCommand(
             trajectory,
             this::getPose,
-            new RamseteController(TrajectoryConstants.kRamseteB, TrajectoryConstants.kRamseteZeta),
+            new RamseteController(TrajectoryConstants.RAMSETE_B, TrajectoryConstants.RAMSETE_ZETA),
             new SimpleMotorFeedforward(
                     DriveConstants.ksVolts,
                     DriveConstants.kvVoltSecondsPerMeter,
                     DriveConstants.kaVoltSecondsSquaredPerMeter),
-            DriveConstants.kDriveKinematics,
+            DriveConstants.DRIVE_KINEMATICS,
             this::getWheelSpeeds,
-            new PIDController(DriveConstants.kPDriveVel, 0, 0),
-            new PIDController(DriveConstants.kPDriveVel, 0, 0),
+            new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
+            new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
             // RamseteCommand passes volts to the callback
             this::tankDriveVolts,
             this);
