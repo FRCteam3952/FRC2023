@@ -3,6 +3,8 @@ import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import frc.robot.Constants.ArmInverseKinematicsConstants;
+
 public class ArmControlCommand extends CommandBase{
     private final ArmSubsystem arm;
     private final FlightJoystick joystick;
@@ -20,7 +22,7 @@ public class ArmControlCommand extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        arm.setIntendedCoordinates(0, 0, 0);
+        arm.setIntendedCoordinates(joystick.getHorizontalMovement(), ArmInverseKinematicsConstants.ORIGIN_HEIGHT, joystick.getLateralMovement());
     }
 
     // Called once the command ends or is interrupted.
