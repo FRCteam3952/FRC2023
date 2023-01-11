@@ -2,30 +2,26 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.util.InverseKinematicsUtil;
 import frc.robot.Constants.ArmInverseKinematicsConstants;
 
 public class MoveArmToAngleCommand extends CommandBase {
     private final ArmSubsystem armSubsystem;
-    private final double x, y, z;
-    private double[] targetAngles;
+    private final double[] targetAngles;
     private double[] currentAngles;
 
-    public MoveArmToAngleCommand(ArmSubsystem armSubsystem, double x, double y, double z) {
+    public MoveArmToAngleCommand(ArmSubsystem armSubsystem, double[] angles) {
         this.armSubsystem = armSubsystem;
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.targetAngles = angles;
     }
 
     @Override
     public void initialize() {
-        this.targetAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z);
+        
     }
 
     @Override
     public void execute() {
-        this.currentAngles = armSubsystem.getAnglefromEncoder();
+        this.currentAngles = armSubsystem.getCurrentAngles();
 
         // if the angle for that particular pivot is within delta, then stop it
         // otherwise, move it in the proper direction

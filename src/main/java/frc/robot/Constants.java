@@ -25,10 +25,15 @@ public final class Constants {
 
     public static final double PIVOT_SPEED = 0.1;
     public static final double TURRET_SPEED = 0.1;
+
+    public static final double STARTING_X = 0;
+    public static final double STARTING_Y = 0;
+    public static final double STARTING_Z = 0;
   }
 
   public static class OperatorConstants {
     public static final int RIGHT_JOYSTICK_PORT = 0;
+    public static final int LEFT_JOYSTICK_PORT = 1;
   }
 
   public static class PortConstants {

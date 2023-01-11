@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ArmControlCommand;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.joystick.FlightJoystick;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
 /**
@@ -23,11 +25,15 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
+  private final ArmSubsystem arm = new ArmSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
+  private final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
 
   private final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
+  private final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
+  
   //private final CommandXboxController driverController =
   //   new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
@@ -68,5 +74,6 @@ public class RobotContainer {
 
   public void onTeleopInit() {
     this.driveTrain.setDefaultCommand(this.manualDrive);
+    this.arm.setDefaultCommand(this.armControl);
   }
 }
