@@ -1,11 +1,10 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants.PortConstants;
+import frc.robot.commands.ArmCommands.MoveArmToAngleCommand;
 import frc.robot.Constants.ArmInverseKinematicsConstants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import frc.robot.commands.MoveArmToAngleCommand;
 import frc.robot.util.InverseKinematicsUtil;
 
 import com.revrobotics.CANSparkMax;
