@@ -27,6 +27,11 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.lang.Math;
 
 public class DriveTrain extends SubsystemBase {
 
@@ -207,12 +212,14 @@ public class DriveTrain extends SubsystemBase {
             // Apply the voltage constraint
             .addConstraint(autoVoltageConstraint);
 
+    List<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
     // A trajectory to follow. All units in meters.
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             startPoint,
-            null,
+            interiorWaypoints,
             endPoint,
             config);
+
 
     RamseteCommand ramseteCommand = new RamseteCommand(
             trajectory,
