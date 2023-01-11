@@ -14,20 +14,38 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class ArmInverseKinematicsConstants {
+
+    // All constants are in inches
+    public static final double ORIGIN_HEIGHT = 1;
+    public static final double LIMB1_LENGTH = 1;
+    public static final double LIMB2_LENGTH = 1;
+
+    public static final double ANGLE_DELTA = 2;
+
+    public static final double PIVOT_SPEED = 0.1;
+    public static final double TURRET_SPEED = 0.1;
+  }
+
   public static class OperatorConstants {
     public static final int RIGHT_JOYSTICK_PORT = 0;
   }
 
-  public static class DriveConstants {
-    public static final int frontRightMotorPort = 1;
-    public static final int rearRighttMotorPort = 2;
-    public static final int rearLeftMotorPort = 3;
-    public static final int frontLeftMotorPort = 4;
+  public static class PortConstants {
+    public static final int FRONT_RIGHT_MOTOR_PORT = 1;
+    public static final int REAR_RIGHT_MOTOR_PORT = 2;
+    public static final int REAR_LEFT_MOTOR_PORT = 3;
+    public static final int FRONT_LEFT_MOTOR_PORT = 4;
 
-    // All constants below are examples; must correct to robot's specification when it is finished being built
-    public static final double ksVolts = 0.22;
-    public static final double kvVoltSecondsPerMeter = 1.98;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.2;
+    public static final int PIVOT1_PORT = 5;
+    public static final int PIVOT2_PORT = 6;
+    public static final int TURRET_PORT = 7;
+  }
+
+  public static class DriveConstants {// All constants below are examples; must correct to robot's specification when it is finished being built
+    public static final double KS_VOLTS = 0.22;
+    public static final double KV_VOLTS_SECONDS_PER_METER = 1.98;
+    public static final double KA_VOLTS_SECONDS_SQ_PER_METER = 0.2;
     public static final double P_DRIVE_VEL = 8.5;
 
     public static final double TRACKWIDTH_METERS = 0.69;

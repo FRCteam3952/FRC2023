@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ManualDrive;
+import frc.robot.commands.ManualDriveCommand;
 import frc.robot.joystick.FlightJoystick;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrainSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,12 +22,12 @@ import frc.robot.subsystems.DriveTrain;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain driveTrain = new DriveTrain();
+  private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
 
-  private final ManualDrive manualDrive = new ManualDrive(driveTrain, driverController);
+  private final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
   //private final CommandXboxController driverController =
   //   new CommandXboxController(OperatorConstants.kDriverControllerPort);
 

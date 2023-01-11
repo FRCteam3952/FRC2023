@@ -5,16 +5,14 @@
 package frc.robot.commands;
 
 import frc.robot.joystick.FlightJoystick;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * The command to drive the robot manually with joysticks.
  */
-public class ManualDrive extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveTrain driveTrain;
+public class ManualDriveCommand extends CommandBase {
+  private final DriveTrainSubsystem driveTrain;
   private final FlightJoystick joystick;
 
   /**
@@ -22,7 +20,7 @@ public class ManualDrive extends CommandBase {
    *
    * @param driveTrain The drivetrain subsystem.
    */
-  public ManualDrive(DriveTrain driveTrain, FlightJoystick joystick) {
+  public ManualDriveCommand(DriveTrainSubsystem driveTrain, FlightJoystick joystick) {
     this.driveTrain = driveTrain;
     this.joystick = joystick;
     // Use addRequirements() here to declare subsystem dependencies.

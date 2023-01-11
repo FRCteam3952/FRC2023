@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.TrajectoryConstants;
+import frc.robot.Constants.PortConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,7 +32,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import java.util.List;
 import java.lang.Math;
 
-public class DriveTrain extends SubsystemBase {
+public class DriveTrainSubsystem extends SubsystemBase {
 
   private final CANSparkMax frontLeftMotor;
   private final CANSparkMax frontRightMotor;
@@ -51,11 +52,11 @@ public class DriveTrain extends SubsystemBase {
 
 
   /** Creates a new ExampleSubsystem. */
-  public DriveTrain() {
-    this.frontLeftMotor = new CANSparkMax(DriveConstants.frontLeftMotorPort, MotorType.kBrushless);
-    this.frontRightMotor = new CANSparkMax(DriveConstants.frontRightMotorPort, MotorType.kBrushless);
-    this.rearLeftMotor = new CANSparkMax(DriveConstants.rearLeftMotorPort, MotorType.kBrushless);
-    this.rearRightMotor = new CANSparkMax(DriveConstants.rearRighttMotorPort, MotorType.kBrushless);
+  public DriveTrainSubsystem() {
+    this.frontLeftMotor = new CANSparkMax(PortConstants.FRONT_LEFT_MOTOR_PORT, MotorType.kBrushless);
+    this.frontRightMotor = new CANSparkMax(PortConstants.FRONT_RIGHT_MOTOR_PORT, MotorType.kBrushless);
+    this.rearLeftMotor = new CANSparkMax(PortConstants.REAR_LEFT_MOTOR_PORT, MotorType.kBrushless);
+    this.rearRightMotor = new CANSparkMax(PortConstants.REAR_RIGHT_MOTOR_PORT, MotorType.kBrushless);
     this.frontLeftEncoder = frontLeftMotor.getEncoder();
     this.frontRightEncoder = frontRightMotor.getEncoder();
     this.rearLeftEncoder = rearLeftMotor.getEncoder();
@@ -169,9 +170,9 @@ public class DriveTrain extends SubsystemBase {
     // Create a voltage constraint to ensure we don't accelerate too fast
     var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
             new SimpleMotorFeedforward(
-                    DriveConstants.ksVolts,
-                    DriveConstants.kvVoltSecondsPerMeter,
-                    DriveConstants.kaVoltSecondsSquaredPerMeter),
+                    DriveConstants.KS_VOLTS,
+                    DriveConstants.KV_VOLTS_SECONDS_PER_METER,
+                    DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
             DriveConstants.DRIVE_KINEMATICS,
             10);
 
@@ -197,9 +198,9 @@ public class DriveTrain extends SubsystemBase {
             this::getPose,
             new RamseteController(TrajectoryConstants.RAMSETE_B, TrajectoryConstants.RAMSETE_ZETA),
             new SimpleMotorFeedforward(
-                    DriveConstants.ksVolts,
-                    DriveConstants.kvVoltSecondsPerMeter,
-                    DriveConstants.kaVoltSecondsSquaredPerMeter),
+                    DriveConstants.KS_VOLTS,
+                    DriveConstants.KV_VOLTS_SECONDS_PER_METER,
+                    DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
             DriveConstants.DRIVE_KINEMATICS,
             this::getWheelSpeeds,
             new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
