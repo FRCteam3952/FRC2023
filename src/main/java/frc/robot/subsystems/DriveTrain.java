@@ -30,13 +30,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 
 public class DriveTrain extends SubsystemBase {
 
-  private static CANSparkMax frontLeftMotor;
-  private static CANSparkMax frontRightMotor;
-  private static CANSparkMax rearLeftMotor;
-  private static CANSparkMax rearRightMotor;
+  private final CANSparkMax frontLeftMotor;
+  private final CANSparkMax frontRightMotor;
+  private final CANSparkMax rearLeftMotor;
+  private final CANSparkMax rearRightMotor;
 
-  private static MotorControllerGroup leftMotorGroup;
-  private static MotorControllerGroup rightMotorGroup;
+  private final MotorControllerGroup leftMotorGroup;
+  private final MotorControllerGroup rightMotorGroup;
 
   private final RelativeEncoder frontLeftEncoder;
   private final RelativeEncoder frontRightEncoder;
@@ -49,32 +49,31 @@ public class DriveTrain extends SubsystemBase {
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrain() {
+    this.frontLeftMotor = new CANSparkMax(DriveConstants.frontLeftMotorPort, MotorType.kBrushless);
+    this.frontRightMotor = new CANSparkMax(DriveConstants.frontRightMotorPort, MotorType.kBrushless);
+    this.rearLeftMotor = new CANSparkMax(DriveConstants.rearLeftMotorPort, MotorType.kBrushless);
+    this.rearRightMotor = new CANSparkMax(DriveConstants.rearRighttMotorPort, MotorType.kBrushless);
+    this.frontLeftEncoder = frontLeftMotor.getEncoder();
+    this.frontRightEncoder = frontRightMotor.getEncoder();
+    this.rearLeftEncoder = rearLeftMotor.getEncoder();
+    this.rearRightEncoder = rearRightMotor.getEncoder();
 
-    frontLeftMotor = new CANSparkMax(DriveConstants.frontLeftMotorPort, MotorType.kBrushless);
-    frontRightMotor = new CANSparkMax(DriveConstants.frontRightMotorPort, MotorType.kBrushless);
-    rearLeftMotor = new CANSparkMax(DriveConstants.rearLeftMotorPort, MotorType.kBrushless);
-    rearRightMotor = new CANSparkMax(DriveConstants.rearRighttMotorPort, MotorType.kBrushless);
-    frontLeftEncoder = frontLeftMotor.getEncoder();
-    frontRightEncoder = frontRightMotor.getEncoder();
-    rearLeftEncoder = rearLeftMotor.getEncoder();
-    rearRightEncoder = rearRightMotor.getEncoder();
+    this.frontLeftEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
+    this.frontRightEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
+    this.rearLeftEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
+    this.rearRightEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
 
-    frontLeftEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
-    frontRightEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
-    rearLeftEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
-    rearRightEncoder.setPositionConversionFactor(DriveConstants.kEncoderConversionFactor);
+    this.leftMotorGroup = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
+    this.rightMotorGroup = new MotorControllerGroup(frontRightMotor, rearRightMotor);
 
-    leftMotorGroup = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
-    rightMotorGroup = new MotorControllerGroup(frontRightMotor, rearRightMotor);
+    this.frontRightMotor.setInverted(false);
+    this.rearRightMotor.setInverted(false);
+    this.frontLeftMotor.setInverted(true);
+    this.rearLeftMotor.setInverted(true);
 
-    frontRightMotor.setInverted(false);
-    rearRightMotor.setInverted(false);
-    frontLeftMotor.setInverted(true);
-    rearLeftMotor.setInverted(true);
+    this.odometry = new DifferentialDriveOdometry(new Rotation2d(Gyro.getGyroAngle()), 0, 0);
 
-    odometry = new DifferentialDriveOdometry(new Rotation2d(Gyro.getGyroAngle()), 0, 0);
-
-    tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
+    this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
     // m_dDrive.setSafetyEnabled(false);
     // resetEncoders();
 
@@ -92,9 +91,9 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    leftMotorGroup.setVoltage(leftVolts);
-    rightMotorGroup.setVoltage(rightVolts);
-    tankDrive.feed();
+    this.leftMotorGroup.setVoltage(leftVolts);
+    this.rightMotorGroup.setVoltage(rightVolts);
+    this.tankDrive.feed();
   }
 
   public double findZRotationSpeedFromAngle(double angle) {
@@ -102,14 +101,14 @@ public class DriveTrain extends SubsystemBase {
     double angleDifference = angle - Gyro.getGyroAngle(); // gets angle difference
 
     if (Math.abs(angleDifference) >= 180) {
-      /**
+      /*
        * ensures that angleDifference is the smallest possible movement to the
        * destination
        */
       angleDifference = angleDifference + (angleDifference > 0 ? -360 : 360);
     }
 
-    /**
+    /*
      * positive angleDifference -> turn clockwise, negative angleDifference -> turn
      * counterclockwise
      * strength of turning power is proportional to size of angleDifference
@@ -123,40 +122,6 @@ public class DriveTrain extends SubsystemBase {
     }
 
     return zRotation;
-  }
-
-
-  public double getPosition() {
-    double[] encoderPositions = { frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(),
-        rearLeftEncoder.getPosition(), rearRightEncoder.getPosition() };
-    double sum = 0;
-
-    for (double i : encoderPositions) {
-      sum += i;
-    }
-
-    return sum / 4;
-  }
-
-  public double getFrontLeftEncoder() {
-    // System.out.println(frontLeftEncoder.getPosition());
-    return Math.abs(frontLeftEncoder.getPosition());
-  }
-  public double getFrontRightEncoder() {
-    // System.out.println(frontLeftEncoder.getPosition());
-    return Math.abs(frontRightEncoder.getPosition());
-  }
-  public double getRearLeftEncoder() {
-    // System.out.println(frontLeftEncoder.getPosition());
-    return Math.abs(rearLeftEncoder.getPosition());
-  }
-  public double getRearRightEncoder() {
-    // System.out.println(frontLeftEncoder.getPosition());
-    return Math.abs(rearRightEncoder.getPosition());
-  }
-
-  public void resetFrontLeftEncoder() {
-    frontLeftEncoder.setPosition(0);
   }
 
   public void resetEncoders() {
