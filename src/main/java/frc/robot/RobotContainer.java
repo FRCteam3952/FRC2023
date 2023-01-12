@@ -24,15 +24,15 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
-  private final ArmSubsystem arm = new ArmSubsystem();
+  public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
+  public final ArmSubsystem arm = new ArmSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
-  private final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
+  public final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
+  public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
 
-  private final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
-  private final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
+  public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
+  public final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
   
   //private final CommandXboxController driverController =
   //   new CommandXboxController(OperatorConstants.kDriverControllerPort);
