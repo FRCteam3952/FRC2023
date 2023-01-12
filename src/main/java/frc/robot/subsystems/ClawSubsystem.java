@@ -28,8 +28,8 @@ public class ClawSubsystem extends SubsystemBase {
 
 
     public ClawSubsystem() {
-        this.clawGrip = new CANSparkMax(PortConstants.PIVOT1_PORT, MotorType.kBrushless);
-        this.clawRotation = new CANSparkMax(PortConstants.PIVOT2_PORT, MotorType.kBrushless);
+        this.clawGrip = new CANSparkMax(PortConstants.CLAW_GRIP_PORT, MotorType.kBrushless);
+        this.clawRotation = new CANSparkMax(PortConstants.CLAW_ROTATE_PORT, MotorType.kBrushless);
 
         this.clawGripEncoder = this.clawGrip.getEncoder();
         this.clawRotationEncoder = this.clawRotation.getEncoder();

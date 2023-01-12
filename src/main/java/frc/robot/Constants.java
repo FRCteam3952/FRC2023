@@ -51,6 +51,9 @@ public final class Constants {
     public static final int PIVOT1_PORT = 5;
     public static final int PIVOT2_PORT = 6;
     public static final int TURRET_PORT = 7;
+
+    public static final int CLAW_GRIP_PORT = 8;
+    public static final int CLAW_ROTATE_PORT = 9;
   }
 
   public static class DriveConstants {// All constants below are examples; must correct to robot's specification when it is finished being built
