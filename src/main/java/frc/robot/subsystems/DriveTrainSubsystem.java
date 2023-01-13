@@ -105,10 +105,22 @@ public class DriveTrainSubsystem extends SubsystemBase {
     if(shortestAngleApart(current, target) > 90){
       swapDirection = !swapDirection; 
       current = normalizeAngle(current+180);
-      tankDrive.arcadeDrive(speed * (swapDirection?-1:1), getDirection(current,target)?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
+      double angleError = getAngleError(current, target);
+      if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA){
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
+      }
+      else{
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
+      }
     }
     else{
-      tankDrive.arcadeDrive(speed * (swapDirection?-1:1), getDirection(current,target)?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
+      double angleError = getAngleError(current, target);
+      if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA){
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
+      }
+      else{
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
+      }
     }
 
   }
@@ -120,8 +132,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
     double difference = Math.abs(a1-a2);
     return difference>180?360-difference:difference;
   }
-  public boolean getDirection(double current, double target){
-    return (target > current+90 || current - target > 0);
+  public double getAngleError(double current, double target){
+    double angleDiff = current - target;
+    if(angleDiff > 90){
+      angleDiff-=360;
+    }
+    else if(angleDiff < -90){
+      angleDiff+=360;
+    }
+    return angleDiff;
   }
   
 
