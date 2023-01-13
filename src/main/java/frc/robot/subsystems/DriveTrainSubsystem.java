@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.TrajectoryConstants;
+import frc.robot.util.InverseKinematicsUtil;
 import frc.robot.Constants.PortConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -88,9 +89,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
    * @param xSpeed
    * @param zRotation
    */
-  public void drive(double xSpeed, double zRotation) {
-    tankDrive(xSpeed, zRotation);
-  }
 
   public void tankDrive(double xSpeed, double zRotation) {
     tankDrive.arcadeDrive(xSpeed, zRotation, false);
@@ -99,8 +97,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // }
   }
 
-  public void tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild() {
-
+  public void tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(double x, double y) {
+    double angleCalc = (Math.atan2(y,x) * 180 / Math.PI) - 90;
+    double targetAngle = angleCalc < 0?360+angleCalc:angleCalc;
+    double currentAngle = Gyro.getGyroAngle();
+    double speed = InverseKinematicsUtil.distance(0,x,0,y);
+    double rotationSpeed = 0;
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
