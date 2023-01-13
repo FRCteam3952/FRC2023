@@ -100,12 +100,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(double x, double y) {
     double speed = InverseKinematicsUtil.distance(0,x,0,y);
     double target = normalizeAngle((Math.atan2(y,x) * 180 / Math.PI) - 90);
-    double current;
-    current = swapDirection?normalizeAngle(Gyro.getGyroAngle()+180):normalizeAngle(Gyro.getGyroAngle());
+    double current = swapDirection?normalizeAngle(Gyro.getGyroAngle()+180):normalizeAngle(Gyro.getGyroAngle());
+
     if(shortestAngleApart(current, target) > 90){
       swapDirection = !swapDirection; 
       current = normalizeAngle(current+180);
-      if(current - target > 0){
+      if(getDirection(current, target)){
         tankDrive.arcadeDrive(speed * (swapDirection?-1:1), DriveConstants.TURN_CONSTANT, false);
       }
       else{
@@ -113,15 +113,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
       }
     }
     else{
-      if(current - target > 0){
+      if(getDirection(current, target)){
         tankDrive.arcadeDrive(speed * (swapDirection?-1:1), DriveConstants.TURN_CONSTANT, false);
       }
       else{
         tankDrive.arcadeDrive(speed * (swapDirection?-1:1), -DriveConstants.TURN_CONSTANT, false);
       }
     }
-
-
 
   }
   public double normalizeAngle(double angle){
@@ -131,6 +129,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public double shortestAngleApart(double a1, double a2){
     double difference = Math.abs(a1-a2);
     return difference>180?360-difference:difference;
+  }
+  public boolean getDirection(double current, double target){
+    return (target > current+90 || current - target > 0);
   }
   
 
