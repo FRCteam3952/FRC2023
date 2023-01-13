@@ -137,18 +137,27 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return zRotation;
   }
 
+  private RelativeEncoder[] getAllEncoders() {
+    return new RelativeEncoder[](
+      frontLeftEncoder, 
+      frontRightEncoder, 
+      rearLeftEncoder, 
+      rearRightEncoder
+    );
+  }
+
   public void resetEncoders() {
-      frontLeftEncoder.setPosition(0);
-      frontRightEncoder.setPosition(0);
-      rearLeftEncoder.setPosition(0);
-      rearRightEncoder.setPosition(0);
+    for (RelativeEncoder encoder : getAllEncoders())
+    {
+      encoder.setPosition(0);
+    }
   }
 
   public void setAllEncoders(double position) {
-    frontLeftEncoder.setPosition(position);
-    frontRightEncoder.setPosition(position);
-    rearLeftEncoder.setPosition(position);
-    rearRightEncoder.setPosition(position);
+    for (RelativeEncoder encoder : getAllEncoders())
+    {
+      encoder.setPosition(position);
+    }
   }
 
   public void resetOdometry(Pose2d pose) {
