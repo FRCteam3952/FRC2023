@@ -4,34 +4,32 @@
 
 package frc.robot.subsystems;
 
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.TrajectoryConstants;
-import frc.robot.util.InverseKinematicsUtil;
-import frc.robot.Constants.PortConstants;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import java.util.List;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
-
-import java.util.List;
-import java.lang.Math;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PortConstants;
+import frc.robot.Constants.TrajectoryConstants;
+import frc.robot.util.InverseKinematicsUtil;
 
 public class DriveTrainSubsystem extends SubsystemBase {
 
@@ -50,6 +48,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   private final DifferentialDrive tankDrive;
   private final DifferentialDriveOdometry odometry;
+
+  private boolean swapDirection = false;
 
 
   /** Creates a new ExampleSubsystem. */
@@ -98,12 +98,41 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(double x, double y) {
-    double angleCalc = (Math.atan2(y,x) * 180 / Math.PI) - 90;
-    double targetAngle = angleCalc < 0?360+angleCalc:angleCalc;
-    double currentAngle = Gyro.getGyroAngle();
     double speed = InverseKinematicsUtil.distance(0,x,0,y);
-    double rotationSpeed = 0;
+    double target = normalizeAngle((Math.atan2(y,x) * 180 / Math.PI) - 90);
+    double current;
+    current = swapDirection?normalizeAngle(Gyro.getGyroAngle()+180):normalizeAngle(Gyro.getGyroAngle());
+    if(shortestAngleApart(current, target) > 90){
+      swapDirection = !swapDirection; 
+      current = normalizeAngle(current+180);
+      if(current - target > 0){
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), DriveConstants.TURN_CONSTANT, false);
+      }
+      else{
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), -DriveConstants.TURN_CONSTANT, false);
+      }
+    }
+    else{
+      if(current - target > 0){
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), DriveConstants.TURN_CONSTANT, false);
+      }
+      else{
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), -DriveConstants.TURN_CONSTANT, false);
+      }
+    }
+
+
+
   }
+  public double normalizeAngle(double angle){
+    angle %= 360;
+    return angle < 0 ? 360+angle : angle;
+  }
+  public double shortestAngleApart(double a1, double a2){
+    double difference = Math.abs(a1-a2);
+    return difference>180?360-difference:difference;
+  }
+  
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     this.leftMotorGroup.setVoltage(leftVolts);

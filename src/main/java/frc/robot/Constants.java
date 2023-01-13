@@ -67,6 +67,8 @@ public final class Constants {
         new DifferentialDriveKinematics(TRACKWIDTH_METERS);
 
     public static final double ENCODER_CONVERSION_FACTOR = 1; //find out experimentally or some other way
+
+    public static final double TURN_CONSTANT = 0.1;
   }
 
   public static class TrajectoryConstants {
