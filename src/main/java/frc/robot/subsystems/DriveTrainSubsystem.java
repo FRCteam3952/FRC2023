@@ -105,20 +105,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
     if(shortestAngleApart(current, target) > 90){
       swapDirection = !swapDirection; 
       current = normalizeAngle(current+180);
-      if(getDirection(current, target)){
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), DriveConstants.TURN_CONSTANT, false);
-      }
-      else{
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), -DriveConstants.TURN_CONSTANT, false);
-      }
+      tankDrive.arcadeDrive(speed * (swapDirection?-1:1), getDirection(current,target)?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
     }
     else{
-      if(getDirection(current, target)){
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), DriveConstants.TURN_CONSTANT, false);
-      }
-      else{
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), -DriveConstants.TURN_CONSTANT, false);
-      }
+      tankDrive.arcadeDrive(speed * (swapDirection?-1:1), getDirection(current,target)?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
     }
 
   }
