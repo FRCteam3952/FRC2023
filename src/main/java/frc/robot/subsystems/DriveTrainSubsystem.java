@@ -96,36 +96,47 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(double x, double y) {
-    double speed = InverseKinematicsUtil.distance(0,x,0,y);
+    if(x == 0 && y == 0){
+      tankDrive.arcadeDrive(0, 0);
+      return;
+    }
+    double speed = Math.abs(y);
     double target = normalizeAngle((Math.atan2(y,x) * 180 / Math.PI) - 90);
     double current = swapDirection?normalizeAngle(Gyro.getGyroAngle()+180):normalizeAngle(Gyro.getGyroAngle());
-    System.out.println(speed + " " + target + " " + current);
 
+    speed = 0; //to test only turning, delete later
     if(shortestAngleApart(current, target) > 90){
       swapDirection = !swapDirection; 
       current = normalizeAngle(current+180);
       double angleError = getAngleError(current, target);
       if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA){
-        //tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
       }
       else{
-        //tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
       }
+      System.out.println(current+ " " + angleError);
     }
     else{
       double angleError = getAngleError(current, target);
       if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA){
-        //tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
       }
       else{
-        //tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?-DriveConstants.TURN_CONSTANT:DriveConstants.TURN_CONSTANT, false);
       }
+      System.out.println(current+ " " + angleError);
+
     }
 
   }
   public double normalizeAngle(double angle){
     angle %= 360;
-    return angle < 0 ? 360+angle : angle;
+    angle = angle < 0 ? 360+angle : angle;
+    if (Math.abs(360-angle) < 0.5){
+      angle = 0;
+    }
+    return angle;
   }
   public double shortestAngleApart(double a1, double a2){
     double difference = Math.abs(a1-a2);

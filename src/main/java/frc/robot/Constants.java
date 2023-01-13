@@ -68,7 +68,7 @@ public final class Constants {
 
     public static final double ENCODER_CONVERSION_FACTOR = 1; //find out experimentally or some other way
 
-    public static final double TURN_CONSTANT = 30;
+    public static final double TURN_CONSTANT = 0.3;
     public static final double ANGLE_DELTA = 2;
   }
 

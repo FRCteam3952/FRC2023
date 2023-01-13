@@ -12,7 +12,7 @@ public class Gyro extends SubsystemBase {
 
   public Gyro() {
     gyro = new ADIS16470_IMU();
-    gyro.setYawAxis(ADIS16470_IMU.IMUAxis.kY);
+    gyro.setYawAxis(ADIS16470_IMU.IMUAxis.kZ);
     gyro.calibrate();
   }
 
