@@ -47,30 +47,8 @@ public final class InverseKinematicsUtil {
         a1 = angleBetweenLines(0, -1, 0, adjusted_x, relative_y, z) - lawofsines(a2, dist3d, ArmInverseKinematicsConstants.LIMB2_LENGTH);   // a1 is angle between verticle to 1st arm segment
        
         //turret angle calculations
-        if (x == 0) {
-            if(z == 0) {
-                turretAngle = 0;
-            } else if(z > 0) {
-                turretAngle = 90;
-            } else {
-                turretAngle = 270;
-            }
-        } else if(x > 0) {
-            if(z > 0) {
-                turretAngle = Math.toDegrees(Math.atan(Math.abs(z/x)));
-            } else {
-                turretAngle = 360 - Math.toDegrees(Math.atan(Math.abs(z/x)));
-            }
-        } else {
-            if(z > 0) {
-                turretAngle = 180 - Math.toDegrees(Math.atan(Math.abs(z/x)));
-            } else {
-                turretAngle = 180 + Math.toDegrees(Math.atan(Math.abs(z/x)));
-            }
-        }
-        if(turretAngle == 360) {
-            turretAngle = 0;
-        }
+        double angleCalc = Math.atan2(y,x) * 180 / Math.PI;
+        turretAngle = angleCalc < 0?360+angleCalc:angleCalc;
         
         return new double[] {a1,a2,turretAngle};
     }
