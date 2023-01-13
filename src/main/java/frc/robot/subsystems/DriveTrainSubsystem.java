@@ -50,6 +50,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private final DifferentialDrive tankDrive;
   private final DifferentialDriveOdometry odometry;
 
+  private final RelativeEncoder[] encoders;
+
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrainSubsystem() {
@@ -76,6 +78,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
     this.rearLeftMotor.setInverted(true);
 
     this.odometry = new DifferentialDriveOdometry(new Rotation2d(Gyro.getGyroAngle()), 0, 0);
+
+    this.encoders = new RelativeEncoder[]{
+      frontLeftEncoder, 
+      frontRightEncoder, 
+      rearLeftEncoder, 
+      rearRightEncoder
+    };
 
     this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
     // m_dDrive.setSafetyEnabled(false);
@@ -137,24 +146,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return zRotation;
   }
 
-  private RelativeEncoder[] getAllEncoders() {
-    return new RelativeEncoder[](
-      frontLeftEncoder, 
-      frontRightEncoder, 
-      rearLeftEncoder, 
-      rearRightEncoder
-    );
-  }
-
   public void resetEncoders() {
-    for (RelativeEncoder encoder : getAllEncoders())
+    for (RelativeEncoder encoder : encoders)
     {
       encoder.setPosition(0);
     }
   }
 
   public void setAllEncoders(double position) {
-    for (RelativeEncoder encoder : getAllEncoders())
+    for (RelativeEncoder encoder : encoders)
     {
       encoder.setPosition(position);
     }
