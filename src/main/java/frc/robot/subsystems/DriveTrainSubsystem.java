@@ -51,8 +51,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   private boolean swapDirection = false;
 
-
-  /** Creates a new ExampleSubsystem. */
   public DriveTrainSubsystem() {
     this.frontLeftMotor = new CANSparkMax(PortConstants.FRONT_LEFT_MOTOR_PORT, MotorType.kBrushless);
     this.frontRightMotor = new CANSparkMax(PortConstants.FRONT_RIGHT_MOTOR_PORT, MotorType.kBrushless);
@@ -101,25 +99,26 @@ public class DriveTrainSubsystem extends SubsystemBase {
     double speed = InverseKinematicsUtil.distance(0,x,0,y);
     double target = normalizeAngle((Math.atan2(y,x) * 180 / Math.PI) - 90);
     double current = swapDirection?normalizeAngle(Gyro.getGyroAngle()+180):normalizeAngle(Gyro.getGyroAngle());
+    System.out.println(speed + " " + target + " " + current);
 
     if(shortestAngleApart(current, target) > 90){
       swapDirection = !swapDirection; 
       current = normalizeAngle(current+180);
       double angleError = getAngleError(current, target);
       if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA){
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
+        //tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
       }
       else{
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
+        //tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
       }
     }
     else{
       double angleError = getAngleError(current, target);
       if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA){
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
+        //tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
       }
       else{
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
+        //tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
       }
     }
 
