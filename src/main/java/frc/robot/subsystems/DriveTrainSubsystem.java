@@ -100,12 +100,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
       tankDrive.arcadeDrive(0, 0);
       return;
     }
-    double speed = Math.abs(y);
+    double speed = InverseKinematicsUtil.distance(0, x, 0, y);
     double target = normalizeAngle((Math.atan2(y,x) * 180 / Math.PI) - 90);
     double current = swapDirection?normalizeAngle(Gyro.getGyroAngle()+180):normalizeAngle(Gyro.getGyroAngle());
 
-    speed = 0; //to test only turning, delete later
-    if(shortestAngleApart(current, target) > 90){
+    double turningSpeed = DriveConstants.TURN_CONSTANT / speed;
+
+    if(shortestAngleApart(target, current) > 90){
       swapDirection = !swapDirection; 
       current = normalizeAngle(current+180);
       double angleError = getAngleError(current, target);
@@ -113,9 +114,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
         tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
       }
       else{
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?DriveConstants.TURN_CONSTANT:-DriveConstants.TURN_CONSTANT, false);
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?turningSpeed:-turningSpeed, false);
       }
-      System.out.println(current+ " " + angleError);
+      System.out.println(current+ " " + angleError + " " + swapDirection);
     }
     else{
       double angleError = getAngleError(current, target);
@@ -123,9 +124,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
         tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
       }
       else{
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?-DriveConstants.TURN_CONSTANT:DriveConstants.TURN_CONSTANT, false);
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?-turningSpeed:turningSpeed, false);
       }
-      System.out.println(current+ " " + angleError);
+      System.out.println(current+ " " + angleError + " " + swapDirection);
 
     }
 
@@ -143,14 +144,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
     return difference>180?360-difference:difference;
   }
   public double getAngleError(double current, double target){
-    double angleDiff = current - target;
-    if(angleDiff > 90){
-      angleDiff-=360;
+    double angle = shortestAngleApart(current, target);
+    if(Math.abs(current + angle - target) < 0.25) {
+      return angle;
     }
-    else if(angleDiff < -90){
-      angleDiff+=360;
+    if(Math.abs((target + angle) % 360 - current) < 0.25) {
+      return -angle;
     }
-    return angleDiff;
+    return angle;
   }
   
 
