@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.ADIS16470_IMU;
 
 public class Gyro extends SubsystemBase {
   private static ADIS16470_IMU gyro;
+  private static double angleAdjust = 0;
 
   public Gyro() {
     gyro = new ADIS16470_IMU();
@@ -17,7 +18,7 @@ public class Gyro extends SubsystemBase {
   }
 
   public static double getGyroAngle() {
-    return gyro.getAngle();
+    return gyro.getAngle() + angleAdjust;
   }
 
   public static void setGyroAxis(ADIS16470_IMU.IMUAxis axis) {
@@ -26,6 +27,11 @@ public class Gyro extends SubsystemBase {
 
   public static void resetGyroAngle() {
     gyro.reset();
+    angleAdjust = 0;
+  }
+  public static void setGyroAngle(double angle){
+    resetGyroAngle();
+    angleAdjust = angle;
   }
 
   @Override
