@@ -5,14 +5,14 @@
 package frc.robot;
 
 import frc.robot.subsystems.Gyro;
-import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ManualDriveCommand;
-import frc.robot.commands.ArmCommands.ArmControlCommand;
+//import frc.robot.commands.ArmCommands.ArmControlCommand;
+import frc.robot.commands.ArmCommands.ArmTestCommand;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -35,7 +35,7 @@ public class RobotContainer {
   public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
 
   public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
-  public final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
+  public final ArmTestCommand armControl = new ArmTestCommand(arm, armController);
   
   //private final CommandXboxController driverController =
   //   new CommandXboxController(OperatorConstants.kDriverControllerPort);

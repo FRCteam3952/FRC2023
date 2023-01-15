@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.Gyro;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -34,6 +35,9 @@ public class ManualDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (this.joystick.getRawButtonWrapper(8)){
+      Gyro.resetGyroAngle();
+    }
     this.driveTrain.tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(this.joystick.getHorizontalMovement(),-this.joystick.getLateralMovement());
   }
 

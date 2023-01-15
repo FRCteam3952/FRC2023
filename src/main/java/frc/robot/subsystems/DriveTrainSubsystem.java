@@ -104,8 +104,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     double target = normalizeAngle((Math.atan2(y,x) * 180 / Math.PI) - 90);
     double current = swapDirection?normalizeAngle(Gyro.getGyroAngle()+180):normalizeAngle(Gyro.getGyroAngle());
 
-    double turningSpeed = DriveConstants.TURN_CONSTANT / speed;
-
     if(shortestAngleApart(target, current) > 90){
       swapDirection = !swapDirection; 
       current = normalizeAngle(current+180);
@@ -114,9 +112,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
         tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
       }
       else{
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?turningSpeed:-turningSpeed, false);
+        double turningSpeed = angleError * DriveConstants.TURN_CONSTANT;
+        if(turningSpeed < 0.2 && turningSpeed > 0){
+          turningSpeed = 0.2;
+        }
+        else if(turningSpeed > -0.2 && turningSpeed < 0){
+          turningSpeed = -0.2;
+        }
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), turningSpeed, false);
       }
-      System.out.println(current+ " " + angleError + " " + swapDirection);
     }
     else{
       double angleError = getAngleError(current, target);
@@ -124,9 +128,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
         tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
       }
       else{
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), angleError > 0?-turningSpeed:turningSpeed, false);
+        double turningSpeed = -angleError * DriveConstants.TURN_CONSTANT;
+        if(turningSpeed < 0.2 && turningSpeed > 0){
+          turningSpeed = 0.2;
+        }
+        else if(turningSpeed > -0.2 && turningSpeed < 0){
+          turningSpeed = -0.2;
+        }
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), turningSpeed, false);
       }
-      System.out.println(current+ " " + angleError + " " + swapDirection);
 
     }
 
