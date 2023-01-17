@@ -277,7 +277,31 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> this.tankDriveVolts(0, 0));
 
-}
+  }
+
+  public Command followTrajectoryCommand(Trajectory trajectory) {
+    RamseteCommand ramseteCommand = new RamseteCommand(
+            trajectory,
+            this::getPose,
+            new RamseteController(TrajectoryConstants.RAMSETE_B, TrajectoryConstants.RAMSETE_ZETA),
+            new SimpleMotorFeedforward(
+                    DriveConstants.KS_VOLTS,
+                    DriveConstants.KV_VOLTS_SECONDS_PER_METER,
+                    DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
+            DriveConstants.DRIVE_KINEMATICS,
+            this::getWheelSpeeds,
+            new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
+            new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
+            // RamseteCommand passes volts to the callback
+            this::tankDriveVolts,
+            this);
+
+    // Reset odometry to the starting pose of the trajectory.
+    this.resetOdometry(trajectory.getInitialPose());
+
+    // Run path following command, then stop at the end.
+    return ramseteCommand.andThen(() -> this.tankDriveVolts(0, 0));
+  }
 
   @Override
   public void periodic() {
