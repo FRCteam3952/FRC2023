@@ -15,11 +15,11 @@ public final class InverseKinematicsUtil {
         return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2) + Math.pow(z1-z2,2));
     }
 
-    public static double lawofcosines(double a, double b, double c) { //law of cosines calc
+    public static double lawOfCosines(double a, double b, double c) { //law of cosines calc
         return Math.toDegrees(Math.acos((Math.pow(a,2) + Math.pow(b,2) - Math.pow(c,2))/(2*(a*b))));
     }
 
-    public static double lawofsines(double angle, double a, double b) { //law of sines calc
+    public static double lawOfSines(double angle, double a, double b) { //law of sines calc
         return Math.toDegrees(Math.asin((b * Math.sin(Math.toRadians(angle))) / a));
     }
 
@@ -43,8 +43,8 @@ public final class InverseKinematicsUtil {
         if (dist3d == 0) { //zero, zero on coordinate -> prevent divide by 0 exception
             return new double[] {0,0,0};
         }           
-        a2 = lawofcosines(ArmInverseKinematicsConstants.LIMB1_LENGTH, ArmInverseKinematicsConstants.LIMB2_LENGTH, dist3d);                                              // a2 is angle between 1st arm segment to 2nd arm segment
-        a1 = angleBetweenLines(0, -1, 0, adjusted_x, relative_y, z) - lawofsines(a2, dist3d, ArmInverseKinematicsConstants.LIMB2_LENGTH);   // a1 is angle between verticle to 1st arm segment
+        a2 = lawOfCosines(ArmInverseKinematicsConstants.LIMB1_LENGTH, ArmInverseKinematicsConstants.LIMB2_LENGTH, dist3d);                                              // a2 is angle between 1st arm segment to 2nd arm segment
+        a1 = angleBetweenLines(0, -1, 0, adjusted_x, relative_y, z) - lawOfSines(a2, dist3d, ArmInverseKinematicsConstants.LIMB2_LENGTH);   // a1 is angle between verticle to 1st arm segment
        
         //turret angle calculations
         double angleCalc = Math.atan2(y,x) * 180 / Math.PI;

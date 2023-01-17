@@ -37,6 +37,10 @@ public final class Constants {
     public static final double ANGLE_DELTA = 2;
   }
 
+  public static class ControllerConstants{
+    public static final int AIM_ASSIST_BUTTON_NUMBER = 1; //change to whatever it is 
+  }
+
   public static class OperatorConstants {
     public static final int RIGHT_JOYSTICK_PORT = 0;
     public static final int LEFT_JOYSTICK_PORT = 1;
