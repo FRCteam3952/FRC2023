@@ -26,7 +26,6 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public static final Gyro gyro = new Gyro();
   public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   public final ArmSubsystem arm = new ArmSubsystem();
 
@@ -44,6 +43,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    Gyro.poke();
   }
 
   /**

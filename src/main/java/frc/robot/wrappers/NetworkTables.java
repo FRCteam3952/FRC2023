@@ -70,7 +70,6 @@ public class NetworkTables {
 
     /**
      * Use in conjunction w/ latencyTest() in network_tables.py to test latency.
-     * 
      * (Also good example code)
      */
     public static void latencyTesterPeriodicRun() {

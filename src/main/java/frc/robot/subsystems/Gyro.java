@@ -4,18 +4,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 
 /**
- * self explanatory
+ * Wrapper around gyro
  */
 
 public class Gyro extends SubsystemBase {
-  private static ADIS16470_IMU gyro;
-  private static double angleAdjust = 0;
+  private static final ADIS16470_IMU gyro = new ADIS16470_IMU();
 
-  public Gyro() {
-    gyro = new ADIS16470_IMU();
+  static {
     gyro.setYawAxis(ADIS16470_IMU.IMUAxis.kZ);
     gyro.calibrate();
   }
+
+  /**
+   * make sure this class is instantiated properly by poking it
+   */
+  public static void poke() {
+    System.out.println("Gyro init");
+  }
+
+  private static double angleAdjust = 0;
 
   public static double getGyroAngle() {
     return gyro.getAngle() + angleAdjust;
