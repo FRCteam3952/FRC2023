@@ -5,10 +5,12 @@
 package frc.robot;
 
 import frc.robot.subsystems.Gyro;
+import frc.robot.wrappers.TrajectoryReader;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ManualDriveCommand;
 //import frc.robot.commands.ArmCommands.ArmControlCommand;
@@ -28,6 +30,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   public final ArmSubsystem arm = new ArmSubsystem();
+
+  public final TrajectoryReader trajectoryReader = new TrajectoryReader("robogui", "trajectory");
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
@@ -64,6 +68,7 @@ public class RobotContainer {
     // cancelling on release.
     // driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
     
+    driverController.joystick.button(ControllerConstants.RUN_GUI_TRAJECTORY_BUTTON_NUMBER).onTrue(this.driveTrain.followTrajectoryCommand(this.trajectoryReader.currentTrajectory));
   }
 
   /**
