@@ -96,38 +96,36 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(double x, double y) {
-    if(x == 0 && y == 0){
+    if(x == 0 && y == 0) { // If no movement, make sure robot is stopped
       tankDrive.arcadeDrive(0, 0);
       return;
     }
-    double speed = InverseKinematicsUtil.distance(0, x, 0, y);
-    double target = normalizeAngle((Math.atan2(y,x) * 180 / Math.PI) - 90);
-    double current = swapDirection?normalizeAngle(Gyro.getGyroAngle()+180):normalizeAngle(Gyro.getGyroAngle());
+    double speed = InverseKinematicsUtil.distance(0, x, 0, y); // Speed should take the distance to move into account
+    double target = normalizeAngle((Math.atan2(y,x) * 180 / Math.PI) - 90); // Normalize the target angle based on the slope from (0,0) to the point on the unit circle from joystick
+    double current = swapDirection?normalizeAngle(Gyro.getGyroAngle()+180):normalizeAngle(Gyro.getGyroAngle()); // Our current angle, normalized and accounting for if we're going "backwards"
 
-    if(shortestAngleApart(target, current) > 90){
-      swapDirection = !swapDirection; 
-      current = normalizeAngle(current+180);
-      double angleError = getAngleError(current, target);
-      if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA){
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
-      }
-      else{
-        double turningSpeed = angleError * DriveConstants.TURN_CONSTANT;
-        if(turningSpeed < 0.2 && turningSpeed > 0){
+    // The largest possible movement is 90 degrees because our robot is bi-directional (forwards or backwards does not matter on the tank drive)
+    // Since the maximum distance from the x axis is 90 degrees, we check for the shortest angle between the two. If the smallest angle is greater than 90, we need to switch the side we're looking at.
+    if(shortestAngleApart(target, current) > 90) {
+      swapDirection = !swapDirection; // Swap the direction
+      current = normalizeAngle(current+180); // And re-normalize our new angle
+      double angleError = getAngleError(current, target); // Get the angle difference, which we now know to be the smallest.
+      if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA) { // If it's within the delta, we can stop to avoid jittering and indecisiveness.
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false); // zRotation = 0, so no turning
+      } else {
+        double turningSpeed = angleError * DriveConstants.TURN_CONSTANT; // Scale the angleError to our turn constant
+        if(turningSpeed < 0.2 && turningSpeed > 0) { // Make sure turningSpeed is at least 0.2 away from 0
           turningSpeed = 0.2;
-        }
-        else if(turningSpeed > -0.2 && turningSpeed < 0){
+        } else if(turningSpeed > -0.2 && turningSpeed < 0) {
           turningSpeed = -0.2;
         }
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), turningSpeed, false);
+        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), turningSpeed, false); // Drive
       }
-    }
-    else{
-      double angleError = getAngleError(current, target);
-      if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA){
+    } else { // No swap necessary
+      double angleError = getAngleError(current, target); // Same code as above, without the swap logic.
+      if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA) {
         tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
-      }
-      else{
+      } else {
         double turningSpeed = -angleError * DriveConstants.TURN_CONSTANT;
         if(turningSpeed < 0.2 && turningSpeed > 0){
           turningSpeed = 0.2;

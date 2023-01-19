@@ -16,6 +16,8 @@ public class MoveArmToAngleCommand extends CommandBase {
         this.armSubsystem = armSubsystem;
         this.targetAngles = targetAngles;
         this.pidController = new PIDController(0.5, 0, 0); //tune later lol
+
+        addRequirements(armSubsystem);
     }
 
     @Override

@@ -10,6 +10,9 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 
+/**
+ * Moves arm on the turret
+ */
 public class ArmControlCommand extends CommandBase{
     private final ArmSubsystem arm;
     private final FlightJoystick joystick;
@@ -44,7 +47,6 @@ public class ArmControlCommand extends CommandBase{
                 ArmInverseKinematicsConstants.ORIGIN_HEIGHT + yCoord.getDouble(0)/yConst, joystick.getLateralMovement());
         } else {
             arm.setIntendedCoordinates(joystick.getHorizontalMovement(), ArmInverseKinematicsConstants.ORIGIN_HEIGHT, joystick.getLateralMovement());
-
         }
     }
 
