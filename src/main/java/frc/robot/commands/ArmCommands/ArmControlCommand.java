@@ -10,6 +10,8 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 
+import java.util.Math;
+
 /**
  * Moves arm on the turret
  */
@@ -18,7 +20,7 @@ public class ArmControlCommand extends CommandBase{
     private final FlightJoystick joystick;
     private final NetworkTableInstance inst;
     private final NetworkTable table;
-    private final NetworkTableEntry xCoord, yCoord;
+    private final NetworkTableEntry xError, yError;
     private final double xConst, yConst;
 
     public ArmControlCommand(ArmSubsystem arm, FlightJoystick joystick) {
@@ -26,13 +28,21 @@ public class ArmControlCommand extends CommandBase{
         this.joystick = joystick;
         this.inst = NetworkTableInstance.getDefault();
         this.table = inst.getTable("vision");
-        this.xCoord = table.getEntry("x");
-        this.yCoord = table.getEntry("y");
-        this.xConst = 1; //can tune later
-        this.yConst = 1; //can tune later
+        this.xError = table.getEntry("xError");
+        this.yError = table.getEntry("yError");
+        this.xConst = 360; //can tune later
+        this.yConst = 240; //can tune later
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(arm);
+    }
+
+    private double[] getAdjustmentFromCoords() {
+        double[] adjustments = new double[3];
+        adjustments[0] = xError; //x
+        adjustments[1] = yError; //y
+        adjustments[2] = xError; //z
+        return adjustments;
     }
 
     // Called when the command is initially scheduled.
@@ -43,8 +53,7 @@ public class ArmControlCommand extends CommandBase{
     @Override
     public void execute() {
         if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) {
-            arm.setIntendedCoordinates(joystick.getHorizontalMovement() + xCoord.getDouble(0)/xConst, 
-                ArmInverseKinematicsConstants.ORIGIN_HEIGHT + yCoord.getDouble(0)/yConst, joystick.getLateralMovement());
+            getAdjustmentFromCoords[0], getAdjustmentFromCoords[1], getAdjustmentFromCoords[2]);
         } else {
             arm.setIntendedCoordinates(joystick.getHorizontalMovement(), ArmInverseKinematicsConstants.ORIGIN_HEIGHT, joystick.getLateralMovement());
         }
