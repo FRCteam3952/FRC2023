@@ -24,8 +24,8 @@ public final class InverseKinematicsUtil {
     }
 
     public static double angleBetweenLines(double x1, double y1, double z1, double x2, double y2, double z2){ //angle between lines
-        double dotproduct = x1 * x2 + y1 * y2 + z1 * z2;
-        return Math.toDegrees(Math.acos(dotproduct/(Math.abs(distance(0,x1,0,y1,0,z1)*distance(0, x2, 0, y2,0,z2)))));
+        double dotProduct = x1 * x2 + y1 * y2 + z1 * z2;
+        return Math.toDegrees(Math.acos(dotProduct/(Math.abs(distance(0,x1,0,y1,0,z1)*distance(0, x2, 0, y2,0,z2)))));
     }
 
     /**
@@ -47,7 +47,7 @@ public final class InverseKinematicsUtil {
         a1 = angleBetweenLines(0, -1, 0, adjusted_x, relative_y, z) - lawOfSines(a2, dist3d, ArmInverseKinematicsConstants.LIMB2_LENGTH);   // a1 is angle between verticle to 1st arm segment
        
         //turret angle calculations
-        double angleCalc = Math.atan2(y,x) * 180 / Math.PI;
+        double angleCalc = Math.toDegrees(Math.atan2(z,x));
         turretAngle = angleCalc < 0?360+angleCalc:angleCalc;
         
         return new double[] {a1,a2,turretAngle};
