@@ -65,7 +65,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.turret.set(0);
     }
     
-    public double[] getIntendedCoordinates(){
+    public double[] getCurrentCoordinates(){
         return new double[]{this.x_pos,this.y_pos,this.z_pos};
     }
 

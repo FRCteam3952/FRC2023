@@ -46,6 +46,8 @@ public final class Constants {
     public static final int RUN_GUI_TRAJECTORY_BUTTON_NUMBER = 4; // idk i just picked a random number
     // Joystick 1
     public static final int AIM_ASSIST_BUTTON_NUMBER = 1; //change to whatever it is
+    public static final int MOVE_ARM_UP_BUTTON_NUMBER = 2; //change to whatever it is
+    public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 3; //change to whatever it is
   }
 
   public static class PortConstants {
