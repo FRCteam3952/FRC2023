@@ -5,12 +5,9 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-import frc.robot.Constants.ArmInverseKinematicsConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
-
-import java.util.Math;
 
 /**
  * Moves arm on the turret
@@ -21,9 +18,9 @@ public class ArmControlCommand extends CommandBase{
     private final NetworkTableInstance inst;
     private final NetworkTable table;
     private final NetworkTableEntry xError, yError, area;
-    private final double xConst, yConst;
+    private final double xConst, yConst, areaConst;
     private final double xSpeed, ySpeed, zSpeed;
-    private final double DESIRED_AREA = 50; // can tune later
+    private final double DESIRED_AREA = 369; // in pixels probably, can tune later
 
     public ArmControlCommand(ArmSubsystem arm, FlightJoystick joystick) {
         this.arm = arm;
@@ -35,7 +32,7 @@ public class ArmControlCommand extends CommandBase{
         this.area = table.getEntry("area"); // area of gamepiece from perspective of camera vision
         this.xConst = 360; // can tune later
         this.yConst = 240; // can tune later
-        this.zConst = 60; //can tune later
+        this.areaConst = 60; //can tune later
         this.xSpeed = 0.1; // inches per 20ms
         this.ySpeed = 0.1; // inches per 20ms
         this.zSpeed = 0.1; // inches per 20ms
@@ -47,15 +44,21 @@ public class ArmControlCommand extends CommandBase{
     // figure this out later
     private double[] getAdjustmentFromError() {
         double[] adjustments = new double[3];
-        adjustments[0] = xError.getDouble(0)/xConst; // x
-        adjustments[1] = yError.getDouble(0)/yConst; // y
-        adjustments[2] = (DESIRED_AREA - area.getDouble(0))/zConst; // z
+        adjustments[0] = Math.sin(arm.getCurrentAngles()[2]) * xError.getDouble(0)/xConst 
+            + Math.cos(arm.getCurrentAngles()[2]) * (DESIRED_AREA - area.getDouble(0))/areaConst; // x-axis
+
+        adjustments[1] = yError.getDouble(0)/yConst; // y-axis
+
+        adjustments[2] = Math.cos(arm.getCurrentAngles()[2]) * xError.getDouble(0)/xConst 
+            + Math.sin(arm.getCurrentAngles()[2]) * (DESIRED_AREA - area.getDouble(0))/areaConst; // z-axis
+
         return adjustments;
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {}
+
 
     // Called every time the scheduler runs while the command is scheduled.
     /*  This might break the inverse kinematics code, since it may output a coordinate that is outside of the 
@@ -66,20 +69,20 @@ public class ArmControlCommand extends CommandBase{
     @Override
     public void execute() {
         if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) {
-            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0] + getAdjustmentFromError[0], 
-                arm.getCurrentCoordinates()[1] + getAdjustmentFromError[1], 
-                arm.getCurrentCoordinates()[2] + getAdjustmentFromError[2]);
+            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0] + getAdjustmentFromError()[0], 
+                arm.getCurrentCoordinates()[1] + getAdjustmentFromError()[1], 
+                arm.getCurrentCoordinates()[2] + getAdjustmentFromError()[2]);
         } else {
-            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0] + joystick.getHorizontalMovement()*xSpeed, 
-                arm.getCurrentCoordinates()[1], + () -> {
-                    if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_UP_BUTTON_NUMBER)) {
-                        return ySpeed;
-                    } else if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_DOWN_BUTTON_NUMBER)) {
-                        return -ySpeed;
-                    }
-                    return 0;
-                } 
-                arm.getCurrentCoordinates()[2] + joystick.getLateralMovement()*zSpeed);
+            double y;
+            if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_UP_BUTTON_NUMBER)) {
+                y =  ySpeed;
+            } else if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_DOWN_BUTTON_NUMBER)) {
+                y = -ySpeed;
+            } else {
+                y = 0;
+            }
+            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0] + joystick.getHorizontalMovement() * xSpeed, 
+                arm.getCurrentCoordinates()[1] + y, arm.getCurrentCoordinates()[2] + joystick.getLateralMovement() * zSpeed);
         }
     }
 

@@ -1,10 +1,10 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants.PortConstants;
-import frc.robot.commands.ArmCommands.MoveArmToAngleCommand;
 import frc.robot.Constants.ArmInverseKinematicsConstants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.util.InverseKinematicsUtil;
 
 import com.revrobotics.CANSparkMax;
@@ -21,6 +21,8 @@ public class ArmSubsystem extends SubsystemBase {
     private final RelativeEncoder pivot2Encoder;
     private final RelativeEncoder turretEncoder;
 
+    private final PIDController pidController;
+
     private double x_pos;
     private double y_pos;
     private double z_pos;
@@ -35,13 +37,15 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot2Encoder = this.pivot2.getEncoder();
         this.turretEncoder = this.turret.getEncoder();
 
+        this.pidController = new PIDController(0.5, 0, 0); //tune later lol
+
         this.x_pos = ArmInverseKinematicsConstants.STARTING_X;
         this.y_pos = ArmInverseKinematicsConstants.STARTING_Y;
         this.z_pos = ArmInverseKinematicsConstants.STARTING_Z;
     }
 
     public double[] getCurrentAngles() {
-        double angle1 = pivot1Encoder.getPosition() * 1 + 0;
+        double angle1 = pivot1Encoder.getPosition() * 1 + 0; // sean are these radians or degrees pls help
         double angle2 = pivot2Encoder.getPosition() * 1 + 0;
         double angle3 = turretEncoder.getPosition() * 1 + 0;
         
@@ -73,12 +77,19 @@ public class ArmSubsystem extends SubsystemBase {
         if(this.x_pos == x && this.y_pos == y && this.z_pos == z) //if intended coordinates are same, then don't change target
            return; 
 
+        pidController.setTolerance(ArmInverseKinematicsConstants.ANGLE_DELTA);
+        setPivot1Speed(pidController.calculate(x_pos, InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[0]));
+        setPivot2Speed(pidController.calculate(y_pos, InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[1]));
+        setTurretSpeed(pidController.calculate(z_pos, InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[2]));
+
         this.x_pos = x;
         this.y_pos = y;
         this.z_pos = z;
 
-        MoveArmToAngleCommand adjustArm = new MoveArmToAngleCommand(this, InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z));
-        adjustArm.schedule();
+        
+        
+        // MoveArmToAngleCommand adjustArm = new MoveArmToAngleCommand(this, InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z));
+        // adjustArm.schedule();
     }
 
     @Override

@@ -36,8 +36,9 @@ public final class InverseKinematicsUtil {
         double relative_y = y - ArmInverseKinematicsConstants.ORIGIN_HEIGHT;   // calculate height relative to the origin (at the tip of the non-moving rod which holds the arm)
         double adjusted_x = Math.abs(x);
         double dist3d = distance(0,adjusted_x,0,relative_y,0,z);     // calc distance in 3d from top pivot point
-        if(dist3d > ArmInverseKinematicsConstants.LIMB1_LENGTH + ArmInverseKinematicsConstants.LIMB2_LENGTH) {
-            return new double[] {-1,-1,-1};
+        double totalLimbLength = ArmInverseKinematicsConstants.LIMB1_LENGTH + ArmInverseKinematicsConstants.LIMB2_LENGTH;
+        if(dist3d > totalLimbLength) {
+            return new double[] {adjusted_x * (totalLimbLength/dist3d), relative_y * (totalLimbLength/dist3d), z * (totalLimbLength/dist3d)}; // math probably wrong but im too lazy to figure it out
         }
 
         if (dist3d == 0) { //zero, zero on coordinate -> prevent divide by 0 exception
