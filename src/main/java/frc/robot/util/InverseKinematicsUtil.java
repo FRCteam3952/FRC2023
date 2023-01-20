@@ -35,10 +35,12 @@ public final class InverseKinematicsUtil {
         double a1, a2, turretAngle;
         double relative_y = y - ArmInverseKinematicsConstants.ORIGIN_HEIGHT;   // calculate height relative to the origin (at the tip of the non-moving rod which holds the arm)
         double adjusted_x = Math.abs(x);
-        double dist3d = distance(0,adjusted_x,0,relative_y,0,z);     // calc distance in 3d from top pivot point
+        double dist3d = distance(0, adjusted_x, 0, relative_y, 0, z);     // calc distance in 3d from top pivot point
         double totalLimbLength = ArmInverseKinematicsConstants.LIMB1_LENGTH + ArmInverseKinematicsConstants.LIMB2_LENGTH;
         if(dist3d > totalLimbLength) {
-            return new double[] {adjusted_x * (totalLimbLength/dist3d), relative_y * (totalLimbLength/dist3d), z * (totalLimbLength/dist3d)}; // math probably wrong but im too lazy to figure it out
+            adjusted_x *= (totalLimbLength / dist3d); 
+            relative_y *= (totalLimbLength / dist3d);
+            z *= (totalLimbLength / dist3d); // hopefully this is correct maybe
         }
 
         if (dist3d == 0) { //zero, zero on coordinate -> prevent divide by 0 exception
@@ -48,9 +50,9 @@ public final class InverseKinematicsUtil {
         a1 = angleBetweenLines(0, -1, 0, adjusted_x, relative_y, z) - lawOfSines(a2, dist3d, ArmInverseKinematicsConstants.LIMB2_LENGTH);   // a1 is angle between verticle to 1st arm segment
        
         //turret angle calculations
-        double angleCalc = Math.toDegrees(Math.atan2(z,x));
-        turretAngle = angleCalc < 0?360+angleCalc:angleCalc;
+        double angleCalc = Math.toDegrees(Math.atan2(z, x));
+        turretAngle = angleCalc < 0 ? 360 + angleCalc : angleCalc;
         
-        return new double[] {a1,a2,turretAngle};
+        return new double[] {a1, a2, turretAngle};
     }
 }

@@ -86,8 +86,6 @@ public class ArmSubsystem extends SubsystemBase {
         this.y_pos = y;
         this.z_pos = z;
 
-        
-        
         // MoveArmToAngleCommand adjustArm = new MoveArmToAngleCommand(this, InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z));
         // adjustArm.schedule();
     }
