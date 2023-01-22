@@ -50,6 +50,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private final DifferentialDriveOdometry odometry;
 
   private boolean swapDirection = false;
+  private final RelativeEncoder[] encoders;
+
 
   public DriveTrainSubsystem() {
     this.frontLeftMotor = new CANSparkMax(PortConstants.FRONT_LEFT_MOTOR_PORT, MotorType.kBrushless);
@@ -75,6 +77,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
     this.rearLeftMotor.setInverted(true);
 
     this.odometry = new DifferentialDriveOdometry(new Rotation2d(Gyro.getGyroAngle()), 0, 0);
+
+    this.encoders = new RelativeEncoder[]{
+      frontLeftEncoder, 
+      frontRightEncoder, 
+      rearLeftEncoder, 
+      rearRightEncoder
+    };
 
     this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
     // m_dDrive.setSafetyEnabled(false);
@@ -203,17 +212,17 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void resetEncoders() {
-      frontLeftEncoder.setPosition(0);
-      frontRightEncoder.setPosition(0);
-      rearLeftEncoder.setPosition(0);
-      rearRightEncoder.setPosition(0);
+    for (RelativeEncoder encoder : encoders)
+    {
+      encoder.setPosition(0);
+    }
   }
 
   public void setAllEncoders(double position) {
-    frontLeftEncoder.setPosition(position);
-    frontRightEncoder.setPosition(position);
-    rearLeftEncoder.setPosition(position);
-    rearRightEncoder.setPosition(position);
+    for (RelativeEncoder encoder : encoders)
+    {
+      encoder.setPosition(position);
+    }
   }
 
   public void resetOdometry(Pose2d pose) {
