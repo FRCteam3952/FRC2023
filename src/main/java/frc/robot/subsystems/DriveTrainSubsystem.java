@@ -106,12 +106,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     // The largest possible movement is 90 degrees because our robot is bi-directional (forwards or backwards does not matter on the tank drive)
     // Since the maximum distance from the x axis is 90 degrees, we check for the shortest angle between the two. If the smallest angle is greater than 90, we need to switch the side we're looking at.
-    if(shortestAngleApart(target, current) > 90) {
+    if(getShortestAngleApart(target, current) > 90) {
       swapDirection = !swapDirection; // Swap the direction
       current = normalizeAngle(current+180); // And re-normalize our new angle
       double angleError = getAngleError(current, target); // Get the angle difference, which we now know to be the smallest.
       if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA) { // If it's within the delta, we can stop to avoid jittering and indecisiveness.
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false); // zRotation = 0, so no turning
+        this.tankDrive(speed * (swapDirection?-1:1), 0); // zRotation = 0, so no turning
       } else {
         double turningSpeed = angleError * DriveConstants.TURN_CONSTANT; // Scale the angleError to our turn constant
         if(turningSpeed < 0.2 && turningSpeed > 0) { // Make sure turningSpeed is at least 0.2 away from 0
@@ -119,12 +119,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
         } else if(turningSpeed > -0.2 && turningSpeed < 0) {
           turningSpeed = -0.2;
         }
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), turningSpeed, false); // Drive
+        this.tankDrive(speed * (swapDirection?-1:1), turningSpeed); // Drive
       }
     } else { // No swap necessary
       double angleError = getAngleError(current, target); // Same code as above, without the swap logic.
       if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA) {
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), 0, false);
+        this.tankDrive(speed * (swapDirection?-1:1), 0);
       } else {
         double turningSpeed = -angleError * DriveConstants.TURN_CONSTANT;
         if(turningSpeed < 0.2 && turningSpeed > 0){
@@ -133,10 +133,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
         else if(turningSpeed > -0.2 && turningSpeed < 0){
           turningSpeed = -0.2;
         }
-        tankDrive.arcadeDrive(speed * (swapDirection?-1:1), turningSpeed, false);
+        this.tankDrive(speed * (swapDirection?-1:1), turningSpeed);
       }
 
     }
+
 
   }
   public double normalizeAngle(double angle){
@@ -147,12 +148,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
     return angle;
   }
-  public double shortestAngleApart(double a1, double a2){
+
+
+  public double getShortestAngleApart(double a1, double a2){
     double difference = Math.abs(a1-a2);
     return difference>180?360-difference:difference;
   }
+
+
   public double getAngleError(double current, double target){
-    double angle = shortestAngleApart(current, target);
+    double angle = getShortestAngleApart(current, target);
     if(Math.abs(current + angle - target) < 0.25) {
       return angle;
     }

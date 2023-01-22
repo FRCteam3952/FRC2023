@@ -14,7 +14,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class ArmInverseKinematicsConstants {
+  public static class ArmConstants {
 
     // All constants are in inches
     public static final double ORIGIN_HEIGHT = 35.36; 
@@ -29,6 +29,8 @@ public final class Constants {
     public static final double STARTING_X = 0;
     public static final double STARTING_Y = 0;
     public static final double STARTING_Z = 0;
+
+    public static final double PICK_UP_POSITION_Y = 5;
   }
 
   public static class ClawConstants {
@@ -45,9 +47,10 @@ public final class Constants {
     // Joystick 0
     public static final int RUN_GUI_TRAJECTORY_BUTTON_NUMBER = 4; // idk i just picked a random number
     // Joystick 1
-    public static final int AIM_ASSIST_BUTTON_NUMBER = 1; //change to whatever it is
-    public static final int MOVE_ARM_UP_BUTTON_NUMBER = 2; //change to whatever it is
-    public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 3; //change to whatever it is
+    public static final int AIM_ASSIST_BUTTON_NUMBER = 1; // change to whatever it is
+    public static final int MOVE_ARM_UP_BUTTON_NUMBER = 2; // change to whatever it is
+    public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 3; // change to whatever it is
+    public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER = 4; // change to whatever it is
   }
 
   public static class PortConstants {

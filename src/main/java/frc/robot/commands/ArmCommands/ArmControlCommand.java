@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
@@ -68,22 +68,27 @@ public class ArmControlCommand extends CommandBase{
     */
     @Override
     public void execute() {
+        // Primary arm control
         if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) {
             arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0] + getAdjustmentFromError()[0], 
                 arm.getCurrentCoordinates()[1] + getAdjustmentFromError()[1], 
                 arm.getCurrentCoordinates()[2] + getAdjustmentFromError()[2]);
         } else {
-            double y;
+            double y = 0;
             if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_UP_BUTTON_NUMBER)) {
                 y =  ySpeed;
             } else if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_DOWN_BUTTON_NUMBER)) {
                 y = -ySpeed;
-            } else {
-                y = 0;
-            }
+            } 
             arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0] + joystick.getHorizontalMovement() * xSpeed, 
                 arm.getCurrentCoordinates()[1] + y, arm.getCurrentCoordinates()[2] + joystick.getLateralMovement() * zSpeed);
         }
+
+        // Moves arm to preset distance above the floor for picking up gamepieces 
+        if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER)) {
+            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2]);
+        }
+        
     }
 
     // Called once the command ends or is interrupted.

@@ -10,16 +10,12 @@ import frc.robot.Constants.PortConstants;
 
 public class ClawGripSubsystem extends SubsystemBase {
     private final CANSparkMax clawGrip;
-    
     private final RelativeEncoder clawGripEncoder;
-
     private boolean clawState;
 
     public ClawGripSubsystem() {
         this.clawGrip = new CANSparkMax(PortConstants.CLAW_GRIP_PORT, MotorType.kBrushless);
-
         this.clawGripEncoder = this.clawGrip.getEncoder();
-
         this.clawState = false;
     }
 
