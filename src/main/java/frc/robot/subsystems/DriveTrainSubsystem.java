@@ -45,12 +45,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
   private final RelativeEncoder frontRightEncoder;
   private final RelativeEncoder rearLeftEncoder;
   private final RelativeEncoder rearRightEncoder;
+  private final RelativeEncoder[] encoders;
 
   private final DifferentialDrive tankDrive;
   private final DifferentialDriveOdometry odometry;
 
   private boolean swapDirection = false;
-  private final RelativeEncoder[] encoders;
+
 
 
   public DriveTrainSubsystem() {
@@ -144,11 +145,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
         }
         this.tankDrive(speed * (swapDirection?-1:1), turningSpeed);
       }
-
     }
-
-
   }
+
+  
   public double normalizeAngle(double angle){
     angle %= 360;
     angle = angle < 0 ? 360+angle : angle;

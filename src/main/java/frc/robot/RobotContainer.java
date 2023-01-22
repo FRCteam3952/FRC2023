@@ -17,6 +17,7 @@ import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.ArmCommands.ArmTestCommand;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
 /**
@@ -30,6 +31,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   public final ArmSubsystem arm = new ArmSubsystem();
+  public final ClawGripSubsystem clawGrip = new ClawGripSubsystem();
 
   public final TrajectoryReader trajectoryReader = new TrajectoryReader("robogui", "trajectory");
 
@@ -69,6 +71,8 @@ public class RobotContainer {
     // driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
     
     driverController.joystick.button(ControllerConstants.RUN_GUI_TRAJECTORY_BUTTON_NUMBER).onTrue(this.driveTrain.followTrajectoryCommand(this.trajectoryReader.currentTrajectory));
+    armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).whileTrue(clawGrip.closeClaw());
+    armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).onFalse(clawGrip.openClaw());
   }
 
   /**
