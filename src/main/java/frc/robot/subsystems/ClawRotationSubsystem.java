@@ -22,7 +22,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
         this.clawRotationEncoder = this.clawRotator.getEncoder();
     }
 
-    public void setAngle(double angle){
+    public void setAngle(double angle) {
         double difference = this.getClawAngle() - angle;
         if(Math.abs(difference) < ClawConstants.ANGLE_DELTA) {
             this.setClawRotateSpeed(0);
@@ -38,7 +38,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
     }
 
     // Runs continuously when designated button is held down
-    public CommandBase rotateClawRight(){
+    public CommandBase rotateClawRight() {
         return this.runOnce(
             () -> {
               if (clawRotationEncoder.getPosition() < ClawConstants.MAX_ROTATION_ENCODER_VALUE) {
@@ -50,7 +50,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
     }
 
     // Runs continuosly when designated button is held down
-    public CommandBase rotateClawLeft(){
+    public CommandBase rotateClawLeft() {
         return this.runOnce(
             () -> {
               if (clawRotationEncoder.getPosition() > ClawConstants.MIN_ROTATION_ENCODER_VALUE) {
@@ -61,7 +61,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
             });
     }
 
-    public double getClawAngle(){
+    public double getClawAngle() {
         return this.clawRotationEncoder.getPosition();
     }
 
