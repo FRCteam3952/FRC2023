@@ -8,13 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.PortConstants;
+import frc.robot.Constants.ClawConstants;
 
 public class ClawGripSubsystem extends SubsystemBase {
     private final CANSparkMax clawGrip;
     private final RelativeEncoder clawGripEncoder;
-    private final double MAX_CLAW_ENCODER_VALUE = 3; // change to what this actually is
-    private final double MIN_CLAW_ENCODER_VALUE = 0.3; //change to what this actually is
-    private final double CLAW_GRIP_SPEED = 0.5; //change to what this actually is
     private boolean clawState;
 
     public ClawGripSubsystem() {
@@ -27,8 +25,8 @@ public class ClawGripSubsystem extends SubsystemBase {
     public CommandBase openClaw(){
         return this.runOnce(
             () -> {
-              while (clawGripEncoder.getPosition() < MAX_CLAW_ENCODER_VALUE){
-                clawGrip.set(CLAW_GRIP_SPEED); // find out correct direction later
+              while (clawGripEncoder.getPosition() < ClawConstants.MAX_GRIP_ENCODER_VALUE){
+                clawGrip.set(ClawConstants.CLAW_GRIP_SPEED); // find out correct direction later
               }
               clawGrip.set(0);
             });
@@ -38,8 +36,8 @@ public class ClawGripSubsystem extends SubsystemBase {
     public CommandBase closeClaw(){
         return this.runOnce(
             () -> {
-              if (clawGripEncoder.getPosition() > MIN_CLAW_ENCODER_VALUE) {
-                clawGrip.set(-CLAW_GRIP_SPEED); // find out correct direction later
+              if (clawGripEncoder.getPosition() > ClawConstants.MIN_GRIP_ENCODER_VALUE) {
+                clawGrip.set(-ClawConstants.CLAW_GRIP_SPEED); // find out correct direction later
               } else {
                 clawGrip.set(0);
               }

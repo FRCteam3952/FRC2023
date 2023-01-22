@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.PortConstants;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkMax;
@@ -14,12 +15,10 @@ import com.revrobotics.RelativeEncoder;
 
 public class ClawRotationSubsystem extends SubsystemBase {
     private final CANSparkMax clawRotator;
-
     private final RelativeEncoder clawRotationEncoder;
 
     public ClawRotationSubsystem() {
         this.clawRotator = new CANSparkMax(PortConstants.CLAW_ROTATE_PORT, MotorType.kBrushless);
-
         this.clawRotationEncoder = this.clawRotator.getEncoder();
     }
 
@@ -36,6 +35,30 @@ public class ClawRotationSubsystem extends SubsystemBase {
 
     public void setClawRotateSpeed(double speed) {
         this.clawRotator.set(speed);
+    }
+
+    // Runs continuously when designated button is held down
+    public CommandBase rotateClawRight(){
+        return this.runOnce(
+            () -> {
+              if (clawRotationEncoder.getPosition() < ClawConstants.MAX_ROTATION_ENCODER_VALUE) {
+                setClawRotateSpeed(ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
+              } else {
+                setClawRotateSpeed(0);
+              }
+            });
+    }
+
+    // Runs continuosly when designated button is held down
+    public CommandBase rotateClawLeft(){
+        return this.runOnce(
+            () -> {
+              if (clawRotationEncoder.getPosition() > ClawConstants.MIN_ROTATION_ENCODER_VALUE) {
+                setClawRotateSpeed(-ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
+              } else {
+                setClawRotateSpeed(0);
+              }
+            });
     }
 
     public double getClawAngle(){

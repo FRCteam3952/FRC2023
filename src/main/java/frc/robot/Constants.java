@@ -34,8 +34,13 @@ public final class Constants {
   }
 
   public static class ClawConstants {
+    public static final double CLAW_GRIP_SPEED = 0.4; // change to what this actually is
+    public static final double MAX_GRIP_ENCODER_VALUE = 3; // change to what this actually is
+    public static final double MIN_GRIP_ENCODER_VALUE = 0.3; //change to what this actually is
     public static final double CLAW_ROTATE_SPEED = 0.1;
     public static final double ANGLE_DELTA = 2;
+    public static final double MIN_ROTATION_ENCODER_VALUE = 0; // change to what it actually is
+    public static final double MAX_ROTATION_ENCODER_VALUE = 3; // change to what it actually is
   }
 
   public static class OperatorConstants {
@@ -52,6 +57,8 @@ public final class Constants {
     public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 3; // change to whatever it is
     public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER = 4; // change to whatever it is
     public static final int CLAW_GRIP_BUTTON_NUMBER = 1; // change to whatever it is
+    public static final int CLAW_ROTATE_RIGHT_BUTTON_NUMBER = 6; // change to whatever it is
+    public static final int CLAW_ROTATE_LEFT_BUTTON_NUMBER = 7; // change to whatever it is
   }
 
   public static class PortConstants {
