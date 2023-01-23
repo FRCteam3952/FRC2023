@@ -78,9 +78,9 @@ public class ArmSubsystem extends SubsystemBase {
            return; 
 
         pidController.setTolerance(ArmConstants.ANGLE_DELTA);
-        setPivot1Speed(pidController.calculate(x_pos, InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[0]));
-        setPivot2Speed(pidController.calculate(y_pos, InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[1]));
-        setTurretSpeed(pidController.calculate(z_pos, InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[2]));
+        setPivot1Speed(pidController.calculate(getCurrentAngles()[0], InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[0]));
+        setPivot2Speed(pidController.calculate(getCurrentAngles()[1], InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[1]));
+        setTurretSpeed(pidController.calculate(getCurrentAngles()[2], InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[2]));
 
         // Updates coordinates 
         this.x_pos = InverseKinematicsUtil.getCurrentCoordinates()[0];

@@ -27,21 +27,21 @@ public class ArmControlCommand extends CommandBase{
         this.joystick = joystick;
         this.inst = NetworkTableInstance.getDefault();
         this.table = inst.getTable("vision");
-        this.xError = table.getEntry("xError"); // distance along the x-axis between center of camera vision and center of detected gamepiece
-        this.yError = table.getEntry("yError"); // distance along the y-axis between center of camera vision and center of detected gamepiece
-        this.area = table.getEntry("area"); // area of gamepiece from perspective of camera vision
+        this.xError = table.getEntry("xError"); // Distance along the x-axis between center of camera vision and center of detected gamepiece
+        this.yError = table.getEntry("yError"); // Distance along the y-axis between center of camera vision and center of detected gamepiece
+        this.area = table.getEntry("area"); // Area of gamepiece from perspective of camera vision
         this.xConst = 360; // can tune later
         this.yConst = 240; // can tune later
         this.areaConst = 60; //can tune later
-        this.xSpeed = 0.1; // inches per 20ms
-        this.ySpeed = 0.1; // inches per 20ms
-        this.zSpeed = 0.1; // inches per 20ms
+        this.xSpeed = 0.1; // Inches per 20ms
+        this.ySpeed = 0.1; // Inches per 20ms
+        this.zSpeed = 0.1; // Inches per 20ms
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(arm);
     }
 
-    // figure this out later
+    // If getCurrentAngles() returns degrees then convert to radians, if not then leave as is
     private double[] getAdjustmentFromError() {
         double[] adjustments = new double[3];
         adjustments[0] = Math.sin(arm.getCurrentAngles()[2]) * xError.getDouble(0)/xConst 

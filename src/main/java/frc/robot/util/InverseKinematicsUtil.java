@@ -63,6 +63,6 @@ public final class InverseKinematicsUtil {
     }
 
     public static double[] getCurrentCoordinates() {
-        return new double[]{x_pos, y_pos, z_pos};
+        return new double[] {x_pos, y_pos, z_pos};
     }
 }
