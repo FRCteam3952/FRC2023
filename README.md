@@ -17,3 +17,7 @@ Team 3952 - 2023 Season FRC robot code written in Java.
 * Run `./gradlew deploy` to deploy to the robot in Terminal or Powershell (Windows)
 * Run `./gradlew build` to build the code.  Use the `--info` flag for more details
 * Run `./gradlew test` to run all of the JUnit tests
+
+## Contributing
+* Read documentation for WPILib https://docs.wpilib.org/en/latest/
+* Check the issues page https://github.com/FRCteam3952/FRC2023/issues 
