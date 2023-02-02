@@ -124,11 +124,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.tankDrive(speed * (swapDirection?-1:1), 0); // zRotation = 0, so no turning
       } else {
         double turningSpeed = angleError * DriveConstants.TURN_CONSTANT; // Scale the angleError to our turn constant
-        if(turningSpeed < 0.2 && turningSpeed > 0) { // Make sure turningSpeed is at least 0.2 away from 0
-          turningSpeed = 0.2;
-        } else if(turningSpeed > -0.2 && turningSpeed < 0) {
-          turningSpeed = -0.2;
-        }
+        // Make sure turningSpeed is at least 0.2 away from 0
+        turningSpeed = Math.abs(turningSpeed) < 0.2 ? Math.copySign(0.2, turningSpeed) : turningSpeed;
         this.tankDrive(speed * (swapDirection?-1:1), turningSpeed); // Drive
       }
     } else { // No swap necessary
@@ -137,12 +134,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.tankDrive(speed * (swapDirection?-1:1), 0);
       } else {
         double turningSpeed = -angleError * DriveConstants.TURN_CONSTANT;
-        if(turningSpeed < 0.2 && turningSpeed > 0){
-          turningSpeed = 0.2;
-        }
-        else if(turningSpeed > -0.2 && turningSpeed < 0){
-          turningSpeed = -0.2;
-        }
+        // Make sure turningSpeed is at least 0.2 away from 0
+        turningSpeed = Math.abs(turningSpeed) < 0.2 ? Math.copySign(0.2, turningSpeed) : turningSpeed;
         this.tankDrive(speed * (swapDirection?-1:1), turningSpeed);
       }
     }
