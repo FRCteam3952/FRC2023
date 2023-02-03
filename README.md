@@ -33,6 +33,7 @@ $ git clone https://github.com/FRCteam3952/FRC2023.git
 * Read documentation for [WPILib](https://docs.wpilib.org/en/latest/)
 * Check the current [issues page](https://github.com/FRCteam3952/FRC2023/issues)
 * Previous [examples](https://github.com/troyfrc3952/Basic-Robot-Code)
+* Comment on any code that you contribute explaining what it does
  * Ask for help
 
 ## Other Code We Used 
