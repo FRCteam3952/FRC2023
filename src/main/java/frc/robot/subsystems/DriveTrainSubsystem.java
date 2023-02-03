@@ -32,64 +32,37 @@ import frc.robot.Constants.TrajectoryConstants;
 import frc.robot.util.InverseKinematicsUtil;
 
 public class DriveTrainSubsystem extends SubsystemBase {
-
-  private final CANSparkMax frontLeftMotor;
-  private final CANSparkMax frontRightMotor;
-  private final CANSparkMax rearLeftMotor;
-  private final CANSparkMax rearRightMotor;
-
-  private final MotorControllerGroup leftMotorGroup;
-  private final MotorControllerGroup rightMotorGroup;
-
-  private final RelativeEncoder frontLeftEncoder;
-  private final RelativeEncoder frontRightEncoder;
-  private final RelativeEncoder rearLeftEncoder;
-  private final RelativeEncoder rearRightEncoder;
+  private final CANSparkMax[] motors;
   private final RelativeEncoder[] encoders;
+  private final MotorControllerGroup[] motorGroups;
 
   private final DifferentialDrive tankDrive;
   private final DifferentialDriveOdometry odometry;
 
   private boolean swapDirection = false;
 
-
-
   public DriveTrainSubsystem() {
-    this.frontLeftMotor = new CANSparkMax(PortConstants.FRONT_LEFT_MOTOR_PORT, MotorType.kBrushless);
-    this.frontRightMotor = new CANSparkMax(PortConstants.FRONT_RIGHT_MOTOR_PORT, MotorType.kBrushless);
-    this.rearLeftMotor = new CANSparkMax(PortConstants.REAR_LEFT_MOTOR_PORT, MotorType.kBrushless);
-    this.rearRightMotor = new CANSparkMax(PortConstants.REAR_RIGHT_MOTOR_PORT, MotorType.kBrushless);
-    this.frontLeftEncoder = frontLeftMotor.getEncoder();
-    this.frontRightEncoder = frontRightMotor.getEncoder();
-    this.rearLeftEncoder = rearLeftMotor.getEncoder();
-    this.rearRightEncoder = rearRightMotor.getEncoder();
+    // instantiate all motors based on their port constants into `this.motors`
+    // to get a specific motor, use DriveConstants, e.g. motors[DriveConstants.FRONT_LEFT]
+    motors = new CANSparkMax[4];
+    encoders = new RelativeEncoder[4];
+    for (int i = 0; i < this.motors.length; i++) {
+      // create the motor and set correct inversion, more in PortConstants
+      motors[i] = new CANSparkMax(PortConstants.ALL_MOTOR_PORTS[i], MotorType.kBrushless);
+      motors[i].setInverted(DriveConstants.INVERSIONS[i]);
+      // instantiate encoder for motor
+      encoders[i] = this.motors[i].getEncoder();
+      encoders[i].setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
+    }
 
-    this.frontLeftEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
-    this.frontRightEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
-    this.rearLeftEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
-    this.rearRightEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
-
-    this.leftMotorGroup = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
-    this.rightMotorGroup = new MotorControllerGroup(frontRightMotor, rearRightMotor);
-
-    this.frontRightMotor.setInverted(false);
-    this.rearRightMotor.setInverted(false);
-    this.frontLeftMotor.setInverted(true);
-    this.rearLeftMotor.setInverted(true);
-
-    this.odometry = new DifferentialDriveOdometry(new Rotation2d(Gyro.getGyroAngle()), 0, 0);
-
-    this.encoders = new RelativeEncoder[]{
-      frontLeftEncoder, 
-      frontRightEncoder, 
-      rearLeftEncoder, 
-      rearRightEncoder
+    // motor groups, 0 is left and 1 is right
+    motorGroups = new MotorControllerGroup[]{
+      new MotorControllerGroup(motors[DriveConstants.FRONT_LEFT],  motors[DriveConstants.REAR_LEFT]),
+      new MotorControllerGroup(motors[DriveConstants.FRONT_RIGHT], motors[DriveConstants.REAR_RIGHT])
     };
 
-    this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
-    // m_dDrive.setSafetyEnabled(false);
-    // resetEncoders();
-
+    this.odometry = new DifferentialDriveOdometry(new Rotation2d(Gyro.getGyroAngle()), 0, 0);
+    this.tankDrive = new DifferentialDrive(motorGroups[0], motorGroups[1]);
   }
 
   /**
@@ -171,8 +144,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    this.leftMotorGroup.setVoltage(leftVolts);
-    this.rightMotorGroup.setVoltage(rightVolts);
+    for(int i=0;i<2;i++) this.motorGroups[i].setVoltage(new double[]{ leftVolts, rightVolts }[i]);
     this.tankDrive.feed();
   }
 
@@ -205,27 +177,28 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void resetEncoders() {
-    for (RelativeEncoder encoder : encoders)
-    {
-      encoder.setPosition(0);
-    }
+    for (RelativeEncoder encoder : encoders) encoder.setPosition(0);
   }
 
   public void setAllEncoders(double position) {
-    for (RelativeEncoder encoder : encoders)
-    {
-      encoder.setPosition(position);
-    }
+    for (RelativeEncoder encoder : encoders) encoder.setPosition(position);
   }
 
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
     odometry.resetPosition(
-      new Rotation2d(Gyro.getGyroAngle()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), pose);
+      new Rotation2d(Gyro.getGyroAngle()), 
+      encoders[DriveConstants.FRONT_LEFT].getPosition(), 
+      encoders[DriveConstants.FRONT_RIGHT].getPosition(), 
+      pose
+    );
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(frontLeftEncoder.getVelocity(), frontRightEncoder.getVelocity());
+    return new DifferentialDriveWheelSpeeds(
+      encoders[DriveConstants.FRONT_LEFT].getVelocity(), 
+      encoders[DriveConstants.FRONT_RIGHT].getVelocity()
+    );
   }
 
   public Pose2d getPose() {
@@ -311,7 +284,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     
-    odometry.update(new Rotation2d(Gyro.getGyroAngle()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
+    odometry.update(
+      new Rotation2d(Gyro.getGyroAngle()), 
+      encoders[DriveConstants.FRONT_LEFT].getPosition(), 
+      encoders[DriveConstants.FRONT_RIGHT].getPosition()
+    );
 
     //System.out.println("FL: " + getFrontLeftEncoder() + ", FR: " + getFrontRightEncoder() + ", RL: " + getRearLeftEncoder() + ", RR: " + getRearRightEncoder());
     //System.out.println("FL: " + frontLeft.get() + ", FR: " + frontRight.get() + ", RL: " + rearLeft.get() + ", RR: " + rearRight.get());

@@ -62,10 +62,17 @@ public final class Constants {
   }
 
   public static class PortConstants {
-    public static final int FRONT_RIGHT_MOTOR_PORT = 1;
-    public static final int REAR_RIGHT_MOTOR_PORT = 2;
-    public static final int REAR_LEFT_MOTOR_PORT = 3;
     public static final int FRONT_LEFT_MOTOR_PORT = 4;
+    public static final int FRONT_RIGHT_MOTOR_PORT = 1;
+    public static final int REAR_LEFT_MOTOR_PORT = 3;
+    public static final int REAR_RIGHT_MOTOR_PORT = 2;
+
+    public static final int[] ALL_MOTOR_PORTS = new int[]{
+      FRONT_LEFT_MOTOR_PORT,
+      FRONT_RIGHT_MOTOR_PORT,
+      REAR_LEFT_MOTOR_PORT,
+      REAR_RIGHT_MOTOR_PORT
+    };
 
     public static final int PIVOT1_PORT = 5;
     public static final int PIVOT2_PORT = 6;
@@ -89,6 +96,18 @@ public final class Constants {
 
     public static final double TURN_CONSTANT = 0.015;
     public static final double ANGLE_DELTA = 1;
+
+    public static final boolean[] INVERSIONS = new boolean[]{
+      false, // front left
+      false, // front right
+      true,  // rear left
+      true   // rear right
+    };
+
+    public static final int FRONT_LEFT  = 0;
+    public static final int FRONT_RIGHT = 1;
+    public static final int REAR_LEFT   = 2;
+    public static final int REAR_RIGHT  = 3;
   }
 
   public static class TrajectoryConstants {
