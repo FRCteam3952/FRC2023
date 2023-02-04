@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.Gyro;
+import frc.robot.subsystems.LimeLightSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -15,17 +16,19 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ManualDriveCommand extends CommandBase {
   private final DriveTrainSubsystem driveTrain;
   private final FlightJoystick joystick;
+  private final LimeLightSubsystem limelight;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param driveTrain The drivetrain subsystem.
    */
-  public ManualDriveCommand(DriveTrainSubsystem driveTrain, FlightJoystick joystick) {
+  public ManualDriveCommand(DriveTrainSubsystem driveTrain, FlightJoystick joystick, LimeLightSubsystem limelight) {
     this.driveTrain = driveTrain;
     this.joystick = joystick;
+    this.limelight = limelight;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrain);
+    addRequirements(driveTrain, limelight);
   }
 
   // Called when the command is initially scheduled.
@@ -38,7 +41,12 @@ public class ManualDriveCommand extends CommandBase {
     if (this.joystick.getRawButtonWrapper(8)){
       Gyro.resetGyroAngle();
     }
-    this.driveTrain.tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(this.joystick.getHorizontalMovement(),-this.joystick.getLateralMovement());
+    if (this.joystick.getRawButtonWrapper(1)){
+      this.driveTrain.tankDrive(0, limelight.getAdjustment());
+    }
+    else{
+      this.driveTrain.tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(this.joystick.getHorizontalMovement(),-this.joystick.getLateralMovement());
+    }
   }
 
   // Called once the command ends or is interrupted.
