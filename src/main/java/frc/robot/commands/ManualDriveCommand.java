@@ -28,7 +28,7 @@ public class ManualDriveCommand extends CommandBase {
     this.joystick = joystick;
     this.limelight = limelight;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrain, limelight);
+    addRequirements(driveTrain);
   }
 
   // Called when the command is initially scheduled.

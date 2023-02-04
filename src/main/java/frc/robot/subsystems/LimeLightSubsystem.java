@@ -9,7 +9,7 @@ public class LimeLightSubsystem extends SubsystemBase {
     private final NetworkTableInstance inst;
     private final NetworkTable table;
     private final PIDController pidcontrol;
-    private final float kp = 0.02f;
+    private final float kp = 0.003125f;
     private final float ki = 0.01f;
     private final float kd = 0f;
 
@@ -19,12 +19,12 @@ public class LimeLightSubsystem extends SubsystemBase {
         pidcontrol = new PIDController(1, ki, kd);
         inst = NetworkTableInstance.getDefault();
         table = inst.getTable("limelight"); // initiate limelight table
-        //inst.startDSClient(); 
     }
 
     public double getAdjustment() {
         float info[] = table.getEntry("llpython").getFloatArray(new float[3]);
         float tx = (info[1] - 160) * kp;
+
         if(tx > 1){
             tx =1;
         }
