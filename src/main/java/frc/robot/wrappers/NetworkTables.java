@@ -3,6 +3,7 @@ package frc.robot.wrappers;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.networktables.ConnectionInfo;
 import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.networktables.GenericSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
@@ -66,6 +67,16 @@ public class NetworkTables {
         var newSubscriber = entry.getTopic().genericSubscribe(entry.getType().getValueStr(), PubSubOption.keepDuplicates(true), PubSubOption.pollStorage(10));
         subscribers.put(path, newSubscriber);
         return newSubscriber;
+    }
+
+    public static void getConnections() {
+        for (ConnectionInfo connection : INSTANCE.getConnections()) {
+            System.out.println("Connection: Using version " + connection.protocol_version + ", ID: " + connection.remote_id + ", IP: " + connection.remote_ip + ", last update: " + connection.last_update);
+        }
+        if(INSTANCE.getConnections().length == 0) {
+            System.out.println("NO CONNECTIONS FOUND");
+        }
+        System.out.println("END CONNECTIONS LIST \n\n\n\n");
     }
 
     /**
