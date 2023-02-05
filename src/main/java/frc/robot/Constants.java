@@ -100,4 +100,17 @@ public final class Constants {
     public static final double RAMSETE_ZETA = 0.7;
   }
 
+  public static class PositionConstants { // current coordinates are placeholders, replace with actual coordinates (xyz in inches)
+    public static final double[] bottomLeftPos = {0, 0, 0};
+    public static final double[] bottomMiddlePos = {0, 0, 0};
+    public static final double[] bottomRightPos = {0, 0, 0};
+    public static final double[] centerLeftPos = {0, 0, 0};
+    public static final double[] centerMiddlePos = {0, 0, 0};
+    public static final double[] centerRightPos = {0, 0, 0};
+    public static final double[] topLeftPos = {0, 0, 0};
+    public static final double[] topCenterPos = {0, 0, 0};
+    public static final double[] topRightPos = {0, 0, 0};
+
+  }
+
 }

@@ -3,10 +3,10 @@ import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ArmTestCommand extends CommandBase{
+public class AutomaticObjectPlacementCommand extends CommandBase{
     private final ArmSubsystem arm;
     private final FlightJoystick joystick;
-    public ArmTestCommand(ArmSubsystem arm, FlightJoystick joystick) {
+    public AutomaticObjectPlacementCommand(ArmSubsystem arm, FlightJoystick joystick) {
         this.arm = arm;
         this.joystick = joystick;
         // Use addRequirements() here to declare subsystem dependencies.
@@ -19,9 +19,7 @@ public class ArmTestCommand extends CommandBase{
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() {
-        arm.setPivot1Speed(joystick.getLateralMovement());
-    }
+    public void execute() {}
 
     // Called once the command ends or is interrupted.
     @Override
