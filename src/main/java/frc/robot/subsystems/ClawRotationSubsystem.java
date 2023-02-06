@@ -61,6 +61,19 @@ public class ClawRotationSubsystem extends SubsystemBase {
             });
     }
 
+    // TODO: Complete this class
+    // Automatically rotates claw to match angle
+    public CommandBase autoRotate() {
+        return this.runOnce(
+            () -> {
+                double angle = 0; // Assume this is the angle of the cone returned by the camera, we will actually get it later
+                
+                // Implement autoRotate here
+                
+            } 
+        )
+    }
+
     public double getClawAngle() {
         return this.clawRotationEncoder.getPosition();
     }
