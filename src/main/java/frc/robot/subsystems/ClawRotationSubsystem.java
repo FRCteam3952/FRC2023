@@ -20,6 +20,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
     public ClawRotationSubsystem() {
         this.clawRotator = new CANSparkMax(PortConstants.CLAW_ROTATE_PORT, MotorType.kBrushless);
         this.clawRotationEncoder = this.clawRotator.getEncoder();
+        this.clawRotationEncoder.setPositionConversionFactor(30); // each motor rotation is 30 degrees
     }
 
     public void setAngle(double angle) {
@@ -71,7 +72,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
                 // Implement autoRotate here
 
             } 
-        )
+        );
     }
 
     public double getClawAngle() {
