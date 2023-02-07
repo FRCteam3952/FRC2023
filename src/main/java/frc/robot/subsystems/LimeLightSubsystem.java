@@ -5,7 +5,7 @@ import frc.robot.wrappers.NetworkTables;
 import edu.wpi.first.math.controller.PIDController;
 
 public class LimeLightSubsystem extends SubsystemBase {
-    private final PIDController pidcontrolX, pidcontrolY, pidcontrolAngle;
+    private final PIDController pidcontrolAngle;
     private final float kp = 0.003125f;
     private final float ki = 0.01f;
     private final float kd = 0f;
@@ -15,12 +15,10 @@ public class LimeLightSubsystem extends SubsystemBase {
     private float prev_angle = 0f;
 
     public LimeLightSubsystem() {
-        pidcontrolX = new PIDController(1, ki, kd);
-        pidcontrolY = new PIDController(1, ki, kd);
         pidcontrolAngle = new PIDController(1, ki, kd);
     }
 
-    public double getXAdjustment() {
+    public float getXAdjustment() {
         float tx = (NetworkTables.getLimeLightErrorX() - 160) * kp;
 
         if(tx > 1){
@@ -35,11 +33,9 @@ public class LimeLightSubsystem extends SubsystemBase {
         else{
             prev_tx = tx;
         }
-        double steering_adjust = pidcontrolX.calculate(tx) * -1; // calculate PID
-        
-        return steering_adjust; 
+        return tx;
     }
-    public double getYAdjustment() {
+    public float getYAdjustment() {
         float ty = (NetworkTables.getLimeLightErrorY() - 120) * kp;
 
         if(ty > 1){
@@ -54,9 +50,7 @@ public class LimeLightSubsystem extends SubsystemBase {
         else{
             prev_ty = ty;
         }
-        double steering_adjust = pidcontrolY.calculate(ty) * -1; // calculate PID
-        
-        return steering_adjust; 
+        return ty;
     }
     public double getAngleAdjustment(){
         float angle = (NetworkTables.getConeOrientation()) * kp;
