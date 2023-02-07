@@ -117,26 +117,32 @@ public final class Constants {
 
     public static final double Y_FLOOR = 0.0;
 
-    public static final double Z_MIDDLE_DISTANCE = 22.75;
-    public static final double Z_TOP_DISTANCE = 39.75;
+    public static final double Z_MIDDLE_DISTANCE = 22.75 + (ROBOT_LENGTH / 2);
+    public static final double Z_TOP_DISTANCE = 39.75 + (ROBOT_LENGTH / 2);
+    public static final double Z_BOTTOM_DISTANCE = 8.75 + (ROBOT_LENGTH / 2); // APPROXIMATION, TODO get better value & test
 
     public static final double X_BETWEEN_AREA_SPACE = 3.47;
     public static final double X_AREA_WIDTH = 18.5;
 
+    // see top PDF to explain this
+    // two halves of X_AREA_WIDTH added together and then added to X_BETWEEN_AREA_SPACE 
     public static final double X_DISTANCE_TO_SIDE = X_BETWEEN_AREA_SPACE + X_AREA_WIDTH;
+    
+    public static final double X_LEFT   = -X_DISTANCE_TO_SIDE;
+    public static final double X_MIDDLE = 0.0;
+    public static final double X_RIGHT  = X_DISTANCE_TO_SIDE;
 
-    public static final double X_RIGHT =  X_DISTANCE_TO_SIDE;
-    public static final double X_LEFT  = -X_DISTANCE_TO_SIDE;
+    public static final Point BOTTOM_LEFT_POS   = new Point(X_LEFT,   Y_FLOOR, Z_BOTTOM_DISTANCE); // 0.0 is placeholder for z
+    public static final Point BOTTOM_MIDDLE_POS = new Point(X_MIDDLE, Y_FLOOR, Z_BOTTOM_DISTANCE);
+    public static final Point BOTTOM_RIGHT_POS  = new Point(X_RIGHT,  Y_FLOOR, Z_BOTTOM_DISTANCE);
 
-    public static final Point BOTTOM_LEFT_POS   = new Point(0, 0, 0);
-    public static final Point BOTTOM_MIDDLE_POS = new Point(0, 0, 0);
-    public static final Point BOTTOM_RIGHT_POS  = new Point(0, 0, 0);
-    public static final Point CENTER_LEFT_POS   = new Point(0, 0, 0);
-    public static final Point CENTER_MIDDLE_POS = new Point(0, 0, 0);
-    public static final Point CENTER_RIGHT_POS  = new Point(0, 0, 0);
-    public static final Point TOP_LEFT_POS      = new Point(0, 0, 0);
-    public static final Point TOP_CENTER_POS    = new Point(0, 0, 0);
-    public static final Point TOP_RIGHT_POS     = new Point(0, 0, 0);
+    public static final Point CENTER_LEFT_POS   = new Point(X_LEFT,   Y_MIDDLE_POLE_HEIGHT,     Z_MIDDLE_DISTANCE);
+    public static final Point CENTER_MIDDLE_POS = new Point(X_MIDDLE, Y_MIDDLE_PLATFORM_HEIGHT, Z_MIDDLE_DISTANCE);
+    public static final Point CENTER_RIGHT_POS  = new Point(X_RIGHT,  Y_MIDDLE_POLE_HEIGHT,     Z_MIDDLE_DISTANCE);
+
+    public static final Point TOP_LEFT_POS      = new Point(X_LEFT,   Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE);
+    public static final Point TOP_CENTER_POS    = new Point(X_MIDDLE, Y_TOP_PLATFORM_HEIGHT, Z_TOP_DISTANCE);
+    public static final Point TOP_RIGHT_POS     = new Point(X_RIGHT,  Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE);
 
   }
 
