@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ManualDriveCommand extends CommandBase {
   private final DriveTrainSubsystem driveTrain;
   private final FlightJoystick joystick;
-  private final LimeLightSubsystem limelight;
 
   /**
    * Creates a new ExampleCommand.
@@ -26,7 +25,6 @@ public class ManualDriveCommand extends CommandBase {
   public ManualDriveCommand(DriveTrainSubsystem driveTrain, FlightJoystick joystick, LimeLightSubsystem limelight) {
     this.driveTrain = driveTrain;
     this.joystick = joystick;
-    this.limelight = limelight;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
   }
@@ -41,12 +39,8 @@ public class ManualDriveCommand extends CommandBase {
     if (this.joystick.getRawButtonWrapper(8)){
       Gyro.resetGyroAngle();
     }
-    if (this.joystick.getRawButtonWrapper(1)){
-      this.driveTrain.tankDrive(0, limelight.getAdjustment());
-    }
-    else{
-      this.driveTrain.tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(this.joystick.getHorizontalMovement(),-this.joystick.getLateralMovement());
-    }
+    this.driveTrain.tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(this.joystick.getHorizontalMovement(),-this.joystick.getLateralMovement());
+
   }
 
   // Called once the command ends or is interrupted.
