@@ -3,9 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 
-import frc.robot.util.Point;
+
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -132,17 +134,18 @@ public final class Constants {
     public static final double X_MIDDLE = 0.0;
     public static final double X_RIGHT  = X_DISTANCE_TO_SIDE;
 
-    public static final Point BOTTOM_LEFT_POS   = new Point(X_LEFT,   Y_FLOOR, Z_BOTTOM_DISTANCE); // 0.0 is placeholder for z
-    public static final Point BOTTOM_MIDDLE_POS = new Point(X_MIDDLE, Y_FLOOR, Z_BOTTOM_DISTANCE);
-    public static final Point BOTTOM_RIGHT_POS  = new Point(X_RIGHT,  Y_FLOOR, Z_BOTTOM_DISTANCE);
+    
+    public static final Pose3d BOTTOM_LEFT_POS   = new Pose3d(X_LEFT,   Y_FLOOR, Z_BOTTOM_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d BOTTOM_MIDDLE_POS = new Pose3d(X_MIDDLE, Y_FLOOR, Z_BOTTOM_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d BOTTOM_RIGHT_POS  = new Pose3d(X_RIGHT,  Y_FLOOR, Z_BOTTOM_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
 
-    public static final Point CENTER_LEFT_POS   = new Point(X_LEFT,   Y_MIDDLE_POLE_HEIGHT,     Z_MIDDLE_DISTANCE);
-    public static final Point CENTER_MIDDLE_POS = new Point(X_MIDDLE, Y_MIDDLE_PLATFORM_HEIGHT, Z_MIDDLE_DISTANCE);
-    public static final Point CENTER_RIGHT_POS  = new Point(X_RIGHT,  Y_MIDDLE_POLE_HEIGHT,     Z_MIDDLE_DISTANCE);
+    public static final Pose3d CENTER_LEFT_POS   = new Pose3d(X_LEFT,   Y_MIDDLE_POLE_HEIGHT,     Z_MIDDLE_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d CENTER_MIDDLE_POS = new Pose3d(X_MIDDLE, Y_MIDDLE_PLATFORM_HEIGHT, Z_MIDDLE_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d CENTER_RIGHT_POS  = new Pose3d(X_RIGHT,  Y_MIDDLE_POLE_HEIGHT,     Z_MIDDLE_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
 
-    public static final Point TOP_LEFT_POS      = new Point(X_LEFT,   Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE);
-    public static final Point TOP_CENTER_POS    = new Point(X_MIDDLE, Y_TOP_PLATFORM_HEIGHT, Z_TOP_DISTANCE);
-    public static final Point TOP_RIGHT_POS     = new Point(X_RIGHT,  Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE);
+    public static final Pose3d TOP_LEFT_POS      = new Pose3d(X_LEFT,   Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d TOP_CENTER_POS    = new Pose3d(X_MIDDLE, Y_TOP_PLATFORM_HEIGHT, Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d TOP_RIGHT_POS     = new Pose3d(X_RIGHT,  Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
 
   }
 
