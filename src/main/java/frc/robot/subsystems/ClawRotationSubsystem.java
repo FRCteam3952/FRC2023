@@ -70,7 +70,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
                 double angle = 0; // Assume this is the angle of the cone returned by the camera, we will actually get it later
                 
                 // Implement autoRotate here
-
+                this.setAngle(angle);
             } 
         );
     }
