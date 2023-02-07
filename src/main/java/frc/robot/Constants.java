@@ -102,15 +102,39 @@ public final class Constants {
   }
 
   public static class PositionConstants { // current coordinates are placeholders, replace with actual coordinates (xyz in inches)
-    public static final double[] bottomLeftPos = {0, 0, 0};
+
+    // https://firstfrc.blob.core.windows.net/frc2023/FieldAssets/TeamVersions/Drawings/TE-23001-Grid-Dwg.pdf
+
+    public static final double ROBOT_LENGTH = 27.0;
+
+    public static final double Y_MIDDLE_POLE_HEIGHT = 34.0;
+    public static final double Y_TOP_POLE_HEIGHT = 46.0;// ☻
+
+    public static final double Y_MIDDLE_PLATFORM_HEIGHT = 33.5;
+    public static final double Y_TOP_PLATFORM_HEIGHT = 35.5;
+
+    public static final double Y_FLOOR = 0.0;
+
+    public static final double Z_MIDDLE_DISTANCE = 22.75;
+    public static final double Z_TOP_DISTANCE = 39.75;
+
+    public static final double X_BETWEEN_AREA_SPACE = 3.47;
+    public static final double X_AREA_WIDTH = 18.5;
+
+    public static final double X_DISTANCE_TO_SIDE = X_BETWEEN_AREA_SPACE + X_AREA_WIDTH;
+
+    public static final double X_RIGHT =  X_DISTANCE_TO_SIDE;
+    public static final double X_LEFT  = -X_DISTANCE_TO_SIDE;
+
+    public static final double[] bottomLeftPos   = {0, 0, 0};
     public static final double[] bottomMiddlePos = {0, 0, 0};
-    public static final double[] bottomRightPos = {0, 0, 0};
-    public static final double[] centerLeftPos = {0, 0, 0};
+    public static final double[] bottomRightPos  = {0, 0, 0};
+    public static final double[] centerLeftPos   = {0, 0, 0};
     public static final double[] centerMiddlePos = {0, 0, 0};
-    public static final double[] centerRightPos = {0, 0, 0};
-    public static final double[] topLeftPos = {0, 0, 0};
-    public static final double[] topCenterPos = {0, 0, 0};
-    public static final double[] topRightPos = {0, 0, 0};
+    public static final double[] centerRightPos  = {0, 0, 0};
+    public static final double[] topLeftPos      = {0, 0, 0};
+    public static final double[] topCenterPos    = {0, 0, 0};
+    public static final double[] topRightPos     = {0, 0, 0};
 
   }
 
