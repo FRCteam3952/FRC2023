@@ -5,6 +5,8 @@
 package frc.robot;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
+import frc.robot.util.Point;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -126,15 +128,15 @@ public final class Constants {
     public static final double X_RIGHT =  X_DISTANCE_TO_SIDE;
     public static final double X_LEFT  = -X_DISTANCE_TO_SIDE;
 
-    public static final double[] bottomLeftPos   = {0, 0, 0};
-    public static final double[] bottomMiddlePos = {0, 0, 0};
-    public static final double[] bottomRightPos  = {0, 0, 0};
-    public static final double[] centerLeftPos   = {0, 0, 0};
-    public static final double[] centerMiddlePos = {0, 0, 0};
-    public static final double[] centerRightPos  = {0, 0, 0};
-    public static final double[] topLeftPos      = {0, 0, 0};
-    public static final double[] topCenterPos    = {0, 0, 0};
-    public static final double[] topRightPos     = {0, 0, 0};
+    public static final Point BOTTOM_LEFT_POS   = new Point(0, 0, 0);
+    public static final Point BOTTOM_MIDDLE_POS = new Point(0, 0, 0);
+    public static final Point BOTTOM_RIGHT_POS  = new Point(0, 0, 0);
+    public static final Point CENTER_LEFT_POS   = new Point(0, 0, 0);
+    public static final Point CENTER_MIDDLE_POS = new Point(0, 0, 0);
+    public static final Point CENTER_RIGHT_POS  = new Point(0, 0, 0);
+    public static final Point TOP_LEFT_POS      = new Point(0, 0, 0);
+    public static final Point TOP_CENTER_POS    = new Point(0, 0, 0);
+    public static final Point TOP_RIGHT_POS     = new Point(0, 0, 0);
 
   }
 

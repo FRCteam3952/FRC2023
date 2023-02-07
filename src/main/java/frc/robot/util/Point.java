@@ -1,6 +1,6 @@
 package frc.robot.util;
 
-class Point {
+public class Point {
     /* A point in 3D space relative to the robot's center.
      * - X is right/left, I think positive is right.
      * - Y is up/down, positive is up.
