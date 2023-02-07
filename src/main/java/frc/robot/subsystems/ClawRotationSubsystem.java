@@ -20,6 +20,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
     public ClawRotationSubsystem() {
         this.clawRotator = new CANSparkMax(PortConstants.CLAW_ROTATE_PORT, MotorType.kBrushless);
         this.clawRotationEncoder = this.clawRotator.getEncoder();
+        this.clawRotationEncoder.setPositionConversionFactor(30); // each motor rotation is 30 degrees
     }
 
     public void setAngle(double angle) {
@@ -59,6 +60,23 @@ public class ClawRotationSubsystem extends SubsystemBase {
                 setClawRotateSpeed(0);
               }
             });
+    }
+
+    // Automatically rotates claw to match angle
+    // Will need to implement PID controller stuff
+    public CommandBase autoRotate() {
+        double angle = 0; // Assume this is the angle of the cone returned by the camera, we will actually get it later
+        return this.runOnce(
+            () -> {
+                // change speed later; autorotates to 0
+                if (angle > 180 - getClawAngle()) {
+                    this.clawRotator.set(ClawConstants.CLAW_ROTATE_SPEED);
+                } 
+                else if (angle < 180 + getClawAngle()) {
+                    this.clawRotator.set(-ClawConstants.CLAW_ROTATE_SPEED);
+                }
+            }
+        );
     }
 
     public double getClawAngle() {

@@ -14,7 +14,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ManualDriveCommand;
-//import frc.robot.commands.ArmCommands.ArmControlCommand;
+import frc.robot.commands.ArmCommands.ArmControlCommand;
+import frc.robot.commands.ArmCommands.AutomaticObjectPlacementCommand;
 import frc.robot.commands.ArmCommands.ArmTestCommand;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
@@ -44,7 +45,10 @@ public class RobotContainer {
   public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
 
   public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController, limelight);
-  public final ArmTestCommand armControl = new ArmTestCommand(arm, armController);
+
+  public final ArmTestCommand testArmControl = new ArmTestCommand(arm, armController);
+  public final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
+  public final AutomaticObjectPlacementCommand autoObjectPlacement = new AutomaticObjectPlacementCommand(arm, armController);
   
   //private final CommandXboxController driverController =
   //   new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -79,6 +83,7 @@ public class RobotContainer {
     armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).onFalse(clawGrip.openClaw());
     armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
     armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
+    armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
   }
 
   /**
@@ -93,6 +98,6 @@ public class RobotContainer {
 
   public void onTeleopInit() {
     this.driveTrain.setDefaultCommand(this.manualDrive);
-    this.arm.setDefaultCommand(this.armControl);
+    this.arm.setDefaultCommand(this.testArmControl);
   }
 }

@@ -55,20 +55,8 @@ public class ArmControlCommand extends CommandBase{
         return adjustments;
     }
 
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {}
-
-
-    // Called every time the scheduler runs while the command is scheduled.
-    /*  This might break the inverse kinematics code, since it may output a coordinate that is outside of the 
-    reach of the arm. We might want to implement something inside the inverse kinematics code that makes it so if 
-    the returned coordinates are outside the arm's reach, the coordinates are automatically converted to be inside 
-    the arm's range.
-    */
-    @Override
-    public void execute() {
-        // Primary arm control
+    // Primary arm control
+    private void primaryArmControl() {
         if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) {
             arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0] + getAdjustmentFromError()[0], 
                 arm.getCurrentCoordinates()[1] + getAdjustmentFromError()[1], 
@@ -83,12 +71,32 @@ public class ArmControlCommand extends CommandBase{
             arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0] + joystick.getHorizontalMovement() * xSpeed, 
                 arm.getCurrentCoordinates()[1] + y, arm.getCurrentCoordinates()[2] + joystick.getLateralMovement() * zSpeed);
         }
+    }
 
-        // Moves arm to preset distance above the floor for picking up gamepieces 
+    // Moves arm to preset distance above the floor for picking up gamepieces 
+    private void pickUpPosition() {
         if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER)) {
             arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2]);
         }
-        
+    }
+
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {}
+
+
+    // Called every time the scheduler runs while the command is scheduled.
+    /*  This might break the inverse kinematics code, since it may output a coordinate that is outside of the 
+    reach of the arm. We might want to implement something inside the inverse kinematics code that makes it so if 
+    the returned coordinates are outside the arm's reach, the coordinates are automatically converted to be inside 
+    the arm's range.
+    */
+    @Override
+    public void execute() {
+
+        primaryArmControl();
+        pickUpPosition();
+                
     }
 
     // Called once the command ends or is interrupted.
