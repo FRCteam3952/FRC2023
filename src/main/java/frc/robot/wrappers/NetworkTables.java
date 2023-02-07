@@ -41,6 +41,11 @@ public class NetworkTables {
      * @param entryName Name of the entry
      * @return {@link NetworkTableEntry} corresponding
      */
+    public static float getLimeLightError(){
+        NetworkTable table = INSTANCE.getTable("limelight");
+        return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[1].floatValue();
+    }
+
     public static NetworkTableEntry getEntry(String tableName, String entryName) {
         return getTable(tableName).getEntry(entryName);
     }

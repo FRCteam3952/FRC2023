@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.subsystems.Gyro;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.wrappers.TrajectoryReader;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
