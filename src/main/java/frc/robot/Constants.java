@@ -3,6 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+
+
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 /**
@@ -115,26 +119,33 @@ public final class Constants {
 
     public static final double Y_FLOOR = 0.0;
 
-    public static final double Z_MIDDLE_DISTANCE = 22.75;
-    public static final double Z_TOP_DISTANCE = 39.75;
+    public static final double Z_MIDDLE_DISTANCE = 22.75 + (ROBOT_LENGTH / 2);
+    public static final double Z_TOP_DISTANCE = 39.75 + (ROBOT_LENGTH / 2);
+    public static final double Z_BOTTOM_DISTANCE = 8.75 + (ROBOT_LENGTH / 2); // APPROXIMATION, TODO get better value & test
 
     public static final double X_BETWEEN_AREA_SPACE = 3.47;
     public static final double X_AREA_WIDTH = 18.5;
 
+    // see top PDF to explain this
+    // two halves of X_AREA_WIDTH added together and then added to X_BETWEEN_AREA_SPACE 
     public static final double X_DISTANCE_TO_SIDE = X_BETWEEN_AREA_SPACE + X_AREA_WIDTH;
+    
+    public static final double X_LEFT   = -X_DISTANCE_TO_SIDE;
+    public static final double X_MIDDLE = 0.0;
+    public static final double X_RIGHT  = X_DISTANCE_TO_SIDE;
 
-    public static final double X_RIGHT =  X_DISTANCE_TO_SIDE;
-    public static final double X_LEFT  = -X_DISTANCE_TO_SIDE;
+    
+    public static final Pose3d BOTTOM_LEFT_POS   = new Pose3d(X_LEFT,   Y_FLOOR, Z_BOTTOM_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d BOTTOM_MIDDLE_POS = new Pose3d(X_MIDDLE, Y_FLOOR, Z_BOTTOM_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d BOTTOM_RIGHT_POS  = new Pose3d(X_RIGHT,  Y_FLOOR, Z_BOTTOM_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
 
-    public static final double[] bottomLeftPos   = {0, 0, 0};
-    public static final double[] bottomMiddlePos = {0, 0, 0};
-    public static final double[] bottomRightPos  = {0, 0, 0};
-    public static final double[] centerLeftPos   = {0, 0, 0};
-    public static final double[] centerMiddlePos = {0, 0, 0};
-    public static final double[] centerRightPos  = {0, 0, 0};
-    public static final double[] topLeftPos      = {0, 0, 0};
-    public static final double[] topCenterPos    = {0, 0, 0};
-    public static final double[] topRightPos     = {0, 0, 0};
+    public static final Pose3d CENTER_LEFT_POS   = new Pose3d(X_LEFT,   Y_MIDDLE_POLE_HEIGHT,     Z_MIDDLE_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d CENTER_MIDDLE_POS = new Pose3d(X_MIDDLE, Y_MIDDLE_PLATFORM_HEIGHT, Z_MIDDLE_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d CENTER_RIGHT_POS  = new Pose3d(X_RIGHT,  Y_MIDDLE_POLE_HEIGHT,     Z_MIDDLE_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+
+    public static final Pose3d TOP_LEFT_POS      = new Pose3d(X_LEFT,   Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d TOP_CENTER_POS    = new Pose3d(X_MIDDLE, Y_TOP_PLATFORM_HEIGHT, Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
+    public static final Pose3d TOP_RIGHT_POS     = new Pose3d(X_RIGHT,  Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
 
   }
 
