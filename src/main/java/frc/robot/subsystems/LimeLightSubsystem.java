@@ -20,56 +20,53 @@ public class LimeLightSubsystem extends SubsystemBase {
 
     public float getXAdjustment() {
         float tx = (NetworkTables.getLimeLightErrorX() - 160) * kp;
-
-        if(tx > 1){
-            tx =1;
+        
+        // if tx is too big, return the max of 1 or -1
+        if (Math.abs(tx) > 1) {
+            // return 1 if tx is greater than 1, -1 if tx is less than -1
+            return Math.copySign(1, tx);
         }
-        if(tx < -1){
-            tx = -1;
+        // if the value is real close to 0, return the previous value instead
+        if(Math.abs(tx) < 0.01){
+            return prev_tx;
         }
-        if(tx < 0.01 && tx > -0.01){
-            tx = prev_tx;
-        }
-        else{
-            prev_tx = tx;
-        }
+        prev_tx = tx;
         return tx;
     }
+
     public float getYAdjustment() {
         float ty = (NetworkTables.getLimeLightErrorY() - 120) * kp;
 
-        if(ty > 1){
-            ty =1;
+        // if ty is too big, return the max of 1 or -1
+        if (Math.abs(ty) > 1) {
+            // return 1 if ty is greater than 1, -1 if ty is less than -1
+            return Math.copySign(1, ty);
         }
-        if(ty < -1){
-            ty = -1;
+        // if the value is very close to 0, return the previous value instead
+        if(Math.abs(ty) < 0.01){
+            return prev_ty;
         }
-        if(ty < 0.01 && ty > -0.01){
-            ty = prev_ty;
-        }
-        else{
-            prev_ty = ty;
-        }
+        prev_ty = ty;
         return ty;
     }
+
     public double getAngleAdjustment(){
         float angle = (NetworkTables.getConeOrientation()) * kp;
 
-        if(angle > 1){
-            angle =1;
+        // if angle is too big, return the max of 1 or -1
+        if (Math.abs(angle) > 1) {
+            // return 1 if angle is greater than 1, -1 if angle is less than -1
+            return Math.copySign(1, angle);
         }
-        if(angle < -1){
-            angle = -1;
-        }
-        if(angle < 0.01 && angle > -0.01){
+        // if the value is very close to 0, return the previous value instead
+        if(Math.abs(angle) < 0.01) {
             angle = prev_angle;
         }
-        else{
+        else {
             prev_angle = angle;
         }
-        double steering_adjust = pidcontrolAngle.calculate(angle) * -1; // calculate PID
-        
-        return steering_adjust; 
+        // calculate the PID for the steering adjustment
+        return -pidcontrolAngle.calculate(angle);
     }
 
     @Override
