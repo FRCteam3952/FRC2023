@@ -7,11 +7,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ObtainGamePieceCommand extends CommandBase{
     private final ArmSubsystem arm;
     private final FlightJoystick joystick;
-    private final LimeLightSubsystem limey;
-    public ObtainGamePieceCommand(ArmSubsystem arm, FlightJoystick joystick, LimeLightSubsystem limey) {
+    public ObtainGamePieceCommand(ArmSubsystem arm, FlightJoystick joystick) {
         this.arm = arm;
         this.joystick = joystick;
-        this.limey = limey;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(arm);
     }
@@ -24,8 +22,8 @@ public class ObtainGamePieceCommand extends CommandBase{
     @Override
     public void execute() {
         if(joystick.getRawButtonWrapper(1)){ //move arm toward game piece
-            float errorX = limey.getXAdjustment();
-            float errorY = limey.getYAdjustment();
+            float errorX = LimeLightSubsystem.getXAdjustment();
+            float errorY = LimeLightSubsystem.getYAdjustment();
         }
     }
 

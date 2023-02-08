@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.PortConstants;
+import frc.robot.subsystems.LimeLightSubsystem;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -63,18 +65,10 @@ public class ClawRotationSubsystem extends SubsystemBase {
     }
 
     // Automatically rotates claw to match angle
-    // Will need to implement PID controller stuff
     public CommandBase autoRotate() {
-        double angle = 0; // Assume this is the angle of the cone returned by the camera, we will actually get it later
         return this.runOnce(
             () -> {
-                // change speed later; autorotates to 0
-                if (angle > 180 - getClawAngle()) {
-                    this.clawRotator.set(ClawConstants.CLAW_ROTATE_SPEED);
-                } 
-                else if (angle < 180 + getClawAngle()) {
-                    this.clawRotator.set(-ClawConstants.CLAW_ROTATE_SPEED);
-                }
+                clawRotator.set(LimeLightSubsystem.getAngleAdjustment());
             }
         );
     }

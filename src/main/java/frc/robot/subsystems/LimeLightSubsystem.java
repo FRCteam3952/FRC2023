@@ -5,20 +5,20 @@ import frc.robot.wrappers.NetworkTables;
 import edu.wpi.first.math.controller.PIDController;
 
 public class LimeLightSubsystem extends SubsystemBase {
-    private final PIDController pidcontrolAngle;
-    private final float kp = 0.003125f;
-    private final float ki = 0.01f;
-    private final float kd = 0f;
+    private static PIDController clawRotationPID;
+    private static final float kp = 0.003125f;
+    private static final float ki = 0.01f;
+    private static final float kd = 0f;
 
-    private float prev_tx = 0f;
-    private float prev_ty = 0f;
-    private float prev_angle = 0f;
+    private static float prev_tx = 0f;
+    private static float prev_ty = 0f;
+    private static float prev_angle = 0f;
 
     public LimeLightSubsystem() {
-        pidcontrolAngle = new PIDController(1, ki, kd);
+        clawRotationPID = new PIDController(1, ki, kd);
     }
 
-    public float getXAdjustment() {
+    public static float getXAdjustment() {
         float tx = (NetworkTables.getLimeLightErrorX() - 160) * kp;
         
         // if tx is too big, return the max of 1 or -1
@@ -34,7 +34,7 @@ public class LimeLightSubsystem extends SubsystemBase {
         return tx;
     }
 
-    public float getYAdjustment() {
+    public static float getYAdjustment() {
         float ty = (NetworkTables.getLimeLightErrorY() - 120) * kp;
 
         // if ty is too big, return the max of 1 or -1
@@ -50,9 +50,9 @@ public class LimeLightSubsystem extends SubsystemBase {
         return ty;
     }
 
-    public double getAngleAdjustment(){
+    public static double getAngleAdjustment(){
         float angle = (NetworkTables.getConeOrientation()) * kp;
-
+  
         // if angle is too big, return the max of 1 or -1
         if (Math.abs(angle) > 1) {
             // return 1 if angle is greater than 1, -1 if angle is less than -1
@@ -66,7 +66,12 @@ public class LimeLightSubsystem extends SubsystemBase {
             prev_angle = angle;
         }
         // calculate the PID for the steering adjustment
-        return -pidcontrolAngle.calculate(angle);
+        return -clawRotationPID.calculate(angle, angle > 180 ? 360 : 0); // Negated because claw rotation angle is inversely related to cone orientation angle
+        // If cone angle measures greater than 180 (tip pointing towards right), it goes towards 360. If it measures less than 180 (tip pointing towards left), it goes towards 0. (360 and 0 both represent the cone pointing straight up)
+    }
+
+    public static void setIntendedAngle(double setpoint) {
+        clawRotationPID.setSetpoint(setpoint);
     }
 
     @Override
