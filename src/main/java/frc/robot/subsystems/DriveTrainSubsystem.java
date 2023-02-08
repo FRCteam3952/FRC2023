@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.TrajectoryConstants;
-import frc.robot.util.InverseKinematicsUtil;
+import frc.robot.util.MathUtil;
 
 public class DriveTrainSubsystem extends SubsystemBase {
 
@@ -110,7 +110,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
       tankDrive.arcadeDrive(0, 0);
       return;
     }
-    double speed = InverseKinematicsUtil.distance(0, x, 0, y); // Speed should take the distance to move into account
+    double speed = MathUtil.distance(0, x, 0, y); // Speed should take the distance to move into account
     double target = normalizeAngle((Math.atan2(y,x) * 180 / Math.PI) - 90); // Normalize the target angle based on the slope from (0,0) to the point on the unit circle from joystick
     double current = swapDirection?normalizeAngle(Gyro.getGyroAngle()+180):normalizeAngle(Gyro.getGyroAngle()); // Our current angle, normalized and accounting for if we're going "backwards"
 

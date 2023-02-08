@@ -45,7 +45,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double[] getCurrentAngles() {
-        double angle1 = pivot1Encoder.getPosition() * 1 + 0; // sean are these radians or degrees pls help
+        double angle1 = pivot1Encoder.getPosition() * 1 + 0; // "degrees" - sean
         double angle2 = pivot2Encoder.getPosition() * 1 + 0;
         double angle3 = turretEncoder.getPosition() * 1 + 0;
         
