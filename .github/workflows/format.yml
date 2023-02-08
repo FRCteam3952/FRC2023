@@ -25,5 +25,4 @@ jobs:
           prettier_options: --write **/*.java
           only_changed: True
           commit_message: "Formatted code"
-          prettier_plugins:
-            - "prettier-plugin-java"
+          prettier_plugins: "prettier-plugin-java"
