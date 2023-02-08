@@ -23,6 +23,5 @@ jobs:
         with:
           # This part is also where you can pass other options, for example:
           prettier_options: --write **/*.java
-          only_changed: True
           commit_message: "Formatted code"
           prettier_plugins: "prettier-plugin-java"
