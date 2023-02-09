@@ -74,19 +74,22 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void setIntendedCoordinates(double x, double y, double z){
-        if(this.x_pos == x && this.y_pos == y && this.z_pos == z) // if intended coordinates are same, then don't change target
-           return; 
+        if(this.x_pos == x && this.y_pos == y && this.z_pos == z) { // if intended coordinates are same, then don't change target
+           return;
+        }
 
         pidController.setTolerance(ArmConstants.ANGLE_DELTA);
-        setPivot1Speed(pidController.calculate(getCurrentAngles()[0], InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[0]));
-        setPivot2Speed(pidController.calculate(getCurrentAngles()[1], InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[1]));
-        setTurretSpeed(pidController.calculate(getCurrentAngles()[2], InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z)[2]));
+        var ikuAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z);
+        var currentAngles = getCurrentAngles();
+        setPivot1Speed(pidController.calculate(currentAngles[0], ikuAngles[0]));
+        setPivot2Speed(pidController.calculate(currentAngles[1], ikuAngles[1]));
+        setTurretSpeed(pidController.calculate(currentAngles[2], ikuAngles[2]));
 
-        // Updates coordinates 
-        this.x_pos = InverseKinematicsUtil.getCurrentCoordinates()[0];
-        this.y_pos = InverseKinematicsUtil.getCurrentCoordinates()[1];
-        this.z_pos = InverseKinematicsUtil.getCurrentCoordinates()[2];
-
+        // Updates coordinates
+        var positions = InverseKinematicsUtil.getCurrentCoordinates();
+        this.x_pos = positions[0];
+        this.y_pos = positions[1];
+        this.z_pos = positions[2];
     }
 
     @Override

@@ -10,10 +10,6 @@ public class LimeLightSubsystem extends SubsystemBase {
     private static final float ki = 0.01f;
     private static final float kd = 0f;
 
-    private static float prev_tx = 0f;
-    private static float prev_ty = 0f;
-    private static float prev_angle = 0f;
-
     public LimeLightSubsystem() {
         clawRotationPID = new PIDController(1, ki, kd);
     }
@@ -26,11 +22,6 @@ public class LimeLightSubsystem extends SubsystemBase {
             // return 1 if tx is greater than 1, -1 if tx is less than -1
             return Math.copySign(1, tx);
         }
-        // if the value is real close to 0, return the previous value instead
-        if(Math.abs(tx) < 0.01){
-            return prev_tx;
-        }
-        prev_tx = tx;
         return tx;
     }
 
@@ -42,11 +33,6 @@ public class LimeLightSubsystem extends SubsystemBase {
             // return 1 if ty is greater than 1, -1 if ty is less than -1
             return Math.copySign(1, ty);
         }
-        // if the value is very close to 0, return the previous value instead
-        if(Math.abs(ty) < 0.01){
-            return prev_ty;
-        }
-        prev_ty = ty;
         return ty;
     }
 
@@ -57,13 +43,6 @@ public class LimeLightSubsystem extends SubsystemBase {
         if (Math.abs(angle) > 1) {
             // return 1 if angle is greater than 1, -1 if angle is less than -1
             return Math.copySign(1, angle);
-        }
-        // if the value is very close to 0, return the previous value instead
-        if(Math.abs(angle) < 0.01) {
-            angle = prev_angle;
-        }
-        else {
-            prev_angle = angle;
         }
         // calculate the PID for the steering adjustment
         return -clawRotationPID.calculate(angle, angle > 180 ? 360 : 0); // Negated because claw rotation angle is inversely related to cone orientation angle
