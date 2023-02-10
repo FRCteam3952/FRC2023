@@ -27,24 +27,35 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
         double [] coordinates = new double[3];
         long currKey = key.getInteger(1);
         switch ((int) currKey){
+            case 1:
+                coordinates = PositionConstants.BOTTOM_LEFT_POS;
+                break;
             case 2:
                 coordinates = PositionConstants.BOTTOM_MIDDLE_POS;
+                break;
             case 3:
                 coordinates = PositionConstants.BOTTOM_RIGHT_POS;
+                break;
             case 4:
                 coordinates =  PositionConstants.CENTER_LEFT_POS;
+                break;
             case 5:
                 coordinates =  PositionConstants.CENTER_MIDDLE_POS;
+                break;
             case 6:
                 coordinates =  PositionConstants.CENTER_RIGHT_POS;
+                break;
             case 7:
                 coordinates = PositionConstants.TOP_LEFT_POS;
+                break;
             case 8:
                 coordinates = PositionConstants.TOP_CENTER_POS;
+                break;
             case 9:
                 coordinates =  PositionConstants.TOP_RIGHT_POS;
+                break;
             default:
-                coordinates =  PositionConstants.BOTTOM_LEFT_POS;
+                break;
         }
         arm.setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2]);
         
