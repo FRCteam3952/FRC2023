@@ -1,6 +1,7 @@
 package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -15,19 +16,20 @@ import frc.robot.subsystems.ArmSubsystem;
 public class ArmControlCommand extends CommandBase{
     private final ArmSubsystem arm;
     private final FlightJoystick joystick;
+    private double[] intendedAngles;
 
     public ArmControlCommand(ArmSubsystem arm, FlightJoystick joystick) {
         this.arm = arm;
         this.joystick = joystick;
+        this.intendedAngles = arm.getCurrentAngles();
 
-        // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(arm);
     }
 
 
     // Primary arm control
     private void primaryArmControl() {
-        
+        arm.movePolar(joystick.getLateralMovement(),arm.getCurrentAngles()[2]);
     }
 
 

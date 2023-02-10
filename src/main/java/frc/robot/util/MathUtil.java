@@ -28,5 +28,8 @@ public final class MathUtil {
     public static double angleBetweenLines(double x1, double y1, double z1, double x2, double y2, double z2){ //angle between lines
         double dotProduct = x1 * x2 + y1 * y2 + z1 * z2;
         return Math.toDegrees(Math.acos(dotProduct/(Math.abs(distance(0,x1,0,y1,0,z1)*distance(0, x2, 0, y2,0,z2)))));
-    }    
+    }   
+    public static double squared(double x){
+        return x*x;
+    } 
 }

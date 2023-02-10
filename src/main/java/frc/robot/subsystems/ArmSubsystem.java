@@ -4,9 +4,12 @@ import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.ArmConstants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.util.InverseKinematicsUtil;
+
+import java.security.DigestInputStream;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -49,6 +52,17 @@ public class ArmSubsystem extends SubsystemBase {
         this.x_pos = ArmConstants.STARTING_X;
         this.y_pos = ArmConstants.STARTING_Y;
         this.z_pos = ArmConstants.STARTING_Z;
+    }
+    public void movePolar(double power, double angle){ //I have no idea if this works
+        double dist = getDistAway();
+        double dP2 = (2 * dist) / Math.sqrt(1065024 - Math.pow((1065.6-MathUtil.squared(dist)),2)) * power; 
+        double dP1 = -(MathUtil.squared(dist)-265.64) / (MathUtil.squared(dist) * (51.6 * Math.sqrt(1 - (MathUtil.squared(265.64 + MathUtil.squared(dist)) / (2662.65 * MathUtil.squared(dist)))))) * power;
+        //setPivot1Speed(dP1);
+        //setPivot2Speed(dP2);
+        System.out.println(dP1 + " " + dP2);
+    }
+    public double getDistAway(){
+        return MathUtil.distance(x_pos,0,y_pos,0);
     }
 
     public double[] getCurrentAngles() {
@@ -93,10 +107,9 @@ public class ArmSubsystem extends SubsystemBase {
         setTurretSpeed(pidController.calculate(currentAngles[2], ikuAngles[2]));
 
         // Updates coordinates
-        var positions = InverseKinematicsUtil.getCurrentCoordinates();
-        this.x_pos = positions[0];
-        this.y_pos = positions[1];
-        this.z_pos = positions[2];
+        this.x_pos = x;
+        this.y_pos = y;
+        this.z_pos = z;
     }
 
     @Override
