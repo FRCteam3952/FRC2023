@@ -35,6 +35,9 @@ public final class Constants {
     public static final double STARTING_Z = 0;
 
     public static final double PICK_UP_POSITION_Y = 5;
+
+    public static final double ARM_1_INITIAL_ANGLE = 0.0;
+    public static final double ARM_2_INITIAL_ANGLE = 0.0;
   }
 
   public static class ClawConstants {
@@ -78,6 +81,10 @@ public final class Constants {
 
     public static final int CLAW_GRIP_PORT = 8;
     public static final int CLAW_ROTATE_PORT = 9;
+
+    public static final int PIVOT_1_LIMIT_PORT = 0;
+    public static final int PIVOT_2_LIMIT_PORT = 1;
+
   }
 
   public static class DriveConstants {// All constants below are examples; must correct to robot's specification when it is finished being built
