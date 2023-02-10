@@ -37,6 +37,10 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot2Encoder = this.pivot2.getEncoder();
         this.turretEncoder = this.turret.getEncoder();
 
+        pivot1Encoder.setPositionConversionFactor(30);
+        pivot2Encoder.setPositionConversionFactor(30);
+        turretEncoder.setPositionConversionFactor(30);
+
         this.pidController = new PIDController(0.5, 0, 0); // tune later lol
 
         this.x_pos = ArmConstants.STARTING_X;
@@ -45,9 +49,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double[] getCurrentAngles() {
-        double angle1 = pivot1Encoder.getPosition() * 1 + 0; // "degrees" - sean
-        double angle2 = pivot2Encoder.getPosition() * 1 + 0;
-        double angle3 = turretEncoder.getPosition() * 1 + 0;
+        double angle1 = pivot1Encoder.getPosition(); // "degrees" - sean
+        double angle2 = pivot2Encoder.getPosition();
+        double angle3 = turretEncoder.getPosition();
         
         return new double[] {angle1,angle2,angle3};
     }
