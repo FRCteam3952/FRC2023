@@ -59,25 +59,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     this.frontRightMotor = new CANSparkMax(PortConstants.FRONT_RIGHT_MOTOR_PORT, MotorType.kBrushless);
     this.rearLeftMotor = new CANSparkMax(PortConstants.REAR_LEFT_MOTOR_PORT, MotorType.kBrushless);
     this.rearRightMotor = new CANSparkMax(PortConstants.REAR_RIGHT_MOTOR_PORT, MotorType.kBrushless);
+
     this.frontLeftEncoder = frontLeftMotor.getEncoder();
     this.frontRightEncoder = frontRightMotor.getEncoder();
     this.rearLeftEncoder = rearLeftMotor.getEncoder();
     this.rearRightEncoder = rearRightMotor.getEncoder();
-
-    this.frontLeftEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
-    this.frontRightEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
-    this.rearLeftEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
-    this.rearRightEncoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
-
-    this.leftMotorGroup = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
-    this.rightMotorGroup = new MotorControllerGroup(frontRightMotor, rearRightMotor);
-
-    this.frontRightMotor.setInverted(false);
-    this.rearRightMotor.setInverted(false);
-    this.frontLeftMotor.setInverted(true);
-    this.rearLeftMotor.setInverted(true);
-
-    this.odometry = new DifferentialDriveOdometry(new Rotation2d(Gyro.getGyroAngle()), 0, 0);
 
     this.encoders = new RelativeEncoder[]{
       frontLeftEncoder, 
@@ -85,6 +71,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
       rearLeftEncoder, 
       rearRightEncoder
     };
+
+    for (RelativeEncoder encoder : encoders) {
+      encoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
+    }
+
+    this.leftMotorGroup = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
+    this.rightMotorGroup = new MotorControllerGroup(frontRightMotor, rearRightMotor);
+
+    this.frontRightMotor.setInverted(false);
+    this.rearRightMotor .setInverted(false);
+    this.frontLeftMotor .setInverted(true);
+    this.rearLeftMotor  .setInverted(true);
+
+    this.odometry = new DifferentialDriveOdometry(new Rotation2d(Gyro.getGyroAngle()), 0, 0);
 
     this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
     // m_dDrive.setSafetyEnabled(false);
