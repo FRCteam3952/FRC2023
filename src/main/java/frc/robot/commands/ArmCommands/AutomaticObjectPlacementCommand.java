@@ -1,4 +1,5 @@
 package frc.robot.commands.ArmCommands;
+import frc.robot.Constants.PositionConstants;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -22,6 +23,43 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(arm);
     }
+    public void getCoordinatesFromKey(){
+        double [] coordinates = new double[3];
+        long currKey = key.getInteger(1);
+        switch ((int) currKey){
+            case 1:
+                coordinates = PositionConstants.BOTTOM_LEFT_POS;
+                break;
+            case 2:
+                coordinates = PositionConstants.BOTTOM_MIDDLE_POS;
+                break;
+            case 3:
+                coordinates = PositionConstants.BOTTOM_RIGHT_POS;
+                break;
+            case 4:
+                coordinates =  PositionConstants.CENTER_LEFT_POS;
+                break;
+            case 5:
+                coordinates =  PositionConstants.CENTER_MIDDLE_POS;
+                break;
+            case 6:
+                coordinates =  PositionConstants.CENTER_RIGHT_POS;
+                break;
+            case 7:
+                coordinates = PositionConstants.TOP_LEFT_POS;
+                break;
+            case 8:
+                coordinates = PositionConstants.TOP_CENTER_POS;
+                break;
+            case 9:
+                coordinates =  PositionConstants.TOP_RIGHT_POS;
+                break;
+            default:
+                break;
+        }
+        arm.setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2]);
+        
+    }
 
     // Called when the command is initially scheduled.
     @Override
@@ -34,7 +72,7 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
     // ...
     @Override
     public void execute() {
-
+        getCoordinatesFromKey();
     }
 
 
