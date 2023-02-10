@@ -5,6 +5,7 @@ import frc.robot.Constants.ArmConstants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.util.InverseKinematicsUtil;
 
 import com.revrobotics.CANSparkMax;
@@ -20,6 +21,9 @@ public class ArmSubsystem extends SubsystemBase {
     private final RelativeEncoder pivot1Encoder;
     private final RelativeEncoder pivot2Encoder;
     private final RelativeEncoder turretEncoder;
+
+    private final DigitalInput arm1Limit;
+    private final DigitalInput arm2Limit;
 
     private final PIDController pidController;
 
@@ -37,9 +41,8 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot2Encoder = this.pivot2.getEncoder();
         this.turretEncoder = this.turret.getEncoder();
 
-        pivot1Encoder.setPositionConversionFactor(30);
-        pivot2Encoder.setPositionConversionFactor(30);
-        turretEncoder.setPositionConversionFactor(30);
+        this.arm1Limit = new DigitalInput(PortConstants.PIVOT_1_LIMIT_PORT);
+        this.arm2Limit = new DigitalInput(PortConstants.PIVOT_2_LIMIT_PORT);
 
         this.pidController = new PIDController(0.5, 0, 0); // tune later lol
 
@@ -99,6 +102,12 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+        if (this.arm1Limit.get()) {
+           this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
+        }
+        if (this.arm2Limit.get()) {
+            this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+        }
     }
 
     @Override
