@@ -29,18 +29,18 @@ public class ArmControlCommand extends CommandBase{
         addRequirements(arm);
     }
 
-   // If getCurrentAngles() returns degrees then convert to radians, if not then leave as is
-   private double[] getAdjustmentFromError() {
-    double[] adjustments = new double[3];
-    adjustments[0] = Math.sin(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
-        + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea())/areaConst; // x-axis adjustment
+    // Gets adjustments from limelight and converts them to position adjustments
+    private double[] getAdjustmentFromError() {
+        double[] adjustments = new double[3];
+        adjustments[0] = Math.sin(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
+            + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea())/areaConst; // x-axis adjustment
 
-    adjustments[1] = LimeLightSubsystem.getYAdjustment(); // y-axis adjustment
+        adjustments[1] = LimeLightSubsystem.getYAdjustment(); // y-axis adjustment
 
-    adjustments[2] = Math.cos(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
-        + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea()/areaConst); // z-axis adjustment
+        adjustments[2] = Math.cos(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
+            + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea()/areaConst); // z-axis adjustment
 
-    return adjustments;
+        return adjustments;
 }
 
 // Primary arm control with PID

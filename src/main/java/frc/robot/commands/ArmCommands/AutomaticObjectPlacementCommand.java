@@ -53,7 +53,7 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
                 coordinates =  PositionConstants.TOP_RIGHT_POS;
                 break;
             default:
-                System.out.println("A key withing 1-9 was not pressed");
+                System.out.println("A key within 1-9 was not pressed");
                 break;
         }
         arm.setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2]);
