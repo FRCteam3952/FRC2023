@@ -25,8 +25,8 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
     }
     public void getCoordinatesFromKey(){
         double [] coordinates = new double[3];
-        long currKey = key.getInteger(1);
-        switch ((int) currKey){
+        int currKey = (int) key.getInteger(1);
+        switch (currKey){
             case 1:
                 coordinates = PositionConstants.BOTTOM_LEFT_POS;
                 break;
@@ -54,11 +54,8 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
             case 9:
                 coordinates =  PositionConstants.TOP_RIGHT_POS;
                 break;
-            default:
-                break;
         }
         arm.setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2]);
-        
     }
 
     // Called when the command is initially scheduled.
