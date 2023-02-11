@@ -74,10 +74,11 @@ public class ArmSubsystem extends SubsystemBase {
     /*
      * If you're worrying about this ugly method... I don't know either :D
      */
+    // Sean no one can understand what tf this is why are there so many random numbers
     public void movePolar(double power, double angle){
         double dist = getDistAway();
-        double dP2 = (2 * dist) / Math.sqrt(1065024 - Math.pow((1065.6-MathUtil.squared(dist)),2)) * power; 
-        double dP1 = -(MathUtil.squared(dist)-265.64) / (MathUtil.squared(dist) * (51.6 * Math.sqrt(1 - (MathUtil.squared(265.64 + MathUtil.squared(dist)) / (2662.65 * MathUtil.squared(dist)))))) * power;
+        double dP2 = (2 * dist) / Math.sqrt(1065024 - Math.pow((1065.6 - MathUtil.squared(dist)),2)) * power; // Something something derivative of the law of cosines
+        double dP1 = -(MathUtil.squared(dist) - 265.64) / (MathUtil.squared(dist) * (51.6 * Math.sqrt(1 - (MathUtil.squared(265.64 + MathUtil.squared(dist)) / (2662.65 * MathUtil.squared(dist)))))) * power;
         //setPivot1Speed(dP1);
         //setPivot2Speed(dP2);
         System.out.println(dP1 + " " + dP2);
@@ -86,24 +87,40 @@ public class ArmSubsystem extends SubsystemBase {
     /*
      * Changes the intended coordinates by dx, dy, and dz
      */
-    public void moveVector(double dx, double dy, double dz){
+    public void moveByElement(double dx, double dy, double dz){
         updateCurrentCoordinates();
         setIntendedCoordinates(cur_x + dx, cur_y + dy, cur_z + dz);
     }
+
+    /*
+     * Gets distance away on the vertical plane from 0, 0
+     */
+    // note from max: i assumed this is the distance from center to the claw on the vertical plane extending along the arm of the claw, and thus we need to take into account the angle of the turret; if this assumption is incorrect, revert my code and comment
     public double getDistAway(){
         updateCurrentCoordinates();
-        return MathUtil.distance(cur_x,0,cur_y,0);
+        return MathUtil.distance((Math.sin(getCurrentAnglesRad()[2]) * cur_x + Math.cos(getCurrentAnglesRad()[2]) * cur_z), 0, cur_y, 0);
     }
 
     /*
-     * Get the current angles from motor encoders
+     * Get the current angles from motor encoders in degrees
      */
-    public double[] getCurrentAngles() {
+    public double[] getCurrentAnglesDeg() {
         double angle1 = pivot1Encoder.getPosition(); // "degrees" - sean
         double angle2 = pivot2Encoder.getPosition();
         double angle3 = turretEncoder.getPosition();
         
-        return new double[] {angle1,angle2,angle3};
+        return new double[] {angle1, angle2, angle3};
+    }
+
+    /*
+     * Get the current angles from motor encoders in radians
+     */
+    public double[] getCurrentAnglesRad() {
+        double angle1 = Math.toRadians(pivot1Encoder.getPosition()); 
+        double angle2 = Math.toRadians(pivot2Encoder.getPosition());
+        double angle3 = Math.toRadians(turretEncoder.getPosition());
+        
+        return new double[] {angle1, angle2, angle3};
     }
 
     public void setPivot1Speed(double speed) {
@@ -127,7 +144,7 @@ public class ArmSubsystem extends SubsystemBase {
      * Uses motor encoder angles to update the current coordinates
      */
     public void updateCurrentCoordinates(){
-        double[] tempAngles = getCurrentAngles();
+        double[] tempAngles = getCurrentAnglesDeg();
         double[] coords = ForwardKinematicsUtil.getCoordinatesFromAngles(tempAngles[0],tempAngles[1],tempAngles[2]);
         this.cur_x = coords[0];
         this.cur_y = coords[1];
@@ -157,7 +174,7 @@ public class ArmSubsystem extends SubsystemBase {
            return;
         }
         var ikuAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z);
-        var currentAngles = getCurrentAngles();
+        var currentAngles = getCurrentAnglesDeg();
 
         double p1Speed = pidController.calculate(currentAngles[0], ikuAngles[0]);
         double p2Speed = pidController.calculate(currentAngles[1], ikuAngles[1]);
