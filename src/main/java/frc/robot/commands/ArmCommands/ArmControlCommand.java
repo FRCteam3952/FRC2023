@@ -1,12 +1,6 @@
 package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.ControllerConstants;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 
@@ -16,20 +10,23 @@ import frc.robot.subsystems.ArmSubsystem;
 public class ArmControlCommand extends CommandBase{
     private final ArmSubsystem arm;
     private final FlightJoystick joystick;
-    private double[] intendedAngles;
 
     public ArmControlCommand(ArmSubsystem arm, FlightJoystick joystick) {
         this.arm = arm;
         this.joystick = joystick;
-        this.intendedAngles = arm.getCurrentAngles();
-
         addRequirements(arm);
     }
 
 
     // Primary arm control
     private void primaryArmControl() {
-        arm.movePolar(joystick.getLateralMovement(),arm.getCurrentAngles()[2]);
+        //arm.movePolar(joystick.getLateralMovement(),arm.getCurrentAngles()[2]);
+        if(joystick.getRawButtonWrapper(2)){
+            arm.moveVector(1, 0, 0);
+        }
+        else if(joystick.getRawButtonWrapper(3)){
+            arm.moveVector(-1, 0, 0);
+        }
     }
 
 

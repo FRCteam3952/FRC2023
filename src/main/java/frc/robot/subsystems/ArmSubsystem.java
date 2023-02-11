@@ -38,6 +38,10 @@ public class ArmSubsystem extends SubsystemBase {
     private double cur_x;
     private double cur_y;
     private double cur_z;
+
+    private double angle1_pos;
+    private double angle2_pos;
+    private double turret_angle_pos;
     
     //arm control constructor
     public ArmSubsystem() {
@@ -50,9 +54,12 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot1Encoder = this.pivot1.getEncoder();
         this.pivot2Encoder = this.pivot2.getEncoder();
         this.turretEncoder = this.turret.getEncoder();
-        this.pivot1Encoder.setPositionConversionFactor(1/125);
-        this.pivot2Encoder.setPositionConversionFactor(1/60);
-        this.turretEncoder.setPositionConversionFactor(1/60); //this one i'll have to do math
+        this.pivot1Encoder.setPositionConversionFactor(2.88);
+        this.pivot2Encoder.setPositionConversionFactor(6.68);
+        this.turretEncoder.setPositionConversionFactor(6); //this one i'll have to do math
+        this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
+        this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+        this.turretEncoder.setPosition(0);
 
         //initialize arm limit switches
         this.arm1Limit = new DigitalInput(PortConstants.PIVOT_1_LIMIT_PORT);
@@ -60,6 +67,11 @@ public class ArmSubsystem extends SubsystemBase {
 
         this.pidController = new PIDController(0.5, 0, 0); // tune later lol
         pidController.setTolerance(ArmConstants.ANGLE_DELTA);
+
+        //set starting arm angles
+        this.angle1_pos = ArmConstants.ARM_1_INITIAL_ANGLE;
+        this.angle2_pos = ArmConstants.ARM_2_INITIAL_ANGLE;
+        this.turret_angle_pos = 0;
 
         //get starting coords from the initial angle constants
         double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE,ArmConstants.ARM_2_INITIAL_ANGLE,0);
@@ -96,11 +108,11 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     /*
-     * Get the current angles from motor encoders
+     * Get the current angles from motor encoders in DEGREES
      */
     public double[] getCurrentAngles() {
-        double angle1 = pivot1Encoder.getPosition(); // "degrees" - sean
-        double angle2 = pivot2Encoder.getPosition();
+        double angle1 = 20 - pivot1Encoder.getPosition(); //the encoders were inverted so I did negative
+        double angle2 = 30 - pivot2Encoder.getPosition();
         double angle3 = turretEncoder.getPosition();
         
         return new double[] {angle1,angle2,angle3};
@@ -149,6 +161,24 @@ public class ArmSubsystem extends SubsystemBase {
         return new double[]{this.x_pos,this.y_pos,this.z_pos};
     }
 
+    public boolean getPivot1LimitPressed(){
+        return !this.arm1Limit.get();
+    }
+    public boolean getPivot2LimitPressed(){
+        return !this.arm2Limit.get();
+    }
+    public void goTowardIntendedCoordinates(){
+        double[] angles = getCurrentAngles();
+        double p1Speed = pidController.calculate(angles[0], angle1_pos);
+        double p2Speed = pidController.calculate(angles[1], angle2_pos);
+        double turretSpeed = pidController.calculate(angles[2], turret_angle_pos);
+
+        System.out.println(p1Speed + " " + p2Speed + " " + turretSpeed);
+        //System.out.println(angles[0] + " " + angles[1] + " " + angles[2]);
+        /*setPivot1Spdeed(p1Speed);
+        setPivot2Speed(p2Speed);
+        setTurretSpeed(turretSpeed);*/
+    }
     /*
      * sets the coordinate in which the arm "should" move towards
      */
@@ -156,17 +186,11 @@ public class ArmSubsystem extends SubsystemBase {
         if(this.x_pos == x && this.y_pos == y && this.z_pos == z) { // if intended coordinates are same, then don't change target
            return;
         }
-        var ikuAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z);
-        var currentAngles = getCurrentAngles();
-
-        double p1Speed = pidController.calculate(currentAngles[0], ikuAngles[0]);
-        double p2Speed = pidController.calculate(currentAngles[1], ikuAngles[1]);
-        double turretSpeed = pidController.calculate(currentAngles[2], ikuAngles[2]);
-
-        System.out.println(p1Speed + " " + p2Speed + " " + turretSpeed);
-        /*setPivot1Spdeed(p1Speed);
-        setPivot2Speed(p2Speed);
-        setTurretSpeed(turretSpeed);*/
+        //update intended Angles
+        double[] intendedAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z);
+        angle1_pos = intendedAngles[0];
+        angle2_pos = intendedAngles[1];
+        turret_angle_pos = intendedAngles[2];
 
         // Updates coordinates
         this.x_pos = x;
@@ -177,12 +201,17 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // handles limit switches
-        if (this.arm1Limit.get()) {
+        if (getPivot1LimitPressed()) {
            this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         }
-        if (this.arm2Limit.get()) {
+        if (getPivot2LimitPressed()) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
         }
+        
+        //handles PID
+        goTowardIntendedCoordinates();
+        
+        
     }
 
     @Override

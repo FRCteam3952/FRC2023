@@ -34,8 +34,8 @@
 
       public static final double PICK_UP_POSITION_Y = 5;
 
-    public static final double ARM_1_INITIAL_ANGLE = 0.0;
-    public static final double ARM_2_INITIAL_ANGLE = 0.0;
+    public static final double ARM_1_INITIAL_ANGLE = 10.0;
+    public static final double ARM_2_INITIAL_ANGLE = 15.0;
     }
 
     public static class ClawConstants {

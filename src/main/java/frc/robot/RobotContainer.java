@@ -97,7 +97,7 @@ public class RobotContainer {
   }
 
   public void onTeleopInit() {
-    this.driveTrain.setDefaultCommand(this.manualDrive);
+    //this.driveTrain.setDefaultCommand(this.manualDrive);
     this.arm.setDefaultCommand(this.testArmControl);
   }
 }
