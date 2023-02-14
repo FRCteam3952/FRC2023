@@ -30,6 +30,6 @@ public final class MathUtil {
         return Math.toDegrees(Math.acos(dotProduct/(Math.abs(distance(0,x1,0,y1,0,z1)*distance(0, x2, 0, y2,0,z2)))));
     }   
     public static double squared(double x){
-        return x*x;
+        return x * x;
     } 
 }

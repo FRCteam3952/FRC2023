@@ -2,15 +2,14 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.ArmConstants;
-
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 
-import java.security.DigestInputStream;
+// import java.security.DigestInputStream;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -29,19 +28,22 @@ public class ArmSubsystem extends SubsystemBase {
     private final DigitalInput arm1Limit;
     private final DigitalInput arm2Limit;
 
-    private final PIDController pidController;
+    private final PIDController pidController1, pidController2;
 
-    private double x_pos;
-    private double y_pos;
-    private double z_pos;
+    private double targetX;
+    private double targetY;
+    private double targetZ;
 
     private double cur_x;
     private double cur_y;
     private double cur_z;
 
-    private double angle1_pos;
-    private double angle2_pos;
-    private double turret_angle_pos;
+    private double targetAngle1;
+    private double targetAngle2;
+    private double targetAngleTurret;
+
+    private final double kMaxOutput = 0.3;
+    private final double kMinOutput = -0.3;
     
     //arm control constructor
     public ArmSubsystem() {
@@ -50,49 +52,45 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot2 = new CANSparkMax(PortConstants.PIVOT2_PORT, MotorType.kBrushless);
         this.turret = new CANSparkMax(PortConstants.TURRET_PORT, MotorType.kBrushless);
 
+        this.pivot1.setInverted(true);
+        this.pivot2.setInverted(true);
+        this.turret.setInverted(false);
+
         //set up arm encoders and position conversion factors
         this.pivot1Encoder = this.pivot1.getEncoder();
         this.pivot2Encoder = this.pivot2.getEncoder();
         this.turretEncoder = this.turret.getEncoder();
         this.pivot1Encoder.setPositionConversionFactor(2.88);
         this.pivot2Encoder.setPositionConversionFactor(6.68);
-        this.turretEncoder.setPositionConversionFactor(6); //this one i'll have to do math
+        this.turretEncoder.setPositionConversionFactor(1);
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
         this.turretEncoder.setPosition(0);
+
+        this.pidController1 = new PIDController(1.69e-2, 0, 0);
+        this.pidController1.setTolerance(ArmConstants.ANGLE_DELTA);
+        this.pidController2 = new PIDController(9.6e-3, 0, 0);
+        this.pidController2.setTolerance(ArmConstants.ANGLE_DELTA);
 
         //initialize arm limit switches
         this.arm1Limit = new DigitalInput(PortConstants.PIVOT_1_LIMIT_PORT);
         this.arm2Limit = new DigitalInput(PortConstants.PIVOT_2_LIMIT_PORT);
 
-        this.pidController = new PIDController(0.5, 0, 0); // tune later lol
-        pidController.setTolerance(ArmConstants.ANGLE_DELTA);
+        //this.pidController = new PIDController(0.5, 0, 0); // tune later lol
 
         //set starting arm angles
-        this.angle1_pos = ArmConstants.ARM_1_INITIAL_ANGLE;
-        this.angle2_pos = ArmConstants.ARM_2_INITIAL_ANGLE;
-        this.turret_angle_pos = 0;
+        this.targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
+        this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
+        this.targetAngleTurret = 0;
 
         //get starting coords from the initial angle constants
         double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE,ArmConstants.ARM_2_INITIAL_ANGLE,0);
-        this.x_pos = startingCoords[0];
-        this.y_pos = startingCoords[1];
-        this.z_pos = startingCoords[2];
+        this.targetX = startingCoords[0];
+        this.targetY = startingCoords[1];
+        this.targetZ = startingCoords[2];
         this.cur_x = startingCoords[0];
         this.cur_y = startingCoords[1];
         this.cur_z = startingCoords[2];
-    }
-
-    /*
-     * If you're worrying about this ugly method... I don't know either :D
-     */
-    public void movePolar(double power, double angle){
-        double dist = getDistAway();
-        double dP2 = (2 * dist) / Math.sqrt(1065024 - Math.pow((1065.6-MathUtil.squared(dist)),2)) * power; 
-        double dP1 = -(MathUtil.squared(dist)-265.64) / (MathUtil.squared(dist) * (51.6 * Math.sqrt(1 - (MathUtil.squared(265.64 + MathUtil.squared(dist)) / (2662.65 * MathUtil.squared(dist)))))) * power;
-        //setPivot1Speed(dP1);
-        //setPivot2Speed(dP2);
-        System.out.println(dP1 + " " + dP2);
     }
 
     /*
@@ -100,22 +98,29 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public void moveVector(double dx, double dy, double dz){
         updateCurrentCoordinates();
-        setIntendedCoordinates(cur_x + dx, cur_y + dy, cur_z + dz);
-    }
-    public double getDistAway(){
-        updateCurrentCoordinates();
-        return MathUtil.distance(cur_x,0,cur_y,0);
+        setIntendedCoordinates(targetX + dx, targetY + dy, targetZ + dz);
     }
 
     /*
      * Get the current angles from motor encoders in DEGREES
      */
     public double[] getCurrentAngles() {
-        double angle1 = 20 - pivot1Encoder.getPosition(); //the encoders were inverted so I did negative
-        double angle2 = 30 - pivot2Encoder.getPosition();
+        double angle1 = pivot1Encoder.getPosition(); 
+        double angle2 = pivot2Encoder.getPosition();
         double angle3 = turretEncoder.getPosition();
         
-        return new double[] {angle1,angle2,angle3};
+        return new double[] {angle1, angle2, angle3};
+    }
+
+    /*
+     * Get the current angles from motor encoders in radians
+     */
+    public double[] getCurrentAnglesRad() {
+        double angle1 = Math.toRadians(pivot1Encoder.getPosition()); 
+        double angle2 = Math.toRadians(pivot2Encoder.getPosition());
+        double angle3 = Math.toRadians(turretEncoder.getPosition());
+        
+        return new double[] {angle1, angle2, angle3};
     }
 
     public void setPivot1Speed(double speed) {
@@ -158,7 +163,7 @@ public class ArmSubsystem extends SubsystemBase {
      * return coordinates in which the arm "should" move towards
      */
     public double[] getIntendedCoordinates(){
-        return new double[]{this.x_pos,this.y_pos,this.z_pos};
+        return new double[]{this.targetX,this.targetY,this.targetZ};
     }
 
     public boolean getPivot1LimitPressed(){
@@ -169,45 +174,70 @@ public class ArmSubsystem extends SubsystemBase {
     }
     public void goTowardIntendedCoordinates(){
         double[] angles = getCurrentAngles();
-        double p1Speed = pidController.calculate(angles[0], angle1_pos);
-        double p2Speed = pidController.calculate(angles[1], angle2_pos);
-        double turretSpeed = pidController.calculate(angles[2], turret_angle_pos);
 
-        System.out.println(p1Speed + " " + p2Speed + " " + turretSpeed);
-        //System.out.println(angles[0] + " " + angles[1] + " " + angles[2]);
-        /*setPivot1Spdeed(p1Speed);
-        setPivot2Speed(p2Speed);
-        setTurretSpeed(turretSpeed);*/
+        double p1Speed = pidController1.calculate(angles[0], targetAngle1);
+        double p2Speed = pidController2.calculate(angles[1], targetAngle2);
+        // System.out.println(angles[0] + " " + angles[1] + " " );
+        // System.out.println(targetAngle1 + " " + targetAngle2 + " " );
+
+        System.out.println(Math.min(kMaxOutput, Math.max(p1Speed,kMinOutput)) + " " + Math.min(kMaxOutput, Math.max(p2Speed,kMinOutput)));
+        setPivot1Speed(Math.min(kMaxOutput, Math.max(p1Speed,kMinOutput)));
+        setPivot2Speed(Math.min(kMaxOutput, Math.max(p2Speed,kMinOutput)));
     }
+
     /*
      * sets the coordinate in which the arm "should" move towards
      */
     public void setIntendedCoordinates(double x, double y, double z){
-        if(this.x_pos == x && this.y_pos == y && this.z_pos == z) { // if intended coordinates are same, then don't change target
+        if(this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
            return;
         }
         //update intended Angles
         double[] intendedAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z);
-        angle1_pos = intendedAngles[0];
-        angle2_pos = intendedAngles[1];
-        turret_angle_pos = intendedAngles[2];
+
+        if(intendedAngles[0] == Double.NaN || intendedAngles[1] == Double.NaN || intendedAngles[2] == Double.NaN) {
+            System.out.println("An angle is NaN, so skip");
+            return;
+        }
+        
+        targetAngle1 = intendedAngles[0];
+        targetAngle2 = intendedAngles[1];
+        targetAngleTurret = intendedAngles[2];
 
         // Updates coordinates
-        this.x_pos = x;
-        this.y_pos = y;
-        this.z_pos = z;
+        this.targetX = x;
+        this.targetY = y;
+        this.targetZ = z;
+    }
+
+    public CommandBase calibrateArm() {
+        return this.runOnce(
+            () -> {
+                while (!getPivot2LimitPressed()) {
+                    setPivot2Speed(-0.1);
+                }
+                setPivot2Speed(0);  
+                while (!getPivot1LimitPressed()) {
+                    setPivot1Speed(-0.1);
+                }
+                setPivot1Speed(0);
+                this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
+                this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+            });
     }
 
     @Override
     public void periodic() {
         // handles limit switches
         if (getPivot1LimitPressed()) {
-           this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
-        }
+            this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
+
+        } 
+
         if (getPivot2LimitPressed()) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
         }
-        
+
         //handles PID
         goTowardIntendedCoordinates();
         

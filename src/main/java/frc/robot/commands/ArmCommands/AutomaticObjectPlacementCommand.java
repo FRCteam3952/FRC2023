@@ -9,14 +9,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class AutomaticObjectPlacementCommand extends CommandBase{
     private final ArmSubsystem arm;
-    private final FlightJoystick joystick;
     private final NetworkTableInstance inst;
     private final NetworkTable table;
     private final NetworkTableEntry key;
 
     public AutomaticObjectPlacementCommand(ArmSubsystem arm, FlightJoystick joystick) {
         this.arm = arm;
-        this.joystick = joystick;
         this.inst = NetworkTableInstance.getDefault();
         this.table = inst.getTable("robogui");
         this.key = table.getEntry("key"); // Key pressed on keyboard 
@@ -53,6 +51,9 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
                 break;
             case 9:
                 coordinates =  PositionConstants.TOP_RIGHT_POS;
+                break;
+            default:
+                System.out.println("A key within 1-9 was not pressed");
                 break;
         }
         arm.setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2]);

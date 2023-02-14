@@ -65,6 +65,7 @@
       public static final int CLAW_ROTATE_RIGHT_BUTTON_NUMBER = 6; // change to whatever it is
       public static final int CLAW_ROTATE_LEFT_BUTTON_NUMBER = 7; // change to whatever it is
       public static final int AUTO_ROTATE_BUTTON_NUMBER = 8; // change to whatever it is
+      public static final int CALIBRATE_ARM_BUTTON_NUMBER = 9; // change to whatever it is
     }
 
     public static class PortConstants {

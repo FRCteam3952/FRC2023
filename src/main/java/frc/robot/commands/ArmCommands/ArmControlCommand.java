@@ -20,13 +20,7 @@ public class ArmControlCommand extends CommandBase{
 
     // Primary arm control
     private void primaryArmControl() {
-        //arm.movePolar(joystick.getLateralMovement(),arm.getCurrentAngles()[2]);
-        if(joystick.getRawButtonWrapper(2)){
-            arm.moveVector(1, 0, 0);
-        }
-        else if(joystick.getRawButtonWrapper(3)){
-            arm.moveVector(-1, 0, 0);
-        }
+        arm.moveVector(joystick.getLateralMovement(), 0, 0);
     }
 
 

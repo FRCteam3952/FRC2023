@@ -11,24 +11,19 @@ public final class ForwardKinematicsUtil {
      * a1, a2, turretAngle in degrees!!!
      */
     public static double[] getCoordinatesFromAngles(double a1, double a2, double turretAngle) {
-        double x = 0.0, y = 0.0, z = 0.0;
-        a1 = Math.toRadians(a1);
-        a2 = Math.toRadians(a2);
+        double x = 0.0, y = ArmConstants.ORIGIN_HEIGHT, z = 0.0, dist = 0.0;
+        double angleSegment2 = Math.toRadians(90 + a1 - a2); 
+        double a1Rad = Math.toRadians(a1);
         turretAngle = Math.toRadians(turretAngle);
-        // https://github.com/AymenHakim99/Forward-and-Inverse-Kinematics-for-2-DOF-Robotic-arm COPIED
-        x = ArmConstants.LIMB1_LENGTH * Math.cos(a1) + ArmConstants.LIMB2_LENGTH * Math.cos(a1 + a2);
-        z = ArmConstants.LIMB1_LENGTH * Math.sin(a1) + ArmConstants.LIMB2_LENGTH * Math.sin(a1 + a2);
 
-        // https://stackoverflow.com/questions/34372480/rotate-point-about-another-point-in-degrees-python COPIED
-        double x2 = Math.cos(turretAngle) * x - Math.sin(turretAngle) * z;
-        double z2 = Math.sin(turretAngle) * x + Math.cos(turretAngle) * z;
-
-        // Not copied:
-        // Solve for the diagonal distance from origin -> robot arm's (x, z) using LoC
-        // Then, use that distance + the known x distance to solve for the height using Pythag.
+        //redid forward kinematics to match inverse kinematics
+        dist = ArmConstants.LIMB1_LENGTH * Math.sin(a1Rad) + ArmConstants.LIMB2_LENGTH * Math.cos(angleSegment2);
+        z = Math.sin(turretAngle) * dist;
+        x = Math.cos(turretAngle) * dist;
+        y += a1 > 90? ArmConstants.LIMB1_LENGTH * Math.cos(a1Rad) : ArmConstants.LIMB1_LENGTH * Math.cos(a1Rad) * -1;
+        y += ArmConstants.LIMB2_LENGTH * Math.sin(angleSegment2);
 
         // Solve for the distance from origin -> claw
-        y = Math.sqrt(Math.pow(MathUtil.lawOfCosinesForSide(ArmConstants.LIMB1_LENGTH, ArmConstants.LIMB2_LENGTH, a2), 2) - x * x);
-        return new double[] {x2, y, z2};
+        return new double[] {x, y, z};
     }
 }
