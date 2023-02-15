@@ -24,6 +24,7 @@
       public static final double LIMB2_LENGTH = 20; 
       
       public static final double ANGLE_DELTA = 2;
+      public static final double DISTANCE_DELTA = 2;
 
       public static final double PIVOT_SPEED = 0.1;
       public static final double TURRET_SPEED = 0.1;
@@ -58,9 +59,9 @@
       public static final int RUN_GUI_TRAJECTORY_BUTTON_NUMBER = 4; // idk i just picked a random number
       // Joystick 1
       public static final int AIM_ASSIST_BUTTON_NUMBER = 5; // change to whatever it is
-      public static final int MOVE_ARM_UP_BUTTON_NUMBER = 2; // change to whatever it is
-      public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 3; // change to whatever it is
-      public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER = 4; // change to whatever it is
+      public static final int MOVE_ARM_UP_BUTTON_NUMBER = 3; // change to whatever it is
+      public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 2; // change to whatever it is
+      public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER = 6; // change to whatever it is
       public static final int CLAW_GRIP_BUTTON_NUMBER = 1; // change to whatever it is
       public static final int CLAW_ROTATE_RIGHT_BUTTON_NUMBER = 6; // change to whatever it is
       public static final int CLAW_ROTATE_LEFT_BUTTON_NUMBER = 7; // change to whatever it is

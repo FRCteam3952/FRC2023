@@ -104,7 +104,7 @@ public class ArmSubsystem extends SubsystemBase {
     /*
      * Get the current angles from motor encoders in DEGREES
      */
-    public double[] getCurrentAngles() {
+    public double[] getCurrentAnglesDeg() {
         double angle1 = pivot1Encoder.getPosition(); 
         double angle2 = pivot2Encoder.getPosition();
         double angle3 = turretEncoder.getPosition();
@@ -144,7 +144,7 @@ public class ArmSubsystem extends SubsystemBase {
      * Uses motor encoder angles to update the current coordinates
      */
     public void updateCurrentCoordinates(){
-        double[] tempAngles = getCurrentAngles();
+        double[] tempAngles = getCurrentAnglesDeg();
         double[] coords = ForwardKinematicsUtil.getCoordinatesFromAngles(tempAngles[0],tempAngles[1],tempAngles[2]);
         this.cur_x = coords[0];
         this.cur_y = coords[1];
@@ -173,16 +173,22 @@ public class ArmSubsystem extends SubsystemBase {
         return !this.arm2Limit.get();
     }
     public void goTowardIntendedCoordinates(){
-        double[] angles = getCurrentAngles();
+        double[] angles = getCurrentAnglesDeg();
+
+        if(angles[0] == Double.NaN || angles[1] == Double.NaN || angles[2] == Double.NaN ||
+            targetAngle1 == Double.NaN || targetAngle2 == Double.NaN || targetAngleTurret == Double.NaN) {
+            System.out.println("An angle is NaN, so skip");
+            return;
+        }
 
         double p1Speed = pidController1.calculate(angles[0], targetAngle1);
         double p2Speed = pidController2.calculate(angles[1], targetAngle2);
         // System.out.println(angles[0] + " " + angles[1] + " " );
         // System.out.println(targetAngle1 + " " + targetAngle2 + " " );
 
-        System.out.println(Math.min(kMaxOutput, Math.max(p1Speed,kMinOutput)) + " " + Math.min(kMaxOutput, Math.max(p2Speed,kMinOutput)));
-        setPivot1Speed(Math.min(kMaxOutput, Math.max(p1Speed,kMinOutput)));
-        setPivot2Speed(Math.min(kMaxOutput, Math.max(p2Speed,kMinOutput)));
+        System.out.println(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)) + " " + Math.min(kMaxOutput, Math.max(p2Speed,kMinOutput)));
+        setPivot1Speed(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)));
+        setPivot2Speed(Math.min(kMaxOutput, Math.max(p2Speed, kMinOutput)));
     }
 
     /*
@@ -205,9 +211,9 @@ public class ArmSubsystem extends SubsystemBase {
         targetAngleTurret = intendedAngles[2];
 
         // Updates coordinates
-        this.targetX = x;
-        this.targetY = y;
-        this.targetZ = z;
+        this.targetX = InverseKinematicsUtil.getCurrentCoordinates()[0];
+        this.targetY = InverseKinematicsUtil.getCurrentCoordinates()[1];
+        this.targetZ = InverseKinematicsUtil.getCurrentCoordinates()[2];
     }
 
     public CommandBase calibrateArm() {
