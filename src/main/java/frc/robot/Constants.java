@@ -19,8 +19,8 @@
     public static class ArmConstants {
 
       // All constants are in inches
-      public static final double ORIGIN_HEIGHT = 35.36; 
-      public static final double LIMB1_LENGTH = 25.8;
+      public static final double ORIGIN_HEIGHT = 49.5; 
+      public static final double LIMB1_LENGTH = 27;
       public static final double LIMB2_LENGTH = 20; 
       
       public static final double ANGLE_DELTA = 2;

@@ -177,9 +177,6 @@ public class ArmSubsystem extends SubsystemBase {
     public void goTowardIntendedCoordinates(){
         double[] angles = getCurrentAnglesDeg();
 
-        angles[0] = Double.NaN;
-        angles[1] = Double.NaN;
-        angles[2] = Double.NaN;
         if(Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) ||
             Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
             System.out.println("An angle is NaN, so skip");
@@ -257,11 +254,24 @@ public class ArmSubsystem extends SubsystemBase {
         // handles limit switches
         if (getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1) {
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
-
+            double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
+            this.targetX = startingCoords[0];
+            this.targetY = startingCoords[1];
+            this.targetZ = startingCoords[2];
+            this.cur_x = startingCoords[0];
+            this.cur_y = startingCoords[1];
+            this.cur_z = startingCoords[2];
         } 
 
         if (getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+            double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
+            this.targetX = startingCoords[0];
+            this.targetY = startingCoords[1];
+            this.targetZ = startingCoords[2];
+            this.cur_x = startingCoords[0];
+            this.cur_y = startingCoords[1];
+            this.cur_z = startingCoords[2];
         }
         
         //handles PID
