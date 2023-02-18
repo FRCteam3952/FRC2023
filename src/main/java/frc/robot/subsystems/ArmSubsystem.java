@@ -176,11 +176,12 @@ public class ArmSubsystem extends SubsystemBase {
     }
     public void goTowardIntendedCoordinates(){
         double[] angles = getCurrentAnglesDeg();
+
         angles[0] = Double.NaN;
         angles[1] = Double.NaN;
         angles[2] = Double.NaN;
-        if(angles[0] == Double.NaN || angles[1] == Double.NaN || angles[2] == Double.NaN ||
-            targetAngle1 == Double.NaN || targetAngle2 == Double.NaN || targetAngleTurret == Double.NaN) {
+        if(Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) ||
+            Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
             System.out.println("An angle is NaN, so skip");
             return;
         }
@@ -210,7 +211,7 @@ public class ArmSubsystem extends SubsystemBase {
         //update intended Angles
         double[] intendedAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z);
 
-        if(intendedAngles[0] == Double.NaN || intendedAngles[1] == Double.NaN || intendedAngles[2] == Double.NaN) {
+        if(Double.isNaN(intendedAngles[0]) || Double.isNaN(intendedAngles[1]) || Double.isNaN(intendedAngles[2])) {
             System.out.println("An angle is NaN, so skip");
             return;
         }

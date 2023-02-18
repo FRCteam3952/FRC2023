@@ -21,9 +21,9 @@ public class ArmControlCommand extends CommandBase{
         this.arm = arm;
         this.joystick = joystick;
         this.areaConst = 60; //can tune later
-        this.xSpeed = 0.1; // Inches per 20ms
-        this.ySpeed = 0.1; // Inches per 20ms
-        this.zSpeed = 0.1; // Inches per 20ms
+        this.xSpeed = 0.3; // Inches per 20ms
+        this.ySpeed = 0.3; // Inches per 20ms
+        this.zSpeed = 0.3; // Inches per 20ms
         this.turretSpeed = 0.2;
 
         addRequirements(arm);
@@ -33,13 +33,13 @@ public class ArmControlCommand extends CommandBase{
     // Gets adjustments from limelight and converts them to position adjustments
     private double[] getAdjustmentFromError() {
         double[] adjustments = new double[3];
-        adjustments[0] = Math.cos(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
-            + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea())/areaConst; // x-axis adjustment
+        adjustments[0] = Math.sin(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
+            + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea())/areaConst; // x-axis adjustment
 
         adjustments[1] = LimeLightSubsystem.getYAdjustment(); // y-axis adjustment
 
-        adjustments[2] = Math.sin(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
-            + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea()/areaConst); // z-axis adjustment
+        adjustments[2] = Math.cos(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
+            + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea()/areaConst); // z-axis adjustment
 
         return adjustments;
 }
@@ -56,9 +56,9 @@ public class ArmControlCommand extends CommandBase{
                 y = -ySpeed;
             } 
             arm.setTurretSpeed(joystick.getHorizontalMovement() * turretSpeed);
-            arm.moveVector(Math.cos(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * xSpeed, // Handles extension of robot arm 
+            arm.moveVector(Math.sin(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * xSpeed, // Handles extension of robot arm 
                 y, 
-                Math.sin(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * zSpeed);
+                Math.cos(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * zSpeed);
         }
     }
 
