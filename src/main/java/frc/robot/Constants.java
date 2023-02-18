@@ -19,12 +19,12 @@
     public static class ArmConstants {
 
       // All constants are in inches
-      public static final double ORIGIN_HEIGHT = 35.36; 
-      public static final double LIMB1_LENGTH = 25.8;
+      public static final double ORIGIN_HEIGHT = 49.5; 
+      public static final double LIMB1_LENGTH = 27;
       public static final double LIMB2_LENGTH = 20; 
       
       public static final double ANGLE_DELTA = 2;
-      public static final double DISTANCE_DELTA = 2;
+      public static final double DISTANCE_DELTA = 5;
       public static final double MIN_DISTANCE = 12; // change to be correct later
 
       public static final double PIVOT_SPEED = 0.1;
@@ -36,8 +36,8 @@
 
       public static final double PICK_UP_POSITION_Y = 5;
 
-    public static final double ARM_1_INITIAL_ANGLE = 10.0;
-    public static final double ARM_2_INITIAL_ANGLE = 15.0;
+      public static final double ARM_1_INITIAL_ANGLE = 10.0;
+      public static final double ARM_2_INITIAL_ANGLE = 15.0;
     }
 
     public static class ClawConstants {
@@ -68,6 +68,7 @@
       public static final int CLAW_ROTATE_LEFT_BUTTON_NUMBER = 7; // change to whatever it is
       public static final int AUTO_ROTATE_BUTTON_NUMBER = 8; // change to whatever it is
       public static final int CALIBRATE_ARM_BUTTON_NUMBER = 9; // change to whatever it is
+      public static final int PID_CONTROL_TOGGLE_BUTTON_NUMBER = 10; // change to whatever it is
     }
 
     public static class PortConstants {
@@ -80,11 +81,11 @@
       public static final int PIVOT2_PORT = 10;
       public static final int TURRET_PORT = 8;
 
-      public static final int CLAW_GRIP_PORT = 11;
-      public static final int CLAW_ROTATE_PORT = 12;
+      public static final int CLAW_GRIP_PORT = 7;
+      public static final int CLAW_ROTATE_PORT = 11;
 
-      public static final int PIVOT_1_LIMIT_PORT = 0;
-      public static final int PIVOT_2_LIMIT_PORT = 1;
+      public static final int PIVOT_1_LIMIT_PORT = 1;
+      public static final int PIVOT_2_LIMIT_PORT = 0;
     }
 
     public static class DriveConstants {// All constants below are examples; must correct to robot's specification when it is finished being built
