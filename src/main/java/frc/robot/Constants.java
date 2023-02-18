@@ -167,4 +167,53 @@
       // public static final Pose3d TOP_RIGHT_POS     = new Pose3d(X_RIGHT,  Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
   
     }
+    
+    public static class AprilTagConstants {
+      // All distances are in inches, located on pg 4 here: https://firstfrc.blob.core.windows.net/frc2023/FieldAssets/2023LayoutMarkingDiagram.pdf
+      // Relative to origin at bottom left of field
+      public static final double[][] tagInfo = new double[][]{
+        {610.77,42.19,18.22,180},
+        {610.77,108.19,18.22,180},
+        {610.77,174.19,18.22,180},
+        {636.96,265.74,27.38,180}, 
+        {14.25,265.74,27.38,0},
+        {40.45,174.19,18.22,0},
+        {40.45,108.19,18.22,0},
+        {40.45,42.19,18.22,0}
+      };
+      /*
+      TAG_1_X = 610.77
+      TAG_1_Y = 42.19
+      TAG_1_Z = 18.22
+      TAG_1_Z_ROTATION = 180
+      TAG_2_X = 610.77
+      TAG_2_Y = 108.19
+      TAG_2_Z = 18.22
+      TAG_2_Z_ROTATION = 180
+      TAG_3_X = 610.77
+      TAG_3_Y = 174.19
+      TAG_3_Z = 18.22
+      TAG_3_Z_ROTATION = 180
+      TAG_4_X = 636.96
+      TAG_4_Y = 265.74
+      TAG_4_Z = 27.38
+      TAG_4_Z_ROTATION = 180
+      TAG_5_X = 14.25
+      TAG_5_Y = 265.74
+      TAG_5_Z = 27.38
+      TAG_5_Z_ROTATION = 0
+      TAG_6_X = 40.45
+      TAG_6_Y = 174.19
+      TAG_6_Z = 18.22
+      TAG_6_Z_ROTATION = 0
+      TAG_7_X = 40.45
+      TAG_7_Y = 108.19
+      TAG_7_Z = 18.22
+      TAG_7_Z_ROTATION = 0
+      TAG_8_X = 40.45
+      TAG_8_Y = 42.19
+      TAG_8_Z = 18.22
+      TAG_8_Z_ROTATION = 0
+      */
+    }
   }
