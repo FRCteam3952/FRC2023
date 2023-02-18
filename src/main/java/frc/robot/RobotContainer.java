@@ -11,13 +11,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.ArmCommands.ArmControlCommand;
 import frc.robot.commands.ArmCommands.AutomaticObjectPlacementCommand;
 import frc.robot.commands.ArmCommands.ArmTestCommand;
+import frc.robot.commands.AutoCommands.AutoOne;
+import frc.robot.commands.AutoCommands.AutoTwo;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
@@ -51,21 +55,16 @@ public class RobotContainer {
   public final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
   public final AutomaticObjectPlacementCommand autoObjectPlacement = new AutomaticObjectPlacementCommand(arm, armController);
 
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "Case 2";
-  private final SendableChooser<String>chooser = new SendableChooser<>();
-  private String autoSelected;
-  
-  //private final CommandXboxController driverController =
-  //   new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  // A chooser for autonomous commands
+  SendableChooser<Command> chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
     Gyro.poke();
-    chooser.setDefaultOption("Auto 1", autoOne);
-    chooser.addOption("Auto 2", autoTwo);
+    chooser.setDefaultOption("Auto 1", AutoOne); //change AutoOne as needed after writing code for AutoOne.java
+    chooser.addOption("Auto 2", AutoTwo); //change as needed
     SmartDashboard.putData(chooser);
   }
 
@@ -104,7 +103,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return chooser.getSelected();
-    return null;// Autos.exampleAuto(exampleSubsystem);
+    //return null; Autos.exampleAuto(exampleSubsystem);
   }
 
   public void onTeleopInit() {

@@ -167,4 +167,9 @@
       // public static final Pose3d TOP_RIGHT_POS     = new Pose3d(X_RIGHT,  Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
   
     }
+
+    public static class AutoConstants{
+      public static final double AUTO_DRIVE_DISTANCE_INCHES = 0.0; //change number
+      public static final double AUTO_DRIVE_SPEED = 0.0; //change number
+    }
   }
