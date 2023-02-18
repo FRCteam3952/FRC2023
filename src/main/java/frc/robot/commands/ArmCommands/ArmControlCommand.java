@@ -21,9 +21,9 @@ public class ArmControlCommand extends CommandBase{
         this.arm = arm;
         this.joystick = joystick;
         this.areaConst = 60; //can tune later
-        this.xSpeed = 0.05; // Inches per 20ms
-        this.ySpeed = 0.05; // Inches per 20ms
-        this.zSpeed = 0.05; // Inches per 20ms
+        this.xSpeed = 0.1; // Inches per 20ms
+        this.ySpeed = 0.1; // Inches per 20ms
+        this.zSpeed = 0.1; // Inches per 20ms
         this.turretSpeed = 0.2;
 
         addRequirements(arm);
@@ -75,16 +75,26 @@ public class ArmControlCommand extends CommandBase{
         arm.moveVector(joystick.getLateralMovement() * xSpeed, 0, 0);
     }
 
+    // Toggles whether PID control is active or not
+    private void togglePIDControl() {
+        if (joystick.getRawButtonWrapper(ControllerConstants.PID_CONTROL_TOGGLE_BUTTON_NUMBER)) {
+            arm.setPIDControlOn(!arm.getPIDControlOn());
+        }
+    }
+
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+        arm.setPIDControlOn(false);
+    }
 
     @Override
     public void execute() {
-        testPrimaryArmControl();
-        // primaryArmControlPID();
+        // testPrimaryArmControl();
+        primaryArmControl();
         // pickUpPosition();
+        togglePIDControl();
     }
 
     // Called once the command ends or is interrupted.
