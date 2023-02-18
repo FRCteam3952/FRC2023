@@ -20,7 +20,19 @@ public class ArmTestCommand extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        arm.setPivot1Speed(joystick.getLateralMovement());
+        arm.setPivot1Speed(joystick.getLateralMovement()/4);
+        System.out.println(joystick.getLateralMovement());
+        System.out.println(joystick.getHorizontalMovement());
+        arm.setPivot2Speed(joystick.getHorizontalMovement()/4);
+        if(joystick.getRawButtonWrapper(8)){
+            arm.setTurretSpeed(-0.3);
+        }
+        else if(joystick.getRawButtonWrapper(9)){
+            arm.setTurretSpeed(0.3);
+        }
+        else{
+            arm.setTurretSpeed(0);
+        }
     }
 
     // Called once the command ends or is interrupted.

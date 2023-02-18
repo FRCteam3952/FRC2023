@@ -35,6 +35,11 @@ public class LimeLightSubsystem extends SubsystemBase {
         }
         return ty;
     }
+    
+    public static float getArea() {
+        float tA = (NetworkTables.getLimeLightArea());
+        return tA;
+    }
 
     public static double getAngleAdjustment(){
         float angle = (NetworkTables.getConeOrientation()) * kp;

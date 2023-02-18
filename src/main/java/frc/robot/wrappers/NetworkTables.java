@@ -49,6 +49,10 @@ public class NetworkTables {
         NetworkTable table = INSTANCE.getTable("limelight");
         return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[2].floatValue();
     }
+    public static float getLimeLightArea(){
+        NetworkTable table = INSTANCE.getTable("limelight");
+        return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[3].floatValue();
+    }
     public static float getConeOrientation(){
         NetworkTable table = INSTANCE.getTable("limelight");
         return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[0].floatValue();

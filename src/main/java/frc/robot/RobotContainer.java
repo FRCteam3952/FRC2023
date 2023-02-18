@@ -93,6 +93,7 @@ public class RobotContainer {
     armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
     armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
     armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
+    armController.joystick.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
   }
 
   /**
@@ -107,7 +108,7 @@ public class RobotContainer {
   }
 
   public void onTeleopInit() {
-    this.driveTrain.setDefaultCommand(this.manualDrive);
-    this.arm.setDefaultCommand(this.testArmControl);
+    //this.driveTrain.setDefaultCommand(this.manualDrive);
+    this.arm.setDefaultCommand(this.armControl);
   }
 }
