@@ -47,6 +47,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final double kMinOutput = -0.3;
 
     private boolean pidOn = false;
+
     
     //arm control constructor
     public ArmSubsystem() {
@@ -175,7 +176,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
     public void goTowardIntendedCoordinates(){
         double[] angles = getCurrentAnglesDeg();
-
+        angles[0] = Double.NaN;
+        angles[1] = Double.NaN;
+        angles[2] = Double.NaN;
         if(angles[0] == Double.NaN || angles[1] == Double.NaN || angles[2] == Double.NaN ||
             targetAngle1 == Double.NaN || targetAngle2 == Double.NaN || targetAngleTurret == Double.NaN) {
             System.out.println("An angle is NaN, so skip");
@@ -184,12 +187,17 @@ public class ArmSubsystem extends SubsystemBase {
 
         double p1Speed = pidController1.calculate(angles[0], targetAngle1);
         double p2Speed = pidController2.calculate(angles[1], targetAngle2);
-        // System.out.println(angles[0] + " " + angles[1] + " " );
+        System.out.println(angles[0] + " " + angles[1] + " " );
         // System.out.println(targetAngle1 + " " + targetAngle2 + " " );
 
+        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
+            System.out.println("PID is NaN, so skip");
+            return;
+        }
+
         System.out.println(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)) + " " + Math.min(kMaxOutput, Math.max(p2Speed,kMinOutput)));
-        setPivot1Speed(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)));
-        setPivot2Speed(Math.min(kMaxOutput, Math.max(p2Speed, kMinOutput)));
+        // setPivot1Speed(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)));
+        // setPivot2Speed(Math.min(kMaxOutput, Math.max(p2Speed, kMinOutput)));
     }
 
     /*
@@ -218,6 +226,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase calibrateArm() {
+        pidOn = false;
         return this.runOnce(
             () -> {
                 while (!getPivot2LimitPressed()) {
@@ -230,6 +239,7 @@ public class ArmSubsystem extends SubsystemBase {
                 setPivot1Speed(0);
                 this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
                 this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+                pidOn = true;
             });
     }
 
@@ -244,12 +254,12 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // handles limit switches
-        if (getPivot1LimitPressed()) {
+        if (getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1) {
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
 
         } 
 
-        if (getPivot2LimitPressed()) {
+        if (getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
         }
         
