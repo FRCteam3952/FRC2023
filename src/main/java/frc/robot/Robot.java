@@ -32,6 +32,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     this.robotContainer = new RobotContainer();
+    chooser.setDefaultOption("Default Auto", kDefaultAuto)
+    chooser.addOption("My Auto", kCustomAuto);
+    SmartDashboard.putData("Auto choices", chooser);
   }
 
   /**
@@ -63,16 +66,28 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
-
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+
+    autoSelected = chooser.getSelected();
+    System.out.println("Auto selected: " + autoSelected);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    switch (autoSelected) {
+      case kCustomAuto:
+        //custom auto code
+        break;
+      case kDefaultAuto:
+      default:
+        //default code
+        break;
+    }
+  }
 
   @Override
   public void teleopInit() {
