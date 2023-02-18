@@ -22,7 +22,7 @@ public final class InverseKinematicsUtil {
         y_pos = y;
         z_pos = z;
         double totalLimbLength = ArmConstants.LIMB1_LENGTH + ArmConstants.LIMB2_LENGTH;
-        if(dist3d >= totalLimbLength - ArmConstants.DISTANCE_DELTA) {
+        if (dist3d >= totalLimbLength - ArmConstants.DISTANCE_DELTA) {
             adjusted_x *= ((totalLimbLength - ArmConstants.DISTANCE_DELTA) / dist3d); 
             adjusted_y *= ((totalLimbLength - ArmConstants.DISTANCE_DELTA) / dist3d);
             adjusted_z *= ((totalLimbLength - ArmConstants.DISTANCE_DELTA) / dist3d); 
@@ -30,6 +30,15 @@ public final class InverseKinematicsUtil {
             y_pos = adjusted_y * ((totalLimbLength - ArmConstants.DISTANCE_DELTA) / dist3d) + ArmConstants.ORIGIN_HEIGHT;
             z_pos *= ((totalLimbLength - ArmConstants.DISTANCE_DELTA) / dist3d);
         }
+        if (dist3d <= ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) {
+            adjusted_x *= ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d); 
+            adjusted_y *= ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d);
+            adjusted_z *= ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d); 
+            x_pos *= ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d); 
+            y_pos = adjusted_y * ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d) + ArmConstants.ORIGIN_HEIGHT;
+            z_pos *= ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d);
+        }
+
 
         if (dist3d == 0) { //zero, zero on coordinate -> prevent divide by 0 exception
             return new double[] {0,0,0};
