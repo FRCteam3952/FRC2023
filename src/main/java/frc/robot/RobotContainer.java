@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ManualDriveCommand;
@@ -49,6 +50,11 @@ public class RobotContainer {
   public final ArmTestCommand testArmControl = new ArmTestCommand(arm, armController);
   public final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
   public final AutomaticObjectPlacementCommand autoObjectPlacement = new AutomaticObjectPlacementCommand(arm, armController);
+
+  private static final String kDefaultAuto = "Default";
+  private static final String kCustomAuto = "Case 2";
+  private final SendableChooser<String>chooser = new SendableChooser<>();
+  private String autoSelected;
   
   //private final CommandXboxController driverController =
   //   new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -58,6 +64,9 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     Gyro.poke();
+    chooser.setDefaultOption("Auto 1", autoOne);
+    chooser.addOption("Auto 2", autoTwo);
+    SmartDashboard.putData(chooser);
   }
 
   /**
@@ -93,6 +102,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
+    return chooser.getSelected();
     return null;// Autos.exampleAuto(exampleSubsystem);
   }
 
