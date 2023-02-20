@@ -58,6 +58,21 @@ public class NetworkTables {
         return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[0].floatValue();
     }
 
+    public static float getJetsonCoordinateXError(){
+        NetworkTable table = INSTANCE.getTable(key: "Jetson"); // Not sure how to use key for network tables
+        return table.getEntry(key: "jetson").getNumberArray(new Number[]{0,0,0})[1].floatValue();
+    }
+
+    public static float getJetsonCoordinateYError(){
+        NetworkTable table = INSTANCE.getTable(key: "Jetson");
+        return table.getEntry(key: "jetson").getNumberArray(new Number[]{0,0,0})[2].floatValue();
+    }
+
+    public static float getJetsonCoordinateZError(){
+        NetworkTable table = INSTANCE.getTable(key: "Jetson");
+        return table.getEntry(key: "jetson").getNumberArray(new Number[]{0,0,0})[3].floatValue();
+    }
+
     public static NetworkTableEntry getEntry(String tableName, String entryName) {
         return getTable(tableName).getEntry(entryName);
     }
