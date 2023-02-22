@@ -63,7 +63,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
             });
     }
 
-    // Automatically rotates claw to match angle
+    // Automatically rotates claw to match angle when designated button is held down
     public CommandBase autoRotate() {
         return this.runOnce(
             () -> {

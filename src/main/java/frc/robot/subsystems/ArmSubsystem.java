@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.RobotContainer;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 
@@ -44,10 +45,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final double kMaxOutput = 0.3;
     private final double kMinOutput = -0.3;
+
+    private boolean pidOn = false;
+
     
     //arm control constructor
     public ArmSubsystem() {
-        //initialize arm motors
+        // Initialize arm motors
         this.pivot1 = new CANSparkMax(PortConstants.PIVOT1_PORT, MotorType.kBrushless);
         this.pivot2 = new CANSparkMax(PortConstants.PIVOT2_PORT, MotorType.kBrushless);
         this.turret = new CANSparkMax(PortConstants.TURRET_PORT, MotorType.kBrushless);
@@ -56,7 +60,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot2.setInverted(true);
         this.turret.setInverted(false);
 
-        //set up arm encoders and position conversion factors
+        // Set up arm encoders and position conversion factors
         this.pivot1Encoder = this.pivot1.getEncoder();
         this.pivot2Encoder = this.pivot2.getEncoder();
         this.turretEncoder = this.turret.getEncoder();
@@ -72,18 +76,16 @@ public class ArmSubsystem extends SubsystemBase {
         this.pidController2 = new PIDController(9.6e-3, 0, 0);
         this.pidController2.setTolerance(ArmConstants.ANGLE_DELTA);
 
-        //initialize arm limit switches
+        // Initialize arm limit switches
         this.arm1Limit = new DigitalInput(PortConstants.PIVOT_1_LIMIT_PORT);
         this.arm2Limit = new DigitalInput(PortConstants.PIVOT_2_LIMIT_PORT);
 
-        //this.pidController = new PIDController(0.5, 0, 0); // tune later lol
-
-        //set starting arm angles
+        // Set starting arm angles
         this.targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
         this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
         this.targetAngleTurret = 0;
 
-        //get starting coords from the initial angle constants
+        // Get starting coords from the initial angle constants
         double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE,ArmConstants.ARM_2_INITIAL_ANGLE,0);
         this.targetX = startingCoords[0];
         this.targetY = startingCoords[1];
@@ -175,20 +177,25 @@ public class ArmSubsystem extends SubsystemBase {
     public void goTowardIntendedCoordinates(){
         double[] angles = getCurrentAnglesDeg();
 
-        if(angles[0] == Double.NaN || angles[1] == Double.NaN || angles[2] == Double.NaN ||
-            targetAngle1 == Double.NaN || targetAngle2 == Double.NaN || targetAngleTurret == Double.NaN) {
+        if(Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) ||
+            Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
             System.out.println("An angle is NaN, so skip");
             return;
         }
 
         double p1Speed = pidController1.calculate(angles[0], targetAngle1);
         double p2Speed = pidController2.calculate(angles[1], targetAngle2);
-        // System.out.println(angles[0] + " " + angles[1] + " " );
+        System.out.println(angles[0] + " " + angles[1] + " " );
         // System.out.println(targetAngle1 + " " + targetAngle2 + " " );
 
+        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
+            System.out.println("PID is NaN, so skip");
+            return;
+        }
+
         System.out.println(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)) + " " + Math.min(kMaxOutput, Math.max(p2Speed,kMinOutput)));
-        setPivot1Speed(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)));
-        setPivot2Speed(Math.min(kMaxOutput, Math.max(p2Speed, kMinOutput)));
+        // setPivot1Speed(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)));
+        // setPivot2Speed(Math.min(kMaxOutput, Math.max(p2Speed, kMinOutput)));
     }
 
     /*
@@ -201,7 +208,7 @@ public class ArmSubsystem extends SubsystemBase {
         //update intended Angles
         double[] intendedAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z);
 
-        if(intendedAngles[0] == Double.NaN || intendedAngles[1] == Double.NaN || intendedAngles[2] == Double.NaN) {
+        if(Double.isNaN(intendedAngles[0]) || Double.isNaN(intendedAngles[1]) || Double.isNaN(intendedAngles[2])) {
             System.out.println("An angle is NaN, so skip");
             return;
         }
@@ -217,6 +224,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase calibrateArm() {
+        pidOn = false;
         return this.runOnce(
             () -> {
                 while (!getPivot2LimitPressed()) {
@@ -229,23 +237,47 @@ public class ArmSubsystem extends SubsystemBase {
                 setPivot1Speed(0);
                 this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
                 this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+                pidOn = true;
             });
+    }
+
+    public void setPIDControlOn(boolean value) {
+        pidOn = value;
+    }
+
+    public boolean getPIDControlOn() {
+        return pidOn;
     }
 
     @Override
     public void periodic() {
         // handles limit switches
-        if (getPivot1LimitPressed()) {
+        if (getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1) {
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
-
+            double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
+            this.targetX = startingCoords[0];
+            this.targetY = startingCoords[1];
+            this.targetZ = startingCoords[2];
+            this.cur_x = startingCoords[0];
+            this.cur_y = startingCoords[1];
+            this.cur_z = startingCoords[2];
         } 
 
-        if (getPivot2LimitPressed()) {
+        if (getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+            double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
+            this.targetX = startingCoords[0];
+            this.targetY = startingCoords[1];
+            this.targetZ = startingCoords[2];
+            this.cur_x = startingCoords[0];
+            this.cur_y = startingCoords[1];
+            this.cur_z = startingCoords[2];
         }
-
+        
         //handles PID
-        goTowardIntendedCoordinates();
+        if (pidOn) {
+            goTowardIntendedCoordinates();
+        }
         
         
     }
