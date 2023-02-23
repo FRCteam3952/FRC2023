@@ -51,6 +51,10 @@ public class NetworkTables {
         NetworkTable table = INSTANCE.getTable("limelight");
         return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[0].floatValue();
     }
+    public static Double[] getPose(){
+        NetworkTable table = INSTANCE.getTable("jetson");
+        return table.getEntry("pose").getDoubleArray(new Double[]{0.0,0.0,0.0});
+    }
 
     /**
      * Returns the entry reference from NetworkTables
