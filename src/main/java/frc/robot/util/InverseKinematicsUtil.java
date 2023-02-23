@@ -44,19 +44,19 @@ public final class InverseKinematicsUtil {
             double lineAngle = angleCalc < 0 ? 360 + angleCalc : angleCalc;
             a1 = lineAngle*2 - a1;
             a2 = 360 - a2;
-            if (a1 > 350){
-                a1 = 350;
+            if (a1 > (360 - ArmConstants.ARM_1_INITIAL_ANGLE)){
+                a1 = (360 - ArmConstants.ARM_1_INITIAL_ANGLE);
             }
-            if(a2 > 345){
-                a2 = 345;
+            if(a2 > (360 - ArmConstants.ARM_2_INITIAL_ANGLE)){
+                a2 = (360 - ArmConstants.ARM_2_INITIAL_ANGLE);
             }
         }
         else{
-            if (a1 < 10){
-                a1 = 10;
+            if (a1 < ArmConstants.ARM_1_INITIAL_ANGLE){
+                a1 = ArmConstants.ARM_1_INITIAL_ANGLE;
             }
-            if(a2 < 15){
-                a2 = 15;
+            if(a2 < ArmConstants.ARM_2_INITIAL_ANGLE){
+                a2 = ArmConstants.ARM_2_INITIAL_ANGLE;
             }
         }
         
