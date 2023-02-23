@@ -203,7 +203,7 @@ public class ArmSubsystem extends SubsystemBase {
            return;
         }
         //update intended Angles
-        double[] intendedAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z);
+        double[] intendedAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, false);
 
         if(Double.isNaN(intendedAngles[0]) || Double.isNaN(intendedAngles[1]) || Double.isNaN(intendedAngles[2])) {
             System.out.println("An angle is NaN, so skip");
