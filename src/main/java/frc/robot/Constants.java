@@ -167,11 +167,7 @@
       // public static final Pose3d TOP_LEFT_POS      = new Pose3d(X_LEFT,   Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
       // public static final Pose3d TOP_CENTER_POS    = new Pose3d(X_MIDDLE, Y_TOP_PLATFORM_HEIGHT, Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
       // public static final Pose3d TOP_RIGHT_POS     = new Pose3d(X_RIGHT,  Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
-
-
-    public static class AutoConstants {
-      public static final double AUTO_DRIVE_DISTANCE_INCHES = 0.0; //change number
-      public static final double AUTO_DRIVE_SPEED = 0.0; //change number
+  
     }
     
     public static class AprilTagConstants {
@@ -187,7 +183,6 @@
         {40.45,108.19,18.22,0},
         {40.45,42.19,18.22,0}
       };
-      
       /*
       TAG_1_X = 610.77
       TAG_1_Y = 42.19
@@ -222,6 +217,5 @@
       TAG_8_Z = 18.22
       TAG_8_Z_ROTATION = 0
       */
-
     }
   }

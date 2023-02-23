@@ -9,9 +9,6 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.Gyro;
 import frc.robot.subsystems.LimeLightSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.wrappers.NetworkTables;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.controller.PIDController;
 
 /**
  * The command to drive the robot manually with joysticks.
@@ -54,39 +51,5 @@ public class ManualDriveCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  // Returns Jetson coordinates.
-  public static float getJetsonCoordinateX() {
-    float tx = (NetworkTables.getJetsonCoordinateXError() - 160) * kp; // Not sure if the kp is supposed to be there
-    
-    // if tx is too big, return the max of 1 or -1 (We might need to change this and the others too because I don't know what values are needed)
-    if (Math.abs(tx) > 1) {
-        // return 1 if tx is greater than 1, -1 if tx is less than -1
-        return Math.copySign(1, tx);
-    }
-    return tx;
-  }
-
-  public static float getJetsonCoordinateY() {
-    float ty = (NetworkTables.getJetsonCoordinateYError() - 120) * kp;
-
-    // if ty is too big, return the max of 1 or -1
-    if (Math.abs(ty) > 1) {
-        // return 1 if ty is greater than 1, -1 if ty is less than -1
-        return Math.copySign(1, ty);
-    }
-    return ty;
-  }
-
-  public static float getJetsonCoordinateZ() {
-    float tz = (NetworkTables.getJetsonCoordinateZError() - 120) * kp;
-
-    // if ty is too big, return the max of 1 or -1
-    if (Math.abs(tz) > 1) {
-        // return 1 if ty is greater than 1, -1 if ty is less than -1
-        return Math.copySign(1, tz);
-    }
-    return tz;
   }
 }
