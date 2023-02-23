@@ -24,7 +24,7 @@ public class RobotGyro extends SubsystemBase {
 
   private static double angleAdjust = 0;
 
-  public static double getGyroAngle() {
+  public static double getGyroAngleDegrees() {
     return gyro.getAngle() + angleAdjust;
   }
 
