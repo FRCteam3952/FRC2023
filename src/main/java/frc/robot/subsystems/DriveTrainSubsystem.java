@@ -313,7 +313,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     
     odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegrees())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
     var pose = odometry.getPoseMeters();
-    ArmGyro.getGyroAngle();
+
     //System.out.println("pose: " + pose.getX() + ", " + pose.getY() + ", " + pose.getRotation().getDegrees() + ", gyro: " + RobotGyro.getGyroAngleDegrees());
 
     //System.out.println("FL: " + getFrontLeftEncoder() + ", FR: " + getFrontRightEncoder() + ", RL: " + getRearLeftEncoder() + ", RR: " + getRearRightEncoder());
