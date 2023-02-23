@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.Gyro;
+import frc.robot.subsystems.RobotGyro;
 import frc.robot.subsystems.LimeLightSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -37,7 +37,7 @@ public class ManualDriveCommand extends CommandBase {
   @Override
   public void execute() {
     if (this.joystick.getRawButtonWrapper(8)){
-      Gyro.resetGyroAngle();
+      RobotGyro.resetGyroAngle();
     }
     this.driveTrain.tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(this.joystick.getHorizontalMovement(),-this.joystick.getLateralMovement());
 

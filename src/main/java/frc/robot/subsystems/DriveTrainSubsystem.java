@@ -84,7 +84,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     this.frontLeftMotor .setInverted(true);
     this.rearLeftMotor  .setInverted(true);
 
-    this.odometry = new DifferentialDriveOdometry(new Rotation2d(Gyro.getGyroAngle()), 0, 0);
+    this.odometry = new DifferentialDriveOdometry(new Rotation2d(RobotGyro.getGyroAngle()), 0, 0);
 
     this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
     // m_dDrive.setSafetyEnabled(false);
@@ -112,7 +112,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
     double speed = MathUtil.distance(0, x, 0, y); // Speed should take the distance to move into account
     double target = normalizeAngle((Math.atan2(y,x) * 180 / Math.PI) - 90); // Normalize the target angle based on the slope from (0,0) to the point on the unit circle from joystick
-    double current = swapDirection?normalizeAngle(Gyro.getGyroAngle()+180):normalizeAngle(Gyro.getGyroAngle()); // Our current angle, normalized and accounting for if we're going "backwards"
+    double current = swapDirection?normalizeAngle(RobotGyro.getGyroAngle()+180):normalizeAngle(RobotGyro.getGyroAngle()); // Our current angle, normalized and accounting for if we're going "backwards"
 
     // The largest possible movement is 90 degrees because our robot is bi-directional (forwards or backwards does not matter on the tank drive)
     // Since the maximum distance from the x axis is 90 degrees, we check for the shortest angle between the two. If the smallest angle is greater than 90, we need to switch the side we're looking at.
@@ -178,7 +178,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   public double findZRotationSpeedFromAngle(double angle) {
 
-    double angleDifference = angle - Gyro.getGyroAngle(); // gets angle difference
+    double angleDifference = angle - RobotGyro.getGyroAngle(); // gets angle difference
 
     if (Math.abs(angleDifference) >= 180) {
       /*
@@ -221,7 +221,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
     odometry.resetPosition(
-      new Rotation2d(Gyro.getGyroAngle()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), pose);
+      new Rotation2d(RobotGyro.getGyroAngle()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), pose);
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -311,7 +311,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     
-    odometry.update(new Rotation2d(Gyro.getGyroAngle()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
+    odometry.update(new Rotation2d(RobotGyro.getGyroAngle()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
 
     //System.out.println("FL: " + getFrontLeftEncoder() + ", FR: " + getFrontRightEncoder() + ", RL: " + getRearLeftEncoder() + ", RR: " + getRearRightEncoder());
     //System.out.println("FL: " + frontLeft.get() + ", FR: " + frontRight.get() + ", RL: " + rearLeft.get() + ", RR: " + rearRight.get());

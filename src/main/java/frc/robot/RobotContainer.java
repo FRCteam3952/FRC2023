@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.Gyro;
+import frc.robot.subsystems.RobotGyro;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.wrappers.TrajectoryReader;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -57,7 +57,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    Gyro.poke();
+    RobotGyro.poke();
   }
 
   /**

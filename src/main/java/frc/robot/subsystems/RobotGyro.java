@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.ADIS16470_IMU;
  * Wrapper around gyro
  */
 
-public class Gyro extends SubsystemBase {
+public class RobotGyro extends SubsystemBase {
   private static final ADIS16470_IMU gyro = new ADIS16470_IMU();
 
   static {
