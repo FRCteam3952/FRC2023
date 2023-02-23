@@ -66,8 +66,14 @@ public class ArmGyro extends SubsystemBase {
             System.out.println("Arm Gyro not Connected");
         }
     }
-    public static double getGyroAngle() {
-        return Double.parseDouble(arduino.readString()) + gyro_adjust;
+    public static Double getGyroAngle() {
+        if(arduino.getBytesReceived() > 0){
+            return Double.parseDouble(arduino.readString()) + gyro_adjust;
+        }
+        else{
+            return 0.0;
+        }
+
     }
 
     public static void setGyroAngle(double angle){
