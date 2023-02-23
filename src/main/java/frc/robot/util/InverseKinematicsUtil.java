@@ -17,12 +17,14 @@ public final class InverseKinematicsUtil {
         double a1, a2, turretAngle;
         double adjusted_y = y - ArmConstants.ORIGIN_HEIGHT;   // calculate height relative to the origin (at the tip of the non-moving rod which holds the arm)
         double adjusted_x = x;
-        if (x < 5){
-            adjusted_x = 5;
-        }
+        // if (x < 5){
+        //     adjusted_x = 5;
+        // }
+        // I don't think this works because it doesn't take into account the angle of the turret
         double adjusted_z = z;
         double dist3d = MathUtil.distance(0, adjusted_x, 0, adjusted_y, 0, z);     // calc distance in 3d from top pivot point
         double totalLimbLength = ArmConstants.LIMB1_LENGTH + ArmConstants.LIMB2_LENGTH;
+        double horizontalDist = MathUtil.distance(0, adjusted_x, 0, z);
         if(dist3d > totalLimbLength) {
             adjusted_x *= (totalLimbLength / dist3d); 
             adjusted_y *= (totalLimbLength / dist3d);
@@ -31,13 +33,11 @@ public final class InverseKinematicsUtil {
             y_pos = adjusted_y;
             z_pos = adjusted_z;
         }
-        if (dist3d <= ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) {
-            adjusted_x *= ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d); 
-            adjusted_y *= ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d);
-            adjusted_z *= ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d); 
-            x_pos *= ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d); 
-            y_pos = adjusted_y * ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d) + ArmConstants.ORIGIN_HEIGHT;
-            z_pos *= ((ArmConstants.MIN_DISTANCE + ArmConstants.DISTANCE_DELTA) / dist3d);
+        if (horizontalDist <= ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) {
+            adjusted_x *= ((ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) / horizontalDist); 
+            adjusted_z *= ((ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) / horizontalDist); 
+            x_pos *= ((ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) / horizontalDist); 
+            z_pos *= ((ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) / horizontalDist);
         }
 
         if (dist3d == 0) { //zero, zero on coordinate -> prevent divide by 0 exception
