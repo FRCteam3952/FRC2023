@@ -1,13 +1,14 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.I2C;
+//import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * I2C Gyro, copied from: <a href="https://www.reddit.com/r/FRC/comments/2u4bvf/help_with_gyro">...</a>
  */
 public class ArmGyro extends SubsystemBase {
-    private static final byte MPU6050_ADDRESS = 0x68;
+    /*private static final byte MPU6050_ADDRESS = 0x68;
     private static final int REGISTER_PWR_MGMT_1 = 0x68;
     private static final int REGISTER_GYRO = 0x43;
 
@@ -30,6 +31,32 @@ public class ArmGyro extends SubsystemBase {
         int z = (buffer[4] << 8) | buffer[5];
 
         return new int[] {x, y, z};
+    }*/
+
+    public static SerialPort arduino;
+
+    public static void poke(){
+        try{
+            arduino = new SerialPort(9600, SerialPort.Port.kUSB);
+            System.out.println("Arm Gyro Connected");
+        } catch (Exception e){
+            System.out.println("Failed to Connect, trying kUSB1");
+            try{
+                arduino = new SerialPort(9600, SerialPort.Port.kUSB1);
+                System.out.println("Arm Gyro Connected");
+            } catch (Exception e1){
+                System.out.println("Failed to Connect, trying kUSB2");
+                try{
+                    arduino = new SerialPort(9600, SerialPort.Port.kUSB2);
+                    System.out.println("Arm Gyro Connected");
+                } catch (Exception e2){
+                    System.out.println("Failed to Connect, all connections failed");
+                }
+            }
+        }
+    }
+    public static double getGyroAngle() {
+        return Double.parseDouble(arduino.readString());
     }
 
     @Override
