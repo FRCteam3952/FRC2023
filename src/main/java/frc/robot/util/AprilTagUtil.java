@@ -1,11 +1,14 @@
 package frc.robot.util;
-// package Constants;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.Constants;
 
-public class AprilTagUtil {
-    public Pose3d pose_from_tag(double [] rel_cords, int tag_id) {
+public final class AprilTagUtil {
+    private AprilTagUtil() {
+        throw new UnsupportedOperationException("AprilTagUtil is a utility class and cannot be instantiated!");
+    }
+
+    public static Pose3d poseFromTag(double [] rel_cords, int tag_id) {
         /* rel_cords.length() = 3, it's an [x,y,z] coordinate pair
         if the field is rectangular, x is dist of apriltag to the right of center of robot,
         z is up, y is vertically upwards
@@ -19,7 +22,5 @@ public class AprilTagUtil {
         };
         Pose3d pose = new Pose3d(abs_cords[0], abs_cords[1], abs_cords[2], null);
         return pose;
-
     }
-
 }

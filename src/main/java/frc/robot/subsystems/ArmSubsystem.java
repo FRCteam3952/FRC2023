@@ -10,8 +10,6 @@ import frc.robot.RobotContainer;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 
-// import java.security.DigestInputStream;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
@@ -43,11 +41,10 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetAngle2;
     private double targetAngleTurret;
 
-    private final double kMaxOutput = 0.3;
-    private final double kMinOutput = -0.3;
+    private static final double kMaxOutput = 0.3;
+    private static final double kMinOutput = -0.3;
 
     private boolean pidOn = false;
-
     
     //arm control constructor
     public ArmSubsystem() {

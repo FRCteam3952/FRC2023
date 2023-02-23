@@ -35,12 +35,6 @@ public class NetworkTables {
         return INSTANCE.getTable(tableName);
     }
 
-    /**
-     * Returns the entry reference from NetworkTables
-     * @param tableName Name of the table
-     * @param entryName Name of the entry
-     * @return {@link NetworkTableEntry} corresponding
-     */
     public static float getLimeLightErrorX(){
         NetworkTable table = INSTANCE.getTable("limelight");
         return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[1].floatValue();
@@ -58,6 +52,12 @@ public class NetworkTables {
         return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[0].floatValue();
     }
 
+    /**
+     * Returns the entry reference from NetworkTables
+     * @param tableName Name of the table
+     * @param entryName Name of the entry
+     * @return {@link NetworkTableEntry} corresponding
+     */
     public static NetworkTableEntry getEntry(String tableName, String entryName) {
         return getTable(tableName).getEntry(entryName);
     }
