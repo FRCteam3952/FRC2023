@@ -67,7 +67,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
         this.turretEncoder.setPosition(0);
 
-        this.pidController1 = new PIDController(1.69e-2, 0, 0);
+        this.pidController1 = new PIDController(1.69e-2, 0, 0); // nice
         this.pidController1.setTolerance(ArmConstants.ANGLE_DELTA);
         this.pidController2 = new PIDController(9.6e-3, 0, 0);
         this.pidController2.setTolerance(ArmConstants.ANGLE_DELTA);

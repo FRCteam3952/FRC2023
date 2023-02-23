@@ -94,7 +94,7 @@
       public static final double KA_VOLTS_SECONDS_SQ_PER_METER = 0.2;
       public static final double P_DRIVE_VEL = 8.5;
 
-      public static final double TRACKWIDTH_METERS = 0.69;
+      public static final double TRACKWIDTH_METERS = 0.69; // nice
       public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
           new DifferentialDriveKinematics(TRACKWIDTH_METERS);
 
