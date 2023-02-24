@@ -171,8 +171,16 @@ public final class Constants {
     }
 
     public static class AprilTagConstants {
-        // All distances are in inches, located on pg 4 here: https://firstfrc.blob.core.windows.net/frc2023/FieldAssets/2023LayoutMarkingDiagram.pdf
-        // Relative to origin at bottom left of field
+        /**
+         * <pre>
+         * All distances are in inches, located on pg 4 here: <a href="https://firstfrc.blob.core.windows.net/frc2023/FieldAssets/2023LayoutMarkingDiagram.pdf">...</a>, to the center of the tag.
+         * Relative to origin at right corner from Blue Alliance perspective.
+         * +Y is towards the left corner,
+         * +X is towards the Red Alliance.
+         *
+         * Index 0 is TagID 1, Index 1 is TagID 2, etc.
+         * </pre>
+         */
         public static final double[][] tagInfo = new double[][]{
                 {610.77, 42.19, 18.22, 180},
                 {610.77, 108.19, 18.22, 180},
@@ -183,39 +191,5 @@ public final class Constants {
                 {40.45, 108.19, 18.22, 0},
                 {40.45, 42.19, 18.22, 0}
         };
-      /*
-      TAG_1_X = 610.77
-      TAG_1_Y = 42.19
-      TAG_1_Z = 18.22
-      TAG_1_Z_ROTATION = 180
-      TAG_2_X = 610.77
-      TAG_2_Y = 108.19
-      TAG_2_Z = 18.22
-      TAG_2_Z_ROTATION = 180
-      TAG_3_X = 610.77
-      TAG_3_Y = 174.19
-      TAG_3_Z = 18.22
-      TAG_3_Z_ROTATION = 180
-      TAG_4_X = 636.96
-      TAG_4_Y = 265.74
-      TAG_4_Z = 27.38
-      TAG_4_Z_ROTATION = 180
-      TAG_5_X = 14.25
-      TAG_5_Y = 265.74
-      TAG_5_Z = 27.38
-      TAG_5_Z_ROTATION = 0
-      TAG_6_X = 40.45
-      TAG_6_Y = 174.19
-      TAG_6_Z = 18.22
-      TAG_6_Z_ROTATION = 0
-      TAG_7_X = 40.45
-      TAG_7_Y = 108.19
-      TAG_7_Z = 18.22
-      TAG_7_Z_ROTATION = 0
-      TAG_8_X = 40.45
-      TAG_8_Y = 42.19
-      TAG_8_Z = 18.22
-      TAG_8_Z_ROTATION = 0
-      */
     }
 }
