@@ -21,7 +21,7 @@ public class ArmGyro extends SubsystemBase {
                 arduino = new SerialPort(19200, port_type);
                 System.out.println("Arm Gyro Connected");
                 break;
-            } catch (Exception e2){
+            } catch (Exception e){
                 System.out.println("Failed to Connect");
             }
         }
@@ -35,7 +35,7 @@ public class ArmGyro extends SubsystemBase {
             System.out.println("Arm Gyro not Connected");
         }
     }
-    
+
     public static Double getGyroAngle() {
         if(arduino.getBytesReceived() > 0){
             return Double.parseDouble(arduino.readString()) + gyro_adjust;
