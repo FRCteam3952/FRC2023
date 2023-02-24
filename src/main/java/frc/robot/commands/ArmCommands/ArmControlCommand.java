@@ -65,13 +65,13 @@ public class ArmControlCommand extends CommandBase{
     // Moves arm to preset distance above the floor for picking up gamepieces 
     private void pickUpPositionFlipped() {
         if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED)) {
-            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2]);
+            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], true);
         }
     }
 
     private void pickUpPositionNotFlipped() {
         if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_NOT_FLIPPED)) {
-            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2]);
+            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], false);
         }
     }
 
@@ -97,8 +97,11 @@ public class ArmControlCommand extends CommandBase{
     @Override
     public void execute() {
         // testPrimaryArmControl();
-        pickUpPositionFlipped();
-        pickUpPositionNotFlipped();
+        if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED)) {
+            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], true);
+        } else {
+            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], false);
+        }
         primaryArmControl();
         // pickUpPosition();
         togglePIDControl();
