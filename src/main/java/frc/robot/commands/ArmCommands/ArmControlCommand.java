@@ -65,7 +65,8 @@ public class ArmControlCommand extends CommandBase {
     // Moves arm to preset distance above the floor for picking up gamepieces 
     private void pickUpPosition() {
         if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER)) {
-            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2]);
+            double[] armCoordinates = arm.getCurrentCoordinates();
+            arm.setIntendedCoordinates(armCoordinates[0], ArmConstants.PICK_UP_POSITION_Y, armCoordinates[2]);
         }
     }
 
