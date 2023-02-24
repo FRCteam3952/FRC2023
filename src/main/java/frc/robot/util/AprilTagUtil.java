@@ -14,7 +14,7 @@ public final class AprilTagUtil {
         z is up, y is vertically upwards
         */
         // tag_id is apriltag number from 1 to 8
-        tag_id = tag_id - 1;
+        tag_id--;
         double[] abs_cords = {Constants.AprilTagConstants.tagInfo[tag_id][0] - rel_cords[0],
                 Constants.AprilTagConstants.tagInfo[tag_id][1] - rel_cords[1],
                 Constants.AprilTagConstants.tagInfo[tag_id][2] - rel_cords[2]
