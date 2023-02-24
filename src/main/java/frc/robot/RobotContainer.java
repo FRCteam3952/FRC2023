@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.RobotGyro;
 import frc.robot.subsystems.ArmGyro;
 import frc.robot.subsystems.LimeLightSubsystem;
@@ -32,75 +33,76 @@ import frc.robot.subsystems.DriveTrainSubsystem;
  */
 
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
-  public final ArmSubsystem arm = new ArmSubsystem();
-  public final ClawGripSubsystem clawGrip = new ClawGripSubsystem();
-  public final ClawRotationSubsystem clawRotation = new ClawRotationSubsystem();
-  public final LimeLightSubsystem limelight = new LimeLightSubsystem();
+    // The robot's subsystems and commands are defined here...
+    public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
+    public final ArmSubsystem arm = new ArmSubsystem();
+    public final ClawGripSubsystem clawGrip = new ClawGripSubsystem();
+    public final ClawRotationSubsystem clawRotation = new ClawRotationSubsystem();
 
-  public final TrajectoryReader trajectoryReader = new TrajectoryReader("robogui", "trajectory");
+    public final TrajectoryReader trajectoryReader = new TrajectoryReader("robogui", "trajectory");
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  public final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
-  public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
+    // Replace with CommandPS4Controller or CommandJoystick if needed
+    public final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
+    public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
 
-  public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController, limelight);
+    public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
 
-  public final ArmTestCommand testArmControl = new ArmTestCommand(arm, armController);
-  public final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
-  public final AutomaticObjectPlacementCommand autoObjectPlacement = new AutomaticObjectPlacementCommand(arm, armController);
-  
-  //private final CommandXboxController driverController =
-  //   new CommandXboxController(OperatorConstants.kDriverControllerPort);
+    public final ArmTestCommand testArmControl = new ArmTestCommand(arm, armController);
+    public final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
+    public final AutomaticObjectPlacementCommand autoObjectPlacement = new AutomaticObjectPlacementCommand(arm, armController);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
-    RobotGyro.poke();
-    ArmGyro.poke();
-  }
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    public RobotContainer() {
+        // Configure the trigger bindings
+        configureBindings();
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(exampleSubsystem::exampleCondition)
-    //    .onTrue(new ManualDrive(exampleSubsystem));
+        // Poke the static classes so their static initializers are run at startup.
+        LimeLightSubsystem.poke();
+        RobotGyro.poke();
+        ArmGyro.poke();
+    }
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    // driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
-    
-    // driverController.joystick.button(ControllerConstants.RUN_GUI_TRAJECTORY_BUTTON_NUMBER).onTrue(this.driveTrain.followTrajectoryCommand(this.trajectoryReader.currentTrajectory));
-    armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).whileTrue(clawGrip.closeClaw());
-    armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).onFalse(clawGrip.openClaw());
-    armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
-    armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
-    armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
-    armController.joystick.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
-  }
+    /**
+     * Use this method to define your trigger->command mappings. Triggers can be created via the
+     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+     * predicate, or via the named factories in {@link
+     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+     * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+     * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+     * joysticks}.
+     */
+    private void configureBindings() {
+        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+        // new Trigger(exampleSubsystem::exampleCondition)
+        //    .onTrue(new ManualDrive(exampleSubsystem));
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;// Autos.exampleAuto(exampleSubsystem);
-  }
+        // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+        // cancelling on release.
+        // driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
 
-  public void onTeleopInit() {
-    this.driveTrain.setDefaultCommand(this.manualDrive);
-    this.arm.setDefaultCommand(this.armControl);
-  }
+        // driverController.joystick.button(ControllerConstants.RUN_GUI_TRAJECTORY_BUTTON_NUMBER).onTrue(this.driveTrain.followTrajectoryCommand(this.trajectoryReader.currentTrajectory));
+        armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).whileTrue(clawGrip.closeClaw());
+        armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).onFalse(clawGrip.openClaw());
+        armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
+        armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
+        armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
+        armController.joystick.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
+    }
+
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        // An example command will be run in autonomous
+        return Commands.none();// Autos.exampleAuto(exampleSubsystem);
+    }
+
+    public void onTeleopInit() {
+        this.driveTrain.setDefaultCommand(this.manualDrive);
+        this.arm.setDefaultCommand(this.armControl);
+    }
 }

@@ -8,47 +8,51 @@ import edu.wpi.first.wpilibj.ADIS16470_IMU;
  */
 
 public class RobotGyro extends SubsystemBase {
-  private static final ADIS16470_IMU gyro = new ADIS16470_IMU();
+    private static final ADIS16470_IMU gyro = new ADIS16470_IMU();
 
-  static {
-    gyro.setYawAxis(ADIS16470_IMU.IMUAxis.kZ);
-    gyro.calibrate();
-  }
+    static {
+        gyro.setYawAxis(ADIS16470_IMU.IMUAxis.kZ);
+        gyro.calibrate();
+    }
 
-  /**
-   * make sure this class is instantiated properly by poking it
-   */
-  public static void poke() {
-    System.out.println("Gyro init");
-  }
+    /**
+     * make sure this class is instantiated properly by poking it
+     */
+    public static void poke() {
+        System.out.println("Gyro init");
+    }
 
-  private static double angleAdjust = 0;
+    private static double angleAdjust = 0;
 
-  public static double getGyroAngleDegrees() {
-    return gyro.getAngle() + angleAdjust;
-  }
+    public static double getGyroAngleDegrees() {
+        return gyro.getAngle() + angleAdjust;
+    }
 
-  public static void setGyroAxis(ADIS16470_IMU.IMUAxis axis) {
-    gyro.setYawAxis(axis);
-  }
+    public static void setGyroAxis(ADIS16470_IMU.IMUAxis axis) {
+        gyro.setYawAxis(axis);
+    }
 
-  public static void resetGyroAngle() {
-    gyro.reset();
-    angleAdjust = 0;
-  }
-  public static void setGyroAngle(double angle){
-    resetGyroAngle();
-    angleAdjust = angle;
-  }
+    public static void resetGyroAngle() {
+        gyro.reset();
+        angleAdjust = 0;
+    }
 
-  @Override
-  public void periodic() {
-    //System.out.println(getGyroAngle());
-    // resetGyroAngle();
-  }
+    public static void setGyroAngle(double angle) {
+        resetGyroAngle();
+        angleAdjust = angle;
+    }
+    public static void robotCalibrate(){
+        gyro.calibrate();
+    }
 
-  @Override
-  public void simulationPeriodic() {
+    @Override
+    public void periodic() {
+        // System.out.println(getGyroAngle());
+        // resetGyroAngle();
+    }
 
-  }
+    @Override
+    public void simulationPeriodic() {
+
+    }
 }

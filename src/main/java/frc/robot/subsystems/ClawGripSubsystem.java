@@ -24,24 +24,24 @@ public class ClawGripSubsystem extends SubsystemBase {
     // Runs once when claw grip trigger is released
     public CommandBase openClaw() {
         return this.runOnce(
-            () -> {
-              while (clawGripEncoder.getPosition() < ClawConstants.MAX_GRIP_ENCODER_VALUE) {
-                clawGrip.set(ClawConstants.CLAW_GRIP_SPEED); // find out correct direction later
-              }
-              clawGrip.set(0);
-            });
+                () -> {
+                    while (clawGripEncoder.getPosition() < ClawConstants.MAX_GRIP_ENCODER_VALUE) {
+                        clawGrip.set(ClawConstants.CLAW_GRIP_SPEED); // find out correct direction later
+                    }
+                    clawGrip.set(0);
+                });
     }
 
     // Runs continuously when claw grip trigger is held down
     public CommandBase closeClaw() {
         return this.runOnce(
-            () -> {
-              if (clawGripEncoder.getPosition() > ClawConstants.MIN_GRIP_ENCODER_VALUE) {
-                clawGrip.set(-ClawConstants.CLAW_GRIP_SPEED); // find out correct direction later
-              } else {
-                clawGrip.set(0);
-              }
-            });
+                () -> {
+                    if (clawGripEncoder.getPosition() > ClawConstants.MIN_GRIP_ENCODER_VALUE) {
+                        clawGrip.set(-ClawConstants.CLAW_GRIP_SPEED); // find out correct direction later
+                    } else {
+                        clawGrip.set(0);
+                    }
+                });
     }
 
     public boolean getClawState() {
@@ -55,6 +55,6 @@ public class ClawGripSubsystem extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        
+
     }
 }
