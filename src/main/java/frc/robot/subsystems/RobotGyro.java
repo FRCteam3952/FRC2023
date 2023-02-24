@@ -43,6 +43,7 @@ public class RobotGyro extends SubsystemBase {
     }
     public static void robotCalibrate(){
         gyro.calibrate();
+        angleAdjust += gyro.getAngle();
     }
 
     @Override
