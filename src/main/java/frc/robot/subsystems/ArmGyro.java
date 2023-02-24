@@ -10,22 +10,19 @@ public class ArmGyro extends SubsystemBase {
     public static double gyro_adjust = 0.0;
 
     static {
-        try{
-            arduino = new SerialPort(19200, SerialPort.Port.kUSB);
-            System.out.println("Arm Gyro Connected");
-        } catch (Exception e){
-            System.out.println("Failed to Connect, trying kUSB1");
+        SerialPort.Port[] port_types = new SerialPort.Port[] {
+            SerialPort.Port.kUSB,
+            SerialPort.Port.kUSB1,
+            SerialPort.Port.kUSB2,
+        };
+        for (SerialPort.Port port_type : port_types) {
+            System.out.println(port_type);
             try{
-                arduino = new SerialPort(19200, SerialPort.Port.kUSB1);
+                arduino = new SerialPort(19200, port_type);
                 System.out.println("Arm Gyro Connected");
-            } catch (Exception e1){
-                System.out.println("Failed to Connect, trying kUSB2");
-                try{
-                    arduino = new SerialPort(19200, SerialPort.Port.kUSB2);
-                    System.out.println("Arm Gyro Connected");
-                } catch (Exception e2){
-                    System.out.println("Failed to Connect, all connections failed");
-                }
+                break;
+            } catch (Exception e2){
+                System.out.println("Failed to Connect");
             }
         }
     }
@@ -38,6 +35,7 @@ public class ArmGyro extends SubsystemBase {
             System.out.println("Arm Gyro not Connected");
         }
     }
+    
     public static Double getGyroAngle() {
         if(arduino.getBytesReceived() > 0){
             return Double.parseDouble(arduino.readString()) + gyro_adjust;
