@@ -17,9 +17,10 @@ public class NetworkTables {
     private static final NetworkTableInstance INSTANCE = NetworkTableInstance.getDefault();
     private static final Map<String, GenericPublisher> publishers = new HashMap<>();
     private static final Map<String, GenericSubscriber> subscribers = new HashMap<>();
-    
+
     /**
      * Gets the NetworkTables Instance being used by the program
+     *
      * @return {@link NetworkTableInstance} used
      */
     public static NetworkTableInstance getNTInstance() {
@@ -28,6 +29,7 @@ public class NetworkTables {
 
     /**
      * Returns the table reference from NetworkTables
+     *
      * @param tableName The name of the table
      * @return {@link NetworkTable} corresponding
      */
@@ -35,29 +37,34 @@ public class NetworkTables {
         return INSTANCE.getTable(tableName);
     }
 
-    public static float getLimeLightErrorX(){
+    public static float getLimeLightErrorX() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[1].floatValue();
+        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0})[1].floatValue();
     }
-    public static float getLimeLightErrorY(){
+
+    public static float getLimeLightErrorY() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[2].floatValue();
+        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0})[2].floatValue();
     }
-    public static float getLimeLightArea(){
+
+    public static float getLimeLightArea() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[3].floatValue();
+        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0})[3].floatValue();
     }
-    public static float getConeOrientation(){
+
+    public static float getConeOrientation() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        return table.getEntry("llpython").getNumberArray(new Number[]{0,0,0})[0].floatValue();
+        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0})[0].floatValue();
     }
-    public static Double[] getPose(){
+
+    public static Double[] getPose() {
         NetworkTable table = INSTANCE.getTable("jetson");
-        return table.getEntry("pose").getDoubleArray(new Double[]{0.0,0.0,0.0});
+        return table.getEntry("pose").getDoubleArray(new Double[]{0.0, 0.0, 0.0});
     }
 
     /**
      * Returns the entry reference from NetworkTables
+     *
      * @param tableName Name of the table
      * @param entryName Name of the entry
      * @return {@link NetworkTableEntry} corresponding
@@ -69,7 +76,7 @@ public class NetworkTables {
     public static GenericPublisher getPublisher(String tableName, String entryName) {
         String path = "/" + tableName + "/" + entryName;
         var temp = publishers.get(path);
-        if(temp != null) {
+        if (temp != null) {
             return temp;
         }
         var entry = getEntry(tableName, entryName);
@@ -81,7 +88,7 @@ public class NetworkTables {
     public static GenericSubscriber getSubscriber(String tableName, String entryName) {
         String path = "/" + tableName + "/" + entryName;
         var temp = subscribers.get(path);
-        if(temp != null) {
+        if (temp != null) {
             return temp;
         }
         var entry = getEntry(tableName, entryName);
@@ -94,7 +101,7 @@ public class NetworkTables {
         for (ConnectionInfo connection : INSTANCE.getConnections()) {
             System.out.println("Connection: Using version " + connection.protocol_version + ", ID: " + connection.remote_id + ", IP: " + connection.remote_ip + ", last update: " + connection.last_update);
         }
-        if(INSTANCE.getConnections().length == 0) {
+        if (INSTANCE.getConnections().length == 0) {
             System.out.println("NO CONNECTIONS FOUND");
         }
         System.out.println("END CONNECTIONS LIST \n\n\n\n");
@@ -110,7 +117,7 @@ public class NetworkTables {
 
         TimestampedDoubleArray tsDA = new TimestampedDoubleArray(NetworkTablesJNI.now(), trajectorySub.getLastChange(), trajectorySub.getDoubleArray(EMPTY));
         var timeDiff = (tsDA.timestamp - tsDA.serverTime) / 1000;
-        if(timeDiff > 1000) {
+        if (timeDiff > 1000) {
             System.out.println(timeDiff - 1000);
         }
     }

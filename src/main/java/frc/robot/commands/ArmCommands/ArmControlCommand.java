@@ -10,7 +10,7 @@ import frc.robot.subsystems.LimeLightSubsystem;
 /**
  * Moves arm on the turret
  */
-public class ArmControlCommand extends CommandBase{
+public class ArmControlCommand extends CommandBase {
     private final ArmSubsystem arm;
     private final FlightJoystick joystick;
     private final double areaConst;
@@ -33,16 +33,16 @@ public class ArmControlCommand extends CommandBase{
     // Gets adjustments from limelight and converts them to position adjustments
     private double[] getAdjustmentFromError() {
         double[] adjustments = new double[3];
-        adjustments[0] = Math.sin(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
-            + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea())/areaConst; // x-axis adjustment
+        adjustments[0] = Math.sin(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment()
+                + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea()) / areaConst; // x-axis adjustment
 
         adjustments[1] = LimeLightSubsystem.getYAdjustment(); // y-axis adjustment
 
-        adjustments[2] = Math.cos(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
-            + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea()/areaConst); // z-axis adjustment
+        adjustments[2] = Math.cos(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment()
+                + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea() / areaConst); // z-axis adjustment
 
         return adjustments;
-}
+    }
 
     // Primary arm control
     private void primaryArmControl() {
@@ -51,14 +51,14 @@ public class ArmControlCommand extends CommandBase{
         } else {
             double y = 0;
             if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_UP_BUTTON_NUMBER)) {
-                y =  ySpeed;
+                y = ySpeed;
             } else if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_DOWN_BUTTON_NUMBER)) {
                 y = -ySpeed;
-            } 
+            }
             arm.setTurretSpeed(joystick.getHorizontalMovement() * turretSpeed);
             arm.moveVector(Math.sin(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * xSpeed, // Handles extension of robot arm 
-                y, 
-                Math.cos(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * zSpeed);
+                    y,
+                    Math.cos(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * zSpeed);
         }
     }
 
@@ -99,7 +99,8 @@ public class ArmControlCommand extends CommandBase{
 
     // Called once the command ends or is interrupted.
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+    }
 
     // Returns true when the command should end.
     @Override

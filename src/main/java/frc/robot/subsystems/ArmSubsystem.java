@@ -44,7 +44,7 @@ public class ArmSubsystem extends SubsystemBase {
     private static final double kMinOutput = -0.3;
 
     private boolean pidOn = false;
-    
+
     //arm control constructor
     public ArmSubsystem() {
         // Initialize arm motors
@@ -82,7 +82,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetAngleTurret = 0;
 
         // Get starting coords from the initial angle constants
-        double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE,ArmConstants.ARM_2_INITIAL_ANGLE,0);
+        double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, 0);
         this.targetX = startingCoords[0];
         this.targetY = startingCoords[1];
         this.targetZ = startingCoords[2];
@@ -94,7 +94,7 @@ public class ArmSubsystem extends SubsystemBase {
     /*
      * Changes the intended coordinates by dx, dy, and dz
      */
-    public void moveVector(double dx, double dy, double dz){
+    public void moveVector(double dx, double dy, double dz) {
         updateCurrentCoordinates();
         setIntendedCoordinates(targetX + dx, targetY + dy, targetZ + dz);
     }
@@ -103,22 +103,22 @@ public class ArmSubsystem extends SubsystemBase {
      * Get the current angles from motor encoders in DEGREES
      */
     public double[] getCurrentAnglesDeg() {
-        double angle1 = pivot1Encoder.getPosition(); 
+        double angle1 = pivot1Encoder.getPosition();
         double angle2 = pivot2Encoder.getPosition();
         double angle3 = turretEncoder.getPosition();
-        
-        return new double[] {angle1, angle2, angle3};
+
+        return new double[]{angle1, angle2, angle3};
     }
 
     /*
      * Get the current angles from motor encoders in radians
      */
     public double[] getCurrentAnglesRad() {
-        double angle1 = Math.toRadians(pivot1Encoder.getPosition()); 
+        double angle1 = Math.toRadians(pivot1Encoder.getPosition());
         double angle2 = Math.toRadians(pivot2Encoder.getPosition());
         double angle3 = Math.toRadians(turretEncoder.getPosition());
-        
-        return new double[] {angle1, angle2, angle3};
+
+        return new double[]{angle1, angle2, angle3};
     }
 
     public void setPivot1Speed(double speed) {
@@ -128,10 +128,11 @@ public class ArmSubsystem extends SubsystemBase {
     public void setPivot2Speed(double speed) {
         this.pivot2.set(speed);
     }
-    
+
     public void setTurretSpeed(double speed) {
         this.turret.set(speed);
     }
+
     public void stopAllMotors() {
         this.pivot1.set(0);
         this.pivot2.set(0);
@@ -141,9 +142,9 @@ public class ArmSubsystem extends SubsystemBase {
     /*
      * Uses motor encoder angles to update the current coordinates
      */
-    public void updateCurrentCoordinates(){
+    public void updateCurrentCoordinates() {
         double[] tempAngles = getCurrentAnglesDeg();
-        double[] coords = ForwardKinematicsUtil.getCoordinatesFromAngles(tempAngles[0],tempAngles[1],tempAngles[2]);
+        double[] coords = ForwardKinematicsUtil.getCoordinatesFromAngles(tempAngles[0], tempAngles[1], tempAngles[2]);
         this.cur_x = coords[0];
         this.cur_y = coords[1];
         this.cur_z = coords[2];
@@ -152,36 +153,38 @@ public class ArmSubsystem extends SubsystemBase {
     /*
      * returns current coordinates
      */
-    public double[] getCurrentCoordinates(){
+    public double[] getCurrentCoordinates() {
         updateCurrentCoordinates();
-        return new double[]{this.cur_x,this.cur_y,this.cur_z};
+        return new double[]{this.cur_x, this.cur_y, this.cur_z};
     }
-    
+
     /*
      * return coordinates in which the arm "should" move towards
      */
-    public double[] getIntendedCoordinates(){
-        return new double[]{this.targetX,this.targetY,this.targetZ};
+    public double[] getIntendedCoordinates() {
+        return new double[]{this.targetX, this.targetY, this.targetZ};
     }
 
-    public boolean getPivot1LimitPressed(){
+    public boolean getPivot1LimitPressed() {
         return !this.arm1Limit.get();
     }
-    public boolean getPivot2LimitPressed(){
+
+    public boolean getPivot2LimitPressed() {
         return !this.arm2Limit.get();
     }
-    public void goTowardIntendedCoordinates(){
+
+    public void goTowardIntendedCoordinates() {
         double[] angles = getCurrentAnglesDeg();
 
-        if(Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) ||
-            Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
+        if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) ||
+                Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
             System.out.println("An angle is NaN, so skip");
             return;
         }
 
         double p1Speed = pidController1.calculate(angles[0], targetAngle1);
         double p2Speed = pidController2.calculate(angles[1], targetAngle2);
-        System.out.println(angles[0] + " " + angles[1] + " " );
+        System.out.println(angles[0] + " " + angles[1] + " ");
         // System.out.println(targetAngle1 + " " + targetAngle2 + " " );
 
         if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
@@ -189,7 +192,7 @@ public class ArmSubsystem extends SubsystemBase {
             return;
         }
 
-        System.out.println(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)) + " " + Math.min(kMaxOutput, Math.max(p2Speed,kMinOutput)));
+        System.out.println(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)) + " " + Math.min(kMaxOutput, Math.max(p2Speed, kMinOutput)));
         // setPivot1Speed(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)));
         // setPivot2Speed(Math.min(kMaxOutput, Math.max(p2Speed, kMinOutput)));
     }
@@ -197,18 +200,18 @@ public class ArmSubsystem extends SubsystemBase {
     /*
      * sets the coordinate in which the arm "should" move towards
      */
-    public void setIntendedCoordinates(double x, double y, double z){
-        if(this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
-           return;
+    public void setIntendedCoordinates(double x, double y, double z) {
+        if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
+            return;
         }
         //update intended Angles
         double[] intendedAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, false);
 
-        if(Double.isNaN(intendedAngles[0]) || Double.isNaN(intendedAngles[1]) || Double.isNaN(intendedAngles[2])) {
+        if (Double.isNaN(intendedAngles[0]) || Double.isNaN(intendedAngles[1]) || Double.isNaN(intendedAngles[2])) {
             System.out.println("An angle is NaN, so skip");
             return;
         }
-        
+
         targetAngle1 = intendedAngles[0];
         targetAngle2 = intendedAngles[1];
         targetAngleTurret = intendedAngles[2];
@@ -222,19 +225,19 @@ public class ArmSubsystem extends SubsystemBase {
     public CommandBase calibrateArm() {
         pidOn = false;
         return this.runOnce(
-            () -> {
-                while (!getPivot2LimitPressed()) {
-                    setPivot2Speed(-0.1);
-                }
-                setPivot2Speed(0);  
-                while (!getPivot1LimitPressed()) {
-                    setPivot1Speed(-0.1);
-                }
-                setPivot1Speed(0);
-                this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
-                this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
-                pidOn = true;
-            });
+                () -> {
+                    while (!getPivot2LimitPressed()) {
+                        setPivot2Speed(-0.1);
+                    }
+                    setPivot2Speed(0);
+                    while (!getPivot1LimitPressed()) {
+                        setPivot1Speed(-0.1);
+                    }
+                    setPivot1Speed(0);
+                    this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
+                    this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+                    pidOn = true;
+                });
     }
 
     public void setPIDControlOn(boolean value) {
@@ -257,7 +260,7 @@ public class ArmSubsystem extends SubsystemBase {
             this.cur_x = startingCoords[0];
             this.cur_y = startingCoords[1];
             this.cur_z = startingCoords[2];
-        } 
+        }
 
         if (getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
@@ -269,13 +272,13 @@ public class ArmSubsystem extends SubsystemBase {
             this.cur_y = startingCoords[1];
             this.cur_z = startingCoords[2];
         }
-        
+
         //handles PID
         if (pidOn) {
             goTowardIntendedCoordinates();
         }
-        
-        
+
+
     }
 
     @Override

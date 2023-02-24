@@ -25,58 +25,57 @@ public final class InverseKinematicsUtil {
         double dist3d = MathUtil.distance(0, adjusted_x, 0, adjusted_y, 0, z);     // calc distance in 3d from top pivot point
         double totalLimbLength = ArmConstants.LIMB1_LENGTH + ArmConstants.LIMB2_LENGTH;
         double horizontalDist = MathUtil.distance(0, adjusted_x, 0, z);
-        if(dist3d > totalLimbLength) {
-            adjusted_x *= (totalLimbLength / dist3d); 
+        if (dist3d > totalLimbLength) {
+            adjusted_x *= (totalLimbLength / dist3d);
             adjusted_y *= (totalLimbLength / dist3d);
-            adjusted_z *= (totalLimbLength / dist3d); 
+            adjusted_z *= (totalLimbLength / dist3d);
             x_pos = adjusted_x;
             y_pos = adjusted_y;
             z_pos = adjusted_z;
         }
         if (horizontalDist <= ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) {
-            adjusted_x *= ((ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) / horizontalDist); 
-            adjusted_z *= ((ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) / horizontalDist); 
-            x_pos *= ((ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) / horizontalDist); 
+            adjusted_x *= ((ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) / horizontalDist);
+            adjusted_z *= ((ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) / horizontalDist);
+            x_pos *= ((ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) / horizontalDist);
             z_pos *= ((ArmConstants.MIN_HOR_DISTANCE + ArmConstants.DISTANCE_DELTA) / horizontalDist);
         }
 
         if (dist3d == 0) { //zero, zero on coordinate -> prevent divide by 0 exception
-            return new double[] {0,0,0};
-        }           
+            return new double[]{0, 0, 0};
+        }
         a2 = MathUtil.lawOfCosinesForAngle(ArmConstants.LIMB1_LENGTH, ArmConstants.LIMB2_LENGTH, dist3d); // a2 is angle between 1st arm segment to 2nd arm segment
         a1 = MathUtil.angleBetweenLines(0, -1, 0, adjusted_x, adjusted_y, adjusted_z) - MathUtil.lawOfSinesForAngle(a2, dist3d, ArmConstants.LIMB2_LENGTH);   // a1 is angle between verticle to 1st arm segment
-       
+
         //if flipped is true, return angles that are "flipped" 
-        if(flipped){
+        if (flipped) {
             double angleCalc = Math.toDegrees(Math.atan2(adjusted_x, -y + ArmConstants.ORIGIN_HEIGHT));
             double lineAngle = angleCalc < 0 ? 360 + angleCalc : angleCalc;
-            a1 = lineAngle*2 - a1;
+            a1 = lineAngle * 2 - a1;
             a2 = 360 - a2;
-            if (a1 > (360 - ArmConstants.ARM_1_INITIAL_ANGLE)){
+            if (a1 > (360 - ArmConstants.ARM_1_INITIAL_ANGLE)) {
                 a1 = (360 - ArmConstants.ARM_1_INITIAL_ANGLE);
             }
-            if(a2 > (360 - ArmConstants.ARM_2_INITIAL_ANGLE)){
+            if (a2 > (360 - ArmConstants.ARM_2_INITIAL_ANGLE)) {
                 a2 = (360 - ArmConstants.ARM_2_INITIAL_ANGLE);
             }
-        }
-        else{
-            if (a1 < ArmConstants.ARM_1_INITIAL_ANGLE){
+        } else {
+            if (a1 < ArmConstants.ARM_1_INITIAL_ANGLE) {
                 a1 = ArmConstants.ARM_1_INITIAL_ANGLE;
             }
-            if(a2 < ArmConstants.ARM_2_INITIAL_ANGLE){
+            if (a2 < ArmConstants.ARM_2_INITIAL_ANGLE) {
                 a2 = ArmConstants.ARM_2_INITIAL_ANGLE;
             }
         }
-        
+
 
         //turret angle calculations
         double angleCalc = Math.toDegrees(Math.atan2(z, x));
         turretAngle = angleCalc < 0 ? 360 + angleCalc : angleCalc;
 
-        return new double[] {a1, a2, turretAngle};
+        return new double[]{a1, a2, turretAngle};
     }
 
     public static double[] getCurrentCoordinates() {
-        return new double[] {x_pos, y_pos, z_pos};
+        return new double[]{x_pos, y_pos, z_pos};
     }
 }

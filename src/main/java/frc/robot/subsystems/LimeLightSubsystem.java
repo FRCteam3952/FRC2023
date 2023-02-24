@@ -16,7 +16,7 @@ public class LimeLightSubsystem extends SubsystemBase {
 
     public static float getXAdjustment() {
         float tx = (NetworkTables.getLimeLightErrorX() - 160) * kp;
-        
+
         // if tx is too big, return the max of 1 or -1
         if (Math.abs(tx) > 1) {
             // return 1 if tx is greater than 1, -1 if tx is less than -1
@@ -35,15 +35,15 @@ public class LimeLightSubsystem extends SubsystemBase {
         }
         return ty;
     }
-    
+
     public static float getArea() {
         float tA = (NetworkTables.getLimeLightArea());
         return tA;
     }
 
-    public static double getAngleAdjustment(){
+    public static double getAngleAdjustment() {
         float angle = (NetworkTables.getConeOrientation()) * kp;
-  
+
         // if angle is too big, return the max of 1 or -1
         if (Math.abs(angle) > 1) {
             // return 1 if angle is greater than 1, -1 if angle is less than -1
@@ -60,7 +60,7 @@ public class LimeLightSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
+
     }
 
     @Override

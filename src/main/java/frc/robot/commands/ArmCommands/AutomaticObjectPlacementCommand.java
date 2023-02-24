@@ -1,4 +1,5 @@
 package frc.robot.commands.ArmCommands;
+
 import frc.robot.Constants.PositionConstants;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
@@ -7,7 +8,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-public class AutomaticObjectPlacementCommand extends CommandBase{
+public class AutomaticObjectPlacementCommand extends CommandBase {
     private final ArmSubsystem arm;
     private final NetworkTableInstance inst;
     private final NetworkTable table;
@@ -21,10 +22,11 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(arm);
     }
-    public void getCoordinatesFromKey(){
-        double [] coordinates = new double[3];
+
+    public void getCoordinatesFromKey() {
+        double[] coordinates = new double[3];
         int currKey = (int) key.getInteger(1);
-        switch (currKey){
+        switch (currKey) {
             case 1:
                 coordinates = PositionConstants.BOTTOM_LEFT_POS;
                 break;
@@ -35,13 +37,13 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
                 coordinates = PositionConstants.BOTTOM_RIGHT_POS;
                 break;
             case 4:
-                coordinates =  PositionConstants.CENTER_LEFT_POS;
+                coordinates = PositionConstants.CENTER_LEFT_POS;
                 break;
             case 5:
-                coordinates =  PositionConstants.CENTER_MIDDLE_POS;
+                coordinates = PositionConstants.CENTER_MIDDLE_POS;
                 break;
             case 6:
-                coordinates =  PositionConstants.CENTER_RIGHT_POS;
+                coordinates = PositionConstants.CENTER_RIGHT_POS;
                 break;
             case 7:
                 coordinates = PositionConstants.TOP_LEFT_POS;
@@ -50,7 +52,7 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
                 coordinates = PositionConstants.TOP_CENTER_POS;
                 break;
             case 9:
-                coordinates =  PositionConstants.TOP_RIGHT_POS;
+                coordinates = PositionConstants.TOP_RIGHT_POS;
                 break;
             default:
                 System.out.println("A key within 1-9 was not pressed");
@@ -61,7 +63,8 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
 
@@ -76,7 +79,8 @@ public class AutomaticObjectPlacementCommand extends CommandBase{
 
     // Called once the command ends or is interrupted.
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+    }
 
     // Returns true when the command should end.
     @Override

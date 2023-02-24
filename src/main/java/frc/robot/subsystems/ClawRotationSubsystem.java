@@ -26,9 +26,9 @@ public class ClawRotationSubsystem extends SubsystemBase {
 
     public void setAngle(double angle) {
         double difference = this.getClawAngle() - angle;
-        if(Math.abs(difference) < ClawConstants.ANGLE_DELTA) {
+        if (Math.abs(difference) < ClawConstants.ANGLE_DELTA) {
             this.setClawRotateSpeed(0);
-        } else if(difference > 0) {
+        } else if (difference > 0) {
             this.setClawRotateSpeed(ClawConstants.CLAW_ROTATE_SPEED);
         } else {
             this.setClawRotateSpeed(-ClawConstants.CLAW_ROTATE_SPEED);
@@ -42,33 +42,33 @@ public class ClawRotationSubsystem extends SubsystemBase {
     // Runs continuously when designated button is held down
     public CommandBase rotateClawRight() {
         return this.runOnce(
-            () -> {
-              if (clawRotationEncoder.getPosition() < ClawConstants.MAX_ROTATION_ENCODER_VALUE) {
-                setClawRotateSpeed(ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
-              } else {
-                setClawRotateSpeed(0);
-              }
-            });
+                () -> {
+                    if (clawRotationEncoder.getPosition() < ClawConstants.MAX_ROTATION_ENCODER_VALUE) {
+                        setClawRotateSpeed(ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
+                    } else {
+                        setClawRotateSpeed(0);
+                    }
+                });
     }
 
     // Runs continuosly when designated button is held down
     public CommandBase rotateClawLeft() {
         return this.runOnce(
-            () -> {
-              if (clawRotationEncoder.getPosition() > ClawConstants.MIN_ROTATION_ENCODER_VALUE) {
-                setClawRotateSpeed(-ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
-              } else {
-                setClawRotateSpeed(0);
-              }
-            });
+                () -> {
+                    if (clawRotationEncoder.getPosition() > ClawConstants.MIN_ROTATION_ENCODER_VALUE) {
+                        setClawRotateSpeed(-ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
+                    } else {
+                        setClawRotateSpeed(0);
+                    }
+                });
     }
 
     // Automatically rotates claw to match angle when designated button is held down
     public CommandBase autoRotate() {
         return this.runOnce(
-            () -> {
-                clawRotator.set(LimeLightSubsystem.getAngleAdjustment());
-            }
+                () -> {
+                    clawRotator.set(LimeLightSubsystem.getAngleAdjustment());
+                }
         );
     }
 

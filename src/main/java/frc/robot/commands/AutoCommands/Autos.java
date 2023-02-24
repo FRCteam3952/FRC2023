@@ -11,19 +11,21 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 
 
 public final class Autos {
-  private final static DriveTrainSubsystem drive = new DriveTrainSubsystem();
-  private final static ArmSubsystem arm = new ArmSubsystem();
+    private final static DriveTrainSubsystem drive = new DriveTrainSubsystem();
+    private final static ArmSubsystem arm = new ArmSubsystem();
 
-  /** Example static factory for an autonomous command. */
-  public static CommandBase exampleAuto() {
-      // Example command case
-      return Commands.runOnce(() -> {
-        // Autonomous scenario codee
-      }, drive, arm);
-    
-  }
+    /**
+     * Example static factory for an autonomous command.
+     */
+    public static CommandBase exampleAuto() {
+        // Example command case
+        return Commands.runOnce(() -> {
+            // Autonomous scenario codee
+        }, drive, arm);
 
-  private Autos() {
-    throw new UnsupportedOperationException("This is a utility class!");
-  }
+    }
+
+    private Autos() {
+        throw new UnsupportedOperationException("This is a utility class!");
+    }
 }
