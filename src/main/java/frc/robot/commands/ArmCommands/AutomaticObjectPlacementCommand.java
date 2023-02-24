@@ -10,12 +10,14 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class AutomaticObjectPlacementCommand extends CommandBase {
     private final ArmSubsystem arm;
+    private final FlightJoystick joystick;
     private final NetworkTableInstance inst;
     private final NetworkTable table;
     private final NetworkTableEntry key;
 
     public AutomaticObjectPlacementCommand(ArmSubsystem arm, FlightJoystick joystick) {
         this.arm = arm;
+        this.joystick = joystick;
         this.inst = NetworkTableInstance.getDefault();
         this.table = inst.getTable("robogui");
         this.key = table.getEntry("key"); // Key pressed on keyboard 

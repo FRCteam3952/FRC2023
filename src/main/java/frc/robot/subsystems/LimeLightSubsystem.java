@@ -5,13 +5,20 @@ import frc.robot.wrappers.NetworkTables;
 import edu.wpi.first.math.controller.PIDController;
 
 public class LimeLightSubsystem extends SubsystemBase {
-    private static PIDController clawRotationPID;
+    private static final PIDController clawRotationPID;
     private static final float kp = 0.003125f;
     private static final float ki = 0.01f;
     private static final float kd = 0f;
 
-    public LimeLightSubsystem() {
+    static {
         clawRotationPID = new PIDController(1, ki, kd);
+    }
+
+    public static void poke() {
+        System.out.println("LimeLight initialized");
+    }
+
+    public LimeLightSubsystem() {
     }
 
     public static float getXAdjustment() {

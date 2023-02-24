@@ -38,7 +38,6 @@ public class RobotContainer {
     public final ArmSubsystem arm = new ArmSubsystem();
     public final ClawGripSubsystem clawGrip = new ClawGripSubsystem();
     public final ClawRotationSubsystem clawRotation = new ClawRotationSubsystem();
-    public final LimeLightSubsystem limelight = new LimeLightSubsystem();
 
     public final TrajectoryReader trajectoryReader = new TrajectoryReader("robogui", "trajectory");
 
@@ -46,7 +45,7 @@ public class RobotContainer {
     public final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
     public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
 
-    public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController, limelight);
+    public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
 
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, armController);
     public final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
@@ -59,7 +58,8 @@ public class RobotContainer {
         // Configure the trigger bindings
         configureBindings();
 
-        // Poke the gyro classes so their static initializers are run at startup.
+        // Poke the static classes so their static initializers are run at startup.
+        LimeLightSubsystem.poke();
         RobotGyro.poke();
         ArmGyro.poke();
     }

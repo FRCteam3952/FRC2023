@@ -15,7 +15,7 @@ public class ArmControlCommand extends CommandBase {
     private final FlightJoystick joystick;
     private final double areaConst;
     private final double xSpeed, ySpeed, zSpeed, turretSpeed;
-    private final double DESIRED_AREA = 369; // in pixels probably, can tune later
+    private static final double DESIRED_AREA = 369; // in pixels probably, can tune later
 
     public ArmControlCommand(ArmSubsystem arm, FlightJoystick joystick) {
         this.arm = arm;

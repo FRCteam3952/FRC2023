@@ -22,7 +22,7 @@ public class ManualDriveCommand extends CommandBase {
      *
      * @param driveTrain The drivetrain subsystem.
      */
-    public ManualDriveCommand(DriveTrainSubsystem driveTrain, FlightJoystick joystick, LimeLightSubsystem limelight) {
+    public ManualDriveCommand(DriveTrainSubsystem driveTrain, FlightJoystick joystick) {
         this.driveTrain = driveTrain;
         this.joystick = joystick;
         // Use addRequirements() here to declare subsystem dependencies.

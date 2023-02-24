@@ -13,7 +13,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 
-
 public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax pivot1;
     private final CANSparkMax pivot2;
@@ -40,12 +39,12 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetAngle2;
     private double targetAngleTurret;
 
-    private static final double kMaxOutput = 0.3;
-    private static final double kMinOutput = -0.3;
+    private static final double MAX_OUTPUT = 0.3;
+    private static final double MIN_OUTPUT = -0.3;
 
     private boolean pidOn = false;
 
-    //arm control constructor
+    // arm control constructor
     public ArmSubsystem() {
         // Initialize arm motors
         this.pivot1 = new CANSparkMax(PortConstants.PIVOT1_PORT, MotorType.kBrushless);
@@ -91,7 +90,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.cur_z = startingCoords[2];
     }
 
-    /*
+    /**
      * Changes the intended coordinates by dx, dy, and dz
      */
     public void moveVector(double dx, double dy, double dz) {
@@ -99,7 +98,7 @@ public class ArmSubsystem extends SubsystemBase {
         setIntendedCoordinates(targetX + dx, targetY + dy, targetZ + dz);
     }
 
-    /*
+    /**
      * Get the current angles from motor encoders in DEGREES
      */
     public double[] getCurrentAnglesDeg() {
@@ -110,7 +109,7 @@ public class ArmSubsystem extends SubsystemBase {
         return new double[]{angle1, angle2, angle3};
     }
 
-    /*
+    /**
      * Get the current angles from motor encoders in radians
      */
     public double[] getCurrentAnglesRad() {
@@ -139,7 +138,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.turret.set(0);
     }
 
-    /*
+    /**
      * Uses motor encoder angles to update the current coordinates
      */
     public void updateCurrentCoordinates() {
@@ -158,7 +157,7 @@ public class ArmSubsystem extends SubsystemBase {
         return new double[]{this.cur_x, this.cur_y, this.cur_z};
     }
 
-    /*
+    /**
      * return coordinates in which the arm "should" move towards
      */
     public double[] getIntendedCoordinates() {
@@ -192,12 +191,12 @@ public class ArmSubsystem extends SubsystemBase {
             return;
         }
 
-        System.out.println(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)) + " " + Math.min(kMaxOutput, Math.max(p2Speed, kMinOutput)));
-        // setPivot1Speed(Math.min(kMaxOutput, Math.max(p1Speed, kMinOutput)));
-        // setPivot2Speed(Math.min(kMaxOutput, Math.max(p2Speed, kMinOutput)));
+        System.out.println(Math.min(MAX_OUTPUT, Math.max(p1Speed, MIN_OUTPUT)) + " " + Math.min(MAX_OUTPUT, Math.max(p2Speed, MIN_OUTPUT)));
+        // setPivot1Speed(Math.min(MAX_OUTPUT, Math.max(p1Speed, MIN_OUTPUT)));
+        // setPivot2Speed(Math.min(MAX_OUTPUT, Math.max(p2Speed, MIN_OUTPUT)));
     }
 
-    /*
+    /**
      * sets the coordinate in which the arm "should" move towards
      */
     public void setIntendedCoordinates(double x, double y, double z) {

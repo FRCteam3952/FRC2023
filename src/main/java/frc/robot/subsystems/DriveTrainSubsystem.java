@@ -92,10 +92,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     /**
-     * Runs whatever the real drive method is
+     * Wrapper around arcadeDrive
      *
-     * @param xSpeed
-     * @param zRotation
+     * @param xSpeed The movement speed
+     * @param zRotation The rotation speed
      */
 
     public void tankDrive(double xSpeed, double zRotation) {
@@ -105,6 +105,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // }
     }
 
+    /**
+     * Simulates a MecanumDrive on ArcadeDrive/TankDrive
+     *
+     * @param x The x movement speed
+     * @param y The y movement speed
+     */
     public void tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(double x, double y) {
         if (x == 0 && y == 0) { // If no movement, make sure robot is stopped
             tankDrive.arcadeDrive(0, 0);
@@ -310,12 +316,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
     public void periodic() {
 
         odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegrees())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
-        var pose = odometry.getPoseMeters();
+        // var pose = odometry.getPoseMeters();
 
-        //System.out.println("pose: " + pose.getX() + ", " + pose.getY() + ", " + pose.getRotation().getDegrees() + ", gyro: " + RobotGyro.getGyroAngleDegrees());
+        // System.out.println("pose: " + pose.getX() + ", " + pose.getY() + ", " + pose.getRotation().getDegrees() + ", gyro: " + RobotGyro.getGyroAngleDegrees());
 
-        //System.out.println("FL: " + getFrontLeftEncoder() + ", FR: " + getFrontRightEncoder() + ", RL: " + getRearLeftEncoder() + ", RR: " + getRearRightEncoder());
-        //System.out.println("FL: " + frontLeft.get() + ", FR: " + frontRight.get() + ", RL: " + rearLeft.get() + ", RR: " + rearRight.get());
+        // System.out.println("FL: " + getFrontLeftEncoder() + ", FR: " + getFrontRightEncoder() + ", RL: " + getRearLeftEncoder() + ", RR: " + getRearRightEncoder());
+        // System.out.println("FL: " + frontLeft.get() + ", FR: " + frontRight.get() + ", RL: " + rearLeft.get() + ", RR: " + rearRight.get());
 
     }
 
@@ -327,5 +333,4 @@ public class DriveTrainSubsystem extends SubsystemBase {
     public void stopMotors() {
         tankDrive.stopMotor();
     }
-
 }
