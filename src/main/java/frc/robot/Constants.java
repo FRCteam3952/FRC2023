@@ -41,7 +41,8 @@ public final class Constants {
     }
 
     public static class ClawConstants {
-        public static final double CLAW_GRIP_SPEED = -0.1; // change to what this actually is
+        public static final double CLAW_GRIP_SPEED = 0.2; // change to what this actually is
+        public static final double CLAW_GRIP_SPEED_PASSIVE = 0.1;
         public static final double MAX_GRIP_ENCODER_VALUE = 3; // change to what this actually is
         public static final double MIN_GRIP_ENCODER_VALUE = 0; //change to what this actually is
         public static final double CLAW_ROTATE_SPEED = 0.1;

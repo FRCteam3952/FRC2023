@@ -2,7 +2,9 @@ package frc.robot.util;
 
 import frc.robot.Constants.ArmConstants;
 
-
+/**
+ * Inverse Kinematics helper for the arm
+ */
 public final class InverseKinematicsUtil {
     private static double x_pos, y_pos, z_pos;
 
@@ -12,6 +14,11 @@ public final class InverseKinematicsUtil {
 
     /**
      * calculate arm angles relative to limb that it's attached to
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param flipped Whether the arm should attempt to approach from above rather than from the side (true for above, false for side)
+     * @return The angles: [angle_limb_1, angle_limb_2, turret_angle]
      */
     public static double[] getAnglesFromCoordinates(double x, double y, double z, boolean flipped) {
         double a1, a2, turretAngle;

@@ -18,6 +18,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.ArmCommands.ArmControlCommand;
 import frc.robot.commands.ArmCommands.AutomaticObjectPlacementCommand;
+import frc.robot.commands.ClawCommands.ClawOpenandCloseCommand;
 import frc.robot.commands.ArmCommands.ArmTestCommand;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
@@ -50,6 +51,7 @@ public class RobotContainer {
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, armController);
     public final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
     public final AutomaticObjectPlacementCommand autoObjectPlacement = new AutomaticObjectPlacementCommand(arm, armController);
+    public final ClawOpenandCloseCommand clawOpenandCloseCommand = new ClawOpenandCloseCommand(clawGrip, armController);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -83,6 +85,7 @@ public class RobotContainer {
         // driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
 
         // driverController.joystick.button(ControllerConstants.RUN_GUI_TRAJECTORY_BUTTON_NUMBER).onTrue(this.driveTrain.followTrajectoryCommand(this.trajectoryReader.currentTrajectory));
+        /*
         armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER)
             .and(armController.joystick.button(ControllerConstants.CLAW_RELEASE_BUTTON_NUMBER).negate())
             .onFalse(clawGrip.stopClaw());
@@ -91,9 +94,10 @@ public class RobotContainer {
             .onFalse(clawGrip.stopClaw());
         armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).whileTrue(clawGrip.closeClaw());
         armController.joystick.button(ControllerConstants.CLAW_RELEASE_BUTTON_NUMBER).whileTrue(clawGrip.openClaw());
-        armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
-        armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
-        armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
+        */
+        // armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
+        // armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
+        // armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
         armController.joystick.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
     }
 
@@ -110,5 +114,6 @@ public class RobotContainer {
     public void onTeleopInit() {
         this.driveTrain.setDefaultCommand(this.manualDrive);
         this.arm.setDefaultCommand(this.testArmControl);
+        this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand);
     }
 }
