@@ -90,4 +90,17 @@ public final class MathUtil {
     public static double inchesToMeters(double inches) {
         return inches / 39.37;
     }
+
+    /**
+     * Converts an array of inch values to an array of meters values. Returns a new array.
+     * @param arr The array of inches
+     * @return The array of meters
+     */
+    public static double[] inchesArrayToMetersArray(Double[] arr) {
+        double[] newArr = new double[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            newArr[i] = inchesToMeters(arr[i]);
+        }
+        return newArr;
+    }
 }

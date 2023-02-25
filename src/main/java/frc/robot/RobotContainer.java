@@ -5,9 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.RobotGyro;
-import frc.robot.subsystems.ArmGyro;
-import frc.robot.subsystems.LimeLightSubsystem;
+import frc.robot.subsystems.staticsubsystems.RobotGyro;
+import frc.robot.subsystems.staticsubsystems.ArmGyro;
+import frc.robot.subsystems.staticsubsystems.LimeLight;
 import frc.robot.wrappers.TrajectoryReader;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -61,7 +61,7 @@ public class RobotContainer {
         configureBindings();
 
         // Poke the static classes so their static initializers are run at startup.
-        LimeLightSubsystem.poke();
+        LimeLight.poke();
         RobotGyro.poke();
         ArmGyro.poke();
     }

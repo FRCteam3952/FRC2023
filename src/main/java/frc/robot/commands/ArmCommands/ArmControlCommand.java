@@ -5,7 +5,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.LimeLightSubsystem;
+import frc.robot.subsystems.staticsubsystems.LimeLight;
 
 /**
  * Moves arm on the turret
@@ -33,13 +33,13 @@ public class ArmControlCommand extends CommandBase{
     // Gets adjustments from limelight and converts them to position adjustments
     private double[] getAdjustmentFromError() {
         double[] adjustments = new double[3];
-        adjustments[0] = Math.sin(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
-            + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea())/areaConst; // x-axis adjustment
+        adjustments[0] = Math.sin(arm.getCurrentAnglesRad()[2]) * LimeLight.getXAdjustment()
+            + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLight.getArea())/areaConst; // x-axis adjustment
 
-        adjustments[1] = LimeLightSubsystem.getYAdjustment(); // y-axis adjustment
+        adjustments[1] = LimeLight.getYAdjustment(); // y-axis adjustment
 
-        adjustments[2] = Math.cos(arm.getCurrentAnglesRad()[2]) * LimeLightSubsystem.getXAdjustment() 
-            + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLightSubsystem.getArea()/areaConst); // z-axis adjustment
+        adjustments[2] = Math.cos(arm.getCurrentAnglesRad()[2]) * LimeLight.getXAdjustment()
+            + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLight.getArea()/areaConst); // z-axis adjustment
 
         return adjustments;
 }

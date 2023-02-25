@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericSubscriber;
+import frc.robot.util.NetworkTablesUtil;
 
 public class TrajectoryReader {
     public Trajectory currentTrajectory;
@@ -13,7 +14,7 @@ public class TrajectoryReader {
     private static final double[] EMPTY = new double[]{};
 
     public TrajectoryReader(String trajectoryTable, String trajectoryEntry) {
-        this.trajectorySub = NetworkTables.getSubscriber(trajectoryTable, trajectoryEntry);
+        this.trajectorySub = NetworkTablesUtil.getSubscriber(trajectoryTable, trajectoryEntry);
     }
 
     public void periodic() {
