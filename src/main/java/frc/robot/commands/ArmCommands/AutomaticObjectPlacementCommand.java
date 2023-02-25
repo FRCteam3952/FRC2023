@@ -60,7 +60,7 @@ public class AutomaticObjectPlacementCommand extends CommandBase {
                 System.out.println("A key within 1-9 was not pressed");
                 break;
         }
-        arm.setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2]);
+        arm.setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
     }
 
     // Called when the command is initially scheduled.
