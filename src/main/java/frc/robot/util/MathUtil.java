@@ -93,13 +93,13 @@ public final class MathUtil {
 
     /**
      * Converts an array of inch values to an array of meters values. Returns a new array.
-     * @param arr The array of inches
+     * @param ds The array of inches
      * @return The array of meters
      */
-    public static double[] inchesArrayToMetersArray(Double[] arr) {
-        double[] newArr = new double[arr.length];
-        for (int i = 0; i < arr.length; i++) {
-            newArr[i] = inchesToMeters(arr[i]);
+    public static double[] inchesArrayToMetersArray(double[] ds) {
+        double[] newArr = new double[ds.length];
+        for (int i = 0; i < ds.length; i++) {
+            newArr[i] = inchesToMeters(ds[i]);
         }
         return newArr;
     }
