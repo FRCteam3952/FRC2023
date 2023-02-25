@@ -20,19 +20,16 @@ public class ClawOpenandCloseCommand extends CommandBase {
     @Override
     public void execute() {
         if(this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER)) {
-            this.claw.setSpeed(ClawConstants.CLAW_GRIP_SPEED);
+            this.claw.setReverse();
             this.claw.setClawClosed(true);
         } else if(this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_RELEASE_BUTTON_NUMBER)) {
-            this.claw.setSpeed(-ClawConstants.CLAW_GRIP_SPEED);
+            this.claw.setForward();
             this.claw.setClawClosed(false);
         } else {
-            if(this.claw.getClawClosed()) {
-                this.claw.setSpeed(ClawConstants.CLAW_GRIP_SPEED_PASSIVE);
-            } else {
-                this.claw.setSpeed(0);
-            }
+            this.claw.setOff();
         }
     }
+    
 
     // Called once the command ends or is interrupted.
     @Override
