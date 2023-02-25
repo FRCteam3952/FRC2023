@@ -314,7 +314,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
         odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegrees())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
         // var pose = odometry.getPoseMeters();
 
