@@ -49,7 +49,7 @@ public class RobotGyro extends SubsystemBase {
     private static double drift = 0.0;
     private static double prevdrift = 0.0;
     private static void measureDrift() {
-        double angle = getGyroAngleDegrees();
+        double angle = gyro.getAngle();
         drift = drift + angle-prevdrift;
         prevdrift = angle;
         
