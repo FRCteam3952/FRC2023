@@ -1,4 +1,4 @@
-package frc.robot.commands.ClawCommands;
+package frc.robot.commands.clawcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ClawConstants;

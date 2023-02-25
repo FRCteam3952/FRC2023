@@ -1,4 +1,4 @@
-package frc.robot.commands.ArmCommands;
+package frc.robot.commands.armcommands;
 
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;

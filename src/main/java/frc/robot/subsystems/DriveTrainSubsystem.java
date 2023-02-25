@@ -118,7 +118,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
             return;
         }
         double speed = MathUtil.distance(0, x, 0, y); // Speed should take the distance to move into account
-        double target = normalizeAngle((Math.atan2(y, x) * 180 / Math.PI) - 90); // Normalize the target angle based on the slope from (0,0) to the point on the unit circle from joystick
+        double target = normalizeAngle(Math.toDegrees((Math.atan2(y, x))) - 90); // Normalize the target angle based on the slope from (0,0) to the point on the unit circle from joystick
         double current = swapDirection ? normalizeAngle(RobotGyro.getGyroAngleDegrees() + 180) : normalizeAngle(RobotGyro.getGyroAngleDegrees()); // Our current angle, normalized and accounting for if we're going "backwards"
 
         // The largest possible movement is 90 degrees because our robot is bi-directional (forwards or backwards does not matter on the tank drive)
