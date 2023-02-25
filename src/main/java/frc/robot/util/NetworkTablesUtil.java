@@ -1,5 +1,6 @@
 package frc.robot.util;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.*;
 
 import java.util.HashMap;
@@ -51,11 +52,12 @@ public class NetworkTablesUtil {
 
     /**
      * Returns the current robot pose according to AprilTags on Jetson, in meters since that's what they want
-     * @return An array of doubles representing the robot's pose ([x, y, theta])
+     * @return A {@link Translation2d} representing the robot's pose ([x, y, radians])
      */
-    public static double[] getJetsonPoseMeters() {
+    public static Translation2d getJetsonPoseMeters() {
         NetworkTable table = INSTANCE.getTable("jetson");
-        return MathUtil.inchesArrayToMetersArray(table.getEntry("pose").getDoubleArray(new Double[]{0.0, 0.0, 0.0}));
+        var jetsonPoseXYZ = MathUtil.inchesArrayToMetersArray(table.getEntry("pose").getDoubleArray(new double[] {0.0, 0.0, 0.0})); // X, Y, Z
+        return new Translation2d(jetsonPoseXYZ[0], jetsonPoseXYZ[2]);
     }
 
     /**

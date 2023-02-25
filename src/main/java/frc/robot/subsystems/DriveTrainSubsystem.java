@@ -26,11 +26,14 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.TrajectoryConstants;
+import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.MathUtil;
+import frc.robot.util.NetworkTablesUtil;
 
 public class DriveTrainSubsystem extends SubsystemBase {
 
@@ -51,10 +54,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
     private final DifferentialDrive tankDrive;
     private final DifferentialDriveOdometry odometry;
 
+    private final FlightJoystick joystick;
+
     private boolean swapDirection = false;
 
 
-    public DriveTrainSubsystem() {
+    public DriveTrainSubsystem(FlightJoystick joystick) {
         this.frontLeftMotor = new CANSparkMax(PortConstants.FRONT_LEFT_MOTOR_PORT, MotorType.kBrushless);
         this.frontRightMotor = new CANSparkMax(PortConstants.FRONT_RIGHT_MOTOR_PORT, MotorType.kBrushless);
         this.rearLeftMotor = new CANSparkMax(PortConstants.REAR_LEFT_MOTOR_PORT, MotorType.kBrushless);
@@ -85,6 +90,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.rearLeftMotor.setInverted(true);
 
         this.odometry = new DifferentialDriveOdometry(new Rotation2d(RobotGyro.getGyroAngleDegrees()), 0, 0);
+
+        this.joystick = joystick;
 
         this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
         // m_dDrive.setSafetyEnabled(false);
@@ -316,6 +323,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegrees())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
+
+        if(RobotContainer.inTeleop) {
+            if(Math.abs(this.joystick.getHorizontalMovement()) < 0.1 && Math.abs(this.joystick.getLateralMovement()) < 0.1) {
+                var gyroRad = Math.toRadians(RobotGyro.getGyroAngleDegrees());
+                odometry.resetPosition(new Rotation2d(gyroRad), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), new Pose2d(NetworkTablesUtil.getJetsonPoseMeters(), new Rotation2d(gyroRad)));
+            }
+        }
         // var pose = odometry.getPoseMeters();
 
         // System.out.println("pose: " + pose.getX() + ", " + pose.getY() + ", " + pose.getRotation().getDegrees() + ", gyro: " + RobotGyro.getGyroAngleDegrees());

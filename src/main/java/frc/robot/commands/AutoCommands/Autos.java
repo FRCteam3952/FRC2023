@@ -6,14 +6,9 @@ package frc.robot.commands.autocommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem;
 
 
 public final class Autos {
-    private final static DriveTrainSubsystem drive = new DriveTrainSubsystem();
-    private final static ArmSubsystem arm = new ArmSubsystem();
-
     /**
      * Example static factory for an autonomous command.
      */
@@ -21,7 +16,7 @@ public final class Autos {
         // Example command case
         return Commands.runOnce(() -> {
             // Autonomous scenario codee
-        }, drive, arm);
+        });
 
     }
 

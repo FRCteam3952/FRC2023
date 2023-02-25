@@ -33,17 +33,19 @@ import frc.robot.subsystems.DriveTrainSubsystem;
  */
 
 public class RobotContainer {
+    public static boolean inTeleop = false;
+
+    // Replace with CommandPS4Controller or CommandJoystick if needed
+    public final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
+    public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
+
     // The robot's subsystems and commands are defined here...
-    public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
+    public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem(driverController);
     public final ArmSubsystem arm = new ArmSubsystem();
     public final ClawGripSubsystem clawGrip = new ClawGripSubsystem();
     public final ClawRotationSubsystem clawRotation = new ClawRotationSubsystem();
 
     public final TrajectoryReader trajectoryReader = new TrajectoryReader("robogui", "trajectory");
-
-    // Replace with CommandPS4Controller or CommandJoystick if needed
-    public final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
-    public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
 
     public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
 
@@ -110,7 +112,13 @@ public class RobotContainer {
         return Commands.none();// Autos.exampleAuto(exampleSubsystem);
     }
 
+    public void onAutonInit() {
+        inTeleop = false;
+    }
+
     public void onTeleopInit() {
+        inTeleop = true;
+
         this.driveTrain.setDefaultCommand(this.manualDrive);
         this.arm.setDefaultCommand(this.testArmControl);
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand);
