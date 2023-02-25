@@ -9,9 +9,7 @@ import edu.wpi.first.wpilibj.ADIS16470_IMU;
 
 public class RobotGyro extends SubsystemBase {
     private static final ADIS16470_IMU gyro = new ADIS16470_IMU();
-    private static final int measurementSamples= 20; //specifies the number of measurements to take during each interval CHANGED IF NEEDED
-    private static final int measurementInterval = 25; //specifies the duration of each measurement interval in milliseconds CHANGE IF NEEDED
-    private static double drift = 0.0;
+
     
 
     static {
@@ -48,22 +46,13 @@ public class RobotGyro extends SubsystemBase {
     public static void robotCalibrate(){
         gyro.calibrate();
     }
-
+    private static double drift = 0.0;
+    private static double prevdrift = 0.0;
     private static void measureDrift() {
-        double startAngle = gyro.getAngle();
-        double sumAngle = 0.0;
-        long startTime = System.currentTimeMillis();
-    
-        for (int i = 0; i < measurementSamples; i++) {
-            while (System.currentTimeMillis() < startTime + measurementInterval) {
-                // wait until the measurement interval has elapsed
-            }
-            sumAngle += gyro.getAngle() - startAngle;
-            startTime += measurementInterval;
-        }
-    
-        double driftRate = sumAngle / measurementInterval / measurementSamples; // the average change in angle per second during each measurement interval
-        drift = drift + driftRate * measurementInterval * measurementSamples / 1000.0;// adds the driftrate *duration of each measurement * num samples and converts to seconds
+        double angle = getGyroAngleDegrees();
+        drift = drift + angle-prevdrift;
+        prevdrift = angle;
+        
     }
     @Override
     public void periodic() {
