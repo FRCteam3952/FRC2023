@@ -95,7 +95,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public void moveVector(double dx, double dy, double dz) {
         updateCurrentCoordinates();
-        setIntendedCoordinates(targetX + dx, targetY + dy, targetZ + dz);
+        setIntendedCoordinates(targetX + dx, targetY + dy, targetZ + dz, false);
     }
 
     /**
@@ -199,12 +199,12 @@ public class ArmSubsystem extends SubsystemBase {
     /**
      * sets the coordinate in which the arm "should" move towards
      */
-    public void setIntendedCoordinates(double x, double y, double z) {
+    public void setIntendedCoordinates(double x, double y, double z, boolean flipped) {
         if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
             return;
         }
         //update intended Angles
-        double[] intendedAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, false);
+        double[] intendedAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, flipped);
 
         if (Double.isNaN(intendedAngles[0]) || Double.isNaN(intendedAngles[1]) || Double.isNaN(intendedAngles[2])) {
             System.out.println("An angle is NaN, so skip");

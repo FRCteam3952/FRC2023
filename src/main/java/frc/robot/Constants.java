@@ -62,7 +62,8 @@ public final class Constants {
         public static final int AIM_ASSIST_BUTTON_NUMBER = 5; // change to whatever it is
         public static final int MOVE_ARM_UP_BUTTON_NUMBER = 3; // change to whatever it is
         public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 2; // change to whatever it is
-        public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER = 6; // change to whatever it is
+        public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED = 11; // change to whatever it is
+        public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_NOT_FLIPPED = 12; // change to whatever it is
         public static final int CLAW_GRIP_BUTTON_NUMBER = 1; // change to whatever it is
         public static final int CLAW_ROTATE_RIGHT_BUTTON_NUMBER = 6; // change to whatever it is
         public static final int CLAW_ROTATE_LEFT_BUTTON_NUMBER = 7; // change to whatever it is
