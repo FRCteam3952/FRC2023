@@ -173,6 +173,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void goTowardIntendedCoordinates() {
+        /* */
         double[] angles = getCurrentAnglesDeg();
 
         if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) ||
@@ -274,10 +275,10 @@ public class ArmSubsystem extends SubsystemBase {
 
         //handles PID
         if (pidOn) {
-            goTowardIntendedCoordinates();
+            //goTowardIntendedCoordinates();
         }
-
-
+        ArmGyro.getGyroAngle();
+        // System.out.println("ARM GYRO VALUE: " + ArmGyro.getGyroAngle());
     }
 
     @Override

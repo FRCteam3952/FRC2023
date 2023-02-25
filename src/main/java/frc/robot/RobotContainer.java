@@ -83,8 +83,14 @@ public class RobotContainer {
         // driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
 
         // driverController.joystick.button(ControllerConstants.RUN_GUI_TRAJECTORY_BUTTON_NUMBER).onTrue(this.driveTrain.followTrajectoryCommand(this.trajectoryReader.currentTrajectory));
+        armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER)
+            .and(armController.joystick.button(ControllerConstants.CLAW_RELEASE_BUTTON_NUMBER).negate())
+            .onFalse(clawGrip.stopClaw());
+        armController.joystick.button(ControllerConstants.CLAW_RELEASE_BUTTON_NUMBER)
+            .and(armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).negate())
+            .onFalse(clawGrip.stopClaw());
         armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).whileTrue(clawGrip.closeClaw());
-        armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).onFalse(clawGrip.openClaw());
+        armController.joystick.button(ControllerConstants.CLAW_RELEASE_BUTTON_NUMBER).whileTrue(clawGrip.openClaw());
         armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
         armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
         armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
@@ -103,6 +109,6 @@ public class RobotContainer {
 
     public void onTeleopInit() {
         this.driveTrain.setDefaultCommand(this.manualDrive);
-        this.arm.setDefaultCommand(this.armControl);
+        this.arm.setDefaultCommand(this.testArmControl);
     }
 }

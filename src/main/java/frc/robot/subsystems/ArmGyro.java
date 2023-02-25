@@ -34,9 +34,17 @@ public class ArmGyro extends SubsystemBase {
         }
     }
 
-    public static Double getGyroAngle() {
+    public static double getGyroAngle() {
         if (arduino.getBytesReceived() > 0) {
-            return Double.parseDouble(arduino.readString()) + gyro_adjust;
+            try {
+                var str = arduino.readString().replace("\n","");
+                System.out.println(str);
+                // System.out.println("ARIDOUNO OUTPUT: " + str);
+                var val = Double.parseDouble(str) + gyro_adjust;
+                return val;
+            } catch (Exception e) {
+                return 0.0;
+            }
         } else {
             return 0.0;
         }

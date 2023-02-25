@@ -18,6 +18,7 @@ public class ClawGripSubsystem extends SubsystemBase {
     public ClawGripSubsystem() {
         this.clawGrip = new CANSparkMax(PortConstants.CLAW_GRIP_PORT, MotorType.kBrushless);
         this.clawGripEncoder = this.clawGrip.getEncoder();
+        this.clawGripEncoder.setPosition(0);
         this.clawState = false;
     }
 
@@ -25,10 +26,13 @@ public class ClawGripSubsystem extends SubsystemBase {
     public CommandBase openClaw() {
         return this.runOnce(
                 () -> {
-                    while (clawGripEncoder.getPosition() < ClawConstants.MAX_GRIP_ENCODER_VALUE) {
+                    if (-clawGripEncoder.getPosition() < ClawConstants.MAX_GRIP_ENCODER_VALUE) {
+                        System.out.println("OPENED CLAW");
                         clawGrip.set(ClawConstants.CLAW_GRIP_SPEED); // find out correct direction later
+                    } else {
+                        System.out.println("STOPPED CLAW");
+                        clawGrip.set(0);
                     }
-                    clawGrip.set(0);
                 });
     }
 
@@ -36,12 +40,23 @@ public class ClawGripSubsystem extends SubsystemBase {
     public CommandBase closeClaw() {
         return this.runOnce(
                 () -> {
-                    if (clawGripEncoder.getPosition() > ClawConstants.MIN_GRIP_ENCODER_VALUE) {
+                    if (-clawGripEncoder.getPosition() > ClawConstants.MIN_GRIP_ENCODER_VALUE) {
+                        System.out.println("CLOSED CLAW");
                         clawGrip.set(-ClawConstants.CLAW_GRIP_SPEED); // find out correct direction later
                     } else {
+                        System.out.println("STOPPED CLAW");
                         clawGrip.set(0);
                     }
                 });
+    }
+
+    public CommandBase stopClaw() {
+        return this.runOnce(
+            () -> {
+                System.out.println("STOPPED CLAW");
+                this.clawGrip.set(0);
+            }
+        );
     }
 
     public boolean getClawState() {
@@ -50,7 +65,7 @@ public class ClawGripSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        // System.out.println("CLAW ENCODER: " + this.clawGripEncoder.getPosition());
     }
 
     @Override
