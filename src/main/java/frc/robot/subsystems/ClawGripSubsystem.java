@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -21,9 +20,10 @@ public class ClawGripSubsystem extends SubsystemBase {
 
     public ClawGripSubsystem() {
         // this.clawGrip = new CANSparkMax(PortConstants.CLAW_GRIP_PORT, MotorType.kBrushless);
-        this.doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1); // Change to the correct things
+        this.doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1); // Change to the correct things
+        doubleSolenoid.set(Value.kOff);
         // this.clawGripEncoder = this.clawGrip.getEncoder();
-        // this.clawGripEncoder.setPosition(0);
+        // this.clawGripEncoder.setPosition(0);?":"
         this.clawClosed = false;
     }
 
