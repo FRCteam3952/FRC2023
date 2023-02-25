@@ -24,8 +24,6 @@ public class ArmTestCommand extends CommandBase {
     @Override
     public void execute() {
         arm.setPivot1Speed(joystick.getLateralMovement() / 2);
-        System.out.println(joystick.getLateralMovement());
-        System.out.println(joystick.getHorizontalMovement());
         arm.setPivot2Speed(joystick.getHorizontalMovement() / 2);
         if (joystick.getRawButtonWrapper(8)) {
             arm.setTurretSpeed(-0.3);
