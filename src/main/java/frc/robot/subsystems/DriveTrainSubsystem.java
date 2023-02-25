@@ -102,7 +102,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     /**
      * Wrapper around arcadeDrive
      *
-     * @param xSpeed The movement speed
+     * @param xSpeed    The movement speed
      * @param zRotation The rotation speed
      */
 
@@ -324,8 +324,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     public void periodic() {
         odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegrees())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
 
-        if(RobotContainer.inTeleop) {
-            if(Math.abs(this.joystick.getHorizontalMovement()) < 0.1 && Math.abs(this.joystick.getLateralMovement()) < 0.1) {
+        if (RobotContainer.inTeleop) {
+            if (Math.abs(this.joystick.getHorizontalMovement()) < 0.1 && Math.abs(this.joystick.getLateralMovement()) < 0.1) {
                 var gyroRad = Math.toRadians(RobotGyro.getGyroAngleDegrees());
                 odometry.resetPosition(new Rotation2d(gyroRad), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), new Pose2d(NetworkTablesUtil.getJetsonPoseMeters(), new Rotation2d(gyroRad)));
             }

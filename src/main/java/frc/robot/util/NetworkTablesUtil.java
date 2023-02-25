@@ -52,11 +52,12 @@ public class NetworkTablesUtil {
 
     /**
      * Returns the current robot pose according to AprilTags on Jetson, in meters since that's what they want
+     *
      * @return A {@link Translation2d} representing the robot's pose ([x, y, radians])
      */
     public static Translation2d getJetsonPoseMeters() {
         NetworkTable table = INSTANCE.getTable("jetson");
-        var jetsonPoseXYZ = MathUtil.inchesArrayToMetersArray(table.getEntry("pose").getDoubleArray(new double[] {0.0, 0.0, 0.0})); // X, Y, Z
+        var jetsonPoseXYZ = MathUtil.inchesArrayToMetersArray(table.getEntry("pose").getDoubleArray(new double[]{0.0, 0.0, 0.0})); // X, Y, Z
         return new Translation2d(jetsonPoseXYZ[0], jetsonPoseXYZ[2]);
     }
 

@@ -10,6 +10,7 @@ public final class MathUtil {
 
     /**
      * Calculates the distance between two points on a 2D plane.
+     *
      * @param x1 First point's x coordinate
      * @param x2 Second point's x coordinate
      * @param y1 First point's y coordinate
@@ -22,6 +23,7 @@ public final class MathUtil {
 
     /**
      * Returns the distance between two points on a 3D plane
+     *
      * @param x1 First point's x coordinate
      * @param x2 Second point's x coordinate
      * @param y1 First point's y coordinate
@@ -36,6 +38,7 @@ public final class MathUtil {
 
     /**
      * Solves Law of Cosines for the angle
+     *
      * @param a Side a
      * @param b Side b
      * @param c Side c
@@ -47,9 +50,10 @@ public final class MathUtil {
 
     /**
      * Solves Law of Cosines for a side
-     * @param a Side a
-     * @param b Side b
-     * @param includedAngleDeg Angle opposite the unknown side 
+     *
+     * @param a                Side a
+     * @param b                Side b
+     * @param includedAngleDeg Angle opposite the unknown side
      * @return The side you're looking for
      */
     public static double lawOfCosinesForSide(double a, double b, double includedAngleDeg) {
@@ -58,9 +62,10 @@ public final class MathUtil {
 
     /**
      * Solves Law of Sines for a side
+     *
      * @param angle The angle opposite side A
-     * @param a Side opposite angle
-     * @param b Side opposite unknown angle
+     * @param a     Side opposite angle
+     * @param b     Side opposite unknown angle
      * @return Unknown angle opposite b
      */
     public static double lawOfSinesForAngle(double angle, double a, double b) { //law of sines calc
@@ -69,6 +74,7 @@ public final class MathUtil {
 
     /**
      * Returns the angle between two points on a 3D plane
+     *
      * @param x1 First point's x coordinate
      * @param x2 Second point's x coordinate
      * @param y1 First point's y coordinate
@@ -84,6 +90,7 @@ public final class MathUtil {
 
     /**
      * Converts inches to meters
+     *
      * @param inches inches
      * @return meters
      */
@@ -93,6 +100,7 @@ public final class MathUtil {
 
     /**
      * Converts an array of inch values to an array of meters values. Returns a new array.
+     *
      * @param ds The array of inches
      * @return The array of meters
      */

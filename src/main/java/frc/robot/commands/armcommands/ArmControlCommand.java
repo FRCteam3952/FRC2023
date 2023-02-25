@@ -10,7 +10,7 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
 /**
  * Moves arm on the turret
  */
-public class ArmControlCommand extends CommandBase{
+public class ArmControlCommand extends CommandBase {
     private final ArmSubsystem arm;
     private final FlightJoystick joystick;
     private final double areaConst;
@@ -34,15 +34,15 @@ public class ArmControlCommand extends CommandBase{
     private double[] getAdjustmentFromError() {
         double[] adjustments = new double[3];
         adjustments[0] = Math.sin(arm.getCurrentAnglesRad()[2]) * LimeLight.getXAdjustment()
-            + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLight.getArea())/areaConst; // x-axis adjustment
+                + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLight.getArea()) / areaConst; // x-axis adjustment
 
         adjustments[1] = LimeLight.getYAdjustment(); // y-axis adjustment
 
         adjustments[2] = Math.cos(arm.getCurrentAnglesRad()[2]) * LimeLight.getXAdjustment()
-            + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLight.getArea()/areaConst); // z-axis adjustment
+                + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLight.getArea() / areaConst); // z-axis adjustment
 
         return adjustments;
-}
+    }
 
     // Primary arm control
     private void primaryArmControl() {
@@ -51,14 +51,14 @@ public class ArmControlCommand extends CommandBase{
         } else {
             double y = 0;
             if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_UP_BUTTON_NUMBER)) {
-                y =  ySpeed;
+                y = ySpeed;
             } else if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_DOWN_BUTTON_NUMBER)) {
                 y = -ySpeed;
-            } 
+            }
             arm.setTurretSpeed(joystick.getHorizontalMovement() * turretSpeed);
             arm.moveVector(Math.sin(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * xSpeed, // Handles extension of robot arm 
-                y, 
-                Math.cos(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * zSpeed);
+                    y,
+                    Math.cos(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * zSpeed);
         }
     }
 
@@ -109,7 +109,8 @@ public class ArmControlCommand extends CommandBase{
 
     // Called once the command ends or is interrupted.
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+    }
 
     // Returns true when the command should end.
     @Override

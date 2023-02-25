@@ -8,10 +8,10 @@ public class ArmGyro {
     public static double gyro_adjust = 0.0;
 
     static {
-        SerialPort.Port[] port_types = new SerialPort.Port[] {
-            SerialPort.Port.kUSB,
-            SerialPort.Port.kUSB1,
-            SerialPort.Port.kUSB2,
+        SerialPort.Port[] port_types = new SerialPort.Port[]{
+                SerialPort.Port.kUSB,
+                SerialPort.Port.kUSB1,
+                SerialPort.Port.kUSB2,
         };
         for (SerialPort.Port port_type : port_types) {
             System.out.println(port_type);
@@ -36,7 +36,7 @@ public class ArmGyro {
     public static double getGyroAngle() {
         if (arduino.getBytesReceived() > 0) {
             try {
-                var str = arduino.readString().replace("\n","");
+                var str = arduino.readString().replace("\n", "");
                 System.out.println(str);
                 // System.out.println("ARIDOUNO OUTPUT: " + str);
                 var val = Double.parseDouble(str) + gyro_adjust;

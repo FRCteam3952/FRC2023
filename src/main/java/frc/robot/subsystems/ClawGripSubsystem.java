@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 // import com.revrobotics.CANSparkMax;
 // import com.revrobotics.RelativeEncoder;
 // import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -46,10 +47,11 @@ public class ClawGripSubsystem extends SubsystemBase {
     public void setOff() {
         this.doubleSolenoid.set(Value.kOff);
     }
-    
+
 
     /**
      * Gets the claw state
+     *
      * @return True for closing, False for not closing
      */
     public boolean getClawClosed() {
@@ -58,6 +60,7 @@ public class ClawGripSubsystem extends SubsystemBase {
 
     /**
      * Sets the claw state
+     *
      * @param state True for closing, False for not closing
      */
     public void setClawClosed(boolean state) {

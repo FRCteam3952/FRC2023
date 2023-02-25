@@ -40,7 +40,8 @@ public class RobotGyro {
         resetGyroAngle();
         angleAdjust = angle;
     }
-    public static void robotCalibrate(){
+
+    public static void robotCalibrate() {
         gyro.calibrate();
     }
 }

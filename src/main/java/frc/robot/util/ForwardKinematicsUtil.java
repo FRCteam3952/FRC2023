@@ -12,8 +12,9 @@ public final class ForwardKinematicsUtil {
 
     /**
      * Given the angles of the limbs and the turret, find the coordinates
-     * @param a1 First limb's angle in degrees
-     * @param a2 Second limb's angle in degrees
+     *
+     * @param a1          First limb's angle in degrees
+     * @param a2          Second limb's angle in degrees
      * @param turretAngle Turret's angle in degrees
      * @return the coordinates x, y, z
      */

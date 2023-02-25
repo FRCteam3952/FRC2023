@@ -19,9 +19,9 @@ public class ClawRotateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if(this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER)) {
+        if (this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER)) {
             this.claw.setClawRotateSpeed(ClawConstants.CLAW_ROTATE_SPEED);
-        } else if(this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER)) {
+        } else if (this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER)) {
             this.claw.setClawRotateSpeed(-ClawConstants.CLAW_ROTATE_SPEED);
         } else {
             this.claw.setClawRotateSpeed(0);
@@ -30,7 +30,8 @@ public class ClawRotateCommand extends CommandBase {
 
     // Called once the command ends or is interrupted.
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+    }
 
     // Returns true when the command should end.
     @Override

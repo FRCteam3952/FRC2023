@@ -14,9 +14,10 @@ public final class InverseKinematicsUtil {
 
     /**
      * calculate arm angles relative to limb that it's attached to
-     * @param x X coordinate
-     * @param y Y coordinate
-     * @param z Z coordinate
+     *
+     * @param x       X coordinate
+     * @param y       Y coordinate
+     * @param z       Z coordinate
      * @param flipped Whether the arm should attempt to approach from above rather than from the side (true for above, false for side)
      * @return The angles: [angle_limb_1, angle_limb_2, turret_angle]
      */
