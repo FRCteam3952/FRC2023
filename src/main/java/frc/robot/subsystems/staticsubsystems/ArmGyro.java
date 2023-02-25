@@ -1,9 +1,8 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.staticsubsystems;
 
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ArmGyro extends SubsystemBase {
+public class ArmGyro {
 
     public static SerialPort arduino;
     public static double gyro_adjust = 0.0;
@@ -53,14 +52,5 @@ public class ArmGyro extends SubsystemBase {
 
     public static void setGyroAngle(double angle) {
         gyro_adjust = -getGyroAngle() + angle;
-    }
-
-    @Override
-    public void periodic() {
-
-    }
-
-    @Override
-    public void simulationPeriodic() {
     }
 }

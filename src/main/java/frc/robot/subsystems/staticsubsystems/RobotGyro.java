@@ -1,13 +1,12 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.staticsubsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 
 /**
  * Wrapper around gyro
  */
 
-public class RobotGyro extends SubsystemBase {
+public class RobotGyro {
     private static final ADIS16470_IMU gyro = new ADIS16470_IMU();
 
     static {
@@ -19,7 +18,7 @@ public class RobotGyro extends SubsystemBase {
      * make sure this class is instantiated properly by poking it
      */
     public static void poke() {
-        System.out.println("Gyro init");
+        System.out.println("RobotGyro init");
     }
 
     private static double angleAdjust = 0;
@@ -43,16 +42,5 @@ public class RobotGyro extends SubsystemBase {
     }
     public static void robotCalibrate(){
         gyro.calibrate();
-    }
-
-    @Override
-    public void periodic() {
-        // System.out.println(getGyroAngle());
-        // resetGyroAngle();
-    }
-
-    @Override
-    public void simulationPeriodic() {
-
     }
 }

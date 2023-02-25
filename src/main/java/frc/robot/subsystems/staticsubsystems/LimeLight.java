@@ -1,10 +1,9 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.staticsubsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.wrappers.NetworkTables;
 import edu.wpi.first.math.controller.PIDController;
+import frc.robot.util.NetworkTablesUtil;
 
-public class LimeLightSubsystem extends SubsystemBase {
+public class LimeLight {
     private static final PIDController clawRotationPID;
     private static final float kp = 0.003125f;
     private static final float ki = 0.01f;
@@ -18,11 +17,11 @@ public class LimeLightSubsystem extends SubsystemBase {
         System.out.println("LimeLight initialized");
     }
 
-    public LimeLightSubsystem() {
+    public LimeLight() {
     }
 
     public static float getXAdjustment() {
-        float tx = (NetworkTables.getLimeLightErrorX() - 160) * kp;
+        float tx = (NetworkTablesUtil.getLimeLightErrorX() - 160) * kp;
 
         // if tx is too big, return the max of 1 or -1
         if (Math.abs(tx) > 1) {
@@ -33,7 +32,7 @@ public class LimeLightSubsystem extends SubsystemBase {
     }
 
     public static float getYAdjustment() {
-        float ty = (NetworkTables.getLimeLightErrorY() - 120) * kp;
+        float ty = (NetworkTablesUtil.getLimeLightErrorY() - 120) * kp;
 
         // if ty is too big, return the max of 1 or -1
         if (Math.abs(ty) > 1) {
@@ -44,12 +43,12 @@ public class LimeLightSubsystem extends SubsystemBase {
     }
 
     public static float getArea() {
-        float tA = (NetworkTables.getLimeLightArea());
+        float tA = (NetworkTablesUtil.getLimeLightArea());
         return tA;
     }
 
     public static double getAngleAdjustment() {
-        float angle = (NetworkTables.getConeOrientation()) * kp;
+        float angle = (NetworkTablesUtil.getConeOrientation()) * kp;
 
         // if angle is too big, return the max of 1 or -1
         if (Math.abs(angle) > 1) {
@@ -64,15 +63,4 @@ public class LimeLightSubsystem extends SubsystemBase {
     public static void setIntendedAngle(double setpoint) {
         clawRotationPID.setSetpoint(setpoint);
     }
-
-    @Override
-    public void periodic() {
-
-    }
-
-    @Override
-    public void simulationPeriodic() {
-
-    }
-
 }

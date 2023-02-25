@@ -1,19 +1,11 @@
-package frc.robot.wrappers;
+package frc.robot.util;
+
+import edu.wpi.first.networktables.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.networktables.ConnectionInfo;
-import edu.wpi.first.networktables.GenericPublisher;
-import edu.wpi.first.networktables.GenericSubscriber;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTablesJNI;
-import edu.wpi.first.networktables.PubSubOption;
-import edu.wpi.first.networktables.TimestampedDoubleArray;
-
-public class NetworkTables {
+public class NetworkTablesUtil {
     private static final NetworkTableInstance INSTANCE = NetworkTableInstance.getDefault();
     private static final Map<String, GenericPublisher> publishers = new HashMap<>();
     private static final Map<String, GenericSubscriber> subscribers = new HashMap<>();
@@ -57,9 +49,13 @@ public class NetworkTables {
         return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0})[0].floatValue();
     }
 
-    public static Double[] getPose() {
+    /**
+     * Returns the current robot pose according to AprilTags on Jetson, in meters since that's what they want
+     * @return An array of doubles representing the robot's pose ([x, y, theta])
+     */
+    public static double[] getJetsonPoseMeters() {
         NetworkTable table = INSTANCE.getTable("jetson");
-        return table.getEntry("pose").getDoubleArray(new Double[]{0.0, 0.0, 0.0});
+        return MathUtil.inchesArrayToMetersArray(table.getEntry("pose").getDoubleArray(new Double[]{0.0, 0.0, 0.0}));
     }
 
     /**

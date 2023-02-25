@@ -1,8 +1,8 @@
-package frc.robot.commands.ArmCommands;
+package frc.robot.commands.armcommands;
 
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.LimeLightSubsystem;
+import frc.robot.subsystems.staticsubsystems.LimeLight;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ObtainGamePieceCommand extends CommandBase {
@@ -25,8 +25,8 @@ public class ObtainGamePieceCommand extends CommandBase {
     @Override
     public void execute() {
         if (joystick.getRawButtonWrapper(1)) { //move arm toward game piece
-            float errorX = LimeLightSubsystem.getXAdjustment();
-            float errorY = LimeLightSubsystem.getYAdjustment();
+            float errorX = LimeLight.getXAdjustment();
+            float errorY = LimeLight.getYAdjustment();
         }
     }
 

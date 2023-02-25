@@ -1,4 +1,4 @@
-package frc.robot.commands.ArmCommands;
+package frc.robot.commands.armcommands;
 
 import frc.robot.Constants.PositionConstants;
 import frc.robot.joystick.FlightJoystick;
