@@ -4,12 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.staticsubsystems.RobotGyro;
-import frc.robot.subsystems.staticsubsystems.ArmGyro;
-import frc.robot.subsystems.staticsubsystems.LimeLight;
-import frc.robot.wrappers.TrajectoryReader;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -19,11 +15,16 @@ import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.armcommands.AutomaticObjectPlacementCommand;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
+import frc.robot.commands.clawcommands.ClawRotateCommand;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.staticsubsystems.ArmGyro;
+import frc.robot.subsystems.staticsubsystems.LimeLight;
+import frc.robot.subsystems.staticsubsystems.RobotGyro;
+import frc.robot.wrappers.TrajectoryReader;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -53,6 +54,7 @@ public class RobotContainer {
     public final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
     public final AutomaticObjectPlacementCommand autoObjectPlacement = new AutomaticObjectPlacementCommand(arm, armController);
     public final ClawOpenandCloseCommand clawOpenandCloseCommand = new ClawOpenandCloseCommand(clawGrip, armController);
+    public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, armController);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.

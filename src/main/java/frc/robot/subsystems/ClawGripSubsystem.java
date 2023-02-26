@@ -4,28 +4,31 @@ package frc.robot.subsystems;
 // import com.revrobotics.RelativeEncoder;
 // import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants.PortConstants;
 
 public class ClawGripSubsystem extends SubsystemBase {
     // private final CANSparkMax clawGrip;
     // private final RelativeEncoder clawGripEncoder;
     private final DoubleSolenoid doubleSolenoid;
+    private final Compressor compressor;
     private boolean clawClosed;
     DigitalInput limit = new DigitalInput(PortConstants.CLAW_LIMIT_SWITCH_PORT);
 
     public ClawGripSubsystem() {
         // this.clawGrip = new CANSparkMax(PortConstants.CLAW_GRIP_PORT, MotorType.kBrushless);
         this.doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1); // Change to the correct things
-        doubleSolenoid.set(Value.kOff);
         // this.clawGripEncoder = this.clawGrip.getEncoder();
         // this.clawGripEncoder.setPosition(0);?":"
         this.clawClosed = false;
+
+        this.compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+        this.compressor.enableDigital();
     }
 
     // public void setSpeed(double speed) {
@@ -37,15 +40,15 @@ public class ClawGripSubsystem extends SubsystemBase {
     // }
 
     public void setForward() {
-        this.doubleSolenoid.set(Value.kForward);
+        //this.doubleSolenoid.set(Value.kForward);
     }
 
     public void setReverse() {
-        this.doubleSolenoid.set(Value.kReverse);
+        //this.doubleSolenoid.set(Value.kReverse);
     }
 
     public void setOff() {
-        this.doubleSolenoid.set(Value.kOff);
+        //this.doubleSolenoid.set(Value.kReverse);
     }
 
 
@@ -69,6 +72,9 @@ public class ClawGripSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        this.doubleSolenoid.set(this.clawClosed ? Value.kForward : Value.kReverse);
+        System.out.println("SOLENOID STATE: " + this.doubleSolenoid.get().name() + ", FWD/REV Disabled: " + this.doubleSolenoid.isFwdSolenoidDisabled() + "/" + this.doubleSolenoid.isRevSolenoidDisabled());
+        System.out.println("COMPRESSOR STATE- Full:" + this.compressor.getPressureSwitchValue() + ", Enabled: " + this.compressor.isEnabled() + ", Current: " + this.compressor.getCurrent());
         // if(this.limit.get() && this.clawGrip.get() > 0) {
         //     this.clawGrip.set(0);
         // }

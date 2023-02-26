@@ -4,15 +4,13 @@
 
 package frc.robot.subsystems;
 
-import frc.robot.Constants.ClawConstants;
-import frc.robot.Constants.PortConstants;
-
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ClawConstants;
+import frc.robot.Constants.PortConstants;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
 
 public class ClawRotationSubsystem extends SubsystemBase {
@@ -42,35 +40,31 @@ public class ClawRotationSubsystem extends SubsystemBase {
 
     // Runs continuously when designated button is held down
     public CommandBase rotateClawRight() {
-        return this.runOnce(
-                () -> {
-                    if (clawRotationEncoder.getPosition() < ClawConstants.MAX_ROTATION_ENCODER_VALUE) {
-                        setClawRotateSpeed(ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
-                    } else {
-                        setClawRotateSpeed(0);
-                    }
-                });
+        return this.runOnce(() -> {
+            if (clawRotationEncoder.getPosition() < ClawConstants.MAX_ROTATION_ENCODER_VALUE) {
+                setClawRotateSpeed(ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
+            } else {
+                setClawRotateSpeed(0);
+            }
+        });
     }
 
     // Runs continuosly when designated button is held down
     public CommandBase rotateClawLeft() {
-        return this.runOnce(
-                () -> {
-                    if (clawRotationEncoder.getPosition() > ClawConstants.MIN_ROTATION_ENCODER_VALUE) {
-                        setClawRotateSpeed(-ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
-                    } else {
-                        setClawRotateSpeed(0);
-                    }
-                });
+        return this.runOnce(() -> {
+            if (clawRotationEncoder.getPosition() > ClawConstants.MIN_ROTATION_ENCODER_VALUE) {
+                setClawRotateSpeed(-ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
+            } else {
+                setClawRotateSpeed(0);
+            }
+        });
     }
 
     // Automatically rotates claw to match angle when designated button is held down
     public CommandBase autoRotate() {
-        return this.runOnce(
-                () -> {
-                    clawRotator.set(LimeLight.getAngleAdjustment());
-                }
-        );
+        return this.runOnce(() -> {
+            clawRotator.set(LimeLight.getAngleAdjustment());
+        });
     }
 
     public double getClawAngle() {

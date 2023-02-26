@@ -4,10 +4,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * The command to drive the robot manually with joysticks.

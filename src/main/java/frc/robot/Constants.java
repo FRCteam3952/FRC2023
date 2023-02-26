@@ -89,7 +89,7 @@ public final class Constants {
 
         public static final int PIVOT_1_LIMIT_PORT = 1;
         public static final int PIVOT_2_LIMIT_PORT = 0;
-        public static final int CLAW_LIMIT_SWITCH_PORT = 0; // change to whatever it is
+        public static final int CLAW_LIMIT_SWITCH_PORT = 2; // change to whatever it is
     }
 
     public static class DriveConstants {// All constants below are examples; must correct to robot's specification when it is finished being built
@@ -99,8 +99,7 @@ public final class Constants {
         public static final double P_DRIVE_VEL = 8.5;
 
         public static final double TRACKWIDTH_METERS = 0.69; // nice
-        public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
-                new DifferentialDriveKinematics(TRACKWIDTH_METERS);
+        public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACKWIDTH_METERS);
 
         public static final double ENCODER_CONVERSION_FACTOR = 1; //find out experimentally or some other way
 
@@ -158,20 +157,6 @@ public final class Constants {
         public static final double[] TOP_LEFT_POS = {X_LEFT, Y_TOP_POLE_HEIGHT, Z_TOP_DISTANCE};
         public static final double[] TOP_CENTER_POS = {X_MIDDLE, Y_TOP_PLATFORM_HEIGHT, Z_TOP_DISTANCE};
         public static final double[] TOP_RIGHT_POS = {X_RIGHT, Y_TOP_POLE_HEIGHT, Z_TOP_DISTANCE};
-
-
-        // public static final Pose3d BOTTOM_LEFT_POS   = new Pose3d(X_LEFT,   Y_FLOOR, Z_BOTTOM_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
-        // public static final Pose3d BOTTOM_MIDDLE_POS = new Pose3d(X_MIDDLE, Y_FLOOR, Z_BOTTOM_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
-        // public static final Pose3d BOTTOM_RIGHT_POS  = new Pose3d(X_RIGHT,  Y_FLOOR, Z_BOTTOM_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
-
-        // public static final Pose3d CENTER_LEFT_POS   = new Pose3d(X_LEFT,   Y_MIDDLE_POLE_HEIGHT,     Z_MIDDLE_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
-        // public static final Pose3d CENTER_MIDDLE_POS = new Pose3d(X_MIDDLE, Y_MIDDLE_PLATFORM_HEIGHT, Z_MIDDLE_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
-        // public static final Pose3d CENTER_RIGHT_POS  = new Pose3d(X_RIGHT,  Y_MIDDLE_POLE_HEIGHT,     Z_MIDDLE_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
-
-        // public static final Pose3d TOP_LEFT_POS      = new Pose3d(X_LEFT,   Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
-        // public static final Pose3d TOP_CENTER_POS    = new Pose3d(X_MIDDLE, Y_TOP_PLATFORM_HEIGHT, Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
-        // public static final Pose3d TOP_RIGHT_POS     = new Pose3d(X_RIGHT,  Y_TOP_POLE_HEIGHT,     Z_TOP_DISTANCE, new Rotation3d(0.0, 0.0, 0.0));
-
     }
 
     public static class AprilTagConstants {

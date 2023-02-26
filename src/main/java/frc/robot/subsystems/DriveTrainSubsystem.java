@@ -4,12 +4,9 @@
 
 package frc.robot.subsystems;
 
-import java.util.List;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -26,14 +23,16 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.TrajectoryConstants;
+import frc.robot.RobotContainer;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.MathUtil;
 import frc.robot.util.NetworkTablesUtil;
+
+import java.util.List;
 
 public class DriveTrainSubsystem extends SubsystemBase {
 
@@ -70,12 +69,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.rearLeftEncoder = rearLeftMotor.getEncoder();
         this.rearRightEncoder = rearRightMotor.getEncoder();
 
-        this.encoders = new RelativeEncoder[]{
-                frontLeftEncoder,
-                frontRightEncoder,
-                rearLeftEncoder,
-                rearRightEncoder
-        };
+        this.encoders = new RelativeEncoder[]{frontLeftEncoder, frontRightEncoder, rearLeftEncoder, rearRightEncoder};
 
         for (RelativeEncoder encoder : encoders) {
             encoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
@@ -232,8 +226,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        odometry.resetPosition(
-                new Rotation2d(RobotGyro.getGyroAngleDegrees()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), pose);
+        odometry.resetPosition(new Rotation2d(RobotGyro.getGyroAngleDegrees()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), pose);
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -247,46 +240,32 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // Generate command for following a trajectory
     public Command generateRamseteCommand(Pose2d startPoint, Pose2d endPoint) {
         // Create a voltage constraint to ensure we don't accelerate too fast
-        var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
-                new SimpleMotorFeedforward(
-                        DriveConstants.KS_VOLTS,
-                        DriveConstants.KV_VOLTS_SECONDS_PER_METER,
-                        DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
-                DriveConstants.DRIVE_KINEMATICS,
-                10);
+        var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLTS_SECONDS_PER_METER, DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER), DriveConstants.DRIVE_KINEMATICS, 10);
 
         // Create config for trajectory
-        TrajectoryConfig config = new TrajectoryConfig(
-                TrajectoryConstants.MAX_SPEED_METERS_PER_SECOND,
-                TrajectoryConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+        TrajectoryConfig config = new TrajectoryConfig(TrajectoryConstants.MAX_SPEED_METERS_PER_SECOND, TrajectoryConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
                 // Add kinematics to ensure max speed is actually obeyed
                 .setKinematics(DriveConstants.DRIVE_KINEMATICS)
                 // Apply the voltage constraint
                 .addConstraint(autoVoltageConstraint);
 
         // A trajectory to follow. All units in meters.
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                startPoint,
-                List.of(),
-                endPoint,
-                config);
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(startPoint, List.of(), endPoint, config);
 
 
         RamseteCommand ramseteCommand = new RamseteCommand(
                 trajectory,
                 this::getPose,
                 new RamseteController(TrajectoryConstants.RAMSETE_B, TrajectoryConstants.RAMSETE_ZETA),
-                new SimpleMotorFeedforward(
-                        DriveConstants.KS_VOLTS,
-                        DriveConstants.KV_VOLTS_SECONDS_PER_METER,
-                        DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
+                new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLTS_SECONDS_PER_METER, DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
                 DriveConstants.DRIVE_KINEMATICS,
                 this::getWheelSpeeds,
                 new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
                 new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
                 // RamseteCommand passes volts to the callback
                 this::tankDriveVolts,
-                this);
+                this
+        );
 
         // Reset odometry to the starting pose of the trajectory.
         this.resetOdometry(trajectory.getInitialPose());
@@ -301,17 +280,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
                 trajectory,
                 this::getPose,
                 new RamseteController(TrajectoryConstants.RAMSETE_B, TrajectoryConstants.RAMSETE_ZETA),
-                new SimpleMotorFeedforward(
-                        DriveConstants.KS_VOLTS,
-                        DriveConstants.KV_VOLTS_SECONDS_PER_METER,
-                        DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
+                new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLTS_SECONDS_PER_METER, DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
                 DriveConstants.DRIVE_KINEMATICS,
                 this::getWheelSpeeds,
                 new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
                 new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
                 // RamseteCommand passes volts to the callback
                 this::tankDriveVolts,
-                this);
+                this
+        );
 
         // Reset odometry to the starting pose of the trajectory.
         this.resetOdometry(trajectory.getInitialPose());

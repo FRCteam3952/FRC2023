@@ -33,13 +33,11 @@ public class ArmControlCommand extends CommandBase {
     // Gets adjustments from limelight and converts them to position adjustments
     private double[] getAdjustmentFromError() {
         double[] adjustments = new double[3];
-        adjustments[0] = Math.sin(arm.getCurrentAnglesRad()[2]) * LimeLight.getXAdjustment()
-                + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLight.getArea()) / areaConst; // x-axis adjustment
+        adjustments[0] = Math.sin(arm.getCurrentAnglesRad()[2]) * LimeLight.getXAdjustment() + Math.cos(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLight.getArea()) / areaConst; // x-axis adjustment
 
         adjustments[1] = LimeLight.getYAdjustment(); // y-axis adjustment
 
-        adjustments[2] = Math.cos(arm.getCurrentAnglesRad()[2]) * LimeLight.getXAdjustment()
-                + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLight.getArea() / areaConst); // z-axis adjustment
+        adjustments[2] = Math.cos(arm.getCurrentAnglesRad()[2]) * LimeLight.getXAdjustment() + Math.sin(arm.getCurrentAnglesRad()[2]) * (DESIRED_AREA - LimeLight.getArea() / areaConst); // z-axis adjustment
 
         return adjustments;
     }
@@ -57,8 +55,7 @@ public class ArmControlCommand extends CommandBase {
             }
             arm.setTurretSpeed(joystick.getHorizontalMovement() * turretSpeed);
             arm.moveVector(Math.sin(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * xSpeed, // Handles extension of robot arm 
-                    y,
-                    Math.cos(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * zSpeed);
+                    y, Math.cos(arm.getCurrentAnglesRad()[2]) * joystick.getLateralMovement() * zSpeed);
         }
     }
 

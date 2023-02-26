@@ -1,18 +1,17 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants.PortConstants;
-import frc.robot.Constants.ArmConstants;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
-import frc.robot.subsystems.staticsubsystems.ArmGyro;
-import frc.robot.util.ForwardKinematicsUtil;
-import frc.robot.util.InverseKinematicsUtil;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.PortConstants;
+import frc.robot.subsystems.staticsubsystems.ArmGyro;
+import frc.robot.util.ForwardKinematicsUtil;
+import frc.robot.util.InverseKinematicsUtil;
 
 public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax pivot1;
@@ -177,8 +176,7 @@ public class ArmSubsystem extends SubsystemBase {
         /* */
         double[] angles = getCurrentAnglesDeg();
 
-        if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) ||
-                Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
+        if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) || Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
             System.out.println("An angle is NaN, so skip");
             return;
         }
@@ -225,20 +223,19 @@ public class ArmSubsystem extends SubsystemBase {
 
     public CommandBase calibrateArm() {
         pidOn = false;
-        return this.runOnce(
-                () -> {
-                    while (!getPivot2LimitPressed()) {
-                        setPivot2Speed(-0.1);
-                    }
-                    setPivot2Speed(0);
-                    while (!getPivot1LimitPressed()) {
-                        setPivot1Speed(-0.1);
-                    }
-                    setPivot1Speed(0);
-                    this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
-                    this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
-                    pidOn = true;
-                });
+        return this.runOnce(() -> {
+            while (!getPivot2LimitPressed()) {
+                setPivot2Speed(-0.1);
+            }
+            setPivot2Speed(0);
+            while (!getPivot1LimitPressed()) {
+                setPivot1Speed(-0.1);
+            }
+            setPivot1Speed(0);
+            this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
+            this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+            pidOn = true;
+        });
     }
 
     public void setPIDControlOn(boolean value) {

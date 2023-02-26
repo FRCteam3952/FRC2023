@@ -1,12 +1,12 @@
 package frc.robot.wrappers;
 
-import java.util.ArrayList;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericSubscriber;
 import frc.robot.util.NetworkTablesUtil;
+
+import java.util.ArrayList;
 
 public class TrajectoryReader {
     public Trajectory currentTrajectory;
@@ -27,7 +27,12 @@ public class TrajectoryReader {
 
         for (int i = 0; i < latest.length; i++) {
             int shift = i * 7;
-            states.add(new Trajectory.State(latest[shift + 0], latest[shift + 1], latest[shift + 2], new Pose2d(latest[shift + 3], latest[shift + 4], new Rotation2d(latest[shift + 5])), latest[shift + 6]));
+            states.add(new Trajectory.State(
+                    latest[shift + 0],
+                    latest[shift + 1],
+                    latest[shift + 2],
+                    new Pose2d(latest[shift + 3], latest[shift + 4], new Rotation2d(latest[shift + 5])),
+                    latest[shift + 6]));
         }
 
         this.currentTrajectory = new Trajectory(states);

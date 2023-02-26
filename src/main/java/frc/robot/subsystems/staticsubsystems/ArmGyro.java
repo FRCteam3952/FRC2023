@@ -8,11 +8,7 @@ public class ArmGyro {
     public static double gyro_adjust = 0.0;
 
     static {
-        SerialPort.Port[] port_types = new SerialPort.Port[]{
-                SerialPort.Port.kUSB,
-                SerialPort.Port.kUSB1,
-                SerialPort.Port.kUSB2,
-        };
+        SerialPort.Port[] port_types = new SerialPort.Port[]{SerialPort.Port.kUSB, SerialPort.Port.kUSB1, SerialPort.Port.kUSB2,};
         for (SerialPort.Port port_type : port_types) {
             System.out.println(port_type);
             try {
@@ -26,7 +22,7 @@ public class ArmGyro {
     }
 
     public static void poke() {
-        if (arduino.getBytesReceived() > 0) {
+        if (arduino != null && arduino.getBytesReceived() > 0) {
             System.out.println("Arm Gyro Connected");
         } else {
             System.out.println("Arm Gyro not Connected");
@@ -34,7 +30,7 @@ public class ArmGyro {
     }
 
     public static double getGyroAngle() {
-        if (arduino.getBytesReceived() > 0) {
+        if (arduino != null && arduino.getBytesReceived() > 0) {
             try {
                 var str = arduino.readString().replace("\n", "");
                 System.out.println(str);
