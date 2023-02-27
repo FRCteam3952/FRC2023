@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import frc.robot.Constants.FieldConstants;
+
 /**
  * Does Math stuff for us
  */
@@ -101,14 +103,23 @@ public final class MathUtil {
     /**
      * Converts an array of inch values to an array of meters values. Returns a new array.
      *
-     * @param ds The array of inches
+     * @param inchesArray The array of inches
      * @return The array of meters
      */
-    public static double[] inchesArrayToMetersArray(double[] ds) {
-        double[] newArr = new double[ds.length];
-        for (int i = 0; i < ds.length; i++) {
-            newArr[i] = inchesToMeters(ds[i]);
+    public static double[] inchesArrayToMetersArray(double[] inchesArray) {
+        double[] metersArray = new double[inchesArray.length];
+        for (int i = 0; i < inchesArray.length; i++) {
+            metersArray[i] = inchesToMeters(inchesArray[i]);
         }
-        return newArr;
+        return metersArray;
+    }
+
+    /**
+     * Mirrors a coordinate across the middle of the field's X-axis (for when we are on red alliance).
+     * @param value The value to mirror (likely a blue alliance coordinate, but can be either alliance)
+     * @return The mirrored value
+     */
+    public static double mirrorValueOnFieldXAxis(double value) {
+        return FieldConstants.FIELD_X_LENGTH - value;
     }
 }
