@@ -6,6 +6,8 @@ package frc.robot.commands.autocommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.RobotContainer;
+
 
 
 public final class Autos {
@@ -15,7 +17,17 @@ public final class Autos {
     public static CommandBase exampleAuto() {
         // Example command case
         return Commands.runOnce(() -> {
-            // Autonomous scenario codee
+            // Autonomous scenario code
+        });
+
+        // To implement a string of actions/commands use .andThen(), can be used to implement PathWeaver trajectories
+        // For example: return Commands.runOnce(() -> {}).andThen(RobotContainer.trajectory1Command);
+    }
+
+    public static CommandBase defaultAuto() {
+        // Example command case
+        return Commands.runOnce(() -> {
+            // Autonomous scenario code
         });
 
     }

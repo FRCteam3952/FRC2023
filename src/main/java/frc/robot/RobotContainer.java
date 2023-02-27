@@ -9,6 +9,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.armcommands.ArmControlCommand;
@@ -16,6 +20,7 @@ import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.armcommands.AutomaticObjectPlacementCommand;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
+import frc.robot.commands.autocommands.Autos;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
@@ -55,6 +60,15 @@ public class RobotContainer {
     public final AutomaticObjectPlacementCommand autoObjectPlacement = new AutomaticObjectPlacementCommand(arm, armController);
     public final ClawOpenandCloseCommand clawOpenandCloseCommand = new ClawOpenandCloseCommand(clawGrip, armController);
     public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, armController);
+
+    private String trajectory1JSON = "paths/YourPath.wpilib.json"; // placeholder
+    private Trajectory autonTrajectory1 = new Trajectory(); // placeholder
+    public Command trajectory1Command;
+
+    private static final Command defaultAuto = Autos.defaultAuto(); // placeholder, pass in subsystems if needed
+    private static final Command customAuto = Autos.exampleAuto(); // placeholder, pass in subsystems if needed
+    private Command m_autonomousCommand;
+    private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -111,11 +125,33 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-        return Commands.none();// Autos.exampleAuto(exampleSubsystem);
+        return m_chooser.getSelected();// Autos.exampleAuto(exampleSubsystem);
+    }
+
+    public void onRobotInit() {
+        m_chooser.setDefaultOption("Default Auto", defaultAuto);
+        m_chooser.addOption("My Auto", customAuto);
+        SmartDashboard.putData("Auto choices", m_chooser);
+
+        try {
+            Path trajectory1Path = Filesystem.getDeployDirectory().toPath().resolve(trajectory1JSON);
+            autonTrajectory1 = TrajectoryUtil.fromPathweaverJson(trajectory1Path);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + trajectory1JSON, ex.getStackTrace());
+        }
+
+        trajectory1Command = driveTrain.generateRamseteCommand(autonTrajectory1);
     }
 
     public void onAutonInit() {
         inTeleop = false;
+        
+        m_autonomousCommand = this.getAutonomousCommand();
+
+        // schedule the autonomous command (example)
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.schedule();
+        }
     }
 
     public void onTeleopInit() {
