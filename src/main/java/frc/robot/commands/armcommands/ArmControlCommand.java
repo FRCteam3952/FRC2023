@@ -1,7 +1,7 @@
 package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.joystick.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
@@ -11,11 +11,12 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
  * Moves arm on the turret
  */
 public class ArmControlCommand extends CommandBase {
+    private static final double DESIRED_AREA = 369; // in pixels probably, can tune later
+
     private final ArmSubsystem arm;
     private final FlightJoystick joystick;
     private final double areaConst;
     private final double xSpeed, ySpeed, zSpeed, turretSpeed;
-    private final double DESIRED_AREA = 369; // in pixels probably, can tune later
 
     public ArmControlCommand(ArmSubsystem arm, FlightJoystick joystick) {
         this.arm = arm;
@@ -44,13 +45,13 @@ public class ArmControlCommand extends CommandBase {
 
     // Primary arm control
     private void primaryArmControl() {
-        if (joystick.getRawButtonWrapper(Constants.OperatorConstants.ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
+        if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
             arm.moveVector(getAdjustmentFromError()[0] * xSpeed, getAdjustmentFromError()[1] * ySpeed, getAdjustmentFromError()[2] * zSpeed);
         } else {
             double y = 0;
-            if (joystick.getRawButtonWrapper(Constants.OperatorConstants.ControllerConstants.MOVE_ARM_UP_BUTTON_NUMBER)) {
+            if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_UP_BUTTON_NUMBER)) {
                 y = ySpeed;
-            } else if (joystick.getRawButtonWrapper(Constants.OperatorConstants.ControllerConstants.MOVE_ARM_DOWN_BUTTON_NUMBER)) {
+            } else if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_DOWN_BUTTON_NUMBER)) {
                 y = -ySpeed;
             }
             arm.setTurretSpeed(joystick.getHorizontalMovement() * turretSpeed);
@@ -61,13 +62,13 @@ public class ArmControlCommand extends CommandBase {
 
     // Moves arm to preset distance above the floor for picking up gamepieces 
     private void pickUpPositionFlipped() {
-        if (joystick.getRawButtonWrapper(Constants.OperatorConstants.ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED)) {
+        if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED)) {
             arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], true);
         }
     }
 
     private void pickUpPositionNotFlipped() {
-        if (joystick.getRawButtonWrapper(Constants.OperatorConstants.ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_NOT_FLIPPED)) {
+        if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_NOT_FLIPPED)) {
             arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], false);
         }
     }
@@ -80,7 +81,7 @@ public class ArmControlCommand extends CommandBase {
 
     // Toggles whether PID control is active or not
     private void togglePIDControl() {
-        if (joystick.getRawButtonWrapper(Constants.OperatorConstants.ControllerConstants.PID_CONTROL_TOGGLE_BUTTON_NUMBER)) {
+        if (joystick.getRawButtonWrapper(ControllerConstants.PID_CONTROL_TOGGLE_BUTTON_NUMBER)) {
             arm.setPIDControlOn(!arm.getPIDControlOn());
         }
     }
@@ -94,7 +95,7 @@ public class ArmControlCommand extends CommandBase {
     @Override
     public void execute() {
         // testPrimaryArmControl();
-        if (joystick.getRawButtonWrapper(Constants.OperatorConstants.ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED)) {
+        if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED)) {
             arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], true);
         } else {
             arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], false);

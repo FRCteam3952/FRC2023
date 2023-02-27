@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DriveConstants.TrajectoryConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.RobotContainer;
 import frc.robot.joystick.FlightJoystick;
@@ -242,7 +243,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLTS_SECONDS_PER_METER, DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER), DriveConstants.DRIVE_KINEMATICS, 10);
 
         // Create config for trajectory
-        TrajectoryConfig config = new TrajectoryConfig(DriveConstants.TrajectoryConstants.MAX_SPEED_METERS_PER_SECOND, DriveConstants.TrajectoryConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+        TrajectoryConfig config = new TrajectoryConfig(TrajectoryConstants.MAX_SPEED_METERS_PER_SECOND, TrajectoryConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
                 // Add kinematics to ensure max speed is actually obeyed
                 .setKinematics(DriveConstants.DRIVE_KINEMATICS)
                 // Apply the voltage constraint
@@ -255,7 +256,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         RamseteCommand ramseteCommand = new RamseteCommand(
                 trajectory,
                 this::getPose,
-                new RamseteController(DriveConstants.TrajectoryConstants.RAMSETE_B, DriveConstants.TrajectoryConstants.RAMSETE_ZETA),
+                new RamseteController(TrajectoryConstants.RAMSETE_B, TrajectoryConstants.RAMSETE_ZETA),
                 new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLTS_SECONDS_PER_METER, DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
                 DriveConstants.DRIVE_KINEMATICS,
                 this::getWheelSpeeds,
@@ -278,7 +279,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         RamseteCommand ramseteCommand = new RamseteCommand(
                 trajectory,
                 this::getPose,
-                new RamseteController(DriveConstants.TrajectoryConstants.RAMSETE_B, DriveConstants.TrajectoryConstants.RAMSETE_ZETA),
+                new RamseteController(TrajectoryConstants.RAMSETE_B, TrajectoryConstants.RAMSETE_ZETA),
                 new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLTS_SECONDS_PER_METER, DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
                 DriveConstants.DRIVE_KINEMATICS,
                 this::getWheelSpeeds,

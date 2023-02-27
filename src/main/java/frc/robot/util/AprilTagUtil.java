@@ -1,7 +1,7 @@
 package frc.robot.util;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants.AprilTagConstants;
 
 public final class AprilTagUtil {
     private AprilTagUtil() {
@@ -17,9 +17,8 @@ public final class AprilTagUtil {
         tag_id--;
         double[] abs_cords = new double[3];
         for (int i = 0; i < 3; i++) {
-            abs_cords[i] = Constants.FieldConstants.AprilTagConstants.APRILTAG_LOCATIONS[tag_id][i] - rel_cords[i];
+            abs_cords[i] = AprilTagConstants.APRILTAG_LOCATIONS[tag_id][i] - rel_cords[i];
         }
-        Pose3d pose = new Pose3d(abs_cords[0], abs_cords[1], abs_cords[2], null);
-        return pose;
+        return new Pose3d(abs_cords[0], abs_cords[1], abs_cords[2], null);
     }
 }
