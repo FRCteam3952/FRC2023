@@ -3,7 +3,7 @@ package frc.robot.joystick;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
 /**
- * black voodoo magic code from previous software teams
+ * simple code to cut out joystick noise and to provide button inputs for flight joystick
  */
 public class FlightJoystick {
     public static final double c = 0.1;
