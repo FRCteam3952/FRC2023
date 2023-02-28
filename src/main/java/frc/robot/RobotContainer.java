@@ -146,7 +146,7 @@ public class RobotContainer {
             DriverStation.reportError("Unable to open trajectory: " + trajectory1JSON, ex.getStackTrace());
         }
 
-        trajectory1Command = driveTrain.generateRamseteCommand(autonTrajectory1);
+        trajectory1Command = driveTrain.followTrajectoryCommand(autonTrajectory1);
     }
 
     public void onAutonInit() {

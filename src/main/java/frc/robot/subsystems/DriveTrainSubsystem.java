@@ -21,6 +21,7 @@ import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstrai
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
@@ -237,6 +238,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
         return odometry.getPoseMeters();
     }
 
+    public Command resetOdometryCommand(Pose2d pose) {
+        return new InstantCommand(() -> resetOdometry(pose), this);
+    }
+
     // Generate command for following a trajectory
     public Command generateRamseteCommand(Pose2d startPoint, Pose2d endPoint) {
         // Create a voltage constraint to ensure we don't accelerate too fast
@@ -252,55 +257,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // A trajectory to follow. All units in meters.
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(startPoint, List.of(), endPoint, config);
 
-
-        RamseteCommand ramseteCommand = new RamseteCommand(
-                trajectory,
-                this::getPose,
-                new RamseteController(TrajectoryConstants.RAMSETE_B, TrajectoryConstants.RAMSETE_ZETA),
-                new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLTS_SECONDS_PER_METER, DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
-                DriveConstants.DRIVE_KINEMATICS,
-                this::getWheelSpeeds,
-                new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
-                new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
-                // RamseteCommand passes volts to the callback
-                this::tankDriveVolts,
-                this
-        );
-
-        // Reset odometry to the starting pose of the trajectory.
-        this.resetOdometry(trajectory.getInitialPose());
-
-        // Run path following command, then stop at the end.
-        return ramseteCommand.andThen(() -> this.tankDriveVolts(0, 0));
-
+        return this.followTrajectoryCommand(trajectory);
     }
 
-    // Generate command for following a trajectory
-    public Command generateRamseteCommand(Trajectory trajectory) {
-
-        RamseteCommand ramseteCommand = new RamseteCommand(
-                trajectory,
-                this::getPose,
-                new RamseteController(TrajectoryConstants.RAMSETE_B, TrajectoryConstants.RAMSETE_ZETA),
-                new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLTS_SECONDS_PER_METER, DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
-                DriveConstants.DRIVE_KINEMATICS,
-                this::getWheelSpeeds,
-                new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
-                new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
-                // RamseteCommand passes volts to the callback
-                this::tankDriveVolts,
-                this
-        );
-
-        // Reset odometry to the starting pose of the trajectory.
-        this.resetOdometry(trajectory.getInitialPose());
-
-        // Run path following command, then stop at the end.
-        return ramseteCommand.andThen(() -> this.tankDriveVolts(0, 0));
-
-    }
-
-
+    /**
+     * Generates a command that will follow a trajectory. This command should be run immediately, and the given trajectory should begin at the current robot position.
+     * @param trajectory the trajectory to follow
+     * @return the command to follow the trajectory
+     */
     public Command followTrajectoryCommand(Trajectory trajectory) {
         RamseteCommand ramseteCommand = new RamseteCommand(
                 trajectory,
@@ -317,10 +281,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
         );
 
         // Reset odometry to the starting pose of the trajectory.
-        this.resetOdometry(trajectory.getInitialPose());
+        // this.resetOdometry(trajectory.getInitialPose());
 
+        // Reset odometry, run path following command, then stop at the end.
+        return this.resetOdometryCommand(trajectory.getInitialPose()).andThen(ramseteCommand).andThen(() -> this.tankDriveVolts(0, 0), this);
+
+        // ORIGINAL:
         // Run path following command, then stop at the end.
-        return ramseteCommand.andThen(() -> this.tankDriveVolts(0, 0));
+        // return ramseteCommand.andThen(() -> this.tankDriveVolts(0, 0));
     }
 
     @Override
