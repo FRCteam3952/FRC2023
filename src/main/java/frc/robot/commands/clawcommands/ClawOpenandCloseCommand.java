@@ -32,7 +32,6 @@ public class ClawOpenandCloseCommand extends CommandBase {
         }
         if(this.joystick.getRawButtonReleased(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER)){
             toggle = true;
-            this.claw.setOff();
         }
     }
 
