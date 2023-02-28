@@ -67,9 +67,9 @@ public class RobotContainer {
     public final ClawOpenandCloseCommand clawOpenandCloseCommand = new ClawOpenandCloseCommand(clawGrip, armController);
     public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, armController);
 
-    private String trajectory1JSON = "paths/YourPath.wpilib.json"; // placeholder
-    private Trajectory autonTrajectory1 = new Trajectory(); // placeholder
-    public Command trajectory1Command;
+    /*private String trajectory1JSON = "paths/YourPath.wpilib.json"; // placeholder
+    //private Trajectory autonTrajectory1 = new Trajectory(); // placeholder
+    public Command trajectory1Command;*/
 
     private static final Command defaultAuto = Autos.defaultAuto(); // placeholder, pass in subsystems if needed
     private static final Command customAuto = Autos.exampleAuto(); // placeholder, pass in subsystems if needed
@@ -139,14 +139,14 @@ public class RobotContainer {
         m_chooser.addOption("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
 
-        try {
+        /*try {
             Path trajectory1Path = Filesystem.getDeployDirectory().toPath().resolve(trajectory1JSON);
             autonTrajectory1 = TrajectoryUtil.fromPathweaverJson(trajectory1Path);
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + trajectory1JSON, ex.getStackTrace());
         }
 
-        trajectory1Command = driveTrain.followTrajectoryCommand(autonTrajectory1);
+        trajectory1Command = driveTrain.followTrajectoryCommand(autonTrajectory1);*/
     }
 
     public void onAutonInit() {

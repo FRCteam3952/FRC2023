@@ -26,9 +26,9 @@ public class ClawGripSubsystem extends SubsystemBase {
         // this.clawGripEncoder = this.clawGrip.getEncoder();
         // this.clawGripEncoder.setPosition(0);?":"
         this.clawClosed = false;
-
         this.compressor = new Compressor(PneumaticsModuleType.CTREPCM);
         this.compressor.enableDigital();
+
     }
 
     // public void setSpeed(double speed) {
@@ -40,15 +40,15 @@ public class ClawGripSubsystem extends SubsystemBase {
     // }
 
     public void setForward() {
-        //this.doubleSolenoid.set(Value.kForward);
+        this.doubleSolenoid.set(Value.kForward);
     }
 
     public void setReverse() {
-        //this.doubleSolenoid.set(Value.kReverse);
+        this.doubleSolenoid.set(Value.kReverse);
     }
 
     public void setOff() {
-        //this.doubleSolenoid.set(Value.kReverse);
+        this.doubleSolenoid.set(Value.kReverse);
     }
 
 

@@ -8,6 +8,7 @@ import frc.robot.subsystems.ClawGripSubsystem;
 public class ClawOpenandCloseCommand extends CommandBase {
     private final ClawGripSubsystem claw;
     private final FlightJoystick joystick;
+    private boolean toggle = true;
 
     public ClawOpenandCloseCommand(ClawGripSubsystem claw, FlightJoystick joystick) {
         this.claw = claw;
@@ -18,7 +19,7 @@ public class ClawOpenandCloseCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if(this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER)){
+        if(this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER) && toggle){
             if(this.claw.getClawClosed()){
                 this.claw.setForward();
                 this.claw.setClawClosed(false);
@@ -27,6 +28,11 @@ public class ClawOpenandCloseCommand extends CommandBase {
                 this.claw.setReverse();
                 this.claw.setClawClosed(true);
             }
+            toggle = false;
+        }
+        if(this.joystick.getRawButtonReleased(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER)){
+            toggle = true;
+            this.claw.setOff();
         }
     }
 
@@ -34,6 +40,7 @@ public class ClawOpenandCloseCommand extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        
     }
 
     // Returns true when the command should end.
