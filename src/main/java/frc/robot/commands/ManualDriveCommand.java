@@ -16,11 +16,6 @@ public class ManualDriveCommand extends CommandBase {
     private final DriveTrainSubsystem driveTrain;
     private final FlightJoystick joystick;
 
-    /**
-     * Creates a new ExampleCommand.
-     *
-     * @param driveTrain The drivetrain subsystem.
-     */
     public ManualDriveCommand(DriveTrainSubsystem driveTrain, FlightJoystick joystick) {
         this.driveTrain = driveTrain;
         this.joystick = joystick;

@@ -3,7 +3,10 @@ package frc.robot.joystick;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
 /**
- * simple code to cut out joystick noise and to provide button inputs for flight joystick
+ * A wrapper around {@link CommandJoystick}, contains
+ * simple code to handle dead-zones, cut out joystick noise, and to provide button inputs for flight joystick.
+ * <p>
+ * The values here were copied from previous years' code and is known to work, so don't change them.
  */
 public class FlightJoystick {
     public static final double c = 0.1;

@@ -2,8 +2,11 @@ package frc.robot.joystick;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-public class XboxController{
-    public CommandXboxController controller;
+/**
+ * A wrapper around {@link CommandXboxController}
+ */
+public class XboxController {
+    private final CommandXboxController controller;
 
     public XboxController(CommandXboxController controller){
         this.controller = controller;
@@ -23,5 +26,9 @@ public class XboxController{
     
     public double getLeftLateralMovement(){
         return controller.getLeftY();   
+    }
+
+    public boolean getRawButtonWrapper(int button) {
+        return controller.getHID().getRawButton(button);
     }
 }
