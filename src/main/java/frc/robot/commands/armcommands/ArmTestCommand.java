@@ -25,9 +25,9 @@ public class ArmTestCommand extends CommandBase {
     public void execute() {
         arm.setPivot1Speed(joystick.getLateralMovement() / 2);
         arm.setPivot2Speed(joystick.getHorizontalMovement() / 2);
-        if (joystick.getRawButtonWrapper(8)) {
+        if (joystick.getRawButtonWrapper(5)) { // THIS IS THE XBOX VALUE. Original FlightJoystick 8
             arm.setTurretSpeed(-0.3);
-        } else if (joystick.getRawButtonWrapper(9)) {
+        } else if (joystick.getRawButtonWrapper(6)) { // THIS IS THE XBOX VALUE. Original FlightJoystick 9
             arm.setTurretSpeed(0.3);
         } else {
             arm.setTurretSpeed(0);

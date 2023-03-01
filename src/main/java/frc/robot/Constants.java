@@ -79,7 +79,10 @@ public final class Constants {
             public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 2; // change to whatever it is
             public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED = 11; // change to whatever it is
             public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_NOT_FLIPPED = 12; // change to whatever it is
-            public static final int CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER = 1; // change to whatever it is
+            /**
+             *  THIS IS THE XBOX NUMBER. Flight joystick original number: 1;
+             */
+            public static final int CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER = 4; // THIS IS THE XBOX NUMBER. Flight joystick: 1;
             public static final int CLAW_ROTATE_RIGHT_BUTTON_NUMBER = 6; // change to whatever it is
             public static final int CLAW_ROTATE_LEFT_BUTTON_NUMBER = 7; // change to whatever it is
             public static final int AUTO_ROTATE_BUTTON_NUMBER = 8; // change to whatever it is

@@ -64,11 +64,13 @@ public class RobotContainer {
 
     public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
 
-    public final ArmTestCommand testArmControl = new ArmTestCommand(arm, armController);
-    public final ArmControlCommand armControl = new ArmControlCommand(arm, armController);
+    // these ones got changed to xbox
+    public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
+    public final ArmControlCommand armControl = new ArmControlCommand(arm, xboxController);
     public final AutomaticObjectPlacementCommand autoObjectPlacement = new AutomaticObjectPlacementCommand(arm, armController);
-    public final ClawOpenandCloseCommand clawOpenandCloseCommand = new ClawOpenandCloseCommand(clawGrip, armController);
-    public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, armController);
+    public final ClawOpenandCloseCommand clawOpenandCloseCommand = new ClawOpenandCloseCommand(clawGrip, xboxController);
+    public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, xboxController);
+    // end change to xbox
 
     /*private String trajectory1JSON = "paths/YourPath.wpilib.json"; // placeholder
     //private Trajectory autonTrajectory1 = new Trajectory(); // placeholder
