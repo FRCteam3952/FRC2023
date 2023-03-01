@@ -26,9 +26,10 @@ import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.armcommands.AutomaticObjectPlacementCommand;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
+import frc.robot.controllers.FlightJoystick;
 import frc.robot.commands.autocommands.Autos;
-import frc.robot.joystick.FlightJoystick;
-import frc.robot.joystick.XboxController;
+import frc.robot.controllers.FlightJoystick;
+import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
@@ -133,7 +134,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-        return m_chooser.getSelected();// Autos.exampleAuto(exampleSubsystem);
+        return m_chooser.getSelected();
     }
 
     public void onRobotInit() {

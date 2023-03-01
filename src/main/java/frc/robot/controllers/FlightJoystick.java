@@ -1,4 +1,4 @@
-package frc.robot.joystick;
+package frc.robot.controllers;
 
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 

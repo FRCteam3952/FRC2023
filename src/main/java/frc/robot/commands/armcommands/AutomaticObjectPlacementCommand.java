@@ -1,7 +1,7 @@
 package frc.robot.commands.armcommands;
 
 import frc.robot.Constants.PositionConstants;
-import frc.robot.joystick.FlightJoystick;
+import frc.robot.controllers.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.networktables.NetworkTable;

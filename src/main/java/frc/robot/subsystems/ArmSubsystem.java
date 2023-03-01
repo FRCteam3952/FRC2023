@@ -218,9 +218,10 @@ public class ArmSubsystem extends SubsystemBase {
         targetAngleTurret = intendedAngles[2];
 
         // Updates coordinates
-        this.targetX = InverseKinematicsUtil.getCurrentCoordinates()[0];
-        this.targetY = InverseKinematicsUtil.getCurrentCoordinates()[1];
-        this.targetZ = InverseKinematicsUtil.getCurrentCoordinates()[2];
+        double[] currentCoordinates = InverseKinematicsUtil.getCurrentCoordinates();
+        this.targetX = currentCoordinates[0];
+        this.targetY = currentCoordinates[1];
+        this.targetZ = currentCoordinates[2];
     }
 
     public CommandBase calibrateArm() {
