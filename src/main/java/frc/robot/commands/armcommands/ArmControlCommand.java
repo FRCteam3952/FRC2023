@@ -2,8 +2,8 @@ package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
-import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.controllers.AbstractJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
 
@@ -11,14 +11,14 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
  * Moves arm on the turret
  */
 public class ArmControlCommand extends CommandBase {
-    private final double DESIRED_AREA = 369; // in pixels probably, can tune later
+    private static final double DESIRED_AREA = 369; // in pixels probably, can tune later
 
     private final ArmSubsystem arm;
-    private final FlightJoystick joystick;
+    private final AbstractJoystick joystick;
     private final double areaConst;
     private final double xSpeed, ySpeed, zSpeed, turretSpeed;
 
-    public ArmControlCommand(ArmSubsystem arm, FlightJoystick joystick) {
+    public ArmControlCommand(ArmSubsystem arm, AbstractJoystick joystick) {
         this.arm = arm;
         this.joystick = joystick;
         this.areaConst = 60; // can tune later

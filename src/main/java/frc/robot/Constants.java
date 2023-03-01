@@ -79,7 +79,10 @@ public final class Constants {
             public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 2; // change to whatever it is
             public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED = 11; // change to whatever it is
             public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_NOT_FLIPPED = 12; // change to whatever it is
-            public static final int CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER = 1; // change to whatever it is
+            /**
+             *  THIS IS THE XBOX NUMBER. Flight joystick original number: 1;
+             */
+            public static final int CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER = 4; // THIS IS THE XBOX NUMBER. Flight joystick: 1;
             public static final int CLAW_ROTATE_RIGHT_BUTTON_NUMBER = 6; // change to whatever it is
             public static final int CLAW_ROTATE_LEFT_BUTTON_NUMBER = 7; // change to whatever it is
             public static final int AUTO_ROTATE_BUTTON_NUMBER = 8; // change to whatever it is
@@ -185,6 +188,18 @@ public final class Constants {
     }
 
     /**
+     * All robot-related constants. All measurements are in inches
+     */
+    public static class RobotConstants {
+        /*
+         * One of these is 30, and one is 35. I don't know which is which and honestly just use the diagonal distance.
+         */
+        public static final double ROBOT_LENGTH = 30.0;
+        public static final double ROBOT_WIDTH = 35.0;
+        public static final double ROBOT_DIAGONAL_RADIUS = Math.sqrt(Math.pow(ROBOT_LENGTH / 2, 2) + Math.pow(ROBOT_WIDTH / 2, 2)); // about 23.05 inches
+    }
+
+    /**
      * All field-related constants. All measurements are in inches
      */
     public static class FieldConstants {
@@ -192,9 +207,21 @@ public final class Constants {
         public static final double FIELD_X_LENGTH = 651.25;
 
         /**
+         * {@link RobotPlacementLocations#MINIMUM_X_LOCATION_TO_PLACE_FROM} represents the minimum X value (in a pose) that the robot can place a gamepiece from safely (i.e. not colliding into the structure).
+         * <p>
+         * The Y value is the same as the corresponding target game piece location (ex. {@link GamePiecePlacementLocationConstants#Y_DISTANCE_TO_POLE_ONE})
+         */
+        public static class RobotPlacementLocations {
+            public static final double DISTANCE_FROM_LOWER_POLE_TO_FAR_EDGE_OF_FLOOR_NODE = 25;
+            public static final double MINIMUM_X_LOCATION_TO_PLACE_FROM = DISTANCE_FROM_LOWER_POLE_TO_FAR_EDGE_OF_FLOOR_NODE + RobotConstants.ROBOT_DIAGONAL_RADIUS;
+        }
+
+        /**
          * These values were obtained from Solidworks with the measurement tool. It took me an hour to do this (and another 4 to set up solidworks correctly) so they better work.
          * <p>
          * The original values are for the blue alliance (since the origin is on the blue alliance's side), so we use {@link frc.robot.util.MathUtil#mirrorValueOnFieldXAxis(double) MathUtil.mirrorValueOnFieldXAxis(double)} to mirror the values for the red alliance.
+         * <p>
+         * The Z values were acquired by Ivan, and are found on page 27 (lower image) of the FRC 2023 Game Manual.
          * <p>
          * Copied from the pinned message in discord:
          * <pre>
@@ -234,6 +261,12 @@ public final class Constants {
             public static final double X_DISTANCE_TO_TOP_SECTION    = 15.0;
             public static final double X_DISTANCE_TO_MIDDLE_SECTION = 32.0;
             public static final double X_DISTANCE_TO_BOTTOM_SECTION = 47.0;
+
+            public static final double Z_MIDDLE_POLE_HEIGHT = 34.0;
+            public static final double Z_TOP_POLE_HEIGHT = 46.0;
+
+            public static final double Z_MIDDLE_PLATFORM_HEIGHT = 23.5;
+            public static final double Z_TOP_PLATFORM_HEIGHT = 35.5;
         }
 
         public static class AprilTagConstants {

@@ -284,7 +284,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         //handles PID
         if (pidOn) {
-            //goTowardIntendedCoordinates();
+            goTowardIntendedCoordinates();
         }
         ArmGyro.getGyroAngle();
         // System.out.println("ARM GYRO VALUE: " + ArmGyro.getGyroAngle());

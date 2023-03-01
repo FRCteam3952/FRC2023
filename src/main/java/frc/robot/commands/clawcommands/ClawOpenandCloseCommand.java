@@ -2,15 +2,15 @@ package frc.robot.commands.clawcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
-import frc.robot.controllers.FlightJoystick;
+import frc.robot.controllers.AbstractJoystick;
 import frc.robot.subsystems.ClawGripSubsystem;
 
 public class ClawOpenandCloseCommand extends CommandBase {
     private final ClawGripSubsystem claw;
-    private final FlightJoystick joystick;
+    private final AbstractJoystick joystick;
     private boolean toggle = true;
 
-    public ClawOpenandCloseCommand(ClawGripSubsystem claw, FlightJoystick joystick) {
+    public ClawOpenandCloseCommand(ClawGripSubsystem claw, AbstractJoystick joystick) {
         this.claw = claw;
         this.joystick = joystick;
 
@@ -30,7 +30,7 @@ public class ClawOpenandCloseCommand extends CommandBase {
             }
             toggle = false;
         }
-        if(this.joystick.getRawButtonReleased(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER)){
+        if(this.joystick.getRawButtonReleasedWrapper(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER)){
             toggle = true;
         }
     }
