@@ -254,8 +254,8 @@ public class ArmSubsystem extends SubsystemBase {
      * @return A Pose3d object representing the current claw pose.
      */
     public Pose3d getClawPose() {
-        this.updateCurrentCoordinates();
-        return new Pose3d(this.cur_x, this.cur_z, this.cur_y, new Rotation3d());
+        this.updateCurrentCoordinates(); // Make sure the coordinates are the latest ones.
+        return new Pose3d(this.cur_x, this.cur_z, this.cur_y, new Rotation3d()); // z and y are swapped to handle our global coordinate system (the final coord parameter is the height).
     }
 
     @Override

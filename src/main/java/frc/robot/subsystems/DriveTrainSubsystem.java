@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -244,6 +245,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     // Generate command for following a trajectory
     public Command generateRamseteCommand(Pose2d startPoint, Pose2d endPoint) {
+        // A trajectory to follow. All units in meters.
+        Trajectory trajectory = this.generateTrajectory(startPoint, List.of(), endPoint);
+
+        return this.followTrajectoryCommand(trajectory);
+    }
+
+    /**
+     * A wrapper around {@link TrajectoryGenerator#generateTrajectory(Pose2d, List, Pose2d, TrajectoryConfig) that handles the config internally.
+     * @param start The start Pose2d
+     * @param waypoints A list of Translation2d waypoints to follow. Pass in {@link List#of()} if you don't want any waypoints.
+     * @param end The end Pose2d
+     * @return A trajectory. Use this to generate a follow command with {@link #followTrajectoryCommand(Trajectory)}.
+     */
+    public Trajectory generateTrajectory(Pose2d start, List<Translation2d> waypoints, Pose2d end) {
         // Create a voltage constraint to ensure we don't accelerate too fast
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLTS_SECONDS_PER_METER, DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER), DriveConstants.DRIVE_KINEMATICS, 10);
 
@@ -255,9 +270,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
                 .addConstraint(autoVoltageConstraint);
 
         // A trajectory to follow. All units in meters.
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(startPoint, List.of(), endPoint, config);
-
-        return this.followTrajectoryCommand(trajectory);
+        return TrajectoryGenerator.generateTrajectory(start, waypoints, end, config);
     }
 
     /**
