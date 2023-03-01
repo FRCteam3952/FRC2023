@@ -1,14 +1,14 @@
 package frc.robot.commands.armcommands;
 
-import frc.robot.joystick.FlightJoystick;
+import frc.robot.joystick.AbstractJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ArmTestCommand extends CommandBase {
     private final ArmSubsystem arm;
-    private final FlightJoystick joystick;
+    private final AbstractJoystick joystick;
 
-    public ArmTestCommand(ArmSubsystem arm, FlightJoystick joystick) {
+    public ArmTestCommand(ArmSubsystem arm, AbstractJoystick joystick) {
         this.arm = arm;
         this.joystick = joystick;
         // Use addRequirements() here to declare subsystem dependencies.

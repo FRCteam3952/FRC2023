@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
 
-
 public final class Autos {
     /**
      * Example static factory for an autonomous command.
@@ -33,6 +32,6 @@ public final class Autos {
     }
 
     private Autos() {
-        throw new UnsupportedOperationException("This is a utility class!");
+        throw new UnsupportedOperationException("Autos is a utility class and cannot be instantiated!");
     }
 }

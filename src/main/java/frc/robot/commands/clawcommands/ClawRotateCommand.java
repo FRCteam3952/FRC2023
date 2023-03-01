@@ -3,14 +3,14 @@ package frc.robot.commands.clawcommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.Constants.ClawConstants;
-import frc.robot.joystick.FlightJoystick;
+import frc.robot.joystick.AbstractJoystick;
 import frc.robot.subsystems.ClawRotationSubsystem;
 
 public class ClawRotateCommand extends CommandBase {
     private final ClawRotationSubsystem claw;
-    private final FlightJoystick joystick;
+    private final AbstractJoystick joystick;
 
-    public ClawRotateCommand(ClawRotationSubsystem claw, FlightJoystick joystick) {
+    public ClawRotateCommand(ClawRotationSubsystem claw, AbstractJoystick joystick) {
         this.claw = claw;
         this.joystick = joystick;
 
