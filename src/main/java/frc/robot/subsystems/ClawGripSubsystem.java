@@ -5,12 +5,10 @@ package frc.robot.subsystems;
 // import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.PortConstants;
 
 public class ClawGripSubsystem extends SubsystemBase {
     // private final CANSparkMax clawGrip;
@@ -18,15 +16,14 @@ public class ClawGripSubsystem extends SubsystemBase {
     private final DoubleSolenoid doubleSolenoid;
     private final Compressor compressor;
     private boolean clawClosed;
-    DigitalInput limit = new DigitalInput(PortConstants.CLAW_LIMIT_SWITCH_PORT);
 
     public ClawGripSubsystem() {
         // this.clawGrip = new CANSparkMax(PortConstants.CLAW_GRIP_PORT, MotorType.kBrushless);
-        this.doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 0); // Change to the correct things
+        this.doubleSolenoid = new DoubleSolenoid(12, PneumaticsModuleType.REVPH, 1, 0); // Change to the correct things
         // this.clawGripEncoder = this.clawGrip.getEncoder();
         // this.clawGripEncoder.setPosition(0);?":"
         this.clawClosed = false;
-        this.compressor = new Compressor(PneumaticsModuleType.REVPH);
+        this.compressor = new Compressor(12, PneumaticsModuleType.REVPH);
         this.compressor.enableDigital();
 
     }
