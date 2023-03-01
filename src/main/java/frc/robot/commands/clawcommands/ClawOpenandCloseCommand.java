@@ -2,7 +2,7 @@ package frc.robot.commands.clawcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
-import frc.robot.joystick.FlightJoystick;
+import frc.robot.controllers.FlightJoystick;
 import frc.robot.subsystems.ClawGripSubsystem;
 
 public class ClawOpenandCloseCommand extends CommandBase {

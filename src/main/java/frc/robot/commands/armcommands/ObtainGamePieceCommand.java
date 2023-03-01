@@ -1,6 +1,6 @@
 package frc.robot.commands.armcommands;
 
-import frc.robot.joystick.FlightJoystick;
+import frc.robot.controllers.FlightJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
 import edu.wpi.first.wpilibj2.command.CommandBase;
