@@ -4,10 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.ClawConstants;
-<<<<<<< HEAD
 import frc.robot.joystick.AbstractJoystick;
-=======
->>>>>>> 1c2c614711b9fe8d874f161d469233dc16814497
 import frc.robot.subsystems.ClawRotationSubsystem;
 
 public class ClawRotateCommand extends CommandBase {
