@@ -33,7 +33,7 @@ public class ArmGyro {
         if (arduino != null && arduino.getBytesReceived() > 0) {
             try {
                 var str = arduino.readString().replace("\n", "");
-                System.out.println(str);
+                // System.out.println(str);
                 // System.out.println("ARIDOUNO OUTPUT: " + str);
                 var val = Double.parseDouble(str) + gyro_adjust;
                 return val;

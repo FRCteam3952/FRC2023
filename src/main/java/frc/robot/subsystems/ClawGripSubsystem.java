@@ -22,11 +22,11 @@ public class ClawGripSubsystem extends SubsystemBase {
 
     public ClawGripSubsystem() {
         // this.clawGrip = new CANSparkMax(PortConstants.CLAW_GRIP_PORT, MotorType.kBrushless);
-        this.doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1); // Change to the correct things
+        this.doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 0); // Change to the correct things
         // this.clawGripEncoder = this.clawGrip.getEncoder();
         // this.clawGripEncoder.setPosition(0);?":"
         this.clawClosed = false;
-        this.compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+        this.compressor = new Compressor(PneumaticsModuleType.REVPH);
         this.compressor.enableDigital();
 
     }
@@ -72,8 +72,8 @@ public class ClawGripSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         this.doubleSolenoid.set(this.clawClosed ? Value.kForward : Value.kReverse);
-        //System.out.println("SOLENOID STATE: " + this.doubleSolenoid.get().name() + ", FWD/REV Disabled: " + this.doubleSolenoid.isFwdSolenoidDisabled() + "/" + this.doubleSolenoid.isRevSolenoidDisabled());
-        //System.out.println("COMPRESSOR STATE- Full:" + this.compressor.getPressureSwitchValue() + ", Enabled: " + this.compressor.isEnabled() + ", Current: " + this.compressor.getCurrent());
+        System.out.println("SOLENOID STATE: " + this.doubleSolenoid.get().name() + ", FWD/REV Disabled: " + this.doubleSolenoid.isFwdSolenoidDisabled() + "/" + this.doubleSolenoid.isRevSolenoidDisabled());
+        System.out.println("COMPRESSOR STATE- Full:" + this.compressor.getPressureSwitchValue() + ", Enabled: " + this.compressor.isEnabled() + ", Current: " + this.compressor.getCurrent());
         // if(this.limit.get() && this.clawGrip.get() > 0) {
         //     this.clawGrip.set(0);
         // }
