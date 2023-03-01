@@ -28,6 +28,8 @@ import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.commands.autocommands.Autos;
+import frc.robot.controllers.FlightJoystick;
+import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
@@ -50,6 +52,7 @@ public class RobotContainer {
     // Replace with CommandPS4Controller or CommandJoystick if needed
     public final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
     public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
+    public final XboxController xboxController = new XboxController(new CommandXboxController(OperatorConstants.XBOX_CONTROLLER_PORT));
 
     // The robot's subsystems and commands are defined here...
     public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem(driverController);

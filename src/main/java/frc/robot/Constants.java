@@ -64,14 +64,16 @@ public final class Constants {
     public static class OperatorConstants {
         public static final int RIGHT_JOYSTICK_PORT = 0;
         public static final int LEFT_JOYSTICK_PORT = 1;
+        public static final int XBOX_CONTROLLER_PORT = 2;
 
         /**
          * Constants relating to the controllers.
          */
         public static class ControllerConstants {
-            // Joystick 0
+            // Flight Joystick 0
             public static final int RUN_GUI_TRAJECTORY_BUTTON_NUMBER = 4; // idk i just picked a random number
-            // Joystick 1
+
+            // Flight Joystick 1
             public static final int AIM_ASSIST_BUTTON_NUMBER = 5; // change to whatever it is
             public static final int MOVE_ARM_UP_BUTTON_NUMBER = 3; // change to whatever it is
             public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 2; // change to whatever it is
@@ -83,6 +85,9 @@ public final class Constants {
             public static final int AUTO_ROTATE_BUTTON_NUMBER = 8; // change to whatever it is
             public static final int CALIBRATE_ARM_BUTTON_NUMBER = 9; // change to whatever it is
             public static final int PID_CONTROL_TOGGLE_BUTTON_NUMBER = 10; // change to whatever it is
+
+            // Xbox Controller (2)
+
         }
     }
 
