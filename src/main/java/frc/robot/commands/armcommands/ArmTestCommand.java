@@ -1,6 +1,6 @@
 package frc.robot.commands.armcommands;
 
-import frc.robot.joystick.AbstractJoystick;
+import frc.robot.controllers.AbstractJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 

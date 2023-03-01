@@ -2,9 +2,8 @@ package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
-import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.joystick.AbstractJoystick;
+import frc.robot.controllers.AbstractJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
 
