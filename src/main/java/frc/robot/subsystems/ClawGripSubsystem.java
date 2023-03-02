@@ -69,8 +69,8 @@ public class ClawGripSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         this.doubleSolenoid.set(this.clawClosed ? Value.kForward : Value.kReverse);
-        System.out.println("SOLENOID STATE: " + this.doubleSolenoid.get().name() + ", FWD/REV Disabled: " + this.doubleSolenoid.isFwdSolenoidDisabled() + "/" + this.doubleSolenoid.isRevSolenoidDisabled());
-        System.out.println("COMPRESSOR STATE- Full:" + this.compressor.getPressureSwitchValue() + ", Enabled: " + this.compressor.isEnabled() + ", Current: " + this.compressor.getCurrent());
+        // System.out.println("SOLENOID STATE: " + this.doubleSolenoid.get().name() + ", FWD/REV Disabled: " + this.doubleSolenoid.isFwdSolenoidDisabled() + "/" + this.doubleSolenoid.isRevSolenoidDisabled());
+        // System.out.println("COMPRESSOR STATE- Full:" + this.compressor.getPressureSwitchValue() + ", Enabled: " + this.compressor.isEnabled() + ", Current: " + this.compressor.getCurrent());
         // if(this.limit.get() && this.clawGrip.get() > 0) {
         //     this.clawGrip.set(0);
         // }

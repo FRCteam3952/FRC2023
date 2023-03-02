@@ -104,8 +104,8 @@ public class ArmControlCommand extends CommandBase {
     public void execute() {
         // testPrimaryArmControl();
         primaryArmControl();
-        pickUpPositionFlipped();
-        pickUpPositionNotFlipped();
+        // pickUpPositionFlipped();
+        // pickUpPositionNotFlipped();
         togglePIDControl();
     }
 

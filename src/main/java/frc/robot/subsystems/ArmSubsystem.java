@@ -41,8 +41,8 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetAngle2;
     private double targetAngleTurret;
 
-    private static final double MAX_OUTPUT = 0.3;
-    private static final double MIN_OUTPUT = -0.3;
+    private static final double MAX_OUTPUT = 0.2;
+    private static final double MIN_OUTPUT = -0.2;
 
     private boolean pidOn = false;
 
@@ -260,9 +260,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        System.out.println("CURRENT TARGET COORDS ARM: " + targetX + ", " + targetY + ", " + targetZ);
+        // System.out.println("ARM LIMIT SWITCHES: LIM1: " + this.getPivot1LimitPressed() + ", LIM2: " + this.getPivot2LimitPressed());
         double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
         // handles limit switches
-        if (getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1) {
+        if (getPivot1LimitPressed()/* && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1*/) {
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
             this.targetX = startingCoords[0];
             this.targetY = startingCoords[1];
@@ -272,7 +274,7 @@ public class ArmSubsystem extends SubsystemBase {
             this.cur_z = startingCoords[2];
         }
 
-        if (getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1) {
+        if (getPivot2LimitPressed()/* && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1*/) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
             this.targetX = startingCoords[0];
             this.targetY = startingCoords[1];
