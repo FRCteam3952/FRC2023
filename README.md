@@ -14,18 +14,18 @@ Team 3952's robot for the 2023 Season "FIRST Charged Up" using Java and the [WPI
 ```bash
 $ git clone https://github.com/FRCteam3952/FRC2023.git
 ```
-* OR Clone this repo either through the green download button or from the GitHub Desktop app
+* OR Clone this repo either through the green download button, or from the GitHub Desktop app
 
 ## Importing
 ### Visual Studio Code 
 1. Clone the project into a known folder location
-2. The WPILib VSCode extension should automatically detect the project
+2. The WPILib VSCode extension should automatically detect the project so you can start editing
 
 ### Basic Bash Commands
 1. Run `./gradlew` to download gradle and needed FRC/Vendor libraries
 2. Run `./gradlew build` to build the code.  Use the `--info` flag for more details
-3. To deploy code into the robot you must first connect to the robot's Wi-Fi network then Run `./gradlew deploy` 
-4. It is recommended to run the clean task before deploying again to clear previous deployed binaries Run `./gradlew clean deploy`
+3. To deploy code into the robot, you must first connect to the robot's Wi-Fi network, then Run `./gradlew deploy` 
+4. It is recommended to run the clean task before deploying again to clear previous deployed binaries. To do this, run `./gradlew clean deploy`
 * Run `./gradlew test` to run all of the JUnit tests
 * Run `./gradlew tasks` to see available options
 

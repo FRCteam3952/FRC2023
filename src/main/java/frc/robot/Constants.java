@@ -28,8 +28,8 @@ public final class Constants {
         public static final double LIMB2_LENGTH = 19.5;
 
         public static final double ANGLE_DELTA = 2;
-        public static final double DISTANCE_DELTA = 3;
         public static final double MIN_HOR_DISTANCE = 5; // change to be correct later
+        public static final double MAX_REACH_REDUCTION = 2; // change to be correct later
 
         public static final double PIVOT_SPEED = 0.1;
         public static final double TURRET_SPEED = 0.1;
@@ -87,7 +87,6 @@ public final class Constants {
             public static final int CLAW_ROTATE_LEFT_BUTTON_NUMBER = 7; // change to whatever it is
             public static final int AUTO_ROTATE_BUTTON_NUMBER = 8; // change to whatever it is
             public static final int CALIBRATE_ARM_BUTTON_NUMBER = 9; // change to whatever it is
-            public static final int PID_CONTROL_TOGGLE_BUTTON_NUMBER = 10; // change to whatever it is
 
             // Xbox Controller (2)
 

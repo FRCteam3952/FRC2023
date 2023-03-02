@@ -8,6 +8,9 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+/**
+ * TODO: fix - ebay kid, 3-1-2023. the constants are wrong
+ */
 public class AutomaticObjectPlacementCommand extends CommandBase {
     private final ArmSubsystem arm;
     private final FlightJoystick joystick;
