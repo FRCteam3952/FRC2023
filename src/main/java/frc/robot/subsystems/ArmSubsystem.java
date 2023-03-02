@@ -61,10 +61,10 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot2Encoder = this.pivot2.getEncoder();
         this.turretEncoder = this.turret.getEncoder();
 
-        // TODO: CHANGE THESE VALUES
-        this.pivot1Encoder.setPositionConversionFactor(2.88);
-        this.pivot2Encoder.setPositionConversionFactor(6.68);
-        this.turretEncoder.setPositionConversionFactor(1);
+        // Arm Angle Conversion Factors
+        this.pivot1Encoder.setPositionConversionFactor(2.88); // 125:1 gearbox 
+        this.pivot2Encoder.setPositionConversionFactor(2.88); // 125:1 gearbox
+        this.turretEncoder.setPositionConversionFactor(1); // 60:1 gearbox with drive wheel to lazy susan ratio
         // END
 
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
