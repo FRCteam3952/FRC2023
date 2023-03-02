@@ -50,6 +50,18 @@ public class NetworkTablesUtil {
         return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0})[0].floatValue();
     }
 
+    // Gets key from keyboard
+    public static String getKeyString() {
+        NetworkTable table = INSTANCE.getTable("robogui");
+        return table.getEntry("key_string").getString("default");
+    }
+
+    // Gets key from keyboard
+    public static int getKeyInteger() {
+        NetworkTable table = INSTANCE.getTable("robogui");
+        return (int) table.getEntry("key_int").getInteger(0);
+    }
+
     /**
      * Returns the current robot pose according to AprilTags on Jetson, in meters since that's what they want
      *

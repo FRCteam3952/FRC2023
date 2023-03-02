@@ -30,13 +30,11 @@ import frc.robot.Constants.DriveConstants.TrajectoryConstants;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.PortConstants;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.staticsubsystems.LimeLight;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.MathUtil;
 import frc.robot.util.NetworkTablesUtil;
 import frc.robot.util.AprilTagUtil;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 
 import java.util.List;
 
@@ -60,10 +58,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     private final DifferentialDriveOdometry odometry;
 
     private final FlightJoystick joystick;
-
-    private final NetworkTableInstance inst;
-    private final NetworkTable table;
-    private final NetworkTableEntry key;
 
     private boolean swapDirection = false;
 
@@ -98,10 +92,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.odometry = new DifferentialDriveOdometry(new Rotation2d(RobotGyro.getGyroAngleDegrees()), 0, 0);
 
         this.joystick = joystick;
-
-        this.inst = NetworkTableInstance.getDefault();
-        this.table = inst.getTable("robogui");
-        this.key = table.getEntry("key"); // Key pressed on keyboard
 
         this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
         // m_dDrive.setSafetyEnabled(false);
@@ -336,7 +326,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
             }
         }
 
-        String currKey = key.getString("default");
+        String currKey = NetworkTablesUtil.getKeyString();
         
         // Generates trajectories from the robot's current position to a specific April Tag and schedules them to be followed
         if (blueTeam) { // TODO: adjust tag id's to be correct

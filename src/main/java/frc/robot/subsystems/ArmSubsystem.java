@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
+import frc.robot.Constants.PositionConstants;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
+import frc.robot.util.NetworkTablesUtil;
 
 public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax pivot1;
@@ -309,6 +311,64 @@ public class ArmSubsystem extends SubsystemBase {
             this.cur_y = startingCoords[1];
             this.cur_z = startingCoords[2];
         }
+
+        /*
+         * Moves arm to specific positions for placing game pieces. The robot is assumed to be positioned directly in front of an april tag.
+         * Each key corresponds to a specific position on a 3x3 grid, as shown below:
+         *          [7  8  9]
+         *          [4  5  6]
+         *          [1  2  3]
+         *              ^
+         *            robot
+         * A check for a joystick button pressed or something similar can be added if we want to add another check other than the key on the keyboard being pressed
+         */
+        /**
+         * TODO: fix - ebay kid, 3-1-2023. the constants are wrong
+         */
+        double[] coordinates = new double[3];
+        int currKey = NetworkTablesUtil.getKeyInteger();
+        switch (currKey) {
+            case 1:
+                coordinates = PositionConstants.BOTTOM_LEFT_POS;
+                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
+                break;
+            case 2:
+                coordinates = PositionConstants.BOTTOM_MIDDLE_POS;
+                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
+                break;
+            case 3:
+                coordinates = PositionConstants.BOTTOM_RIGHT_POS;
+                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
+                break;
+            case 4:
+                coordinates = PositionConstants.CENTER_LEFT_POS;
+                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
+                break;
+            case 5:
+                coordinates = PositionConstants.CENTER_MIDDLE_POS;
+                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
+                break;
+            case 6:
+                coordinates = PositionConstants.CENTER_RIGHT_POS;
+                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
+                break;
+            case 7:
+                coordinates = PositionConstants.TOP_LEFT_POS;
+                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
+                break;
+            case 8:
+                coordinates = PositionConstants.TOP_CENTER_POS;
+                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
+                break;
+            case 9:
+                coordinates = PositionConstants.TOP_RIGHT_POS;
+                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
+                break;
+            default:
+                System.out.println("A key within 1-9 was not pressed");
+                break;
+        }
+        
 
         //handles PID
         if (pidOn) {
