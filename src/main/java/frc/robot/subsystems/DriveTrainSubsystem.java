@@ -33,6 +33,10 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.MathUtil;
 import frc.robot.util.NetworkTablesUtil;
+import frc.robot.util.AprilTagUtil;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 import java.util.List;
 
@@ -57,7 +61,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     private final FlightJoystick joystick;
 
+    private final NetworkTableInstance inst;
+    private final NetworkTable table;
+    private final NetworkTableEntry key;
+
     private boolean swapDirection = false;
+
+    private boolean blueTeam = true; // We can toggle this with the slider on the drive joystick, TODO: implement later
 
 
     public DriveTrainSubsystem(FlightJoystick joystick) {
@@ -88,6 +98,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.odometry = new DifferentialDriveOdometry(new Rotation2d(RobotGyro.getGyroAngleDegrees()), 0, 0);
 
         this.joystick = joystick;
+
+        this.inst = NetworkTableInstance.getDefault();
+        this.table = inst.getTable("robogui");
+        this.key = table.getEntry("key"); // Key pressed on keyboard
 
         this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
         // m_dDrive.setSafetyEnabled(false);
@@ -235,8 +249,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
         return new DifferentialDriveWheelSpeeds(frontLeftEncoder.getVelocity(), frontRightEncoder.getVelocity());
     }
 
-    public Pose2d getPose() {
+    public Pose2d getPoseMeters() {
         return odometry.getPoseMeters();
+    }
+
+    public Pose2d getPoseInches() {
+        Pose2d poseMeters = odometry.getPoseMeters();
+        double conversionFactor = 39.3700787402;
+        Pose2d poseInches = new Pose2d(poseMeters.getX() * conversionFactor, poseMeters.getY() * conversionFactor, poseMeters.getRotation());
+        return poseInches;
     }
 
     public Command resetOdometryCommand(Pose2d pose) {
@@ -281,7 +302,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     public Command followTrajectoryCommand(Trajectory trajectory) {
         RamseteCommand ramseteCommand = new RamseteCommand(
                 trajectory,
-                this::getPose,
+                this::getPoseMeters,
                 new RamseteController(TrajectoryConstants.RAMSETE_B, TrajectoryConstants.RAMSETE_ZETA),
                 new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLTS_SECONDS_PER_METER, DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER),
                 DriveConstants.DRIVE_KINEMATICS,
@@ -314,6 +335,42 @@ public class DriveTrainSubsystem extends SubsystemBase {
                 odometry.resetPosition(new Rotation2d(gyroRad), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), new Pose2d(NetworkTablesUtil.getJetsonPoseMeters(), new Rotation2d(gyroRad)));
             }
         }
+
+        String currKey = key.getString("default");
+        
+        // Generates trajectories from the robot's current position to a specific April Tag and schedules them to be followed
+        if (blueTeam) { // TODO: adjust tag id's to be correct
+            switch (currKey) {
+                case "q":
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(1)).schedule();
+                    break;
+                case "w":
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(2)).schedule();
+                    break;
+                case "e":
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(3)).schedule();
+                    break;
+                default:
+                    System.out.println("No tag selected");
+                    break;
+            }
+        } else {
+            switch (currKey) {
+                case "q":
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(6)).schedule();
+                    break;
+                case "w":
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(7)).schedule();
+                    break;
+                case "e":
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(8)).schedule();
+                    break;
+                default:
+                    System.out.println("No tag selected");
+                    break;
+            }
+        }
+        
         // var pose = odometry.getPoseMeters();
 
         // System.out.println("pose: " + pose.getX() + ", " + pose.getY() + ", " + pose.getRotation().getDegrees() + ", gyro: " + RobotGyro.getGyroAngleDegrees());

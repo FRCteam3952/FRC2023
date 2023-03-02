@@ -19,12 +19,13 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ManualDriveCommand;
+import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.armcommands.AutomaticObjectPlacementCommand;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
+import frc.robot.commands.drivecommands.ManualDriveCommand;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.commands.autocommands.Autos;
 import frc.robot.controllers.XboxController;
@@ -111,20 +112,12 @@ public class RobotContainer {
         // driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
 
         // driverController.joystick.button(ControllerConstants.RUN_GUI_TRAJECTORY_BUTTON_NUMBER).onTrue(this.driveTrain.followTrajectoryCommand(this.trajectoryReader.currentTrajectory));
-        /*
-        armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER)
-            .and(armController.joystick.button(ControllerConstants.CLAW_RELEASE_BUTTON_NUMBER).negate())
-            .onFalse(clawGrip.stopClaw());
-        armController.joystick.button(ControllerConstants.CLAW_RELEASE_BUTTON_NUMBER)
-            .and(armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).negate())
-            .onFalse(clawGrip.stopClaw());
-        armController.joystick.button(ControllerConstants.CLAW_GRIP_BUTTON_NUMBER).whileTrue(clawGrip.closeClaw());
-        armController.joystick.button(ControllerConstants.CLAW_RELEASE_BUTTON_NUMBER).whileTrue(clawGrip.openClaw());
-        */
+       
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
         // armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
-        armController.joystick.button(OperatorConstants.ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
+        armController.joystick.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
+
     }
 
     /**

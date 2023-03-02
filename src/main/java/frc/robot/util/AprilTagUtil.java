@@ -1,6 +1,9 @@
 package frc.robot.util;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.Constants.FieldConstants.AprilTagConstants;
 
 public final class AprilTagUtil {
@@ -21,4 +24,11 @@ public final class AprilTagUtil {
         }
         return new Pose3d(abs_cords[0], abs_cords[1], abs_cords[2], null);
     }
+
+    public static Pose2d poseOfTag2d(int tag_id) {
+        double[] aprilTagCoords = AprilTagConstants.APRILTAG_LOCATIONS[tag_id - 1];
+        return new Pose2d(aprilTagCoords[0], aprilTagCoords[1], new Rotation2d(aprilTagCoords[3]));
+    }
+
+
 }

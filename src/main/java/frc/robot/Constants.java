@@ -68,6 +68,7 @@ public final class Constants {
 
         /**
          * Constants relating to the controllers.
+         * The designation of which buttons go on which controller are subject to future change.
          */
         public static class ControllerConstants {
             // Flight Joystick 0
