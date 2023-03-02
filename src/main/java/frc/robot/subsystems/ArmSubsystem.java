@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
-import frc.robot.subsystems.staticsubsystems.ArmGyro;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 
@@ -41,8 +40,8 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetAngle2;
     private double targetAngleTurret;
 
-    private static final double MAX_OUTPUT = 0.3;
-    private static final double MIN_OUTPUT = -0.3;
+    private static final double MAX_OUTPUT = 0.2;
+    private static final double MIN_OUTPUT = -0.2;
 
     private boolean pidOn = false;
 
@@ -61,17 +60,23 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot1Encoder = this.pivot1.getEncoder();
         this.pivot2Encoder = this.pivot2.getEncoder();
         this.turretEncoder = this.turret.getEncoder();
+
+        // TODO: CHANGE THESE VALUES
         this.pivot1Encoder.setPositionConversionFactor(2.88);
         this.pivot2Encoder.setPositionConversionFactor(6.68);
         this.turretEncoder.setPositionConversionFactor(1);
+        // END
+
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
         this.turretEncoder.setPosition(0);
 
+        // TODO: TUNE
         this.pidController1 = new PIDController(1.69e-2, 0, 0); // nice
         this.pidController1.setTolerance(ArmConstants.ANGLE_DELTA);
         this.pidController2 = new PIDController(9.6e-3, 0, 0);
         this.pidController2.setTolerance(ArmConstants.ANGLE_DELTA);
+        // END
 
         // Initialize arm limit switches
         this.arm1Limit = new DigitalInput(PortConstants.PIVOT_1_LIMIT_PORT);
@@ -102,6 +107,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * Get the current angles from motor encoders in DEGREES
+     * 
+     * @return [pivot1Angle, pivot2Angle, turretAngle]
      */
     public double[] getCurrentAnglesDeg() {
         double angle1 = pivot1Encoder.getPosition();
@@ -113,6 +120,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * Get the current angles from motor encoders in radians
+     * 
+     * @return [pivot1Angle, pivot2Angle, turretAngle]
      */
     public double[] getCurrentAnglesRad() {
         double angle1 = Math.toRadians(pivot1Encoder.getPosition());
@@ -153,6 +162,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     /*
      * returns current coordinates
+     * 
+     * @return [x, y, z], where y is the height above ground.
      */
     public double[] getCurrentCoordinates() {
         updateCurrentCoordinates();
@@ -161,6 +172,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * return coordinates in which the arm "should" move towards
+     * 
+     * @return [x, y, z], where y is the height above ground
      */
     public double[] getIntendedCoordinates() {
         return new double[]{this.targetX, this.targetY, this.targetZ};
@@ -175,7 +188,6 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void goTowardIntendedCoordinates() {
-        /* */
         double[] angles = getCurrentAnglesDeg();
 
         if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) || Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
@@ -200,28 +212,33 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * sets the coordinate in which the arm "should" move towards
+     * 
+     * @param x the target x coordinate
+     * @param y the target y coordinate (height)
+     * @param z the target z coordinate
+     * @param flipped whether the arm should act "flipped", i.e. the claw would approach from the gamepiece from the top. True for "top approach", False for "side approach"
      */
     public void setIntendedCoordinates(double x, double y, double z, boolean flipped) {
         if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
             return;
         }
-        //update intended Angles
-        double[] intendedAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, flipped);
+        // Updates target Angles
+        double[] targetAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, flipped);
 
-        if (Double.isNaN(intendedAngles[0]) || Double.isNaN(intendedAngles[1]) || Double.isNaN(intendedAngles[2])) {
-            System.out.println("An angle is NaN, so skip");
+        if (Double.isNaN(targetAngles[0]) || Double.isNaN(targetAngles[1]) || Double.isNaN(targetAngles[2])) {
+            System.out.println("Hi this is the Arm Death Prevention Hotline @copyright setIntendedCoordinates");
             return;
         }
 
-        targetAngle1 = intendedAngles[0];
-        targetAngle2 = intendedAngles[1];
-        targetAngleTurret = intendedAngles[2];
+        // Udates target angles
+        targetAngle1 = targetAngles[0];
+        targetAngle2 = targetAngles[1];
+        targetAngleTurret = targetAngles[2];
 
-        // Updates coordinates
-        double[] currentCoordinates = InverseKinematicsUtil.getCurrentCoordinates();
-        this.targetX = currentCoordinates[0];
-        this.targetY = currentCoordinates[1];
-        this.targetZ = currentCoordinates[2];
+        // Updates target coordinates
+        this.targetX = x;
+        this.targetY = y;
+        this.targetZ = z;
     }
 
     public CommandBase calibrateArm() {
@@ -241,16 +258,24 @@ public class ArmSubsystem extends SubsystemBase {
         });
     }
 
-    public void setPIDControlOn(boolean value) {
+    /**
+     * Sets the usage of PID control for the arm.
+     * @param value True for enabled PID, False for disabled.
+     */
+    public void setPIDControlState(boolean value) {
         pidOn = value;
     }
 
+    /**
+     * Get the usage of PID control for the arm.
+     * @return True if enabled, false otherwise
+     */
     public boolean getPIDControlOn() {
         return pidOn;
     }
 
     /**
-     * Returns the current claw pose. Note that the claw pose is stored as {x, z, y}, where y is the height of the claw. This allows you to use {@link Pose3d#toPose2d()} to get a coorect 2D pose.
+     * Returns the current claw pose. Note that the claw pose is stored as {x, z, y}, where y is the height of the claw. This allows you to use {@link Pose3d#toPose2d()} to get a correct 2D pose.
      * @return A Pose3d object representing the current claw pose.
      */
     public Pose3d getClawPose() {
@@ -261,6 +286,7 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
+        
         // handles limit switches
         if (getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1) {
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
@@ -286,8 +312,6 @@ public class ArmSubsystem extends SubsystemBase {
         if (pidOn) {
             goTowardIntendedCoordinates();
         }
-        ArmGyro.getGyroAngle();
-        // System.out.println("ARM GYRO VALUE: " + ArmGyro.getGyroAngle());
     }
 
     @Override

@@ -3,7 +3,7 @@ package frc.robot.commands.armcommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.controllers.AbstractJoystick;
+import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
 
@@ -14,18 +14,19 @@ public class ArmControlCommand extends CommandBase {
     private static final double DESIRED_AREA = 369; // in pixels probably, can tune later
 
     private final ArmSubsystem arm;
-    private final AbstractJoystick joystick;
-    private final double areaConst;
-    private final double xSpeed, ySpeed, zSpeed, turretSpeed;
+    private final XboxController joystick;
+    private static final double AREA_CONST = 60; // can tune later
 
-    public ArmControlCommand(ArmSubsystem arm, AbstractJoystick joystick) {
+    // inches per 20ms
+    private static final double X_SPEED = 0.3;
+    private static final double Y_SPEED = 0.3;
+    private static final double Z_SPEED = 0.3;
+
+    private static final double TURRET_SPEED = 0.2;
+
+    public ArmControlCommand(ArmSubsystem arm, XboxController joystick) {
         this.arm = arm;
         this.joystick = joystick;
-        this.areaConst = 60; // can tune later
-        this.xSpeed = 0.3; // Inches per 20ms
-        this.ySpeed = 0.3; // Inches per 20ms
-        this.zSpeed = 0.3; // Inches per 20ms
-        this.turretSpeed = 0.2;
 
         addRequirements(arm);
     }
@@ -35,7 +36,7 @@ public class ArmControlCommand extends CommandBase {
     private double[] getAdjustmentFromError() {
         double[] adjustments = new double[4];
         double turretAngle = arm.getCurrentAnglesRad()[2];
-        double zAdjustment = (DESIRED_AREA - LimeLight.getArea()) / areaConst; // z axis from perspective of the camera
+        double zAdjustment = (DESIRED_AREA - LimeLight.getArea()) / AREA_CONST; // z axis from perspective of the camera
 
         adjustments[0] = Math.sin(turretAngle) * zAdjustment; // x-axis adjustment
 
@@ -52,19 +53,16 @@ public class ArmControlCommand extends CommandBase {
     private void primaryArmControl() {
         if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
             double[] adjustments = this.getAdjustmentFromError();
-            arm.setTurretSpeed(adjustments[3] * turretSpeed);
-            arm.moveVector(adjustments[0] * xSpeed, adjustments[1] * ySpeed, adjustments[2] * zSpeed);
+            arm.setTurretSpeed(adjustments[3] * TURRET_SPEED);
+            arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, adjustments[2] * Z_SPEED);
         } else {
             double y = 0;
             if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_UP_BUTTON_NUMBER)) {
-                y = ySpeed;
+                y = Y_SPEED;
             } else if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_DOWN_BUTTON_NUMBER)) {
-                y = -ySpeed;
+                y = -Y_SPEED;
             }
-            double turretAngle = arm.getCurrentAnglesRad()[2];
-            arm.setTurretSpeed(joystick.getHorizontalMovement() * turretSpeed);
-            arm.moveVector(Math.sin(turretAngle) * joystick.getLateralMovement() * xSpeed, // Handles extension of robot arm 
-                    y, Math.cos(turretAngle) * joystick.getLateralMovement() * zSpeed);
+            arm.moveVector(joystick.getLateralMovement() * X_SPEED, y, joystick.getHorizontalMovement() * Z_SPEED);
         }
     }
 
@@ -81,32 +79,16 @@ public class ArmControlCommand extends CommandBase {
         }
     }
 
-
-    // Test primary arm control
-    private void testPrimaryArmControl() {
-        arm.moveVector(joystick.getLateralMovement() * xSpeed, 0, 0);
-    }
-
-    // Toggles whether PID control is active or not
-    private void togglePIDControl() {
-        if (joystick.getRawButtonWrapper(ControllerConstants.PID_CONTROL_TOGGLE_BUTTON_NUMBER)) {
-            arm.setPIDControlOn(!arm.getPIDControlOn());
-        }
-    }
-
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        arm.setPIDControlOn(false);
     }
 
     @Override
     public void execute() {
-        // testPrimaryArmControl();
         primaryArmControl();
         pickUpPositionFlipped();
         pickUpPositionNotFlipped();
-        togglePIDControl();
     }
 
     // Called once the command ends or is interrupted.
