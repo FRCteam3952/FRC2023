@@ -5,6 +5,8 @@ import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ClawRotationSubsystem;
 
 public class ClawRotateCommand extends CommandBase {
+    private static final double CLAW_ROTATION_SPEED = 0.05;
+
     private final ClawRotationSubsystem claw;
     private final XboxController joystick;
 
@@ -17,7 +19,15 @@ public class ClawRotateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        this.claw.setClawRotateSpeed(this.joystick.getLeftHorizontalMovement() * 0.1);
+        int fov = this.joystick.controller.getHID().getPOV();
+        if(fov == 90) {
+            this.claw.setClawRotateSpeed(CLAW_ROTATION_SPEED);
+        } else if(fov == 270) {
+            this.claw.setClawRotateSpeed(-CLAW_ROTATION_SPEED);
+        } else {
+            this.claw.setClawRotateSpeed(0.0);
+        }
+        // this.claw.setClawRotateSpeed(this.joystick.getLeftHorizontalMovement() * 0.1);
         /*
         if (this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER)) {
             this.claw.setClawRotateSpeed(ClawConstants.CLAW_ROTATE_SPEED);

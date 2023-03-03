@@ -1,5 +1,6 @@
 package frc.robot.util;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.Constants.FieldConstants;
 
 /**
@@ -118,8 +119,19 @@ public final class MathUtil {
      * Mirrors a coordinate across the middle of the field's X-axis (for when we are on red alliance).
      * @param value The value to mirror (likely a blue alliance coordinate, but can be either alliance)
      * @return The mirrored value
+     * @see {@link #mirrorPoseOnFieldForOppositeSide(Pose3d)}
      */
-    public static double mirrorValueOnFieldXAxis(double value) {
+    public static double mirrorValueOnFieldForOppositeSide(double value) {
         return FieldConstants.FIELD_X_LENGTH - value;
+    }
+
+    /**
+     * Mirrors the pose across the middle of the field's X-axis (for when we are on red alliance).
+     * @param pose
+     * @return A new Pose3d with the mirrored value(s).
+     * @see {@link #mirrorValueOnFieldForOppositeSide(double)}
+     */
+    public static Pose3d mirrorPoseOnFieldForOppositeSide(Pose3d pose) {
+        return new Pose3d(mirrorValueOnFieldForOppositeSide(pose.getX()), pose.getY(), pose.getZ(), pose.getRotation());
     }
 }

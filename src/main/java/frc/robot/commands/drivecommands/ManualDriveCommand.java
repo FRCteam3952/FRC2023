@@ -13,6 +13,8 @@ import frc.robot.subsystems.staticsubsystems.RobotGyro;
  * The command to drive the robot manually with joysticks.
  */
 public class ManualDriveCommand extends CommandBase {
+    private static final double MICRO_PP = 0.2; // Micro Pinpoint Positioning :tm:
+
     private final DriveTrainSubsystem driveTrain;
     private final FlightJoystick joystick;
 
@@ -36,7 +38,14 @@ public class ManualDriveCommand extends CommandBase {
         }
         this.driveTrain.tankDrive(-this.joystick.getLateralMovement(), this.joystick.getRotation());
         // this.driveTrain.tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(this.joystick.getHorizontalMovement(), -this.joystick.getLateralMovement());
-
+        
+        // TODO: DISABLE THIS WHEN WE GO TO MECANUM x TANK DRIVE.
+        int pov = this.joystick.joystick.getHID().getPOV();
+        if(pov == 0) {
+            this.driveTrain.tankDrive(MICRO_PP, 0);
+        } else if (pov == 180) {
+            this.driveTrain.tankDrive(-MICRO_PP, 0);
+        }
     }
 
     // Called once the command ends or is interrupted.
