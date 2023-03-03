@@ -234,15 +234,16 @@ public class ArmSubsystem extends SubsystemBase {
             return;
         }
 
-        // Udates target angles
+        // Updates target angles
         targetAngle1 = targetAngles[0];
         targetAngle2 = targetAngles[1];
         targetAngleTurret = targetAngles[2];
 
         // Updates target coordinates
-        this.targetX = x;
-        this.targetY = y;
-        this.targetZ = z;
+        double[] adjustedCoordinates = ForwardKinematicsUtil.getCoordinatesFromAngles(targetAngle1, targetAngle2, targetAngleTurret);
+        this.targetX = adjustedCoordinates[0];
+        this.targetY = adjustedCoordinates[1];
+        this.targetZ = adjustedCoordinates[2];
     }
 
     public CommandBase calibrateArm() {
