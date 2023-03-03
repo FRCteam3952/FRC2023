@@ -40,3 +40,4 @@ $ git clone https://github.com/FRCteam3952/FRC2023.git
 * [FRC2023RobotGUI](https://github.com/SeanSon2005/FRC2023RobotGUI)
 * [TroyFRC2023VisionCode](https://github.com/bobandjoe/TroyFRC2023VisionCode)
 * [FRC2023_Vision](https://github.com/FRCteam3952/FRC2023_Vision)
+* [FRC2023_3d_ArmSimulator](https://github.com/FRCteam3952/FRC2023_3d_ArmSimulator)
