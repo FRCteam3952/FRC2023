@@ -24,7 +24,8 @@ import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
-import frc.robot.commands.drivecommands.BalanceChargeStation;
+import frc.robot.commands.drivecommands.BalanceChargeStationCommand;
+import frc.robot.commands.drivecommands.ManualDriveCommand;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.commands.autocommands.Autos;
 import frc.robot.controllers.XboxController;
@@ -60,7 +61,8 @@ public class RobotContainer {
 
     public final TrajectoryReader trajectoryReader = new TrajectoryReader("robogui", "trajectory");
 
-    public final BalanceChargeStation manualDrive = new BalanceChargeStation(driveTrain, driverController);
+    public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
+    public final BalanceChargeStationCommand balanceCommand = new BalanceChargeStationCommand(driveTrain);
 
     // these ones got changed to xbox
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
@@ -73,8 +75,8 @@ public class RobotContainer {
     //private Trajectory autonTrajectory1 = new Trajectory(); // placeholder
     public Command trajectory1Command;*/
 
-    private static final Command defaultAuto = Autos.defaultAuto(); // placeholder, pass in subsystems if needed
-    private static final Command customAuto = Autos.exampleAuto(); // placeholder, pass in subsystems if needed
+    private static final Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
+    private static final Command customAuto = Autos.exampleAuto(/*pass in parameters */); // placeholder, pass in subsystems or commands if needed
     private Command m_autonomousCommand;
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
