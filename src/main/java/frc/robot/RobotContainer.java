@@ -75,9 +75,8 @@ public class RobotContainer {
     //private Trajectory autonTrajectory1 = new Trajectory(); // placeholder
     public Command trajectory1Command;*/
 
-    private static final Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
-    private static final Command customAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
-
+    private final Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
+    private final Command customAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
     private final Command placeConeCommandAuto = Autos.armPlaceConeAuto(arm, clawGrip);
 
     private Command m_autonomousCommand;
@@ -136,6 +135,7 @@ public class RobotContainer {
     public void onRobotInit() {
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
         m_chooser.addOption("My Auto", customAuto);
+        m_chooser.addOption("woohoo arm place cone yay", placeConeCommandAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
 
         /*try {
