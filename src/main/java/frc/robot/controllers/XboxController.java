@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class XboxController extends AbstractJoystick {
     public static final double IGNORE_DELTA = 0.05;
 
-    private final CommandXboxController controller;
+    public final CommandXboxController controller;
 
     public XboxController(CommandXboxController controller){
         this.controller = controller;

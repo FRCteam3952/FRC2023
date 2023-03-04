@@ -207,7 +207,9 @@ public class ArmSubsystem extends SubsystemBase {
             return;
         }
 
-        System.out.println(Math.min(MAX_OUTPUT, Math.max(p1Speed, MIN_OUTPUT)) + " " + Math.min(MAX_OUTPUT, Math.max(p2Speed, MIN_OUTPUT)));
+        p1Speed = Math.min(MAX_OUTPUT, Math.max(p1Speed, MIN_OUTPUT));
+        p2Speed = Math.min(MAX_OUTPUT, Math.max(p2Speed, MIN_OUTPUT));
+        System.out.println(p1Speed + " " + p2Speed);
         // setPivot1Speed(Math.min(MAX_OUTPUT, Math.max(p1Speed, MIN_OUTPUT)));
         // setPivot2Speed(Math.min(MAX_OUTPUT, Math.max(p2Speed, MIN_OUTPUT)));
     }
@@ -288,7 +290,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println("CURRENT TARGET COORDS ARM: " + targetX + ", " + targetY + ", " + targetZ);
+        System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
+        // System.out.println("CURRENT TARGET COORDS ARM: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM LIMIT SWITCHES: LIM1: " + this.getPivot1LimitPressed() + ", LIM2: " + this.getPivot2LimitPressed());
         double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
         
@@ -321,11 +324,14 @@ public class ArmSubsystem extends SubsystemBase {
          *          [1  2  3]
          *              ^
          *            robot
+         * 
+         * There are 3 of these 3x3 grids.
+         * 
          * A check for a joystick button pressed or something similar can be added if we want to add another check other than the key on the keyboard being pressed
          */
-        /**
-         * TODO: fix - ebay kid, 3-1-2023. the constants are wrong
-         */
+
+        //TODO: fix - ebay kid, 3-1-2023. the constants are wrong
+        /*
         double[] coordinates = new double[3];
         int currKey = NetworkTablesUtil.getKeyInteger();
         switch (currKey) {
@@ -368,12 +374,14 @@ public class ArmSubsystem extends SubsystemBase {
             default:
                 System.out.println("A key within 1-9 was not pressed");
                 break;
+                
         }
+        */
         
 
         //handles PID
         if (pidOn) {
-            goTowardIntendedCoordinates();
+            // goTowardIntendedCoordinates();
         }
     }
 

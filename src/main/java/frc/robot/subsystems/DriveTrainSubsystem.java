@@ -30,7 +30,6 @@ import frc.robot.Constants.DriveConstants.TrajectoryConstants;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.PortConstants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.staticsubsystems.LimeLight;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.MathUtil;
 import frc.robot.util.NetworkTablesUtil;

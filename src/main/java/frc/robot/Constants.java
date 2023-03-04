@@ -5,6 +5,7 @@
 package frc.robot;
 
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 /**
@@ -219,13 +220,13 @@ public final class Constants {
         /**
          * These values were obtained from Solidworks with the measurement tool. It took me an hour to do this (and another 4 to set up solidworks correctly) so they better work.
          * <p>
-         * The original values are for the blue alliance (since the origin is on the blue alliance's side), so we use {@link frc.robot.util.MathUtil#mirrorValueOnFieldXAxis(double) MathUtil.mirrorValueOnFieldXAxis(double)} to mirror the values for the red alliance.
+         * The original values are for the blue alliance (since the origin is on the blue alliance's side), so we use {@link frc.robot.util.MathUtil#mirrorValueOnFieldForOppositeSide(double) MathUtil.mirrorValueOnFieldXAxis(double)} to mirror the values for the red alliance.
          * <p>
          * The Z values were acquired by Ivan, and are found on page 27 (lower image) of the FRC 2023 Game Manual.
          * <p>
-         * Copied from the pinned message in discord:
+         * From the pinned message in Discord:
          * <pre>
-         * PLACEMENT LOCATIONS from AprilTags-defined coordinate system, where "closest" means the closest to the origin.
+         * PLACEMENT LOCATIONS based on AprilTags-defined coordinate system, where "closest" means the closest to the origin.
          * ALL IN INCHES:
          *
          * POLES (Y axis):
@@ -236,7 +237,7 @@ public final class Constants {
          *        to next:        152.47
          *        to last    (6): 196.36
          *
-         * TO THOSE CUBE PLATFORM PLACES (Y axis):
+         * CUBE PLATFORMS (Y axis):
          *   dist to closest (1): 42.48
          *        to next:        108.5
          *        to last    (3): 174.45
@@ -245,6 +246,19 @@ public final class Constants {
          *   top: 15
          *   mid: 32
          *   low: 47
+         * </pre>
+         * 
+         * The layout would look like this:
+         * 
+         * <pre>
+         * BLUE SIDE
+         * Origin -> +Y
+         * |  Top Z:   Pole1 Plat1 Pole2 Pole3 Plat2 Pole4 Pole5 Plat3 Pole6
+         * v  Mid Z:   Pole1 Plat1 Pole2 Pole3 Plat2 Pole4 Pole5 Plat3 Pole6
+         * +X Low (0): Pole1 Plat1 Pole2 Pole3 Plat2 Pole4 Pole5 Plat3 Pole6
+         * 
+         * </pre>
+         * This image would be reflected across the middle of the field, on a line parallel to the Y axis for the Red alliance's side.
          */
         public static class GamePiecePlacementLocationConstants {
             public static final double Y_DISTANCE_TO_POLE_ONE       = 20.32;
@@ -262,11 +276,13 @@ public final class Constants {
             public static final double X_DISTANCE_TO_MIDDLE_SECTION = 32.0;
             public static final double X_DISTANCE_TO_BOTTOM_SECTION = 47.0;
 
-            public static final double Z_MIDDLE_POLE_HEIGHT = 34.0;
-            public static final double Z_TOP_POLE_HEIGHT = 46.0;
+            public static final double Z_MIDDLE_POLE_HEIGHT         = 34.0;
+            public static final double Z_TOP_POLE_HEIGHT            = 46.0;
 
-            public static final double Z_MIDDLE_PLATFORM_HEIGHT = 23.5;
-            public static final double Z_TOP_PLATFORM_HEIGHT = 35.5;
+            public static final double Z_MIDDLE_PLATFORM_HEIGHT     = 23.5;
+            public static final double Z_TOP_PLATFORM_HEIGHT        = 35.5;
+
+            
         }
 
         public static class AprilTagConstants {
@@ -283,14 +299,14 @@ public final class Constants {
              * </pre>
              */
             public static final double[][] APRILTAG_LOCATIONS = new double[][]{
-                    {610.77, 42.19, 18.22, 180},
+                    {610.77, 42.19,  18.22, 180},
                     {610.77, 108.19, 18.22, 180},
                     {610.77, 174.19, 18.22, 180},
                     {636.96, 265.74, 27.38, 180},
-                    {14.25, 265.74, 27.38, 0},
-                    {40.45, 174.19, 18.22, 0},
-                    {40.45, 108.19, 18.22, 0},
-                    {40.45, 42.19, 18.22, 0}
+                    {14.25,  265.74, 27.38, 0},
+                    {40.45,  174.19, 18.22, 0},
+                    {40.45,  108.19, 18.22, 0},
+                    {40.45,  42.19,  18.22, 0}
             };
         }
     }
