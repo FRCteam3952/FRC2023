@@ -6,9 +6,11 @@ package frc.robot.commands.autocommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.ArmSubsystem;
 
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawGripSubsystem;
+
+import frc.robot.Constants.PositionConstants;
 
 public final class Autos {
     /**
@@ -33,6 +35,15 @@ public final class Autos {
             // Autonomous scenario code
         });
 
+    }
+
+    public static CommandBase armPlaceConeAuto(ArmSubsystem arm, ClawGripSubsystem claw) {
+        return Commands.runOnce(() -> {
+            double[] newArmPosition = PositionConstants.TOP_RIGHT_POS; // or maybe top left pos?
+            arm.setIntendedCoordinates(newArmPosition[0], newArmPosition[1], newArmPosition[2], false);
+            // we might have to wait before doing this, this could release the cone too early
+            claw.setClawClosed(false); // open claw
+        });
     }
 
     private Autos() {
