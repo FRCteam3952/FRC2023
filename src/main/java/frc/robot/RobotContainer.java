@@ -76,7 +76,10 @@ public class RobotContainer {
     public Command trajectory1Command;*/
 
     private static final Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
-    private static final Command customAuto = Autos.exampleAuto(/*pass in parameters */); // placeholder, pass in subsystems or commands if needed
+    private static final Command customAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
+
+    private final Command placeConeCommandAuto = Autos.armPlaceConeAuto(arm, clawGrip);
+
     private Command m_autonomousCommand;
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
