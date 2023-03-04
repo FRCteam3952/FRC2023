@@ -11,18 +11,20 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
  * Moves arm on the turret
  */
 public class ArmControlCommand extends CommandBase {
-    private static final double DESIRED_AREA = 369; // in pixels probably, can tune later
+    private static final double DESIRED_AREA_CONE = 369; // in pixels probably, can tune later
+    private static final double DESIRED_AREA_CUBE = 420; // in pixels probably, can tune later
 
     private final ArmSubsystem arm;
     private final XboxController joystick;
-    private static final double AREA_CONST = 60; // can tune later
 
-    // inches per 20ms
+    // Inches per 20ms
     private static final double X_SPEED = 0.3;
     private static final double Y_SPEED = 0.3;
     private static final double Z_SPEED = 0.3;
 
     private static final double TURRET_SPEED = 0.2;
+
+    private boolean detectCone = true; // True -> vision is looking for cones, False -> vision is looking for cubes, TODO: implement toggle
 
     public ArmControlCommand(ArmSubsystem arm, XboxController joystick) {
         this.arm = arm;
@@ -36,7 +38,9 @@ public class ArmControlCommand extends CommandBase {
     private double[] getAdjustmentFromError() {
         double[] adjustments = new double[4];
         double turretAngle = arm.getCurrentAnglesRad()[2];
-        double zAdjustment = (DESIRED_AREA - LimeLight.getArea()) / AREA_CONST; // z axis from perspective of the camera
+        double zAdjustment = detectCone ? (DESIRED_AREA_CONE - LimeLight.getArea()) / DESIRED_AREA_CONE : 
+                (DESIRED_AREA_CUBE - LimeLight.getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
+        zAdjustment = zAdjustment > 1 ? 1 : zAdjustment;
 
         adjustments[0] = Math.sin(turretAngle) * zAdjustment; // x-axis adjustment
 

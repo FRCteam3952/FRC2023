@@ -27,10 +27,8 @@ public final class InverseKinematicsUtil {
         double adjusted_x = x;
         double adjusted_z = z;
 
-        double horizontalDist = MathUtil.distance(0, x, 0, z);
         if (MathUtil.distance(x, 0, z, 0) < ArmConstants.MIN_HOR_DISTANCE){ //Makes sure the arm isn't unrealistically close to the base arm segment
-            adjusted_x *= ((ArmConstants.MIN_HOR_DISTANCE) / horizontalDist);
-            adjusted_z *= ((ArmConstants.MIN_HOR_DISTANCE) / horizontalDist);
+            return getSavedAngles();
         }
 
         double dist3d = MathUtil.distance(0, adjusted_x, 0, adjusted_y, 0, z); // calc distance in 3d from top pivot point
