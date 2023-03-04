@@ -27,7 +27,14 @@ public final class InverseKinematicsUtil {
         double adjusted_x = x;
         double adjusted_z = z;
 
-        if (MathUtil.distance(x, 0, z, 0) < ArmConstants.MIN_HOR_DISTANCE){ //Makes sure the arm isn't unrealistically close to the base arm segment
+        //turret angle calculations
+        double angleCalc = Math.toDegrees(Math.atan2(z, x));
+        turretAngle = angleCalc < 0 ? 360 + angleCalc : angleCalc;
+        double turretAngleRad = Math.toRadians(turretAngle);
+
+        double a = Math.cos(Math.toRadians(ArmConstants.ARM_1_INITIAL_ANGLE)) * ArmConstants.LIMB1_LENGTH; // Vertical distance from arm origin point to first pivot point
+        double b = Math.sin(Math.toRadians(ArmConstants.ARM_1_INITIAL_ANGLE)) * ArmConstants.LIMB1_LENGTH; // Horizontal distance from arm origin point to first pivot point
+        if (MathUtil.distance(x, Math.sin(turretAngleRad) * b, y, ArmConstants.ORIGIN_HEIGHT - a, z, Math.cos(turretAngleRad) * b) < ArmConstants.LIMB2_LENGTH){ // Makes sure the arm isn't unrealistically close to the base arm segment
             return getSavedAngles();
         }
 
@@ -42,7 +49,7 @@ public final class InverseKinematicsUtil {
        
         //if flipped is true, return angles that are "flipped" 
         if(flipped){
-            double angleCalc = Math.toDegrees(Math.atan2(adjusted_x, -y + ArmConstants.ORIGIN_HEIGHT));
+            angleCalc = Math.toDegrees(Math.atan2(adjusted_x, -y + ArmConstants.ORIGIN_HEIGHT));
             double lineAngle = angleCalc < 0 ? 360 + angleCalc : angleCalc;
             pivot1Angle = lineAngle*2 - pivot1Angle;
             pivot2Angle = 360 - pivot2Angle;
@@ -62,10 +69,6 @@ public final class InverseKinematicsUtil {
             }
         }
         
-
-        //turret angle calculations
-        double angleCalc = Math.toDegrees(Math.atan2(z, x));
-        turretAngle = angleCalc < 0 ? 360 + angleCalc : angleCalc;
 
         //updating the saved angles
         setSavedAngles(pivot1Angle, pivot2Angle, turretAngle);

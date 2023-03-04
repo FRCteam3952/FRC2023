@@ -29,7 +29,6 @@ public final class Constants {
         public static final double LIMB2_LENGTH = 19.5;
 
         public static final double ANGLE_DELTA = 2;
-        public static final double MIN_HOR_DISTANCE = 5; // change to be correct later
         public static final double MAX_REACH_REDUCTION = 2; // change to be correct later
 
         public static final double PIVOT_SPEED = 0.1;
