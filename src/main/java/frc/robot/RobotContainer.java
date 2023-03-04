@@ -24,7 +24,7 @@ import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
-import frc.robot.commands.drivecommands.ManualDriveCommand;
+import frc.robot.commands.drivecommands.BalanceChargeStation;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.commands.autocommands.Autos;
 import frc.robot.controllers.XboxController;
@@ -60,7 +60,7 @@ public class RobotContainer {
 
     public final TrajectoryReader trajectoryReader = new TrajectoryReader("robogui", "trajectory");
 
-    public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
+    public final BalanceChargeStation manualDrive = new BalanceChargeStation(driveTrain, driverController);
 
     // these ones got changed to xbox
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
