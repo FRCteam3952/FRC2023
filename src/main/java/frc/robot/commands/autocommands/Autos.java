@@ -44,7 +44,9 @@ public final class Autos {
             arm.setIntendedCoordinates(newArmPosition[0], newArmPosition[1], newArmPosition[2], false);
             // we might have to wait before doing this, this could release the cone too early
             claw.setClawClosed(false); // open claw
-        });
+        }).alongWith(Commands.runOnce(() -> {
+            // drive here!
+        }));
     }
 
     private Autos() {
