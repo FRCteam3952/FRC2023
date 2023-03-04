@@ -16,7 +16,8 @@ public final class Autos {
     /**
      * Example static factory for an autonomous command.
      */
-    public static CommandBase exampleAuto(/* parameter of type Subsystem goes here (you can have multiple), make sure to pass them in when the method is called inside RobotContainer */) {
+    public static CommandBase exampleAuto(/* if you need a subsystem, pass it in as a parameter here, and make sure to pass them in when the method is called inside RobotContainer */) {
+        // You can also pass in commands as parameters if you want to use existing commands as part of your autonomouse command (such as BalanceChargeStation.java *wink wink hint hint*)
         // Example command case
         return Commands.runOnce(() -> {
             // Autonomous scenario code

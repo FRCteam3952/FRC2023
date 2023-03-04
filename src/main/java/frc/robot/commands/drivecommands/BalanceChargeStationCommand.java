@@ -7,19 +7,18 @@ package frc.robot.commands.drivecommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.staticsubsystems.ArmGyro;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 
 /**
  * The command to drive the robot manually with joysticks.
  */
-public class BalanceChargeStation extends CommandBase {
+public class BalanceChargeStationCommand extends CommandBase {
 
     private final DriveTrainSubsystem driveTrain;
 
     private final double kP = 1/60;
 
-    public BalanceChargeStation(DriveTrainSubsystem driveTrain, FlightJoystick joystick) {
+    public BalanceChargeStationCommand(DriveTrainSubsystem driveTrain) {
         this.driveTrain = driveTrain;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(driveTrain);
