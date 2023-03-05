@@ -30,6 +30,7 @@ public final class Constants {
 
         public static final double ANGLE_DELTA = 2;
         public static final double MAX_REACH_REDUCTION = 2; // change to be correct later
+        public static final double MIN_HOR_DISTANCE = 6; // change to be correct later
 
         public static final double PIVOT_SPEED = 0.1;
         public static final double TURRET_SPEED = 0.1;
