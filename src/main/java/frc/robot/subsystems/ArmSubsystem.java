@@ -42,8 +42,8 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetAngle2;
     private double targetAngleTurret;
 
-    private static final double MAX_OUTPUT = 0.2;
-    private static final double MIN_OUTPUT = -0.2;
+    private static final double MAX_OUTPUT = 0.1;
+    private static final double MIN_OUTPUT = -0.1;
 
     private boolean pidOn = false;
 
@@ -381,7 +381,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         //handles PID
         if (pidOn) {
-            // goTowardIntendedCoordinates();
+            goTowardIntendedCoordinates();
         }
     }
 
