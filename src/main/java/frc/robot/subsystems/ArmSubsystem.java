@@ -240,15 +240,10 @@ public class ArmSubsystem extends SubsystemBase {
             return;
         }
 
-        /* 
-        double dist = MathUtil.distance(0, x, 0, y, 0, z);
-        if(dist > ArmConstants.LIMB1_LENGTH + ArmConstants.LIMB2_LENGTH - ArmConstants.MAX_REACH_REDUCTION || dist < ArmConstants.MIN_HOR_DISTANCE) {
-            return;
-        }*/
-
         // Updates target Angles
         double[] targetAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, flipped);
-
+    
+        // Stops any updates if IKU is out of bounds or calculation error occurs
         if (Double.isNaN(targetAngles[0]) || Double.isNaN(targetAngles[1]) || Double.isNaN(targetAngles[2])) {
             System.out.println("Hi this is the Arm Death Prevention Hotline @copyright setIntendedCoordinates");
             return;

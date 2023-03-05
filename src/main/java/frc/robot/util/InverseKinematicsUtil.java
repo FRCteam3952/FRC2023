@@ -5,8 +5,6 @@ import frc.robot.Constants.ArmConstants;
  * Inverse Kinematics helper for the arm
  */
 public final class InverseKinematicsUtil {
-    private static double savedPivot1Angle, savedPivot2Angle, savedTurretAngle;
-
     private InverseKinematicsUtil() {
         throw new UnsupportedOperationException("InverseKinematicsUtil is a utility class and cannot be instantiated");
     }
@@ -34,19 +32,19 @@ public final class InverseKinematicsUtil {
 
         if (flipped) { 
             if (MathUtil.distance(x, 0, z, 0) < ArmConstants.MIN_HOR_DISTANCE) {
-                return getSavedAngles();
+                return new double[]{Double.NaN, Double.NaN, Double.NaN};
             } 
         } else { 
             double a = Math.cos(Math.toRadians(ArmConstants.ARM_1_INITIAL_ANGLE)) * ArmConstants.LIMB1_LENGTH; // Vertical distance from arm origin point to first pivot point
             double b = Math.sin(Math.toRadians(ArmConstants.ARM_1_INITIAL_ANGLE)) * ArmConstants.LIMB1_LENGTH; // Horizontal distance from arm origin point to first pivot point
             if (MathUtil.distance(x, Math.sin(turretAngleRad) * b, y, ArmConstants.ORIGIN_HEIGHT - a, z, Math.cos(turretAngleRad) * b) < ArmConstants.LIMB2_LENGTH){ // Makes sure the arm isn't unrealistically close to the base arm segment
-                return getSavedAngles();
+                return new double[]{Double.NaN, Double.NaN, Double.NaN};
             }
         }
 
         double dist3d = MathUtil.distance(0, adjusted_x, 0, adjusted_y, 0, z); // calc distance in 3d from top pivot point
         if(dist3d > ArmConstants.LIMB1_LENGTH + ArmConstants.LIMB2_LENGTH - ArmConstants.MAX_REACH_REDUCTION) { // If distance reach is impossible then just return saved angles
-            return getSavedAngles();
+            return new double[]{Double.NaN, Double.NaN, Double.NaN};
         }
 
         //inverse kinematics but it looks "simple"
@@ -80,21 +78,7 @@ public final class InverseKinematicsUtil {
         } else if(turretAngle < -180) {
             turretAngle += 360;
         }
-        
-
-        //updating the saved angles
-        setSavedAngles(pivot1Angle, pivot2Angle, turretAngle);
 
         return new double[] {pivot1Angle, pivot2Angle, turretAngle};
-    }
-
-    public static double[] getSavedAngles() {
-        return new double[] {savedPivot1Angle, savedPivot2Angle, savedTurretAngle};
-    }
-
-    public static void setSavedAngles(double a, double b, double c){
-        savedPivot1Angle = a;
-        savedPivot2Angle = b;
-        savedTurretAngle = c;
     }
 }
