@@ -11,8 +11,8 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
  * Moves arm on the turret
  */
 public class ArmControlCommand extends CommandBase {
-    private static final double DESIRED_AREA_CONE = 369; // in pixels probably, can tune later
-    private static final double DESIRED_AREA_CUBE = 420; // in pixels probably, can tune later
+    private static final double DESIRED_AREA_CONE = 5000; // tentative measurement, pixels
+    private static final double DESIRED_AREA_CUBE = 420; // measure later
 
     private final ArmSubsystem arm;
     private final XboxController joystick;
