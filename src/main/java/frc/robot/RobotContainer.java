@@ -161,7 +161,7 @@ public class RobotContainer {
 
     public void onTeleopInit() {
         inTeleop = true;
-        this.arm.reset();
+        this.arm.setPIDControlState(false);
         
 
         this.driveTrain.setDefaultCommand(this.manualDrive);

@@ -25,6 +25,7 @@ public class ArmControlCommand extends CommandBase {
     private static final double TURRET_SPEED = 0.2;
 
     private boolean detectCone = true; // True -> vision is looking for cones, False -> vision is looking for cubes, TODO: implement toggle
+    private boolean toggle = true;
 
     public ArmControlCommand(ArmSubsystem arm, XboxController joystick) {
         this.arm = arm;
@@ -62,7 +63,13 @@ public class ArmControlCommand extends CommandBase {
             System.out.println(adjustments[3] * TURRET_SPEED + ", " + adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
         } else {
             System.out.println("RIGHT Y JOYSTICK AOIFJAO" + joystick.getRightLateralMovement());
-            arm.moveVector(-joystick.getLeftLateralMovement() * Z_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, joystick.getLeftHorizontalMovement() * X_SPEED);
+            arm.moveVector(-joystick.getLeftLateralMovement() * Z_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
+
+            this.arm.setTurretSpeed(-X_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()));            
+        }
+
+        if(this.joystick.getRawButtonPressedWrapper(5)) {
+            this.arm.setPIDControlState(!this.arm.getPIDControlOn());
         }
     }
 

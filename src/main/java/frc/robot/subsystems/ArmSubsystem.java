@@ -41,8 +41,8 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetAngle2;
     private double targetAngleTurret;
 
-    private static final double MAX_OUTPUT = 0.1;
-    private static final double MIN_OUTPUT = -0.1;
+    private static final double MAX_OUTPUT = 0.5;
+    private static final double MIN_OUTPUT = -0.5;
 
     private boolean pidOn = false;
     private double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, 0);
@@ -223,10 +223,10 @@ public class ArmSubsystem extends SubsystemBase {
         p2Speed = Math.min(MAX_OUTPUT, Math.max(p2Speed, MIN_OUTPUT));
         turretSpeed = Math.min(MAX_OUTPUT, Math.max(turretSpeed, MIN_OUTPUT));
         System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
-        
+
         setPivot1Speed(p1Speed);
         setPivot2Speed(p2Speed);
-        setTurretSpeed(turretSpeed);
+        //setTurretSpeed(turretSpeed);
     }
 
     /**
@@ -286,6 +286,9 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public void setPIDControlState(boolean value) {
         pidOn = value;
+        if(!value) {
+            stopAllMotors();
+        }
     }
 
     /**
@@ -307,21 +310,26 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
+        // System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
         System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
-        System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
+        //System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
         // System.out.println("CURRENT TARGET COORDS ARM: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM LIMIT SWITCHES: LIM1: " + this.getPivot1LimitPressed() + ", LIM2: " + this.getPivot2LimitPressed());
         startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
         
+        boolean resetPivot1 = getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle1 - ArmConstants.ARM_1_INITIAL_ANGLE) < 5;
+        boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
+
         // handles limit switches
-        if (getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1) {
+        if (resetPivot1) {
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
-            resetCoords();
         }
 
-        if (getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1) {
+        if (resetPivot2) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+        }
+
+        if(resetPivot1 && resetPivot2) {
             resetCoords();
         }
 
