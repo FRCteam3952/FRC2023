@@ -200,17 +200,20 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void goTowardIntendedCoordinates() {
-        double[] angles = getCurrentAnglesDeg();
+
+        double[] angles = getCurrentAnglesDeg(); // gets the current angles read from motor encoders
 
         if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) || Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
             System.out.println("An angle is NaN, so skip");
             return;
         }
 
+        // gets PID control calculations
         double p1Speed = pidController1.calculate(angles[0], targetAngle1);
         double p2Speed = pidController2.calculate(angles[1], targetAngle2);
         double turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
 
+        // if power is NaN, don't run it :D
         if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed) || Double.isNaN(turretSpeed)) {
             System.out.println("PID is NaN, so skip");
             return;
