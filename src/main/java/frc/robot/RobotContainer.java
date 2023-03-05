@@ -118,7 +118,7 @@ public class RobotContainer {
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
         // armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
-        armController.joystick.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
+        xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
 
     }
 
@@ -161,9 +161,11 @@ public class RobotContainer {
 
     public void onTeleopInit() {
         inTeleop = true;
+        this.arm.reset();
+        
 
         this.driveTrain.setDefaultCommand(this.manualDrive);
-        // this.arm.setDefaultCommand(this.testArmControl);
+        //this.arm.setDefaultCommand(this.testArmControl);
         this.arm.setDefaultCommand(this.armControl);
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand);
         this.clawRotation.setDefaultCommand(this.clawRotateCommand);

@@ -57,16 +57,12 @@ public class ArmControlCommand extends CommandBase {
     private void primaryArmControl() {
         if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
             double[] adjustments = this.getAdjustmentFromError();
-            arm.setTurretSpeed(adjustments[3] * TURRET_SPEED);
-            arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, adjustments[2] * Z_SPEED);
+            // arm.setTurretSpeed(adjustments[3] * TURRET_SPEED);
+            // arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, adjustments[2] * Z_SPEED);
+            System.out.println(adjustments[3] * TURRET_SPEED + ", " + adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
         } else {
-            double y = 0;
-            if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_UP_BUTTON_NUMBER)) {
-                y = Y_SPEED;
-            } else if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_DOWN_BUTTON_NUMBER)) {
-                y = -Y_SPEED;
-            }
-            arm.moveVector(joystick.getLateralMovement() * X_SPEED, y, joystick.getHorizontalMovement() * Z_SPEED);
+            System.out.println("RIGHT Y JOYSTICK AOIFJAO" + joystick.getRightLateralMovement());
+            arm.moveVector(-joystick.getLeftLateralMovement() * Z_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, joystick.getLeftHorizontalMovement() * X_SPEED);
         }
     }
 

@@ -340,7 +340,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
                     generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(3)).schedule();
                     break;
                 default:
-                    System.out.println("No tag selected");
+                    // System.out.println("No tag selected");
                     break;
             }
         } else {
@@ -355,7 +355,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
                     generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(8)).schedule();
                     break;
                 default:
-                    System.out.println("No tag selected");
+                    // System.out.println("No tag selected");
                     break;
             }
         }
