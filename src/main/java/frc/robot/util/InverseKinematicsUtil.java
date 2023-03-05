@@ -74,6 +74,12 @@ public final class InverseKinematicsUtil {
                 pivot2Angle = 15;
             }
         }
+
+        if(turretAngle > 180) {
+            turretAngle -= 360;
+        } else if(turretAngle < -180) {
+            turretAngle += 360;
+        }
         
 
         //updating the saved angles

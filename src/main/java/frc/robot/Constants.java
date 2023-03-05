@@ -84,9 +84,7 @@ public final class Constants {
             /**
              *  THIS IS THE XBOX NUMBER. Flight joystick original number: 1;
              */
-            public static final int CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER = 4; // THIS IS THE XBOX NUMBER. Flight joystick: 1;
-            public static final int CLAW_ROTATE_RIGHT_BUTTON_NUMBER = 6; // change to whatever it is
-            public static final int CLAW_ROTATE_LEFT_BUTTON_NUMBER = 7; // change to whatever it is
+            public static final int CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER = 6; // THIS IS THE XBOX NUMBER. Flight joystick: 1;
             public static final int AUTO_ROTATE_BUTTON_NUMBER = 8; // change to whatever it is
             public static final int CALIBRATE_ARM_BUTTON_NUMBER = 9; // change to whatever it is
 
@@ -130,7 +128,7 @@ public final class Constants {
 
         public static final double ENCODER_CONVERSION_FACTOR = 1; //find out experimentally or some other way
 
-        public static final double TURN_CONSTANT = 0.015;
+        public static final double TURN_CONSTANT = 0.02; // was 0.015
         public static final double ANGLE_DELTA = 1;
 
         /**

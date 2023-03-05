@@ -19,6 +19,8 @@ public class ClawRotateCommand extends CommandBase {
 
     @Override
     public void execute() {
+        this.claw.setClawRotateSpeed(CLAW_ROTATION_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()));
+
         int fov = this.joystick.controller.getHID().getPOV();
         if(fov == 90) {
             this.claw.setClawRotateSpeed(CLAW_ROTATION_SPEED);

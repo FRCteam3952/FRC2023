@@ -14,6 +14,7 @@ import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.PositionConstants;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
+import frc.robot.util.MathUtil;
 import frc.robot.util.NetworkTablesUtil;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -28,7 +29,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final DigitalInput arm1Limit;
     private final DigitalInput arm2Limit;
 
-    private final PIDController pidController1, pidController2;
+    private final PIDController pidController1, pidController2, pidController3;
 
     private double targetX;
     private double targetY;
@@ -42,10 +43,11 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetAngle2;
     private double targetAngleTurret;
 
-    private static final double MAX_OUTPUT = 0.2;
-    private static final double MIN_OUTPUT = -0.2;
+    private static final double MAX_OUTPUT = 0.1;
+    private static final double MIN_OUTPUT = -0.1;
 
     private boolean pidOn = false;
+    private double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, 0);
 
     // arm control constructor
     public ArmSubsystem() {
@@ -78,6 +80,8 @@ public class ArmSubsystem extends SubsystemBase {
         this.pidController1.setTolerance(ArmConstants.ANGLE_DELTA);
         this.pidController2 = new PIDController(9.6e-3, 0, 0);
         this.pidController2.setTolerance(ArmConstants.ANGLE_DELTA);
+        this.pidController3 = new PIDController(9.6e-3, 0, 0);
+        this.pidController3.setTolerance(ArmConstants.ANGLE_DELTA);
         // END
 
         // Initialize arm limit switches
@@ -90,13 +94,19 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetAngleTurret = 0;
 
         // Get starting coords from the initial angle constants
-        double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, 0);
         this.targetX = startingCoords[0];
         this.targetY = startingCoords[1];
         this.targetZ = startingCoords[2];
         this.cur_x = startingCoords[0];
         this.cur_y = startingCoords[1];
         this.cur_z = startingCoords[2];
+    }
+
+    public void reset() {
+        this.pidOn = false;
+        this.cur_x = startingCoords[0];
+        this.targetY = startingCoords[1];
+        this.targetZ = startingCoords[2];
     }
 
     /**
@@ -199,19 +209,22 @@ public class ArmSubsystem extends SubsystemBase {
 
         double p1Speed = pidController1.calculate(angles[0], targetAngle1);
         double p2Speed = pidController2.calculate(angles[1], targetAngle2);
-        System.out.println(angles[0] + " " + angles[1] + " ");
+        double turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
+        System.out.println(angles[0] + " " + angles[1] + " " + " " + angles[2]);
         // System.out.println(targetAngle1 + " " + targetAngle2 + " " );
 
-        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
+        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed) || Double.isNaN(turretSpeed)) {
             System.out.println("PID is NaN, so skip");
             return;
         }
 
         p1Speed = Math.min(MAX_OUTPUT, Math.max(p1Speed, MIN_OUTPUT));
         p2Speed = Math.min(MAX_OUTPUT, Math.max(p2Speed, MIN_OUTPUT));
-        System.out.println(p1Speed + " " + p2Speed);
-        // setPivot1Speed(Math.min(MAX_OUTPUT, Math.max(p1Speed, MIN_OUTPUT)));
-        // setPivot2Speed(Math.min(MAX_OUTPUT, Math.max(p2Speed, MIN_OUTPUT)));
+        turretSpeed = Math.min(MAX_OUTPUT, Math.max(turretSpeed, MIN_OUTPUT));
+        System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
+        setPivot1Speed(p1Speed);
+        setPivot2Speed(p2Speed);
+        setTurretSpeed(turretSpeed);
     }
 
     /**
@@ -226,6 +239,13 @@ public class ArmSubsystem extends SubsystemBase {
         if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
             return;
         }
+
+        /* 
+        double dist = MathUtil.distance(0, x, 0, y, 0, z);
+        if(dist > ArmConstants.LIMB1_LENGTH + ArmConstants.LIMB2_LENGTH - ArmConstants.MAX_REACH_REDUCTION || dist < ArmConstants.MIN_HOR_DISTANCE) {
+            return;
+        }*/
+
         // Updates target Angles
         double[] targetAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, flipped);
 
@@ -291,6 +311,8 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
+        System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
+        System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
         // System.out.println("CURRENT TARGET COORDS ARM: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM LIMIT SWITCHES: LIM1: " + this.getPivot1LimitPressed() + ", LIM2: " + this.getPivot2LimitPressed());
         double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
@@ -381,7 +403,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         //handles PID
         if (pidOn) {
-            // goTowardIntendedCoordinates();
+            goTowardIntendedCoordinates();
         }
     }
 
