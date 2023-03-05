@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.PositionConstants;
+import frc.robot.subsystems.staticsubsystems.ArmGyro;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 import frc.robot.util.MathUtil;
@@ -104,7 +105,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void reset() {
         this.pidOn = false;
-        this.cur_x = startingCoords[0];
+        this.targetX = startingCoords[0];
         this.targetY = startingCoords[1];
         this.targetZ = startingCoords[2];
     }
