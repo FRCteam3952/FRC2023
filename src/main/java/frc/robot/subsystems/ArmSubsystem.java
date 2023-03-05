@@ -11,12 +11,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
-import frc.robot.Constants.PositionConstants;
 import frc.robot.subsystems.staticsubsystems.ArmGyro;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
-import frc.robot.util.MathUtil;
-import frc.robot.util.NetworkTablesUtil;
 
 public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax pivot1;
@@ -95,6 +92,14 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetAngleTurret = 0;
 
         // Get starting coords from the initial angle constants
+        resetCoords();
+    }
+
+    public void reset() {
+        this.pidOn = false;
+        resetCoords();
+    }
+    public void resetCoords() {
         this.targetX = startingCoords[0];
         this.targetY = startingCoords[1];
         this.targetZ = startingCoords[2];
@@ -103,12 +108,6 @@ public class ArmSubsystem extends SubsystemBase {
         this.cur_z = startingCoords[2];
     }
 
-    public void reset() {
-        this.pidOn = false;
-        this.targetX = startingCoords[0];
-        this.targetY = startingCoords[1];
-        this.targetZ = startingCoords[2];
-    }
 
     /**
      * Changes the intended coordinates by dx, dy, and dz
@@ -211,8 +210,6 @@ public class ArmSubsystem extends SubsystemBase {
         double p1Speed = pidController1.calculate(angles[0], targetAngle1);
         double p2Speed = pidController2.calculate(angles[1], targetAngle2);
         double turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
-        System.out.println(angles[0] + " " + angles[1] + " " + " " + angles[2]);
-        // System.out.println(targetAngle1 + " " + targetAngle2 + " " );
 
         if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed) || Double.isNaN(turretSpeed)) {
             System.out.println("PID is NaN, so skip");
@@ -266,11 +263,11 @@ public class ArmSubsystem extends SubsystemBase {
         pidOn = false;
         return this.runOnce(() -> {
             while (!getPivot2LimitPressed()) {
-                setPivot2Speed(-0.1);
+                setPivot2Speed(-0.2);
             }
             setPivot2Speed(0);
             while (!getPivot1LimitPressed()) {
-                setPivot1Speed(-0.1);
+                setPivot1Speed(-0.2);
             }
             setPivot1Speed(0);
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
@@ -311,27 +308,17 @@ public class ArmSubsystem extends SubsystemBase {
         System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
         // System.out.println("CURRENT TARGET COORDS ARM: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM LIMIT SWITCHES: LIM1: " + this.getPivot1LimitPressed() + ", LIM2: " + this.getPivot2LimitPressed());
-        double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
+        startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
         
         // handles limit switches
         if (getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1) {
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
-            this.targetX = startingCoords[0];
-            this.targetY = startingCoords[1];
-            this.targetZ = startingCoords[2];
-            this.cur_x = startingCoords[0];
-            this.cur_y = startingCoords[1];
-            this.cur_z = startingCoords[2];
+            resetCoords();
         }
 
         if (getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
-            this.targetX = startingCoords[0];
-            this.targetY = startingCoords[1];
-            this.targetZ = startingCoords[2];
-            this.cur_x = startingCoords[0];
-            this.cur_y = startingCoords[1];
-            this.cur_z = startingCoords[2];
+            resetCoords();
         }
 
         /*
