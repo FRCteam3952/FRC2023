@@ -223,6 +223,7 @@ public class ArmSubsystem extends SubsystemBase {
         p2Speed = Math.min(MAX_OUTPUT, Math.max(p2Speed, MIN_OUTPUT));
         turretSpeed = Math.min(MAX_OUTPUT, Math.max(turretSpeed, MIN_OUTPUT));
         System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
+        
         setPivot1Speed(p1Speed);
         setPivot2Speed(p2Speed);
         setTurretSpeed(turretSpeed);
