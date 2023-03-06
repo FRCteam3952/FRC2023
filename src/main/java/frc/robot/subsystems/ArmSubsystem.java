@@ -47,6 +47,9 @@ public class ArmSubsystem extends SubsystemBase {
     private boolean pidOn = false;
     private boolean flipped = false;
 
+    private double arm1SpeedMultiplier = 1;
+    private double arm2SpeedMultiplier = 1;
+
     // arm control constructor
     public ArmSubsystem() {
         // Initialize arm motors
@@ -122,7 +125,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public void moveVector(double dx, double dy, double dz) {
         updateCurrentCoordinates();
-        setIntendedCoordinates(targetX + dx, targetY + dy, targetZ + dz);
+        setTargetCoordinates(targetX + dx, targetY + dy, targetZ + dz);
     }
 
     /**
@@ -215,6 +218,14 @@ public class ArmSubsystem extends SubsystemBase {
         return !this.arm2Limit.get();
     }
 
+    public void setArm1SpeedMultiplier(double mult) {
+        this.arm1SpeedMultiplier = mult;
+    }
+
+    public void setArm2SpeedMultiplier(double mult) {
+        this.arm2SpeedMultiplier = mult;
+    }
+
     public void goTowardIntendedCoordinates() {
         double[] angles = getCurrentAnglesDeg(); // gets the current angles read from motor encoders
 
@@ -224,8 +235,8 @@ public class ArmSubsystem extends SubsystemBase {
         }
 
         // gets PID control calculations
-        double p1Speed = pidController1.calculate(angles[0], targetAngle1);
-        double p2Speed = pidController2.calculate(angles[1], targetAngle2);
+        double p1Speed = pidController1.calculate(angles[0], targetAngle1) * arm1SpeedMultiplier;
+        double p2Speed = pidController2.calculate(angles[1], targetAngle2) * arm2SpeedMultiplier;
         double turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
 
         // if power is NaN, don't run it :D
@@ -251,7 +262,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @param z the target z coordinate
      * @param flipped whether the arm should act "flipped", i.e. the claw would approach from the gamepiece from the top. True for "top approach", False for "side approach"
      */
-    public void setIntendedCoordinates(double x, double y, double z) {
+    public void setTargetCoordinates(double x, double y, double z) {
         if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
             return;
         }
@@ -295,99 +306,6 @@ public class ArmSubsystem extends SubsystemBase {
         });
     }
 
-    public CommandBase flipArmCommand() {
-        if(flipped) {
-            return Commands.runOnce(() -> { // 31 17 6
-                setPIDControlState(false);
-                targetAngle1 = ArmConstants.FLIPPING_TARGET_ANGLES[0];
-                targetAngle2 = ArmConstants.FLIPPING_TARGET_ANGLES[1];
-                while(Math.abs(getCurrentAnglesDeg()[0] - ArmConstants.FLIPPING_TARGET_ANGLES[0]) > ArmConstants.ANGLE_DELTA + 5 || Math.abs(getCurrentAnglesDeg()[1] - ArmConstants.FLIPPING_TARGET_ANGLES[1]) > ArmConstants.ANGLE_DELTA + 5) {
-                    double[] angles = getCurrentAnglesDeg(); // gets the current angles read from motor encoders
-
-                    if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) || Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
-                        System.out.println("An angle is NaN, so skip");
-                        return;
-                    }
-
-                    // gets PID control calculations
-                    double p1Speed = pidController1.calculate(angles[0], targetAngle1);
-                    double p2Speed = pidController2.calculate(angles[1], targetAngle2);
-
-                    // We've just flipped, one arm segment needs to go slower than the other segment to avoid ground collision
-                    // If we're going to flipped=true, then arm2 needs to go slower.
-                    // If we're going to flipped=false, then arm1 needs to go slower
-                    if(flipped) { // going to flipped=true
-                        p2Speed *= ArmConstants.SPEED_DEC_ON_FLIP;
-                        p1Speed *= ArmConstants.COMPLEMENTING_FLIP_SPEED;
-                    } else {
-                        p1Speed *= ArmConstants.SPEED_DEC_ON_UNFLIP;
-                        p2Speed *= ArmConstants.COMPLEMENTING_FLIP_SPEED;
-                    }
-
-                    // if power is NaN, don't run it :D
-                    if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
-                        System.out.println("PID is NaN, so skip");
-                        return;
-                    }
-
-                    p1Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p1Speed, ArmConstants.MIN_OUTPUT));
-                    p2Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p2Speed, ArmConstants.MIN_OUTPUT));
-                    System.out.println("SPEEDS: " + p1Speed + " " + p2Speed);
-
-                    setPivot1Speed(p1Speed);
-                    setPivot2Speed(p2Speed);
-                }
-                setPIDControlState(true);
-            }, this);
-        }
-        else{
-            return Commands.runOnce(() -> { // 31 17 6
-                moveVector(0, 10, 0);
-                double[] coords = getCurrentCoordinates();
-                setPIDControlState(false);
-                targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
-                targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
-                while(Math.abs(getCurrentAnglesDeg()[0] - ArmConstants.ARM_1_INITIAL_ANGLE) > ArmConstants.ANGLE_DELTA + 5 || Math.abs(getCurrentAnglesDeg()[1] - ArmConstants.ARM_2_INITIAL_ANGLE) > ArmConstants.ANGLE_DELTA + 5) {
-                    double[] angles = getCurrentAnglesDeg(); // gets the current angles read from motor encoders
-
-                    if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) || Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
-                        System.out.println("An angle is NaN, so skip");
-                        return;
-                    }
-
-                    // gets PID control calculations
-                    double p1Speed = pidController1.calculate(angles[0], targetAngle1);
-                    double p2Speed = pidController2.calculate(angles[1], targetAngle2);
-
-                    // We've just flipped, one arm segment needs to go slower than the other segment to avoid ground collision
-                    // If we're going to flipped=true, then arm2 needs to go slower.
-                    // If we're going to flipped=false, then arm1 needs to go slower
-                    if(flipped) { // going to flipped=true
-                        p2Speed *= ArmConstants.SPEED_DEC_ON_FLIP;
-                        p1Speed *= ArmConstants.COMPLEMENTING_FLIP_SPEED;
-                    } else {
-                        p1Speed *= ArmConstants.SPEED_DEC_ON_UNFLIP;
-                        p2Speed *= ArmConstants.COMPLEMENTING_FLIP_SPEED;
-                    }
-
-                    // if power is NaN, don't run it :D
-                    if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
-                        System.out.println("PID is NaN, so skip");
-                        return;
-                    }
-
-                    p1Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p1Speed, ArmConstants.MIN_OUTPUT));
-                    p2Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p2Speed, ArmConstants.MIN_OUTPUT));
-                    // System.out.println("SPEEDS: " + p1Speed + " " + p2Speed);
-
-                    setPivot1Speed(p1Speed);
-                    setPivot2Speed(p2Speed);
-                }
-                setPIDControlState(true);
-            }, this);
-        }
-    }
-
     /**
      * Sets the usage of PID control for the arm.
      * @param value True for enabled PID, False for disabled.
@@ -414,7 +332,11 @@ public class ArmSubsystem extends SubsystemBase {
     public void setFlipped(boolean flipped){
         this.flipped = flipped;
         (new FlipArmCommand(this, flipped)).schedule();
-        // this.setIntendedCoordinates(currentIntendedCoords[0], currentIntendedCoords[1], currentIntendedCoords[2]);
+    }
+
+    public boolean isAtCoords(){
+        double[] curAngles = getCurrentAnglesDeg();
+        return (Math.abs(targetAngle1 - curAngles[0]) < ArmConstants.ANGLE_DELTA) && (Math.abs(targetAngle2 - curAngles[1]) < ArmConstants.ANGLE_DELTA) && (Math.abs(targetAngleTurret - curAngles[2]) < ArmConstants.ANGLE_DELTA);
     }
 
     /**
