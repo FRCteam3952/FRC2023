@@ -87,10 +87,10 @@ public final class Constants {
             // Flight Joystick 0
             public static final int RUN_GUI_TRAJECTORY_BUTTON_NUMBER = 4; // idk i just picked a random number
 
-            // Flight Joystick 1
+            // Xbox Controller
             public static final int AIM_ASSIST_BUTTON_NUMBER = 11; // change to whatever it is
-            public static final int MOVE_ARM_UP_BUTTON_NUMBER = 3; // change to whatever it is
-            public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 2; // change to whatever it is
+            public static final int EXTEND_ARM_BUTTON_NUMBER = 3; // change to up arrow on d-pad
+            public static final int RETRACT_ARM_BUTTON_NUMBER = 2; // change to down arrow on d-pad
             public static final int FLIP_ARM_BUTTON_NUMBER = 5;
             /**
              *  THIS IS THE XBOX NUMBER. Flight joystick original number: 1;

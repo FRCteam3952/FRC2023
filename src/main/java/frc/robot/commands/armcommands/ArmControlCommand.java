@@ -20,6 +20,7 @@ public class ArmControlCommand extends CommandBase {
     private static final double X_SPEED = 0.3;
     private static final double Y_SPEED = 0.3;
     private static final double Z_SPEED = 0.3;
+    private static final double EXTEND_RETRACT_SPEED = 0.2;
 
     private static final double TURRET_SPEED = 0.5;
 
@@ -79,11 +80,25 @@ public class ArmControlCommand extends CommandBase {
                 System.out.println(adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
             }
             else{
-                this.arm.moveVector(-joystick.getLeftLateralMovement() * Z_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
+                this.arm.moveVector(-joystick.getLeftLateralMovement() * X_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
                 this.arm.setTurretSpeed(TURRET_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()));     
     
                 if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.FLIP_ARM_BUTTON_NUMBER)) {
                     this.arm.setFlipped(!this.arm.getFlipped());
+                }
+
+                double turretAngleRad = this.arm.getCurrentAnglesRad()[2];
+                double currentYPos = this.arm.getCurrentCoordinates()[1];
+                if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.EXTEND_ARM_BUTTON_NUMBER)) {
+                    this.arm.moveVector(Math.sin(turretAngleRad) * EXTEND_RETRACT_SPEED, // x
+                            currentYPos, // y
+                            Math.cos(turretAngleRad) * EXTEND_RETRACT_SPEED); // z
+                }
+
+                if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.RETRACT_ARM_BUTTON_NUMBER)) {
+                    this.arm.moveVector(Math.sin(turretAngleRad) * -EXTEND_RETRACT_SPEED, // x
+                            currentYPos, // y
+                            Math.cos(turretAngleRad) * -EXTEND_RETRACT_SPEED); // z
                 }
     
                 this.arm.setControlDimensions(true);
