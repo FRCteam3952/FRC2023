@@ -34,22 +34,38 @@ public class ArmControlCommand extends CommandBase {
 
 
     // Gets adjustments from limelight and converts them to position adjustments
-    private double[] getAdjustmentFromError() {
-        double[] adjustments = new double[4];
-        double turretAngle = arm.getCurrentAnglesRad()[2];
-        double zAdjustment = detectCone ? (DESIRED_AREA_CONE - LimeLight.getArea()) / DESIRED_AREA_CONE : 
-                (DESIRED_AREA_CUBE - LimeLight.getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
-        zAdjustment = zAdjustment > 1 ? 1 : zAdjustment;
+    private double[] getAdjustmentFromError(boolean flipped) {
+        double[] adjustments = new double[3];
 
-        adjustments[0] = Math.sin(turretAngle) * zAdjustment; // x-axis adjustment
+        if(flipped){
+            
+            double yAdjustment = detectCone ? (DESIRED_AREA_CONE - LimeLight.getArea()) / DESIRED_AREA_CONE : 
+                    (DESIRED_AREA_CUBE - LimeLight.getArea()) / DESIRED_AREA_CUBE; // y axis from perspective of the camera
+            yAdjustment = yAdjustment > 1 ? 1 : yAdjustment;
+    
+            adjustments[0] = LimeLight.getYAdjustment(); // x-axis adjustment
+    
+            adjustments[1] = yAdjustment; // y-axis adjustment
+    
+            adjustments[2] = LimeLight.getXAdjustment(); // z-axis adjustment
+    
+        }
+        else{
 
-        adjustments[1] = LimeLight.getYAdjustment(); // y-axis adjustment
-
-        adjustments[2] = Math.cos(turretAngle) * zAdjustment; // z-axis adjustment
-
-        adjustments[3] = LimeLight.getXAdjustment(); // turret angle adjustment
-
+            double xAdjustment = detectCone ? (DESIRED_AREA_CONE - LimeLight.getArea()) / DESIRED_AREA_CONE : 
+                    (DESIRED_AREA_CUBE - LimeLight.getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
+            xAdjustment = xAdjustment > 1 ? 1 : xAdjustment;
+    
+            adjustments[0] = xAdjustment; // x-axis adjustment
+    
+            adjustments[1] = LimeLight.getYAdjustment(); // y-axis adjustment
+    
+            adjustments[2] = LimeLight.getXAdjustment(); // z-axis adjustment
+    
+        }
+            
         return adjustments;
+
     }
 
     // Primary arm control
@@ -58,9 +74,9 @@ public class ArmControlCommand extends CommandBase {
         if(this.arm.getControlMode()){ // only run when arm is in manual control
             if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
                 arm.setControlDimensions(false);
-                double[] adjustments = this.getAdjustmentFromError();
+                double[] adjustments = this.getAdjustmentFromError(this.arm.getFlipped());
                 //arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, adjustments[2] * Z_SPEED);
-                System.out.println(adjustments[3] * TURRET_SPEED + ", " + adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
+                System.out.println(adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
             }
             else{
                 this.arm.moveVector(-joystick.getLeftLateralMovement() * Z_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
