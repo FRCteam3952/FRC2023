@@ -48,6 +48,8 @@ public class ArmSubsystem extends SubsystemBase {
     private double arm1SpeedMultiplier = 1;
     private double arm2SpeedMultiplier = 1;
 
+    private boolean isManual = true;
+
     // arm control constructor
     public ArmSubsystem() {
         // Initialize arm motors
@@ -164,6 +166,10 @@ public class ArmSubsystem extends SubsystemBase {
         this.turret.set(speed);
     }
 
+    public void setControlMode(boolean isManual){
+        this.isManual = isManual;
+    }
+
     public void stopAllMotors() {
         this.pivot1.set(0);
         this.pivot2.set(0);
@@ -235,21 +241,29 @@ public class ArmSubsystem extends SubsystemBase {
         // gets PID control calculations
         double p1Speed = pidController1.calculate(angles[0], targetAngle1) * arm1SpeedMultiplier;
         double p2Speed = pidController2.calculate(angles[1], targetAngle2) * arm2SpeedMultiplier;
-        double turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
+        double turretSpeed = 0;
 
         // if power is NaN, don't run it :D
-        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed) || Double.isNaN(turretSpeed)) {
+        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
             System.out.println("PID is NaN, so skip");
             return;
         }
 
         p1Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p1Speed, ArmConstants.MIN_OUTPUT));
         p2Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p2Speed, ArmConstants.MIN_OUTPUT));
-        turretSpeed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(turretSpeed, ArmConstants.MIN_OUTPUT));
-        System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
 
+        if (!isManual) { //only control turret or Z axis when auto
+            turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
+            turretSpeed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(turretSpeed, ArmConstants.MIN_OUTPUT));
+            if(Double.isNaN(turretSpeed)){
+                return;
+            }
+            setTurretSpeed(turretSpeed);
+        }
         setPivot1Speed(p1Speed);
         setPivot2Speed(p2Speed);
+
+        System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
     }
 
     /**
