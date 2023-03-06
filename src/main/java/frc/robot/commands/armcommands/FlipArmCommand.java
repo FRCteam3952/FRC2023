@@ -26,8 +26,7 @@ public class FlipArmCommand extends CommandBase {
         } else {
             arm.setArm1SpeedMultiplier(ArmConstants.COMPLEMENTING_FLIP_SPEED); // set speed multipliers 
             arm.setArm2SpeedMultiplier(ArmConstants.SPEED_DEC_ON_FLIP);
-            arm.setTargetAngle1(ArmConstants.FLIPPING_TARGET_ANGLES[0]); // move arm to pre-defined flip coordinates (optimized for cone grabbing)
-            arm.setTargetAngle2(ArmConstants.FLIPPING_TARGET_ANGLES[1]);
+            arm.setTargetCoordinates(ArmConstants.FLIP_COORDS_WHEN_FLIPPING[0], ArmConstants.FLIP_COORDS_WHEN_FLIPPING[1], 0);
         }
     }
 
@@ -43,8 +42,7 @@ public class FlipArmCommand extends CommandBase {
             canBeginFlip = true;
             arm.setArm1SpeedMultiplier(ArmConstants.COMPLEMENTING_FLIP_SPEED); // set speed multipliers
             arm.setArm2SpeedMultiplier(ArmConstants.SPEED_DEC_ON_UNFLIP);
-            arm.setTargetAngle1(ArmConstants.ARM_1_INITIAL_ANGLE);
-            arm.setTargetAngle2(ArmConstants.ARM_2_INITIAL_ANGLE);
+            arm.setTargetCoordinates(ArmConstants.STARTING_COORDS[0], ArmConstants.STARTING_COORDS[1], 0);
         }
         if(canBeginFlip && arm.isAtCoords()){
             System.out.println("Arm is now at starting config");
