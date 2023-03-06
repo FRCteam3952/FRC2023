@@ -41,7 +41,7 @@ public final class Autos {
     public static CommandBase armPlaceConeAuto(ArmSubsystem arm, ClawGripSubsystem claw) {
         return Commands.runOnce(() -> {
             double[] newArmPosition = PositionConstants.TOP_RIGHT_POS; // or maybe top left pos?
-            arm.setIntendedCoordinates(newArmPosition[0], newArmPosition[1], 0, false);
+            arm.setIntendedCoordinates(newArmPosition[0], newArmPosition[1], 0);
             // we might have to wait before doing this, this could release the cone too early
             claw.setClawClosed(false); // open claw
         }).alongWith(Commands.runOnce(() -> {

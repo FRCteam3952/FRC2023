@@ -7,6 +7,8 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import frc.robot.util.ForwardKinematicsUtil;
+import frc.robot.util.InverseKinematicsUtil;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -26,9 +28,9 @@ public final class Constants {
         // All constants are in inches
         public static final double ORIGIN_HEIGHT = 42.0;
         public static final double LIMB1_LENGTH = 32.5;
-        public static final double LIMB2_LENGTH = 19.5;
+        public static final double LIMB2_LENGTH = 29d;
 
-        public static final double ANGLE_DELTA = 2;
+        public static final double ANGLE_DELTA = 5.0;
         public static final double MAX_REACH_REDUCTION = 1; // change to be correct later
         public static final double MIN_HOR_DISTANCE = 6; // change to be correct later
 
@@ -41,8 +43,18 @@ public final class Constants {
 
         public static final double PICK_UP_POSITION_Y = 5;
 
+        public static final double PID_TOLERANCE = 1.0;
+
         public static final double ARM_1_INITIAL_ANGLE = 10.0;
         public static final double ARM_2_INITIAL_ANGLE = 20.0;
+        public static final double MAX_OUTPUT = 0.5;
+        public static final double MIN_OUTPUT = -0.5;
+        public static final double SPEED_DEC_ON_UNFLIP = 0.2;
+        public static final double SPEED_DEC_ON_FLIP = 1.0;
+        public static final double COMPLEMENTING_FLIP_SPEED = 1.2;
+        public static final double[] STARTING_COORDS = ForwardKinematicsUtil.getCoordinatesFromAngles(ARM_1_INITIAL_ANGLE, ARM_2_INITIAL_ANGLE, 0);
+        public static final double[] FLIP_COORDS_WHEN_FLIPPING = {31.0, 17.0, 0.0};
+        public static final double[] FLIPPING_TARGET_ANGLES = InverseKinematicsUtil.getAnglesFromCoordinates(FLIP_COORDS_WHEN_FLIPPING[0], FLIP_COORDS_WHEN_FLIPPING[1], FLIP_COORDS_WHEN_FLIPPING[2], true);
     }
 
     /**
@@ -76,11 +88,10 @@ public final class Constants {
             public static final int RUN_GUI_TRAJECTORY_BUTTON_NUMBER = 4; // idk i just picked a random number
 
             // Flight Joystick 1
-            public static final int AIM_ASSIST_BUTTON_NUMBER = 5; // change to whatever it is
+            public static final int AIM_ASSIST_BUTTON_NUMBER = 11; // change to whatever it is
             public static final int MOVE_ARM_UP_BUTTON_NUMBER = 3; // change to whatever it is
             public static final int MOVE_ARM_DOWN_BUTTON_NUMBER = 2; // change to whatever it is
-            public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED = 11; // change to whatever it is
-            public static final int MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_NOT_FLIPPED = 12; // change to whatever it is
+            public static final int FLIP_ARM_BUTTON_NUMBER = 5;
             /**
              *  THIS IS THE XBOX NUMBER. Flight joystick original number: 1;
              */

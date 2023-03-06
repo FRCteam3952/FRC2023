@@ -2,7 +2,6 @@ package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
@@ -25,7 +24,6 @@ public class ArmControlCommand extends CommandBase {
     private static final double TURRET_SPEED = 0.2;
 
     private boolean detectCone = true; // True -> vision is looking for cones, False -> vision is looking for cubes, TODO: implement toggle
-    private boolean toggle = true;
 
     public ArmControlCommand(ArmSubsystem arm, XboxController joystick) {
         this.arm = arm;
@@ -65,24 +63,15 @@ public class ArmControlCommand extends CommandBase {
             System.out.println("RIGHT Y JOYSTICK AOIFJAO" + joystick.getRightLateralMovement());
             arm.moveVector(-joystick.getLeftLateralMovement() * Z_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
 
-            this.arm.setTurretSpeed(-X_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()));            
+            this.arm.setTurretSpeed(X_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()));            
         }
 
-        if(this.joystick.getRawButtonPressedWrapper(5)) {
+        if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.FLIP_ARM_BUTTON_NUMBER)) {
+            this.arm.setFlipped(!this.arm.getFlipped());
+        }
+
+        if(this.joystick.getRawButtonPressedWrapper(4)){
             this.arm.setPIDControlState(!this.arm.getPIDControlOn());
-        }
-    }
-
-    // Moves arm to preset distance above the floor for picking up gamepieces 
-    private void pickUpPositionFlipped() {
-        if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED)) {
-            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], true);
-        }
-    }
-
-    private void pickUpPositionNotFlipped() {
-        if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_NOT_FLIPPED)) {
-            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], false);
         }
     }
 
@@ -94,8 +83,6 @@ public class ArmControlCommand extends CommandBase {
     @Override
     public void execute() {
         primaryArmControl();
-        pickUpPositionFlipped();
-        pickUpPositionNotFlipped();
     }
 
     // Called once the command ends or is interrupted.

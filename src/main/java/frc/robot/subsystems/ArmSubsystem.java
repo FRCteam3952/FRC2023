@@ -8,14 +8,17 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
+import frc.robot.commands.armcommands.FlipArmCommand;
 import frc.robot.subsystems.staticsubsystems.ArmGyro;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 
 public class ArmSubsystem extends SubsystemBase {
+
     private final CANSparkMax pivot1;
     private final CANSparkMax pivot2;
     private final CANSparkMax turret;
@@ -41,11 +44,8 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetAngle2;
     private double targetAngleTurret;
 
-    private static final double MAX_OUTPUT = 0.5;
-    private static final double MIN_OUTPUT = -0.5;
-
     private boolean pidOn = false;
-    private double[] startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, 0);
+    private boolean flipped = false;
 
     // arm control constructor
     public ArmSubsystem() {
@@ -75,11 +75,11 @@ public class ArmSubsystem extends SubsystemBase {
 
         // TODO: TUNE
         this.pidController1 = new PIDController(1.69e-2, 0, 0); // nice
-        this.pidController1.setTolerance(ArmConstants.ANGLE_DELTA);
+        this.pidController1.setTolerance(ArmConstants.PID_TOLERANCE);
         this.pidController2 = new PIDController(9.6e-3, 0, 0);
-        this.pidController2.setTolerance(ArmConstants.ANGLE_DELTA);
+        this.pidController2.setTolerance(ArmConstants.PID_TOLERANCE);
         this.pidController3 = new PIDController(9.6e-3, 0, 0);
-        this.pidController3.setTolerance(ArmConstants.ANGLE_DELTA);
+        this.pidController3.setTolerance(ArmConstants.PID_TOLERANCE);
         // END
 
         // Initialize arm limit switches
@@ -100,12 +100,20 @@ public class ArmSubsystem extends SubsystemBase {
         resetCoords();
     }
     public void resetCoords() {
-        this.targetX = startingCoords[0];
-        this.targetY = startingCoords[1];
-        this.targetZ = startingCoords[2];
-        this.cur_x = startingCoords[0];
-        this.cur_y = startingCoords[1];
-        this.cur_z = startingCoords[2];
+        this.targetX = ArmConstants.STARTING_COORDS[0];
+        this.targetY = ArmConstants.STARTING_COORDS[1];
+        this.targetZ = ArmConstants.STARTING_COORDS[2];
+        this.cur_x = ArmConstants.STARTING_COORDS[0];
+        this.cur_y = ArmConstants.STARTING_COORDS[1];
+        this.cur_z = ArmConstants.STARTING_COORDS[2];
+    }
+
+    public PIDController getPID1() {
+        return this.pidController1;
+    }
+
+    public PIDController getPID2() {
+        return this.pidController2;
     }
 
 
@@ -114,7 +122,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public void moveVector(double dx, double dy, double dz) {
         updateCurrentCoordinates();
-        setIntendedCoordinates(targetX + dx, targetY + dy, targetZ + dz, false);
+        setIntendedCoordinates(targetX + dx, targetY + dy, targetZ + dz);
     }
 
     /**
@@ -161,6 +169,14 @@ public class ArmSubsystem extends SubsystemBase {
         this.turret.set(0);
     }
 
+    public void setTargetAngle1(double angle) {
+        this.targetAngle1 = angle;
+    }
+
+    public void setTargetAngle2(double angle) {
+        this.targetAngle2 = angle;
+    }
+
     /**
      * Uses motor encoder angles to update the current coordinates
      */
@@ -200,7 +216,6 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void goTowardIntendedCoordinates() {
-
         double[] angles = getCurrentAnglesDeg(); // gets the current angles read from motor encoders
 
         if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) || Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
@@ -219,14 +234,13 @@ public class ArmSubsystem extends SubsystemBase {
             return;
         }
 
-        p1Speed = Math.min(MAX_OUTPUT, Math.max(p1Speed, MIN_OUTPUT));
-        p2Speed = Math.min(MAX_OUTPUT, Math.max(p2Speed, MIN_OUTPUT));
-        turretSpeed = Math.min(MAX_OUTPUT, Math.max(turretSpeed, MIN_OUTPUT));
+        p1Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p1Speed, ArmConstants.MIN_OUTPUT));
+        p2Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p2Speed, ArmConstants.MIN_OUTPUT));
+        turretSpeed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(turretSpeed, ArmConstants.MIN_OUTPUT));
         System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
 
         setPivot1Speed(p1Speed);
         setPivot2Speed(p2Speed);
-        //setTurretSpeed(turretSpeed);
     }
 
     /**
@@ -237,7 +251,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @param z the target z coordinate
      * @param flipped whether the arm should act "flipped", i.e. the claw would approach from the gamepiece from the top. True for "top approach", False for "side approach"
      */
-    public void setIntendedCoordinates(double x, double y, double z, boolean flipped) {
+    public void setIntendedCoordinates(double x, double y, double z) {
         if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
             return;
         }
@@ -276,8 +290,102 @@ public class ArmSubsystem extends SubsystemBase {
             setPivot1Speed(0);
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+            resetCoords();
             pidOn = true;
         });
+    }
+
+    public CommandBase flipArmCommand() {
+        if(flipped) {
+            return Commands.runOnce(() -> { // 31 17 6
+                setPIDControlState(false);
+                targetAngle1 = ArmConstants.FLIPPING_TARGET_ANGLES[0];
+                targetAngle2 = ArmConstants.FLIPPING_TARGET_ANGLES[1];
+                while(Math.abs(getCurrentAnglesDeg()[0] - ArmConstants.FLIPPING_TARGET_ANGLES[0]) > ArmConstants.ANGLE_DELTA + 5 || Math.abs(getCurrentAnglesDeg()[1] - ArmConstants.FLIPPING_TARGET_ANGLES[1]) > ArmConstants.ANGLE_DELTA + 5) {
+                    double[] angles = getCurrentAnglesDeg(); // gets the current angles read from motor encoders
+
+                    if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) || Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
+                        System.out.println("An angle is NaN, so skip");
+                        return;
+                    }
+
+                    // gets PID control calculations
+                    double p1Speed = pidController1.calculate(angles[0], targetAngle1);
+                    double p2Speed = pidController2.calculate(angles[1], targetAngle2);
+
+                    // We've just flipped, one arm segment needs to go slower than the other segment to avoid ground collision
+                    // If we're going to flipped=true, then arm2 needs to go slower.
+                    // If we're going to flipped=false, then arm1 needs to go slower
+                    if(flipped) { // going to flipped=true
+                        p2Speed *= ArmConstants.SPEED_DEC_ON_FLIP;
+                        p1Speed *= ArmConstants.COMPLEMENTING_FLIP_SPEED;
+                    } else {
+                        p1Speed *= ArmConstants.SPEED_DEC_ON_UNFLIP;
+                        p2Speed *= ArmConstants.COMPLEMENTING_FLIP_SPEED;
+                    }
+
+                    // if power is NaN, don't run it :D
+                    if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
+                        System.out.println("PID is NaN, so skip");
+                        return;
+                    }
+
+                    p1Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p1Speed, ArmConstants.MIN_OUTPUT));
+                    p2Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p2Speed, ArmConstants.MIN_OUTPUT));
+                    System.out.println("SPEEDS: " + p1Speed + " " + p2Speed);
+
+                    setPivot1Speed(p1Speed);
+                    setPivot2Speed(p2Speed);
+                }
+                setPIDControlState(true);
+            }, this);
+        }
+        else{
+            return Commands.runOnce(() -> { // 31 17 6
+                moveVector(0, 10, 0);
+                double[] coords = getCurrentCoordinates();
+                setPIDControlState(false);
+                targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
+                targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
+                while(Math.abs(getCurrentAnglesDeg()[0] - ArmConstants.ARM_1_INITIAL_ANGLE) > ArmConstants.ANGLE_DELTA + 5 || Math.abs(getCurrentAnglesDeg()[1] - ArmConstants.ARM_2_INITIAL_ANGLE) > ArmConstants.ANGLE_DELTA + 5) {
+                    double[] angles = getCurrentAnglesDeg(); // gets the current angles read from motor encoders
+
+                    if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) || Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
+                        System.out.println("An angle is NaN, so skip");
+                        return;
+                    }
+
+                    // gets PID control calculations
+                    double p1Speed = pidController1.calculate(angles[0], targetAngle1);
+                    double p2Speed = pidController2.calculate(angles[1], targetAngle2);
+
+                    // We've just flipped, one arm segment needs to go slower than the other segment to avoid ground collision
+                    // If we're going to flipped=true, then arm2 needs to go slower.
+                    // If we're going to flipped=false, then arm1 needs to go slower
+                    if(flipped) { // going to flipped=true
+                        p2Speed *= ArmConstants.SPEED_DEC_ON_FLIP;
+                        p1Speed *= ArmConstants.COMPLEMENTING_FLIP_SPEED;
+                    } else {
+                        p1Speed *= ArmConstants.SPEED_DEC_ON_UNFLIP;
+                        p2Speed *= ArmConstants.COMPLEMENTING_FLIP_SPEED;
+                    }
+
+                    // if power is NaN, don't run it :D
+                    if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
+                        System.out.println("PID is NaN, so skip");
+                        return;
+                    }
+
+                    p1Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p1Speed, ArmConstants.MIN_OUTPUT));
+                    p2Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p2Speed, ArmConstants.MIN_OUTPUT));
+                    // System.out.println("SPEEDS: " + p1Speed + " " + p2Speed);
+
+                    setPivot1Speed(p1Speed);
+                    setPivot2Speed(p2Speed);
+                }
+                setPIDControlState(true);
+            }, this);
+        }
     }
 
     /**
@@ -299,6 +407,16 @@ public class ArmSubsystem extends SubsystemBase {
         return pidOn;
     }
 
+    public boolean getFlipped(){
+        return flipped;
+    }
+
+    public void setFlipped(boolean flipped){
+        this.flipped = flipped;
+        (new FlipArmCommand(this, flipped)).schedule();
+        // this.setIntendedCoordinates(currentIntendedCoords[0], currentIntendedCoords[1], currentIntendedCoords[2]);
+    }
+
     /**
      * Returns the current claw pose. Note that the claw pose is stored as {x, z, y}, where y is the height of the claw. This allows you to use {@link Pose3d#toPose2d()} to get a correct 2D pose.
      * @return A Pose3d object representing the current claw pose.
@@ -311,11 +429,12 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
-        System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
-        //System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
+        // System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
+        // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
+        System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
+        System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
         // System.out.println("CURRENT TARGET COORDS ARM: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM LIMIT SWITCHES: LIM1: " + this.getPivot1LimitPressed() + ", LIM2: " + this.getPivot2LimitPressed());
-        startingCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(ArmConstants.ARM_1_INITIAL_ANGLE, ArmConstants.ARM_2_INITIAL_ANGLE, this.getCurrentAnglesDeg()[2]);
         
         boolean resetPivot1 = getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle1 - ArmConstants.ARM_1_INITIAL_ANGLE) < 5;
         boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
