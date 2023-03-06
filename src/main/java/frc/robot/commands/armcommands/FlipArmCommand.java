@@ -20,6 +20,7 @@ public class FlipArmCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        arm.setControlMode(false);
         if(!flipped) {
             arm.moveVector(0, 10, 0); //move arm up 10 inches
         } else {
@@ -58,6 +59,7 @@ public class FlipArmCommand extends CommandBase {
         //resets multipliers to default
         arm.setArm1SpeedMultiplier(1d);
         arm.setArm2SpeedMultiplier(1d);
+        arm.setControlMode(true);
 
     }
 

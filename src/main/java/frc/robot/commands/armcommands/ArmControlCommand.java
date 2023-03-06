@@ -54,25 +54,30 @@ public class ArmControlCommand extends CommandBase {
 
     // Primary arm control
     private void primaryArmControl() {
-        if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
-            double[] adjustments = this.getAdjustmentFromError();
-            // arm.setTurretSpeed(adjustments[3] * TURRET_SPEED);
-            // arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, adjustments[2] * Z_SPEED);
-            System.out.println(adjustments[3] * TURRET_SPEED + ", " + adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
-        } else {
-            System.out.println("RIGHT Y JOYSTICK AOIFJAO" + joystick.getRightLateralMovement());
-            arm.moveVector(-joystick.getLeftLateralMovement() * Z_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
 
-            this.arm.setTurretSpeed(X_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()));            
+        if(this.arm.getControlMode()){ // only run when arm is in manual control
+            if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
+                arm.setControlDimensions(false);
+                double[] adjustments = this.getAdjustmentFromError();
+                //arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, adjustments[2] * Z_SPEED);
+                System.out.println(adjustments[3] * TURRET_SPEED + ", " + adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
+            }
+            else{
+                this.arm.moveVector(-joystick.getLeftLateralMovement() * Z_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
+                this.arm.setTurretSpeed(X_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()));     
+    
+                if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.FLIP_ARM_BUTTON_NUMBER)) {
+                    this.arm.setFlipped(!this.arm.getFlipped());
+                }
+    
+                this.arm.setControlDimensions(true);
+            }
         }
-
-        if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.FLIP_ARM_BUTTON_NUMBER)) {
-            this.arm.setFlipped(!this.arm.getFlipped());
-        }
-
+    
         if(this.joystick.getRawButtonPressedWrapper(4)){
             this.arm.setPIDControlState(!this.arm.getPIDControlOn());
         }
+        
     }
 
     // Called when the command is initially scheduled.

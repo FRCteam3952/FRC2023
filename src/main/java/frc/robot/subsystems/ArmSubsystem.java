@@ -49,6 +49,7 @@ public class ArmSubsystem extends SubsystemBase {
     private double arm2SpeedMultiplier = 1;
 
     private boolean isManual = true;
+    private boolean is2D = true;
 
     // arm control constructor
     public ArmSubsystem() {
@@ -170,6 +171,10 @@ public class ArmSubsystem extends SubsystemBase {
         this.isManual = isManual;
     }
 
+    public void setControlDimensions(boolean is2D){
+        this.is2D = is2D;
+    }
+
     public void stopAllMotors() {
         this.pivot1.set(0);
         this.pivot2.set(0);
@@ -182,6 +187,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void setTargetAngle2(double angle) {
         this.targetAngle2 = angle;
+    }
+
+    public boolean getControlMode(){
+        return isManual;
     }
 
     /**
@@ -252,7 +261,7 @@ public class ArmSubsystem extends SubsystemBase {
         p1Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p1Speed, ArmConstants.MIN_OUTPUT));
         p2Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p2Speed, ArmConstants.MIN_OUTPUT));
 
-        if (!isManual) { //only control turret or Z axis when auto
+        if (!is2D) { //only control turret or Z axis when auto
             turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
             turretSpeed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(turretSpeed, ArmConstants.MIN_OUTPUT));
             if(Double.isNaN(turretSpeed)){
