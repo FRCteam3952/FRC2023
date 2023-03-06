@@ -34,10 +34,13 @@ public class FlipArmCommand extends CommandBase {
 
     @Override
     public void execute() {
+        System.out.println("Arm is moving to position");
         if(flipped && arm.isAtCoords()){
+            System.out.println("Arm is now FLIPPED!");
             end = true;
         }
         if(!canBeginFlip && !flipped && arm.isAtCoords()){ // waits for arm to move up 10 before flipping back upright
+            System.out.println("Arm has moved up 10 inches");
             canBeginFlip = true;
             arm.setArm1SpeedMultiplier(ArmConstants.COMPLEMENTING_FLIP_SPEED); // set speed multipliers
             arm.setArm2SpeedMultiplier(ArmConstants.SPEED_DEC_ON_UNFLIP);
@@ -45,6 +48,7 @@ public class FlipArmCommand extends CommandBase {
             arm.setTargetAngle2(ArmConstants.ARM_2_INITIAL_ANGLE);
         }
         if(canBeginFlip && arm.isAtCoords()){
+            System.out.println("Arm is now at starting config");
             end = true;
         }
     }
