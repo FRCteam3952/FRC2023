@@ -26,12 +26,12 @@ public final class Constants {
     public static class ArmConstants {
 
         // All constants are in inches
-        public static final double ORIGIN_HEIGHT = 42.0;
+        public static final double ORIGIN_HEIGHT = 42d;
         public static final double LIMB1_LENGTH = 32.5;
         public static final double LIMB2_LENGTH = 29d;
 
         public static final double ANGLE_DELTA = 5.0;
-        public static final double MAX_REACH_REDUCTION = 1; // change to be correct later
+        public static final double MAX_REACH_REDUCTION = 0; // change to be correct later
         public static final double MIN_HOR_DISTANCE = 6; // change to be correct later
 
         public static final double PIVOT_SPEED = 0.1;
