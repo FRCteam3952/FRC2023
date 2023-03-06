@@ -22,7 +22,7 @@ public class FlipArmCommand extends CommandBase {
     public void initialize() {
         arm.setControlMode(false);
         if(!flipped) {
-            arm.moveVector(0, 10, 0); //move arm up 10 inches
+            arm.moveVector(0, 20, 0); //move arm up 10 inches
         } else {
             arm.setArm1SpeedMultiplier(ArmConstants.COMPLEMENTING_FLIP_SPEED); // set speed multipliers 
             arm.setArm2SpeedMultiplier(ArmConstants.SPEED_DEC_ON_FLIP);
@@ -39,10 +39,10 @@ public class FlipArmCommand extends CommandBase {
         }
         if(!canBeginFlip && !flipped && arm.isAtCoords()){ // waits for arm to move up 10 before flipping back upright
             System.out.println("Arm has moved up 10 inches");
-            canBeginFlip = true;
-            arm.setArm1SpeedMultiplier(ArmConstants.COMPLEMENTING_FLIP_SPEED); // set speed multipliers
-            arm.setArm2SpeedMultiplier(ArmConstants.SPEED_DEC_ON_UNFLIP);
-            arm.setTargetCoordinates(ArmConstants.STARTING_COORDS[0], ArmConstants.STARTING_COORDS[1], 0);
+            //canBeginFlip = true;
+            //arm.setArm1SpeedMultiplier(ArmConstants.COMPLEMENTING_FLIP_SPEED); // set speed multipliers
+            //arm.setArm2SpeedMultiplier(ArmConstants.SPEED_DEC_ON_UNFLIP);
+            //arm.setTargetCoordinates(ArmConstants.STARTING_COORDS[0], ArmConstants.STARTING_COORDS[1], 0);
         }
         if(canBeginFlip && arm.isAtCoords()){
             System.out.println("Arm is now at starting config");
