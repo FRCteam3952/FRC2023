@@ -290,6 +290,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
      * @param trajectory the trajectory to follow
      * @return the command to follow the trajectory
      */
+    
     public Command generateRamseteCommand(Trajectory trajectory) {
         RamseteCommand ramseteCommand = new RamseteCommand(
                 trajectory,
@@ -299,7 +300,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
                 DriveConstants.DRIVE_KINEMATICS,
                 this::getWheelSpeeds,
                 new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
-                new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
+             new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
                 // RamseteCommand passes volts to the callback
                 this::tankDriveVolts,
                 this
@@ -318,7 +319,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegreesYaw())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
+        /*odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegreesYaw())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
 
         if (RobotContainer.inTeleop) {
             if (Math.abs(this.joystick.getHorizontalMovement()) < 0.1 && Math.abs(this.joystick.getLateralMovement()) < 0.1) {
@@ -368,6 +369,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
         // System.out.println("FL: " + getFrontLeftEncoder() + ", FR: " + getFrontRightEncoder() + ", RL: " + getRearLeftEncoder() + ", RR: " + getRearRightEncoder());
         // System.out.println("FL: " + frontLeft.get() + ", FR: " + frontRight.get() + ", RL: " + rearLeft.get() + ", RR: " + rearRight.get());
+        */
 
     }
 

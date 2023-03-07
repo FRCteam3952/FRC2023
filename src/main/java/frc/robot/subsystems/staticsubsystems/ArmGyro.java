@@ -6,13 +6,13 @@ public class ArmGyro {
 
     public static SerialPort arduino;
     public static double gyro_adjust = 0.0;
+    public static double saved_angle = 0.0;
 
     static {
         SerialPort.Port[] port_types = new SerialPort.Port[]{SerialPort.Port.kUSB, SerialPort.Port.kUSB1, SerialPort.Port.kUSB2};
         for (SerialPort.Port port_type : port_types) {
             try {
-                arduino = new SerialPort(9600, port_type);
-                arduino.setReadBufferSize(1);
+                arduino = new SerialPort(19200, port_type);
                 System.out.println("Arm Gyro Connected");
                 break;
             } catch (Exception e) {
@@ -32,18 +32,27 @@ public class ArmGyro {
     public static double getGyroAngle() {
         if (arduino != null && arduino.getBytesReceived() > 0) {
             try {
-                var val = Double.parseDouble(arduino.readString()) + gyro_adjust;
-                return val;
+                String[] read = arduino.readString().split("\n");
+                if (read.length > 0){
+                    String angle = read[read.length-1];
+                    double val = Double.parseDouble(angle) - gyro_adjust;
+                    saved_angle = val;
+                    return val;
+                }
+                else{
+                    return saved_angle;
+                }
+
             } catch (Exception e) {
-                return 0.0;
+                return saved_angle;
             }
         } else {
-            return 0.0;
+            return saved_angle;
         }
 
     }
 
     public static void setGyroAngle(double angle) {
-        gyro_adjust = -getGyroAngle() + angle;
+        gyro_adjust = saved_angle;
     }
 }

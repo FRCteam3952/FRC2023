@@ -87,9 +87,9 @@ public class RobotContainer {
     private final Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
     private final Command customAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
     private final Command placeConeCommandAuto = Autos.armPlaceConeAuto(arm, clawGrip);
-    private final Command balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
-            driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand);
-
+    //private final Command balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
+    //        driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand);
+    
     private Command m_autonomousCommand;
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -145,8 +145,8 @@ public class RobotContainer {
     public void onRobotInit() {
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
         m_chooser.addOption("My Auto", customAuto);
-        m_chooser.addOption("Balance Charge Station", balanceChargeStationAuto);
-        m_chooser.addOption("woohoo arm place cone yay", placeConeCommandAuto);
+        //m_chooser.addOption("Balance Charge Station", balanceChargeStationAuto);
+        //m_chooser.addOption("woohoo arm place cone yay", placeConeCommandAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
 
         /**
@@ -180,10 +180,10 @@ public class RobotContainer {
             DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationRedJSON, ex.getStackTrace());
         }
 
-        driveForwardOverChargeStationBlueCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationBlueTraj);
-        driveBackwardsOntoChargeStationBlueCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationBlueTraj);
-        driveForwardOverChargeStationRedCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationRedTraj);
-        driveBackwardsOntoChargeStationRedCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationRedTraj);
+        //driveForwardOverChargeStationBlueCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationBlueTraj);
+        //driveBackwardsOntoChargeStationBlueCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationBlueTraj);
+        //driveForwardOverChargeStationRedCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationRedTraj);
+        //driveBackwardsOntoChargeStationRedCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationRedTraj);*/
     }
 
     public void onAutonInit() {

@@ -116,6 +116,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.cur_z = ArmConstants.STARTING_COORDS[2];
         this.targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
         this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
+        ArmGyro.setGyroAngle(0);
     }
 
     public PIDController getPID1() {
@@ -388,10 +389,9 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
         // System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
-        //System.out.println("Arm2 Angle: " + (90 + getCurrentAnglesDeg()[0] - MPU6050.getGyroX()));
-        ArmGyro.poke();
+        System.out.println("Arm2 Angle: " + ArmGyro.getGyroAngle());
         //System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
-        System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
+        //System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
         // System.out.println("CURRENT TARGET COORDS ARM: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM LIMIT SWITCHES: LIM1: " + this.getPivot1LimitPressed() + ", LIM2: " + this.getPivot2LimitPressed());
         
@@ -405,6 +405,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         if (resetPivot2) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+            ArmGyro.setGyroAngle(0);
         }
 
         if(resetPivot1 && resetPivot2) {

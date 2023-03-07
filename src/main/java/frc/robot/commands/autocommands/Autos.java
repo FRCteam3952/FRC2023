@@ -41,10 +41,9 @@ public final class Autos {
     }
 
     // Autonomous mode for balancing charge station
-    public static CommandBase balanceAuto(Command driveForwardOverChargeStationBlueCommand, 
-            Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
-            Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation) {
-
+    /*public static CommandBase balanceAuto(Command driveForwardOverChargeStationBlueCommand, 
+        Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
+        Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation) {
         if (blueTeam) {
             return Commands.runOnce(() -> {
                 // Calibration code if needed
@@ -58,7 +57,7 @@ public final class Autos {
             .andThen(driveBackwardsOntoChargeStationRedCommand)
             .andThen(balanceChargeStation);
         }
-    }
+    }*/
 
     // In progress
     public static CommandBase armPlaceConeAuto(ArmSubsystem arm, ClawGripSubsystem claw) {
