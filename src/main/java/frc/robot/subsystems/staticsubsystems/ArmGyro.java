@@ -12,6 +12,7 @@ public class ArmGyro {
         for (SerialPort.Port port_type : port_types) {
             try {
                 arduino = new SerialPort(9600, port_type);
+                arduino.setReadBufferSize(1);
                 System.out.println("Arm Gyro Connected");
                 break;
             } catch (Exception e) {
@@ -31,8 +32,7 @@ public class ArmGyro {
     public static double getGyroAngle() {
         if (arduino != null && arduino.getBytesReceived() > 0) {
             try {
-                var str = arduino.readString().replace("\n", "");
-                var val = Double.parseDouble(str) + gyro_adjust;
+                var val = Double.parseDouble(arduino.readString()) + gyro_adjust;
                 return val;
             } catch (Exception e) {
                 return 0.0;
