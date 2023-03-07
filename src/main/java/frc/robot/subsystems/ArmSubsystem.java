@@ -14,6 +14,7 @@ import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.PositionConstants;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
+import frc.robot.util.MathUtil;
 import frc.robot.util.NetworkTablesUtil;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -285,7 +286,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public Pose3d getClawPose() {
         this.updateCurrentCoordinates(); // Make sure the coordinates are the latest ones.
-        return new Pose3d(this.cur_x, this.cur_z, this.cur_y, new Rotation3d()); // z and y are swapped to handle our global coordinate system (the final coord parameter is the height).
+        return new Pose3d(MathUtil.inchesToMeters(this.cur_x), MathUtil.inchesToMeters(this.cur_z), MathUtil.inchesToMeters(this.cur_y), new Rotation3d()); // z and y are swapped to handle our global coordinate system (the final coord parameter is the height).
     }
 
     @Override

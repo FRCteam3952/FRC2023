@@ -1,6 +1,8 @@
 package frc.robot.util;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.FieldConstants;
 
 /**
@@ -133,5 +135,24 @@ public final class MathUtil {
      */
     public static Pose3d mirrorPoseOnFieldForOppositeSide(Pose3d pose) {
         return new Pose3d(mirrorValueOnFieldForOppositeSide(pose.getX()), pose.getY(), pose.getZ(), pose.getRotation());
+    }
+
+    /**
+     * Given the robot's field relative position, and the claw's robot relative position, find the claw's field relative position. 
+     * @param robotPoseFieldRelative The robot's field relative position.
+     * @param clawPoseRobotRelative The claw's robot relative position (rotation not necessary). This could be anything, but we only use it for the claw.
+     * @return The claw's field relative position
+     */
+    public static Pose2d findFieldRelativePose(Pose2d robotPoseFieldRelative, Pose2d clawPoseRobotRelative) {
+        double robotX = robotPoseFieldRelative.getX(), robotY = robotPoseFieldRelative.getY();
+        double clawX = clawPoseRobotRelative.getX(), clawY = clawPoseRobotRelative.getY();
+
+        Rotation2d robotAngle = robotPoseFieldRelative.getRotation();
+        double newClawX = clawX * robotAngle.getCos() - clawY * robotAngle.getSin();
+        double newClawY = clawX * robotAngle.getSin() + clawY * robotAngle.getCos();
+
+        double fieldClawX = newClawX + robotX;
+        double fieldClawY = newClawY + robotY;
+        return new Pose2d(fieldClawX, fieldClawY, new Rotation2d());
     }
 }

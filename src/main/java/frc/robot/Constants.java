@@ -6,6 +6,7 @@ package frc.robot;
 
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 /**
@@ -49,10 +50,6 @@ public final class Constants {
      * Constants for the Claw
      */
     public static class ClawConstants {
-        public static final double CLAW_GRIP_SPEED = 0.2; // change to what this actually is
-        public static final double CLAW_GRIP_SPEED_PASSIVE = 0.1;
-        public static final double MAX_GRIP_ENCODER_VALUE = 3; // change to what this actually is
-        public static final double MIN_GRIP_ENCODER_VALUE = 0; //change to what this actually is
         public static final double CLAW_ROTATE_SPEED = 0.1;
         public static final double ANGLE_DELTA = 2;
         public static final double MIN_ROTATION_ENCODER_VALUE = 0; // change to what it actually is
@@ -282,7 +279,42 @@ public final class Constants {
             public static final double Z_MIDDLE_PLATFORM_HEIGHT     = 23.5;
             public static final double Z_TOP_PLATFORM_HEIGHT        = 35.5;
 
-            
+            public static final Pose3d[][] POLE_POSITIONS = new Pose3d[3][6];
+            public static final Pose3d[][] PLATFORM_POSITIONS = new Pose3d[3][3];
+
+            private static final double[] X_COORDS = new double[] { // len3 all
+                X_DISTANCE_TO_TOP_SECTION, X_DISTANCE_TO_MIDDLE_SECTION, X_DISTANCE_TO_BOTTOM_SECTION
+            };
+
+            private static final double[] POLE_Y_COORDS = new double[] { // len6 pole
+                Y_DISTANCE_TO_POLE_ONE, Y_DISTANCE_TO_POLE_TWO, Y_DISTANCE_TO_POLE_THREE, Y_DISTANCE_TO_POLE_FOUR, Y_DISTANCE_TO_POLE_FIVE, Y_DISTANCE_TO_POLE_SIX
+            };
+
+            private static final double[] POLE_Z_COORDS = new double[] { // len3 pole vertical
+                Z_TOP_POLE_HEIGHT, Z_MIDDLE_POLE_HEIGHT, 0.0
+            };
+
+            private static final double[] PLATFORM_Y_COORDS = new double[] { // len3 platform
+                Y_DISTANCE_TO_PLATFORM_ONE, Y_DISTANCE_TO_PLATFORM_TWO, Y_DISTANCE_TO_PLATFORM_THREE
+            };
+
+            private static final double[] PLATFORM_Z_COORDS = new double[] { // len3 platform vertical
+                Z_TOP_PLATFORM_HEIGHT, Z_MIDDLE_PLATFORM_HEIGHT, 0.0
+            };
+
+            static {
+                for(int i = 0; i < 3; i++) { // POLE
+                    for(int j = 0; j < 5; j++) {
+                        POLE_POSITIONS[i][j] = new Pose3d(X_COORDS[i], POLE_Y_COORDS[j], POLE_Z_COORDS[i], new Rotation3d());
+                    }
+                }
+
+                for(int i = 0; i < 3; i++) { // PLATFORM
+                    for(int j = 0; j < 3; j++) {
+                        PLATFORM_POSITIONS[i][j] = new Pose3d(X_COORDS[i], PLATFORM_Y_COORDS[j], PLATFORM_Z_COORDS[i], new Rotation3d());
+                    }
+                }
+            }
         }
 
         public static class AprilTagConstants {

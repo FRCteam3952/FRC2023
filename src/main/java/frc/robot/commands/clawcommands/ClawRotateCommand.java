@@ -5,27 +5,36 @@ import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ClawRotationSubsystem;
 
 public class ClawRotateCommand extends CommandBase {
+    private static final double CORRECT_CLAW_ROTATION_AT_DELTA = 10;
     private static final double CLAW_ROTATION_SPEED = 0.05;
 
     private final ClawRotationSubsystem claw;
     private final XboxController joystick;
+
+    private double previousRotationsAtZero;
 
     public ClawRotateCommand(ClawRotationSubsystem claw, XboxController joystick) {
         this.claw = claw;
         this.joystick = joystick;
 
         addRequirements(claw);
+        this.previousRotationsAtZero = this.claw.getClawAngle();
     }
 
     @Override
     public void execute() {
         int fov = this.joystick.controller.getHID().getPOV();
         if(fov == 90) {
-            this.claw.setClawRotateSpeed(CLAW_ROTATION_SPEED);
+            this.claw.setClawRotateSpeed(CLAW_ROTATION_SPEED); // clockwise
         } else if(fov == 270) {
-            this.claw.setClawRotateSpeed(-CLAW_ROTATION_SPEED);
+            this.claw.setClawRotateSpeed(-CLAW_ROTATION_SPEED); // counterclockwise
         } else {
-            this.claw.setClawRotateSpeed(0.0);
+            double difference = this.claw.getClawAngle() - this.previousRotationsAtZero; // if this is positive, we've drifted clockwise. if negative, we've drifted cc-wise (i hope)
+            if(Math.abs(difference) > CORRECT_CLAW_ROTATION_AT_DELTA) {
+                this.claw.setClawRotateSpeed(Math.signum(-difference) * CLAW_ROTATION_SPEED);
+            } else {
+                this.claw.setClawRotateSpeed(0.0);
+            }
         }
         // this.claw.setClawRotateSpeed(this.joystick.getLeftHorizontalMovement() * 0.1);
         /*
