@@ -3,6 +3,7 @@ package frc.robot.commands.armcommands;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.staticsubsystems.LimeLight;
 
 public class ArmTestCommand extends CommandBase {
     private final ArmSubsystem arm;
@@ -25,6 +26,11 @@ public class ArmTestCommand extends CommandBase {
     public void execute() {
         arm.setPivot1Speed(-joystick.getRightLateralMovement() / 2);
         arm.setPivot2Speed(joystick.getLeftLateralMovement() / 2);
+
+        arm.setTurretSpeed((joystick.controller.getLeftTriggerAxis() - joystick.controller.getRightTriggerAxis()) * 0.5);
+
+        System.out.println(LimeLight.getArea());
+        /*
         if (joystick.getRawButtonWrapper(5)) { // THIS IS THE XBOX VALUE. Original FlightJoystick 8
             arm.setTurretSpeed(0.3);
         } else if (joystick.getRawButtonWrapper(6)) { // THIS IS THE XBOX VALUE. Original FlightJoystick 9
@@ -32,6 +38,7 @@ public class ArmTestCommand extends CommandBase {
         } else {
             arm.setTurretSpeed(0);
         }
+        */
     }
 
     // Called once the command ends or is interrupted.

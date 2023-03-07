@@ -88,7 +88,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.frontLeftMotor.setInverted(true);
         this.rearLeftMotor.setInverted(true);
 
-        this.odometry = new DifferentialDriveOdometry(new Rotation2d(RobotGyro.getGyroAngleDegrees()), 0, 0);
+        this.odometry = new DifferentialDriveOdometry(new Rotation2d(RobotGyro.getGyroAngleDegreesYaw()), 0, 0);
 
         this.joystick = joystick;
 
@@ -125,7 +125,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         }
         double speed = MathUtil.distance(0, x, 0, y); // Speed should take the distance to move into account
         double target = normalizeAngle(Math.toDegrees((Math.atan2(y, x))) - 90); // Normalize the target angle based on the slope from (0,0) to the point on the unit circle from joystick
-        double current = swapDirection ? normalizeAngle(RobotGyro.getGyroAngleDegrees() + 180) : normalizeAngle(RobotGyro.getGyroAngleDegrees()); // Our current angle, normalized and accounting for if we're going "backwards"
+        double current = swapDirection ? normalizeAngle(RobotGyro.getGyroAngleDegreesYaw() + 180) : normalizeAngle(RobotGyro.getGyroAngleDegreesYaw()); // Our current angle, normalized and accounting for if we're going "backwards"
 
         // The largest possible movement is 90 degrees because our robot is bi-directional (forwards or backwards does not matter on the tank drive)
         // Since the maximum distance from the x axis is 90 degrees, we check for the shortest angle between the two. If the smallest angle is greater than 90, we need to switch the side we're looking at.
@@ -191,7 +191,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     public double findZRotationSpeedFromAngle(double angle) {
 
-        double angleDifference = angle - RobotGyro.getGyroAngleDegrees(); // gets angle difference
+        double angleDifference = angle - RobotGyro.getGyroAngleDegreesYaw(); // gets angle difference
 
         if (Math.abs(angleDifference) >= 180) {
             /*
@@ -231,7 +231,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        odometry.resetPosition(new Rotation2d(RobotGyro.getGyroAngleDegrees()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), pose);
+        odometry.resetPosition(new Rotation2d(RobotGyro.getGyroAngleDegreesYaw()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), pose);
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -316,11 +316,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegrees())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
+        odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegreesYaw())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
 
         if (RobotContainer.inTeleop) {
             if (Math.abs(this.joystick.getHorizontalMovement()) < 0.1 && Math.abs(this.joystick.getLateralMovement()) < 0.1) {
-                var gyroRad = Math.toRadians(RobotGyro.getGyroAngleDegrees());
+                var gyroRad = Math.toRadians(RobotGyro.getGyroAngleDegreesYaw());
                 odometry.resetPosition(new Rotation2d(gyroRad), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), new Pose2d(NetworkTablesUtil.getJetsonPoseMeters(), new Rotation2d(gyroRad)));
             }
         }
@@ -340,7 +340,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
                     generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(3)).schedule();
                     break;
                 default:
-                    System.out.println("No tag selected");
+                    // System.out.println("No tag selected");
                     break;
             }
         } else {
@@ -355,7 +355,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
                     generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(8)).schedule();
                     break;
                 default:
-                    System.out.println("No tag selected");
+                    // System.out.println("No tag selected");
                     break;
             }
         }

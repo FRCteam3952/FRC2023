@@ -2,7 +2,6 @@ package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
@@ -11,18 +10,21 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
  * Moves arm on the turret
  */
 public class ArmControlCommand extends CommandBase {
-    private static final double DESIRED_AREA = 369; // in pixels probably, can tune later
+    private static final double DESIRED_AREA_CONE = 5000; // tentative measurement, pixels
+    private static final double DESIRED_AREA_CUBE = 420; // measure later
 
     private final ArmSubsystem arm;
     private final XboxController joystick;
-    private static final double AREA_CONST = 60; // can tune later
 
-    // inches per 20ms
+    // Inches per 20ms
     private static final double X_SPEED = 0.3;
     private static final double Y_SPEED = 0.3;
     private static final double Z_SPEED = 0.3;
+    private static final double EXTEND_RETRACT_SPEED = 0.02;
 
-    private static final double TURRET_SPEED = 0.2;
+    private static final double TURRET_SPEED = 0.5;
+
+    private boolean detectCone = true; // True -> vision is looking for cones, False -> vision is looking for cubes, TODO: implement toggle
 
     public ArmControlCommand(ArmSubsystem arm, XboxController joystick) {
         this.arm = arm;
@@ -33,50 +35,79 @@ public class ArmControlCommand extends CommandBase {
 
 
     // Gets adjustments from limelight and converts them to position adjustments
-    private double[] getAdjustmentFromError() {
-        double[] adjustments = new double[4];
-        double turretAngle = arm.getCurrentAnglesRad()[2];
-        double zAdjustment = (DESIRED_AREA - LimeLight.getArea()) / AREA_CONST; // z axis from perspective of the camera
+    private double[] getAdjustmentFromError(boolean flipped) {
+        double[] adjustments = new double[3];
 
-        adjustments[0] = Math.sin(turretAngle) * zAdjustment; // x-axis adjustment
+        if(flipped){
 
-        adjustments[1] = LimeLight.getYAdjustment(); // y-axis adjustment
+            double yAdjustment = detectCone ? (DESIRED_AREA_CONE - LimeLight.getArea()) / DESIRED_AREA_CONE : 
+                    (DESIRED_AREA_CUBE - LimeLight.getArea()) / DESIRED_AREA_CUBE; // y axis from perspective of the camera
+            yAdjustment = yAdjustment > 1 ? 1 : yAdjustment;
+    
+            adjustments[0] = LimeLight.getYAdjustment(); // x-axis adjustment
+    
+            adjustments[1] = yAdjustment; // y-axis adjustment
+    
+            adjustments[2] = LimeLight.getXAdjustment(); // z-axis adjustment
+    
+        }
+        else{
 
-        adjustments[2] = Math.cos(turretAngle) * zAdjustment; // z-axis adjustment
-
-        adjustments[3] = LimeLight.getXAdjustment(); // turret angle adjustment
-
+            double xAdjustment = detectCone ? (DESIRED_AREA_CONE - LimeLight.getArea()) / DESIRED_AREA_CONE : 
+                    (DESIRED_AREA_CUBE - LimeLight.getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
+            xAdjustment = xAdjustment > 1 ? 1 : xAdjustment;
+    
+            adjustments[0] = xAdjustment; // x-axis adjustment
+    
+            adjustments[1] = LimeLight.getYAdjustment(); // y-axis adjustment
+    
+            adjustments[2] = LimeLight.getXAdjustment(); // z-axis adjustment
+    
+        }
+            
         return adjustments;
+
     }
 
     // Primary arm control
     private void primaryArmControl() {
-        if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
-            double[] adjustments = this.getAdjustmentFromError();
-            arm.setTurretSpeed(adjustments[3] * TURRET_SPEED);
-            arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, adjustments[2] * Z_SPEED);
-        } else {
-            double y = 0;
-            if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_UP_BUTTON_NUMBER)) {
-                y = Y_SPEED;
-            } else if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_DOWN_BUTTON_NUMBER)) {
-                y = -Y_SPEED;
+
+        if(this.arm.getControlMode()){ // only run when arm is in manual control
+            if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
+                arm.setControlDimensions(false);
+                double[] adjustments = this.getAdjustmentFromError(this.arm.getFlipped());
+                //arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, adjustments[2] * Z_SPEED);
+                System.out.println(adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
             }
-            arm.moveVector(joystick.getLateralMovement() * X_SPEED, y, joystick.getHorizontalMovement() * Z_SPEED);
-        }
-    }
+            else{
+                this.arm.moveVector(-joystick.getLeftLateralMovement() * X_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
+                this.arm.setTurretSpeed(TURRET_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()));     
+    
+                if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.FLIP_ARM_BUTTON_NUMBER)) {
+                    this.arm.setFlipped(!this.arm.getFlipped());
+                }
 
-    // Moves arm to preset distance above the floor for picking up gamepieces 
-    private void pickUpPositionFlipped() {
-        if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_FLIPPED)) {
-            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], true);
-        }
-    }
+                double turretAngleRad = this.arm.getCurrentAnglesRad()[2];
+                if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.EXTEND_ARM_BUTTON_NUMBER)) {
+                    this.arm.moveVector(Math.sin(turretAngleRad) * EXTEND_RETRACT_SPEED, // x
+                            0, // y
+                            Math.cos(turretAngleRad) * EXTEND_RETRACT_SPEED); // z
+                }
 
-    private void pickUpPositionNotFlipped() {
-        if (joystick.getRawButtonWrapper(ControllerConstants.MOVE_ARM_TO_PICK_UP_POSITION_BUTTON_NUMBER_NOT_FLIPPED)) {
-            arm.setIntendedCoordinates(arm.getCurrentCoordinates()[0], ArmConstants.PICK_UP_POSITION_Y, arm.getCurrentCoordinates()[2], false);
+                if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.RETRACT_ARM_BUTTON_NUMBER)) {
+                    this.arm.moveVector(Math.sin(turretAngleRad) * -EXTEND_RETRACT_SPEED, // x
+                            0, // y
+                            Math.cos(turretAngleRad) * -EXTEND_RETRACT_SPEED); // z
+                }
+                
+                this.arm.setControlDimensions(true);
+            }
         }
+    
+        if(this.joystick.getRawButtonPressedWrapper(4)){
+            this.arm.setPIDControlState(!this.arm.getPIDControlOn());
+        }
+        
     }
 
     // Called when the command is initially scheduled.
@@ -87,8 +118,6 @@ public class ArmControlCommand extends CommandBase {
     @Override
     public void execute() {
         primaryArmControl();
-        pickUpPositionFlipped();
-        pickUpPositionNotFlipped();
     }
 
     // Called once the command ends or is interrupted.

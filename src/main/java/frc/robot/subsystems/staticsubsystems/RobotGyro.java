@@ -23,9 +23,18 @@ public class RobotGyro {
 
     private static double angleAdjust = 0;
 
-    public static double getGyroAngleDegrees() {
+    public static double getGyroAngleDegreesYaw() {
         return gyro.getAngle() + angleAdjust;
     }
+
+    public static double getGyroAngleDegreesPitch() {
+        return gyro.getXComplementaryAngle() + angleAdjust;
+    }
+
+    public static double getGyroAngleDegreesRoll() {
+        return gyro.getYComplementaryAngle() + angleAdjust;
+    }
+    
 
     public static void setGyroAxis(ADIS16470_IMU.IMUAxis axis) {
         gyro.setYawAxis(axis);

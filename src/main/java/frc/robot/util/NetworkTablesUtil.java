@@ -32,22 +32,22 @@ public class NetworkTablesUtil {
 
     public static float getLimeLightErrorX() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0})[1].floatValue();
+        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[1].floatValue();
     }
 
     public static float getLimeLightErrorY() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0})[2].floatValue();
+        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[2].floatValue();
     }
 
     public static float getLimeLightArea() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0})[3].floatValue();
+        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[3].floatValue();
     }
 
     public static float getConeOrientation() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0})[0].floatValue();
+        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[0].floatValue();
     }
 
     // Gets key from keyboard

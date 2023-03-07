@@ -12,15 +12,14 @@ import frc.robot.subsystems.staticsubsystems.RobotGyro;
 /**
  * The command to drive the robot manually with joysticks.
  */
-public class ManualDriveCommand extends CommandBase {
-    private static final double MICRO_PP = 0.2; // Micro Pinpoint Positioning :tm:
+public class BalanceChargeStationCommand extends CommandBase {
 
     private final DriveTrainSubsystem driveTrain;
-    private final FlightJoystick joystick;
 
-    public ManualDriveCommand(DriveTrainSubsystem driveTrain, FlightJoystick joystick) {
+    private final double kP = 1/60;
+
+    public BalanceChargeStationCommand(DriveTrainSubsystem driveTrain) {
         this.driveTrain = driveTrain;
-        this.joystick = joystick;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(driveTrain);
     }
@@ -33,20 +32,8 @@ public class ManualDriveCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (this.joystick.getRawButtonWrapper(8)) {
-            RobotGyro.resetGyroAngle();
-        }
-        this.driveTrain.tankDrive(this.joystick.getLateralMovement(), this.joystick.getRotation());
-        // this.driveTrain.tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(this.joystick.getHorizontalMovement(), -this.joystick.getLateralMovement());
-        
-        
-        // TODO: DISABLE THIS WHEN WE GO TO MECANUM x TANK DRIVE.
-        int pov = this.joystick.joystick.getHID().getPOV();
-        if(pov == 0) {
-            this.driveTrain.tankDrive(-MICRO_PP, 0);
-        } else if (pov == 180) {
-            this.driveTrain.tankDrive(MICRO_PP, 0);
-        }
+        double speed = RobotGyro.getGyroAngleDegreesPitch() * kP; // tune later
+        driveTrain.tankDrive(speed, 0);
     }
 
     // Called once the command ends or is interrupted.

@@ -24,6 +24,7 @@ import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
+import frc.robot.commands.drivecommands.BalanceChargeStationCommand;
 import frc.robot.commands.drivecommands.ManualDriveCommand;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.commands.autocommands.Autos;
@@ -61,6 +62,7 @@ public class RobotContainer {
     public final TrajectoryReader trajectoryReader = new TrajectoryReader("robogui", "trajectory");
 
     public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
+    public final BalanceChargeStationCommand balanceCommand = new BalanceChargeStationCommand(driveTrain);
 
     // these ones got changed to xbox
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
@@ -73,8 +75,10 @@ public class RobotContainer {
     //private Trajectory autonTrajectory1 = new Trajectory(); // placeholder
     public Command trajectory1Command;*/
 
-    private static final Command defaultAuto = Autos.defaultAuto(); // placeholder, pass in subsystems if needed
-    private static final Command customAuto = Autos.exampleAuto(); // placeholder, pass in subsystems if needed
+    private final Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
+    private final Command customAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
+    private final Command placeConeCommandAuto = Autos.armPlaceConeAuto(arm, clawGrip);
+
     private Command m_autonomousCommand;
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -114,8 +118,7 @@ public class RobotContainer {
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
         // armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
-        armController.joystick.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
-
+        xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
     }
 
     /**
@@ -131,6 +134,7 @@ public class RobotContainer {
     public void onRobotInit() {
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
         m_chooser.addOption("My Auto", customAuto);
+        m_chooser.addOption("woohoo arm place cone yay", placeConeCommandAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
 
         /*try {
@@ -156,10 +160,12 @@ public class RobotContainer {
 
     public void onTeleopInit() {
         inTeleop = true;
+        this.arm.setPIDControlState(false);
+        
 
         this.driveTrain.setDefaultCommand(this.manualDrive);
-        this.arm.setDefaultCommand(this.testArmControl);
-        // this.arm.setDefaultCommand(this.armControl);
+        //this.arm.setDefaultCommand(this.testArmControl);
+        this.arm.setDefaultCommand(this.armControl);
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand);
         this.clawRotation.setDefaultCommand(this.clawRotateCommand);
     }

@@ -24,10 +24,11 @@ $ git clone https://github.com/FRCteam3952/FRC2023.git
 ### Basic Bash Commands
 1. Run `./gradlew` to download gradle and needed FRC/Vendor libraries
 2. Run `./gradlew build` to build the code.  Use the `--info` flag for more details
-3. To deploy code into the robot, you must first connect to the robot's Wi-Fi network, then Run `./gradlew deploy` 
-4. It is recommended to run the clean task before deploying again to clear previous deployed binaries. To do this, run `./gradlew clean deploy`
+3. To deploy code into the robot, you must first connect to the robot's Wi-Fi network then run `./gradlew deploy` 
+4. It is recommended to run the clean task before deploying again to clear previous deployed binaries run `./gradlew clean deploy`
 * Run `./gradlew test` to run all of the JUnit tests
 * Run `./gradlew tasks` to see available options
+If you run into any gradle errors remember to check your java installation path 
 
 ## Contributing
 * Read documentation for [WPILib](https://docs.wpilib.org/en/latest/)
@@ -40,3 +41,4 @@ $ git clone https://github.com/FRCteam3952/FRC2023.git
 * [FRC2023RobotGUI](https://github.com/SeanSon2005/FRC2023RobotGUI)
 * [TroyFRC2023VisionCode](https://github.com/bobandjoe/TroyFRC2023VisionCode)
 * [FRC2023_Vision](https://github.com/FRCteam3952/FRC2023_Vision)
+* [FRC2023_3d_ArmSimulator](https://github.com/FRCteam3952/FRC2023_3d_ArmSimulator)

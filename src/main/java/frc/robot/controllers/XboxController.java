@@ -62,4 +62,8 @@ public class XboxController extends AbstractJoystick {
     public boolean getRawButtonReleasedWrapper(int button) {
         return controller.getHID().getRawButtonReleased(button);
     }
+
+    public boolean getRawButtonPressedWrapper(int button){
+        return controller.getHID().getRawButtonPressed(button);
+    }
 }
