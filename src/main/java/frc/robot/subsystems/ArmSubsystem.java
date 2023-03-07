@@ -68,8 +68,8 @@ public class ArmSubsystem extends SubsystemBase {
         this.turretEncoder = this.turret.getEncoder();
 
         // Arm Angle Conversion Factors
-        this.pivot1Encoder.setPositionConversionFactor(2.88); // 125:1 gearbox 
-        this.pivot2Encoder.setPositionConversionFactor(2.88); // 125:1 gearbox
+        this.pivot1Encoder.setPositionConversionFactor(2.86); // 125:1 gearbox
+        this.pivot2Encoder.setPositionConversionFactor(2.84); // 125:1 gearbox
         this.turretEncoder.setPositionConversionFactor(1); // 60:1 gearbox with drive wheel to lazy susan ratio
         // END
 
@@ -78,9 +78,9 @@ public class ArmSubsystem extends SubsystemBase {
         this.turretEncoder.setPosition(0);
 
         // TODO: TUNE
-        this.pidController1 = new PIDController(1.69e-2, 0, 0); // nice
+        this.pidController1 = new PIDController(1.8e-2, 0, 0); // nice
         this.pidController1.setTolerance(ArmConstants.PID_TOLERANCE);
-        this.pidController2 = new PIDController(9.6e-3, 0, 0);
+        this.pidController2 = new PIDController(1e-2, 0, 0);
         this.pidController2.setTolerance(ArmConstants.PID_TOLERANCE);
         this.pidController3 = new PIDController(9.6e-3, 0, 0);
         this.pidController3.setTolerance(ArmConstants.PID_TOLERANCE);
@@ -110,6 +110,8 @@ public class ArmSubsystem extends SubsystemBase {
         this.cur_x = ArmConstants.STARTING_COORDS[0];
         this.cur_y = ArmConstants.STARTING_COORDS[1];
         this.cur_z = ArmConstants.STARTING_COORDS[2];
+        this.targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
+        this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
     }
 
     public PIDController getPID1() {
@@ -138,6 +140,11 @@ public class ArmSubsystem extends SubsystemBase {
         double angle1 = pivot1Encoder.getPosition();
         double angle2 = pivot2Encoder.getPosition();
         double angle3 = turretEncoder.getPosition();
+
+        if (flipped) { //offset for when arm is flipped because our gearbox is lose for some reason
+            angle1 -= 8;
+            angle2 -= 35;
+        }
 
         return new double[]{angle1, angle2, angle3};
     }
@@ -272,7 +279,7 @@ public class ArmSubsystem extends SubsystemBase {
         setPivot1Speed(p1Speed);
         setPivot2Speed(p2Speed);
 
-        System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
+        // System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
     }
 
     /**
@@ -289,7 +296,7 @@ public class ArmSubsystem extends SubsystemBase {
         }
 
         // Updates target Angles
-        double[] targetAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, flipped);
+        double[] targetAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, getFlipped());
     
         // Stops any updates if IKU is out of bounds or calculation error occurs
         if (Double.isNaN(targetAngles[0]) || Double.isNaN(targetAngles[1]) || Double.isNaN(targetAngles[2])) {
@@ -351,6 +358,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void setFlipped(boolean flipped){
+        if(!flipped){
+            moveVector(0, 10, 0);
+        }
         this.flipped = flipped;
         (new FlipArmCommand(this, flipped)).schedule();
     }

@@ -20,7 +20,7 @@ public class ArmControlCommand extends CommandBase {
     private static final double X_SPEED = 0.3;
     private static final double Y_SPEED = 0.3;
     private static final double Z_SPEED = 0.3;
-    private static final double EXTEND_RETRACT_SPEED = 0.2;
+    private static final double EXTEND_RETRACT_SPEED = 0.02;
 
     private static final double TURRET_SPEED = 0.5;
 
@@ -88,19 +88,18 @@ public class ArmControlCommand extends CommandBase {
                 }
 
                 double turretAngleRad = this.arm.getCurrentAnglesRad()[2];
-                double currentYPos = this.arm.getCurrentCoordinates()[1];
                 if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.EXTEND_ARM_BUTTON_NUMBER)) {
                     this.arm.moveVector(Math.sin(turretAngleRad) * EXTEND_RETRACT_SPEED, // x
-                            currentYPos, // y
+                            0, // y
                             Math.cos(turretAngleRad) * EXTEND_RETRACT_SPEED); // z
                 }
 
                 if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.RETRACT_ARM_BUTTON_NUMBER)) {
                     this.arm.moveVector(Math.sin(turretAngleRad) * -EXTEND_RETRACT_SPEED, // x
-                            currentYPos, // y
+                            0, // y
                             Math.cos(turretAngleRad) * -EXTEND_RETRACT_SPEED); // z
                 }
-    
+                
                 this.arm.setControlDimensions(true);
             }
         }
