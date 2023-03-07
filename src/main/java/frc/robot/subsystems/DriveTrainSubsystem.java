@@ -254,11 +254,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     // Generate command for following a trajectory
-    public Command generateRamseteCommand(Pose2d startPoint, Pose2d endPoint) {
+    public Command generateRamseteCommand(Pose2d startPoint, Pose2d endPoint, boolean reversed) {
         // A trajectory to follow. All units in meters.
-        Trajectory trajectory = this.generateTrajectory(startPoint, List.of(), endPoint);
+        Trajectory trajectory = this.generateTrajectory(startPoint, List.of(), endPoint, reversed);
 
-        return this.followTrajectoryCommand(trajectory);
+        return this.generateRamseteCommand(trajectory);
     }
 
     /**
@@ -266,9 +266,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
      * @param start The start Pose2d
      * @param waypoints A list of Translation2d waypoints to follow. Pass in {@link List#of()} if you don't want any waypoints.
      * @param end The end Pose2d
-     * @return A trajectory. Use this to generate a follow command with {@link #followTrajectoryCommand(Trajectory)}.
+     * @return A trajectory. Use this to generate a follow command with {@link #generateRamseteCommand(Trajectory)}.
      */
-    public Trajectory generateTrajectory(Pose2d start, List<Translation2d> waypoints, Pose2d end) {
+    public Trajectory generateTrajectory(Pose2d start, List<Translation2d> waypoints, Pose2d end, boolean reversed) {
         // Create a voltage constraint to ensure we don't accelerate too fast
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLTS_SECONDS_PER_METER, DriveConstants.KA_VOLTS_SECONDS_SQ_PER_METER), DriveConstants.DRIVE_KINEMATICS, 10);
 
@@ -277,7 +277,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
                 // Add kinematics to ensure max speed is actually obeyed
                 .setKinematics(DriveConstants.DRIVE_KINEMATICS)
                 // Apply the voltage constraint
-                .addConstraint(autoVoltageConstraint);
+                .addConstraint(autoVoltageConstraint)
+                // Set reversed
+                .setReversed(reversed);
 
         // A trajectory to follow. All units in meters.
         return TrajectoryGenerator.generateTrajectory(start, waypoints, end, config);
@@ -288,7 +290,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
      * @param trajectory the trajectory to follow
      * @return the command to follow the trajectory
      */
-    public Command followTrajectoryCommand(Trajectory trajectory) {
+    public Command generateRamseteCommand(Trajectory trajectory) {
         RamseteCommand ramseteCommand = new RamseteCommand(
                 trajectory,
                 this::getPoseMeters,
@@ -331,13 +333,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
         if (blueTeam) { // TODO: adjust tag id's to be correct
             switch (currKey) {
                 case "q":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(1)).schedule();
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(1), false).schedule();
                     break;
                 case "w":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(2)).schedule();
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(2), false).schedule();
                     break;
                 case "e":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(3)).schedule();
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(3), false).schedule();
                     break;
                 default:
                     // System.out.println("No tag selected");
@@ -346,13 +348,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
         } else {
             switch (currKey) {
                 case "q":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(6)).schedule();
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(6), false).schedule();
                     break;
                 case "w":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(7)).schedule();
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(7), false).schedule();
                     break;
                 case "e":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(8)).schedule();
+                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(8), false).schedule();
                     break;
                 default:
                     // System.out.println("No tag selected");

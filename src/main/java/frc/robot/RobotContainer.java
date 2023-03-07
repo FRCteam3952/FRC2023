@@ -71,13 +71,24 @@ public class RobotContainer {
     public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, xboxController);
     // end change to xbox
 
-    /*private String trajectory1JSON = "paths/YourPath.wpilib.json"; // placeholder
-    //private Trajectory autonTrajectory1 = new Trajectory(); // placeholder
-    public Command trajectory1Command;*/
+    private String driveForwardOverChargeStationBlueJSON = "paths/DriveForwardOverChargeStationBlue.wpilib.json"; 
+    private Trajectory driveForwardOverChargeStationBlueTraj = new Trajectory(); 
+    public Command driveForwardOverChargeStationBlueCommand;
+    private String driveBackwardsOntoChargeStationBlueJSON = "paths/DriveBackwardsOntoChargeStationBlue.wpilib.json";
+    private Trajectory driveBackwardsOntoChargeStationBlueTraj = new Trajectory();
+    public Command driveBackwardsOntoChargeStationBlueCommand;
+    private String driveForwardOverChargeStationRedJSON = "paths/DriveForwardOverChargeStationRed.wpilib.json"; 
+    private Trajectory driveForwardOverChargeStationRedTraj = new Trajectory(); 
+    public Command driveForwardOverChargeStationRedCommand;
+    private String driveBackwardsOntoChargeStationRedJSON = "paths/DriveBackwardsOntoChargeStationRed.wpilib.json";
+    private Trajectory driveBackwardsOntoChargeStationRedTraj = new Trajectory();
+    public Command driveBackwardsOntoChargeStationRedCommand;
 
     private final Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
     private final Command customAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
     private final Command placeConeCommandAuto = Autos.armPlaceConeAuto(arm, clawGrip);
+    private final Command balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
+            driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand);
 
     private Command m_autonomousCommand;
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -113,7 +124,7 @@ public class RobotContainer {
         // cancelling on release.
         // driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
 
-        // driverController.joystick.button(ControllerConstants.RUN_GUI_TRAJECTORY_BUTTON_NUMBER).onTrue(this.driveTrain.followTrajectoryCommand(this.trajectoryReader.currentTrajectory));
+        // driverController.joystick.button(ControllerConstants.RUN_GUI_TRAJECTORY_BUTTON_NUMBER).onTrue(this.driveTrain.generateRamseteCommand(this.trajectoryReader.currentTrajectory));
        
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
@@ -134,17 +145,45 @@ public class RobotContainer {
     public void onRobotInit() {
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
         m_chooser.addOption("My Auto", customAuto);
+        m_chooser.addOption("Balance Charge Station", balanceChargeStationAuto);
         m_chooser.addOption("woohoo arm place cone yay", placeConeCommandAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
 
-        /*try {
-            Path trajectory1Path = Filesystem.getDeployDirectory().toPath().resolve(trajectory1JSON);
-            autonTrajectory1 = TrajectoryUtil.fromPathweaverJson(trajectory1Path);
+        /**
+         * Initialize Pathweaver trajectories/commands here
+         */
+        try {
+            Path driveForwardOverChargeStationBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardOverChargeStationBlueJSON);
+            driveForwardOverChargeStationBlueTraj = TrajectoryUtil.fromPathweaverJson(driveForwardOverChargeStationBluePath);
         } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + trajectory1JSON, ex.getStackTrace());
+            DriverStation.reportError("Unable to open trajectory: " + driveForwardOverChargeStationBlueJSON, ex.getStackTrace());
         }
 
-        trajectory1Command = driveTrain.followTrajectoryCommand(autonTrajectory1);*/
+        try {
+            Path driveBackwardsOntoChargeStationBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationBlueJSON);
+            driveForwardOverChargeStationBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationBluePath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationBlueJSON, ex.getStackTrace());
+        }
+
+        try {
+            Path driveForwardOverChargeStationRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardOverChargeStationRedJSON);
+            driveForwardOverChargeStationRedTraj = TrajectoryUtil.fromPathweaverJson(driveForwardOverChargeStationRedPath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + driveForwardOverChargeStationRedJSON, ex.getStackTrace());
+        }
+
+        try {
+            Path driveBackwardsOntoChargeStationRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationRedJSON);
+            driveForwardOverChargeStationBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationRedPath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationRedJSON, ex.getStackTrace());
+        }
+
+        driveForwardOverChargeStationBlueCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationBlueTraj);
+        driveBackwardsOntoChargeStationBlueCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationBlueTraj);
+        driveForwardOverChargeStationRedCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationRedTraj);
+        driveBackwardsOntoChargeStationRedCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationRedTraj);
     }
 
     public void onAutonInit() {
