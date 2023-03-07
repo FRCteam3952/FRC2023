@@ -35,6 +35,18 @@ public class MPU6050 {
         }
     }
 
+    public float getGyroX() {
+        return gyroX;
+    }
+
+    public float getGyroY() {
+        return gyroY;
+    }
+
+    public float getGyroZ() {
+        return gyroZ;
+    }
+
     private void setup() throws InterruptedException {
         gyro.write(0x6B, 0x00); // In register 6B, place a 0. Why? I have no clue
 
@@ -47,7 +59,7 @@ public class MPU6050 {
         // Thread.sleep(20); // we pray
     }
 
-    private void periodic() {
+    public void periodic() {
         readAccelerometerValues();
 
         accAngleX = (float) Math.atan(accY / Math.sqrt(accX * accX + accZ * accZ)) * 180f / (float) Math.PI;
