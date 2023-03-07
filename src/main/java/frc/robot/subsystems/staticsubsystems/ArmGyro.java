@@ -8,11 +8,10 @@ public class ArmGyro {
     public static double gyro_adjust = 0.0;
 
     static {
-        SerialPort.Port[] port_types = new SerialPort.Port[]{SerialPort.Port.kUSB, SerialPort.Port.kUSB1, SerialPort.Port.kUSB2,};
+        SerialPort.Port[] port_types = new SerialPort.Port[]{SerialPort.Port.kUSB, SerialPort.Port.kUSB1, SerialPort.Port.kUSB2};
         for (SerialPort.Port port_type : port_types) {
-            System.out.println(port_type);
             try {
-                arduino = new SerialPort(19200, port_type);
+                arduino = new SerialPort(9600, port_type);
                 System.out.println("Arm Gyro Connected");
                 break;
             } catch (Exception e) {
