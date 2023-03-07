@@ -13,12 +13,12 @@ public class MPU6050 {
     private static final int ACCEL_REGISTER = 0x3B;
 
     private static final int ERROR_CALC_ITERS = 200;
-    private float accX, accY, accZ;
-    private float gyroX, gyroY, gyroZ;
-    private float accAngleX, accAngleY, gyroAngleX, gyroAngleY, gyroAngleZ;
-    private float roll, pitch, yaw;
-    private float accErrorX, accErrorY, gyroErrorX, gyroErrorY, gyroErrorZ;
-    private float elapsedTime, currentTime, previousTime;
+    private static float accX, accY, accZ;
+    private static float gyroX, gyroY, gyroZ;
+    private static float accAngleX, accAngleY, gyroAngleX, gyroAngleY, gyroAngleZ;
+    private static float roll, pitch, yaw;
+    private static float accErrorX, accErrorY, gyroErrorX, gyroErrorY, gyroErrorZ;
+    private static float elapsedTime, currentTime, previousTime;
 
     private int c = 0;
 
@@ -35,15 +35,15 @@ public class MPU6050 {
         }
     }
 
-    public float getGyroX() {
+    public static float getGyroX() {
         return gyroX;
     }
 
-    public float getGyroY() {
+    public static float getGyroY() {
         return gyroY;
     }
 
-    public float getGyroZ() {
+    public static float getGyroZ() {
         return gyroZ;
     }
 
