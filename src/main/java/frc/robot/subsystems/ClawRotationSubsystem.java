@@ -20,7 +20,11 @@ public class ClawRotationSubsystem extends SubsystemBase {
     private final CANSparkMax clawRotator;
     private final RelativeEncoder clawRotationEncoder;
 
-    private final PIDController clawPidController;
+    
+    private final PIDController clawPIDController;
+    private final float kp = 0.003125f;
+    private final float ki = 0.01f;
+    private final float kd = 0f;
 
     private double targetAngle;
 
@@ -29,8 +33,8 @@ public class ClawRotationSubsystem extends SubsystemBase {
         this.clawRotationEncoder = this.clawRotator.getEncoder();
         this.clawRotationEncoder.setPositionConversionFactor(30); // each motor rotation is 30 degrees
 
-        this.clawPidController = new PIDController(1e-2, 0, 0);
-        this.clawPidController.setTolerance(ClawConstants.CORRECT_CLAW_ROTATION_AT_DELTA);
+        this.clawPIDController = new PIDController(kp, ki, kd);
+        this.clawPIDController.setTolerance(ClawConstants.CORRECT_CLAW_ROTATION_AT_DELTA);
         this.targetAngle = 0;
     }
     public void changeAngle(double changeBy){
@@ -38,7 +42,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-        double clawSpeed = clawPidController.calculate(getClawAngle(),angle);
+        double clawSpeed = clawPIDController.calculate(getClawAngle(),angle);
         clawSpeed = Math.min(ClawConstants.ROTATE_MAX_OUTPUT, Math.max(clawSpeed, ClawConstants.ROTATE_MIN_OUTPUT));
         this.setClawRotateSpeed(clawSpeed);
     }
@@ -50,7 +54,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
     // Automatically rotates claw to match angle when designated button is held down
     public CommandBase autoRotate() {
         return this.runOnce(() -> {
-            clawRotator.set(LimeLight.getAngleAdjustment());
+            targetAngle = LimeLight.getAngle();
         });
     }
 
