@@ -84,10 +84,24 @@ public class RobotContainer {
     private Trajectory driveBackwardsOntoChargeStationRedTraj = new Trajectory();
     public Command driveBackwardsOntoChargeStationRedCommand;
 
+    public String driveBackwardsToCubeBlueJSON = "paths/DriveBackwardsToCubeBlue.wpilib.json";
+    public Trajectory driveBackwardsToCubeBlueTraj = new Trajectory();
+    public Command driveBackwardsToCubeBlueCommand;
+    public String driveForwardsToGridBlueJSON = "paths/DriveForwardsToGridBlue.wpilib.json";
+    public Trajectory driveForwardsToGridBlueTraj = new Trajectory();
+    public Command driveForwardsToGridBlueCommand;
+    public String driveBackwardsToCubeRedJSON = "paths/DriveBackwardsToCubeRed.wpilib.json";
+    public Trajectory driveBackwardsToCubeRedTraj = new Trajectory();
+    public Command driveBackwardsToCubeRedCommand;
+    public String driveForwardsToGridRedJSON = "paths/DriveForwardsToGridRed.wpilib.json";
+    public Trajectory driveForwardsToGridRedTraj = new Trajectory();
+    public Command driveForwardsToGridRedCommand;
+
     private Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
     private Command customAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
-    private Command placeConeCommandAuto = Autos.armPlaceConeAuto(arm, clawGrip);
+    private Command placeConeCommandAuto;
     private Command balanceChargeStationAuto; 
+    private Command doublePlacementAuto;
     
     private Command m_autonomousCommand;
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -144,8 +158,9 @@ public class RobotContainer {
     public void onRobotInit() {
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
         m_chooser.addOption("My Auto", customAuto);
-        m_chooser.addOption("Balance Charge Station", balanceChargeStationAuto);
-        m_chooser.addOption("woohoo arm place cone yay", placeConeCommandAuto);
+        m_chooser.addOption("Balance Charge Station Auto", balanceChargeStationAuto);
+        m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
+        m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
 
         /**
@@ -179,14 +194,52 @@ public class RobotContainer {
             DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationRedJSON, ex.getStackTrace());
         }
 
+        try {
+            Path driveBackwardsToCubeBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsToCubeBlueJSON);
+            driveBackwardsToCubeBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsToCubeBluePath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsToCubeBlueJSON, ex.getStackTrace());
+        }
+
+        try {
+            Path driveForwardsToGridBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardsToGridBlueJSON);
+            driveBackwardsToCubeBlueTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridBluePath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + driveForwardsToGridBlueJSON, ex.getStackTrace());
+        }
+
+        try {
+            Path driveBackwardsToCubeRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsToCubeRedJSON);
+            driveBackwardsToCubeRedTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsToCubeRedPath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsToCubeRedJSON, ex.getStackTrace());
+        }
+
+        try {
+            Path driveForwardsToGridRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardsToGridRedJSON);
+            driveBackwardsToCubeBlueTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridRedPath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + driveForwardsToGridRedJSON, ex.getStackTrace());
+        }
+
         driveForwardOverChargeStationBlueCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationBlueTraj);
         driveBackwardsOntoChargeStationBlueCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationBlueTraj);
         driveForwardOverChargeStationRedCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationRedTraj);
         driveBackwardsOntoChargeStationRedCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationRedTraj);
 
+        driveBackwardsToCubeBlueCommand = driveTrain.generateRamseteCommand(driveBackwardsToCubeBlueTraj);
+        driveForwardsToGridBlueCommand = driveTrain.generateRamseteCommand(driveForwardsToGridBlueTraj);
+        driveBackwardsToCubeRedCommand = driveTrain.generateRamseteCommand(driveBackwardsToCubeRedTraj);
+        driveForwardsToGridRedCommand = driveTrain.generateRamseteCommand(driveForwardsToGridRedTraj);
+
+        
+
         // Initialize autonomous commands here
         balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
-        driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand, arm);
+                driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand, arm);
+        placeConeCommandAuto = Autos.placeConeAuto(arm, clawGrip);
+        doublePlacementAuto = Autos.doublePlacementAuto(arm, clawGrip, driveBackwardsToCubeBlueCommand, driveForwardsToGridBlueCommand,
+                driveBackwardsToCubeRedCommand, driveForwardsToGridRedCommand);
     }
 
     public void onAutonInit() {

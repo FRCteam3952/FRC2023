@@ -202,9 +202,9 @@ public final class Constants {
         /*
          * One of these is 30, and one is 35. I don't know which is which and honestly just use the diagonal distance.
          */
-        public static final double ROBOT_LENGTH = 30.0;
-        public static final double ROBOT_WIDTH = 35.0;
-        public static final double ROBOT_DIAGONAL_RADIUS = Math.sqrt(Math.pow(ROBOT_LENGTH / 2, 2) + Math.pow(ROBOT_WIDTH / 2, 2)); // about 23.05 inches
+        public static final double ROBOT_WIDTH = 30.0;
+        public static final double ROBOT_LENGTH = 35.0;
+        public static final double ROBOT_DIAGONAL_RADIUS = Math.sqrt(Math.pow(ROBOT_WIDTH / 2, 2) + Math.pow(ROBOT_LENGTH / 2, 2)); // about 23.05 inches
     }
 
     /**
