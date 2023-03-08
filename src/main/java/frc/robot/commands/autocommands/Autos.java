@@ -49,13 +49,13 @@ public final class Autos {
         if (blueTeam) {
             return Commands.runOnce(() -> {
                 // Calibration code if needed
-            })/* .alongWith(driveForwardOverChargeStationBlueCommand)
+            }).alongWith(driveForwardOverChargeStationBlueCommand)
             .andThen(driveBackwardsOntoChargeStationBlueCommand)
-            .andThen(balanceChargeStation)*/;
+            .andThen(balanceChargeStation);
         } else {
             return Commands.runOnce(() -> {
                 // Calibration code if needed
-            })/* .alongWith(driveForwardOverChargeStationRedCommand)
+            })/*.alongWith(driveForwardOverChargeStationRedCommand)
             .andThen(driveBackwardsOntoChargeStationRedCommand)
             .andThen(balanceChargeStation)*/;
         }

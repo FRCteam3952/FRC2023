@@ -310,7 +310,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // this.resetOdometry(trajectory.getInitialPose());
 
         // Reset odometry, run path following command, then stop at the end.
-        return this.resetOdometryCommand(trajectory.getInitialPose()).andThen(ramseteCommand).andThen(() -> this.tankDriveVolts(0, 0), this);
+        return /*this.resetOdometryCommand(trajectory.getInitialPose()).andThen*/(ramseteCommand).andThen(() -> this.tankDriveVolts(0, 0), this);
 
         // ORIGINAL:
         // Run path following command, then stop at the end.
@@ -319,7 +319,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        /*odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegreesYaw())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
+        odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegreesYaw())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
 
         if (RobotContainer.inTeleop) {
             if (Math.abs(this.joystick.getHorizontalMovement()) < 0.1 && Math.abs(this.joystick.getLateralMovement()) < 0.1) {
@@ -369,7 +369,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
         // System.out.println("FL: " + getFrontLeftEncoder() + ", FR: " + getFrontRightEncoder() + ", RL: " + getRearLeftEncoder() + ", RR: " + getRearRightEncoder());
         // System.out.println("FL: " + frontLeft.get() + ", FR: " + frontRight.get() + ", RL: " + rearLeft.get() + ", RR: " + rearRight.get());
-        */
+        
 
     }
 
