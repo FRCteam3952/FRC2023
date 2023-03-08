@@ -55,7 +55,6 @@ public final class Constants {
         public static final double COMPLEMENTING_FLIP_SPEED = 1.2;
         public static final double[] STARTING_COORDS = ForwardKinematicsUtil.getCoordinatesFromAngles(ARM_1_INITIAL_ANGLE, ARM_2_INITIAL_ANGLE, 0);
         public static final double[] FLIP_COORDS_WHEN_FLIPPING = {31.0, 17.0, 0.0};
-        public static final double[] FLIPPING_TARGET_ANGLES = InverseKinematicsUtil.getAnglesFromCoordinates(FLIP_COORDS_WHEN_FLIPPING[0], FLIP_COORDS_WHEN_FLIPPING[1], FLIP_COORDS_WHEN_FLIPPING[2], true);
     }
 
     /**
@@ -92,6 +91,7 @@ public final class Constants {
             public static final int EXTEND_ARM_BUTTON_NUMBER = 3; // change to up arrow on d-pad
             public static final int RETRACT_ARM_BUTTON_NUMBER = 2; // change to down arrow on d-pad
             public static final int FLIP_ARM_BUTTON_NUMBER = 5;
+            public static final int TOGGLE_PID_BUTTON_NUMBER = 4;
             /**
              *  THIS IS THE XBOX NUMBER. Flight joystick original number: 1;
              */

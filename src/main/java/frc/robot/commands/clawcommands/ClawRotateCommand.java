@@ -1,5 +1,6 @@
 package frc.robot.commands.clawcommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ClawRotationSubsystem;
 
@@ -18,12 +19,21 @@ public class ClawRotateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        int fov = this.joystick.controller.getHID().getPOV();
-        if(fov == 90) {
-            this.claw.changeAngle(CLAW_ROTATION_SPEED); // clockwise
-        } else if(fov == 270) {
-            this.claw.changeAngle(-CLAW_ROTATION_SPEED); // counterclockwise
+        if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)){
+            claw.autoRotateClaw();
         }
+        else{
+
+            int fov = this.joystick.controller.getHID().getPOV();
+
+            if(fov == 90) {
+                this.claw.changeAngle(CLAW_ROTATION_SPEED); // clockwise
+            } else if(fov == 270) {
+                this.claw.changeAngle(-CLAW_ROTATION_SPEED); // counterclockwise
+            }
+
+        }
+
     }
 
     // Called once the command ends or is interrupted.

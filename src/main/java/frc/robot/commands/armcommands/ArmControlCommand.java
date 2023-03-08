@@ -66,7 +66,7 @@ public class ArmControlCommand extends CommandBase {
             }
             
         }
-        if(this.joystick.getRawButtonPressedWrapper(2)){
+        if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)){
             if (NetworkTablesUtil.getLimeLightPipeline() == 2){
                 NetworkTablesUtil.setLimelightPipeline(1);
             }
@@ -74,7 +74,7 @@ public class ArmControlCommand extends CommandBase {
                 NetworkTablesUtil.setLimelightPipeline(2);
             }
         }
-        if(this.joystick.getRawButtonPressedWrapper(4)){
+        if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)){
             this.arm.setPIDControlState(!this.arm.getPIDControlOn());
         }
         

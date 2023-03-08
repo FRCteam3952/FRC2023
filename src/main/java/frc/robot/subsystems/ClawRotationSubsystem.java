@@ -9,7 +9,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.PortConstants;
@@ -52,10 +51,8 @@ public class ClawRotationSubsystem extends SubsystemBase {
     }
 
     // Automatically rotates claw to match angle when designated button is held down
-    public CommandBase autoRotate() {
-        return this.runOnce(() -> {
-            targetAngle = LimeLight.getAngle();
-        });
+    public void autoRotateClaw(){
+        this.targetAngle = LimeLight.getAngle();
     }
 
     public double getClawAngle() {
