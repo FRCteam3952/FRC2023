@@ -13,7 +13,6 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.commands.armcommands.FlipArmCommand;
 import frc.robot.subsystems.staticsubsystems.ArmGyro;
-import frc.robot.subsystems.staticsubsystems.MPU6050;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 import frc.robot.util.MathUtil;
@@ -116,7 +115,9 @@ public class ArmSubsystem extends SubsystemBase {
         this.cur_z = ArmConstants.STARTING_COORDS[2];
         this.targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
         this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
-        ArmGyro.setGyroAngle(0);
+        this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
+        this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+        ArmGyro.resetAngle();
     }
 
     public PIDController getPID1() {
@@ -143,12 +144,11 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double[] getCurrentAnglesDeg() {
         double angle1 = pivot1Encoder.getPosition();
-        double angle2 = pivot2Encoder.getPosition();
+        double angle2 = (90 + angle1 + (ArmGyro.getGyroAngle()-80));
         double angle3 = turretEncoder.getPosition();
 
         if (flipped) { //offset for when arm is flipped because our gearbox is lose for some reason
             angle1 -= 8;
-            angle2 -= 35;
         }
 
         return new double[]{angle1, angle2, angle3};
@@ -161,11 +161,12 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double[] getCurrentAnglesRad() {
         double angle1 = Math.toRadians(pivot1Encoder.getPosition());
-        double angle2 = Math.toRadians(pivot2Encoder.getPosition());
+        double angle2 = Math.toRadians((90 + angle1 + (ArmGyro.getGyroAngle()-80)));
         double angle3 = Math.toRadians(turretEncoder.getPosition());
 
         return new double[]{angle1, angle2, angle3};
     }
+
 
     public void setPivot1Speed(double speed) {
         this.pivot1.set(speed);
@@ -332,8 +333,6 @@ public class ArmSubsystem extends SubsystemBase {
                 setPivot1Speed(-0.2);
             }
             setPivot1Speed(0);
-            this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
-            this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
             resetCoords();
             pidOn = true;
         });
@@ -389,14 +388,14 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
         // System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
-        System.out.println("Arm2 Angle: " + ArmGyro.getGyroAngle());
         //System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
-        //System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
+        ArmGyro.update();
+        System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
         // System.out.println("CURRENT TARGET COORDS ARM: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM LIMIT SWITCHES: LIM1: " + this.getPivot1LimitPressed() + ", LIM2: " + this.getPivot2LimitPressed());
         
         boolean resetPivot1 = getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle1 - ArmConstants.ARM_1_INITIAL_ANGLE) < 5;
-        boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
+        boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(getCurrentAnglesDeg()[1] - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
 
         // handles limit switches
         if (resetPivot1) {
@@ -405,7 +404,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         if (resetPivot2) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
-            ArmGyro.setGyroAngle(0);
+            ArmGyro.resetAngle();
         }
 
         if(resetPivot1 && resetPivot2) {

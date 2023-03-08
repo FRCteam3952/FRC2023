@@ -48,8 +48,8 @@ public final class Constants {
 
         public static final double ARM_1_INITIAL_ANGLE = 10.0;
         public static final double ARM_2_INITIAL_ANGLE = 20.0;
-        public static final double MAX_OUTPUT = 0.5;
-        public static final double MIN_OUTPUT = -0.5;
+        public static final double MAX_OUTPUT = 0.4;
+        public static final double MIN_OUTPUT = -0.4;
         public static final double SPEED_DEC_ON_UNFLIP = 0.2;
         public static final double SPEED_DEC_ON_FLIP = 1.0;
         public static final double COMPLEMENTING_FLIP_SPEED = 1.2;
@@ -85,7 +85,7 @@ public final class Constants {
             public static final int RUN_GUI_TRAJECTORY_BUTTON_NUMBER = 4; // idk i just picked a random number
 
             // Xbox Controller
-            public static final int AIM_ASSIST_BUTTON_NUMBER = 11; // change to whatever it is
+            public static final int AIM_ASSIST_BUTTON_NUMBER = 1; // change to whatever it is
             public static final int EXTEND_ARM_BUTTON_NUMBER = 3; // change to up arrow on d-pad
             public static final int RETRACT_ARM_BUTTON_NUMBER = 2; // change to down arrow on d-pad
             public static final int FLIP_ARM_BUTTON_NUMBER = 5;

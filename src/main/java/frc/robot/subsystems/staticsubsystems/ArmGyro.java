@@ -29,30 +29,34 @@ public class ArmGyro {
         }
     }
 
-    public static double getGyroAngle() {
-        if (arduino != null && arduino.getBytesReceived() > 0) {
-            try {
-                String[] read = arduino.readString().split("\n");
-                if (read.length > 0){
-                    String angle = read[read.length-1];
-                    double val = Double.parseDouble(angle) - gyro_adjust;
-                    saved_angle = val;
-                    return val;
-                }
-                else{
-                    return saved_angle;
-                }
-
-            } catch (Exception e) {
-                return saved_angle;
-            }
-        } else {
-            return saved_angle;
+    private static String parseReadString(String str) {
+        if(!str.contains("S") || !str.contains("E")) {
+            return "BAD BAD BAD";
         }
+        int firstS = str.indexOf("S", 0);
+        int nextD = str.indexOf("E", firstS);
 
+        String s = str.substring(firstS + 1, nextD).replace("\n", "");
+        return s;
     }
 
-    public static void setGyroAngle(double angle) {
+    public static void update() {
+        if (arduino != null && arduino.getBytesReceived() > 0) {
+            try {
+                String sad = parseReadString(arduino.readString());
+                double val = Double.parseDouble(sad);
+                saved_angle = val;
+            }
+            catch (Exception e) {
+
+            }
+        }
+    }
+    public static double getGyroAngle(){
+        return saved_angle - gyro_adjust;
+    }
+
+    public static void resetAngle() {
         gyro_adjust = saved_angle;
     }
 }

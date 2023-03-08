@@ -76,7 +76,7 @@ public class ArmControlCommand extends CommandBase {
             if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
                 arm.setControlDimensions(false);
                 double[] adjustments = this.getAdjustmentFromError(this.arm.getFlipped());
-                //arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, adjustments[2] * Z_SPEED);
+                arm.moveVector(-adjustments[0] * X_SPEED, -adjustments[1] * Y_SPEED, -adjustments[2] * Z_SPEED);
                 System.out.println(adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
             }
             else{
