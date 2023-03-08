@@ -5,6 +5,7 @@ import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
+import frc.robot.util.NetworkTablesUtil;
 
 /**
  * Moves arm on the turret
@@ -76,7 +77,7 @@ public class ArmControlCommand extends CommandBase {
             if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
                 arm.setControlDimensions(false);
                 double[] adjustments = this.getAdjustmentFromError(this.arm.getFlipped());
-                arm.moveVector(-adjustments[0] * X_SPEED, -adjustments[1] * Y_SPEED, -adjustments[2] * Z_SPEED);
+                arm.moveVector(-adjustments[0] * X_SPEED, 0, -adjustments[2] * Z_SPEED);
                 System.out.println(adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
             }
             else{
@@ -103,8 +104,16 @@ public class ArmControlCommand extends CommandBase {
                 
                 this.arm.setControlDimensions(true);
             }
+            
         }
-    
+        if(this.joystick.getRawButtonPressedWrapper(2)){
+            if (NetworkTablesUtil.getLimeLightPipeline() == 2){
+                NetworkTablesUtil.setLimelightPipeline(1);
+            }
+            else{
+                NetworkTablesUtil.setLimelightPipeline(2);
+            }
+        }
         if(this.joystick.getRawButtonPressedWrapper(4)){
             this.arm.setPIDControlState(!this.arm.getPIDControlOn());
         }

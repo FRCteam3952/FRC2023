@@ -29,6 +29,13 @@ public class NetworkTablesUtil {
     public static NetworkTable getTable(String tableName) {
         return INSTANCE.getTable(tableName);
     }
+    public static void setLimelightPipeline(int pipeline){
+        NetworkTable table = INSTANCE.getTable("limelight"); //we have to program this lol
+    }
+    public static int getLimeLightPipeline(){
+        NetworkTable table = INSTANCE.getTable("limelight");
+        return 1;
+    }
 
     public static float getLimeLightErrorX() {
         NetworkTable table = INSTANCE.getTable("limelight");
