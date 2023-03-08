@@ -8,13 +8,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj.Timer;
+
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
-
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PositionConstants;
 
 public final class Autos {
     private static boolean blueTeam = true; // Whether we are on the blue team or not
+    private static final Timer timer = new Timer();
+
     /**
      * Example static factory for an autonomous command.
      */
@@ -62,16 +66,28 @@ public final class Autos {
         }
     }
 
-    // In progress
+    // Assumes robot is at a AprilTag
     public static CommandBase armPlaceConeAuto(ArmSubsystem arm, ClawGripSubsystem claw) {
         return Commands.runOnce(() -> {
             double[] newArmPosition = PositionConstants.TOP_RIGHT_POS; // or maybe top left pos?
-            arm.setTargetCoordinates(newArmPosition[0], newArmPosition[1], 0);
-            // we might have to wait before doing this, this could release the cone too early
+            double[] currentArmPosition = arm.getCurrentCoordinates();
+            arm.setTargetCoordinates(newArmPosition[0], newArmPosition[1], newArmPosition[2]);
+            while (Math.abs(currentArmPosition[0] - newArmPosition[0]) > 1.0 || Math.abs(currentArmPosition[1] - newArmPosition[1]) > 1.0 || Math.abs(currentArmPosition[2] - newArmPosition[2]) > 1.0) {
+                arm.goTowardIntendedCoordinates();
+                currentArmPosition = arm.getCurrentCoordinates();
+            }
+
             claw.setClawClosed(false); // open claw
-        }).alongWith(Commands.runOnce(() -> {
-            // drive here!
-        }));
+
+            arm.setTargetCoordinates(ArmConstants.STARTING_X, ArmConstants.STARTING_Y, ArmConstants.STARTING_Z); // Go back to starting position
+            currentArmPosition = arm.getCurrentCoordinates();
+            while (Math.abs(currentArmPosition[0] - ArmConstants.STARTING_X) > 1.0 || Math.abs(currentArmPosition[1] - ArmConstants.STARTING_Y) > 1.0 || Math.abs(currentArmPosition[2] - ArmConstants.STARTING_Z) > 1.0) {
+                arm.goTowardIntendedCoordinates();
+                currentArmPosition = arm.getCurrentCoordinates();
+            }
+
+            System.out.println("Auton finished");
+        }, arm, claw);
     }
 
     private Autos() {
