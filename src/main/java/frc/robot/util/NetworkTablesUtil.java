@@ -30,11 +30,12 @@ public class NetworkTablesUtil {
         return INSTANCE.getTable(tableName);
     }
     public static void setLimelightPipeline(int pipeline){
-        NetworkTable table = INSTANCE.getTable("limelight"); //we have to program this lol
+        NetworkTable table = INSTANCE.getTable("limelight");
+        table.getEntry("pipeline").setInteger(pipeline);
     }
     public static int getLimeLightPipeline(){
         NetworkTable table = INSTANCE.getTable("limelight");
-        return 1;
+        return (int)table.getEntry("getpipe").getInteger(1);
     }
 
     public static float getLimeLightErrorX() {
