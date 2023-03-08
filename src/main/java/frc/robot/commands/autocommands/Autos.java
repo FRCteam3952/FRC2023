@@ -7,7 +7,8 @@ package frc.robot.commands.autocommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
-
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 
@@ -41,23 +42,24 @@ public final class Autos {
     }
 
     // Autonomous mode for balancing charge station
-    /*public static CommandBase balanceAuto(Command driveForwardOverChargeStationBlueCommand, 
-        Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
-        Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation) {
+    public static CommandBase balanceAuto(Command driveForwardOverChargeStationBlueCommand, 
+            Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
+            Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation) {
+
         if (blueTeam) {
             return Commands.runOnce(() -> {
                 // Calibration code if needed
-            }).alongWith(driveForwardOverChargeStationBlueCommand)
+            })/* .alongWith(driveForwardOverChargeStationBlueCommand)
             .andThen(driveBackwardsOntoChargeStationBlueCommand)
-            .andThen(balanceChargeStation);
+            .andThen(balanceChargeStation)*/;
         } else {
             return Commands.runOnce(() -> {
                 // Calibration code if needed
-            }).alongWith(driveForwardOverChargeStationRedCommand)
+            })/* .alongWith(driveForwardOverChargeStationRedCommand)
             .andThen(driveBackwardsOntoChargeStationRedCommand)
-            .andThen(balanceChargeStation);
+            .andThen(balanceChargeStation)*/;
         }
-    }*/
+    }
 
     // In progress
     public static CommandBase armPlaceConeAuto(ArmSubsystem arm, ClawGripSubsystem claw) {

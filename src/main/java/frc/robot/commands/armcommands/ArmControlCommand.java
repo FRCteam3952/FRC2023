@@ -88,18 +88,18 @@ public class ArmControlCommand extends CommandBase {
                 }
 
                 // test later for better understanding, if theres not enough time its okay - max
-                // double turretAngleRad = this.arm.getCurrentAnglesRad()[2];
-                // if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.EXTEND_ARM_BUTTON_NUMBER)) {
-                //     this.arm.moveVector(Math.sin(turretAngleRad) * EXTEND_RETRACT_SPEED, // x
-                //             0, // y
-                //             Math.cos(turretAngleRad) * EXTEND_RETRACT_SPEED); // z
-                // }
+                double turretAngleRad = this.arm.getCurrentAnglesRad()[2];
+                if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.EXTEND_ARM_BUTTON_NUMBER)) {
+                    this.arm.moveVector(Math.sin(turretAngleRad) * EXTEND_RETRACT_SPEED, // x
+                            0, // y
+                            Math.cos(turretAngleRad) * EXTEND_RETRACT_SPEED); // z
+                }
 
-                // if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.RETRACT_ARM_BUTTON_NUMBER)) {
-                //     this.arm.moveVector(Math.sin(turretAngleRad) * -EXTEND_RETRACT_SPEED, // x
-                //             0, // y
-                //             Math.cos(turretAngleRad) * -EXTEND_RETRACT_SPEED); // z
-                // }
+                if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.RETRACT_ARM_BUTTON_NUMBER)) {
+                    this.arm.moveVector(Math.sin(turretAngleRad) * -EXTEND_RETRACT_SPEED, // x
+                            0, // y
+                            Math.cos(turretAngleRad) * -EXTEND_RETRACT_SPEED); // z
+                }
                 
                 this.arm.setControlDimensions(true);
             }
