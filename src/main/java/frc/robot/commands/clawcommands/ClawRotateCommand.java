@@ -11,6 +11,7 @@ public class ClawRotateCommand extends CommandBase {
     private final ClawRotationSubsystem claw;
     private final XboxController joystick;
 
+    private boolean wasJustZero = false;
     private double previousRotationsAtZero;
 
     public ClawRotateCommand(ClawRotationSubsystem claw, XboxController joystick) {
@@ -28,18 +29,24 @@ public class ClawRotateCommand extends CommandBase {
         int fov = this.joystick.controller.getHID().getPOV();
         if(fov == 90) {
             this.claw.setClawRotateSpeed(CLAW_ROTATION_SPEED); // clockwise
+            this.wasJustZero = true;
         } else if(fov == 270) {
             this.claw.setClawRotateSpeed(-CLAW_ROTATION_SPEED); // counterclockwise
+            this.wasJustZero = true;
         } else {
-            this.claw.setClawRotateSpeed(0.0);
-        }/*else {
-            double difference = this.claw.getClawAngle() - this.previousRotationsAtZero; // if this is positive, we've drifted clockwise. if negative, we've drifted cc-wise (i hope)
-            if(Math.abs(difference) > CORRECT_CLAW_ROTATION_AT_DELTA) {
-                this.claw.setClawRotateSpeed(Math.signum(-difference) * CLAW_ROTATION_SPEED);
-            } else {
+            if(this.wasJustZero) {
+                this.previousRotationsAtZero = this.claw.getClawAngle();
+                this.wasJustZero = false;
                 this.claw.setClawRotateSpeed(0.0);
+            } else {
+                double difference = this.claw.getClawAngle() - this.previousRotationsAtZero; // if this is positive, we've drifted clockwise. if negative, we've drifted cc-wise (i hope)
+                if (Math.abs(difference) > CORRECT_CLAW_ROTATION_AT_DELTA) {
+                    this.claw.setClawRotateSpeed(Math.signum(-difference) * CLAW_ROTATION_SPEED);
+                } else {
+                    this.claw.setClawRotateSpeed(0.0);
+                }
             }
-        }*/
+        }
         // this.claw.setClawRotateSpeed(this.joystick.getLeftHorizontalMovement() * 0.1);
         /*
         if (this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER)) {
