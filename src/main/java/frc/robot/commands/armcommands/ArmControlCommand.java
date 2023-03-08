@@ -16,12 +16,12 @@ public class ArmControlCommand extends CommandBase {
     private final XboxController joystick;
 
     // Inches per 20ms
-    private static final double X_SPEED = 0.3;
-    private static final double Y_SPEED = 0.3;
-    private static final double Z_SPEED = 0.3;
+    private static final double X_SPEED = 0.4;
+    private static final double Y_SPEED = 0.4;
+    private static final double Z_SPEED = 0.4;
     private static final double EXTEND_RETRACT_SPEED = 0.02; // for possible testing later
 
-    private static final double TURRET_SPEED = 0.5;
+    private static final double TURRET_SPEED = 0.6;
 
     public ArmControlCommand(ArmSubsystem arm, XboxController joystick) {
         this.arm = arm;
