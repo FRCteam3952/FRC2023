@@ -66,6 +66,9 @@ public final class Constants {
         public static final double ANGLE_DELTA = 2;
         public static final double MIN_ROTATION_ENCODER_VALUE = 0; // change to what it actually is
         public static final double MAX_ROTATION_ENCODER_VALUE = 3; // change to what it actually is
+        public static final double CORRECT_CLAW_ROTATION_AT_DELTA = 10;
+        public static final double ROTATE_MAX_OUTPUT = 0.3;
+        public static final double ROTATE_MIN_OUTPUT = 0.3;
     }
 
     /**

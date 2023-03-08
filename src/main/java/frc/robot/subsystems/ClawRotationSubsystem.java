@@ -7,57 +7,44 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
 
+
 public class ClawRotationSubsystem extends SubsystemBase {
     private final CANSparkMax clawRotator;
     private final RelativeEncoder clawRotationEncoder;
+
+    private final PIDController clawPidController;
+
+    private double targetAngle;
 
     public ClawRotationSubsystem() {
         this.clawRotator = new CANSparkMax(PortConstants.CLAW_ROTATE_PORT, MotorType.kBrushless);
         this.clawRotationEncoder = this.clawRotator.getEncoder();
         this.clawRotationEncoder.setPositionConversionFactor(30); // each motor rotation is 30 degrees
+
+        this.clawPidController = new PIDController(1e-2, 0, 0);
+        this.clawPidController.setTolerance(ClawConstants.CORRECT_CLAW_ROTATION_AT_DELTA);
+        this.targetAngle = 0;
+    }
+    public void changeAngle(double changeBy){
+        targetAngle += changeBy;
     }
 
     public void setAngle(double angle) {
-        double difference = this.getClawAngle() - angle;
-        if (Math.abs(difference) < ClawConstants.ANGLE_DELTA) {
-            this.setClawRotateSpeed(0);
-        } else if (difference > 0) {
-            this.setClawRotateSpeed(ClawConstants.CLAW_ROTATE_SPEED);
-        } else {
-            this.setClawRotateSpeed(-ClawConstants.CLAW_ROTATE_SPEED);
-        }
+        double clawSpeed = clawPidController.calculate(getClawAngle(),angle);
+        clawSpeed = Math.min(ClawConstants.ROTATE_MAX_OUTPUT, Math.max(clawSpeed, ClawConstants.ROTATE_MIN_OUTPUT));
+        this.setClawRotateSpeed(clawSpeed);
     }
 
     public void setClawRotateSpeed(double speed) {
         this.clawRotator.set(speed);
-    }
-
-    // Runs continuously when designated button is held down
-    public CommandBase rotateClawRight() {
-        return this.runOnce(() -> {
-            if (clawRotationEncoder.getPosition() < ClawConstants.MAX_ROTATION_ENCODER_VALUE) {
-                setClawRotateSpeed(ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
-            } else {
-                setClawRotateSpeed(0);
-            }
-        });
-    }
-
-    // Runs continuosly when designated button is held down
-    public CommandBase rotateClawLeft() {
-        return this.runOnce(() -> {
-            if (clawRotationEncoder.getPosition() > ClawConstants.MIN_ROTATION_ENCODER_VALUE) {
-                setClawRotateSpeed(-ClawConstants.CLAW_ROTATE_SPEED); // find out direction later
-            } else {
-                setClawRotateSpeed(0);
-            }
-        });
     }
 
     // Automatically rotates claw to match angle when designated button is held down
@@ -73,7 +60,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
+        setAngle(targetAngle);
     }
 
     @Override
