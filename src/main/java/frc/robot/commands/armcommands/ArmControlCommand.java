@@ -11,8 +11,6 @@ import frc.robot.util.NetworkTablesUtil;
  * Moves arm on the turret
  */
 public class ArmControlCommand extends CommandBase {
-    private static final double DESIRED_AREA_CONE = 5000; // tentative measurement, pixels
-    private static final double DESIRED_AREA_CUBE = 420; // measure later
 
     private final ArmSubsystem arm;
     private final XboxController joystick;
@@ -25,49 +23,11 @@ public class ArmControlCommand extends CommandBase {
 
     private static final double TURRET_SPEED = 0.5;
 
-    private boolean detectCone = true; // True -> vision is looking for cones, False -> vision is looking for cubes, TODO: implement toggle
-
     public ArmControlCommand(ArmSubsystem arm, XboxController joystick) {
         this.arm = arm;
         this.joystick = joystick;
 
         addRequirements(arm);
-    }
-
-
-    // Gets adjustments from limelight and converts them to position adjustments
-    private double[] getAdjustmentFromError(boolean flipped) {
-        double[] adjustments = new double[3];
-
-        if(flipped){
-
-            double yAdjustment = detectCone ? (DESIRED_AREA_CONE - LimeLight.getArea()) / DESIRED_AREA_CONE : 
-                    (DESIRED_AREA_CUBE - LimeLight.getArea()) / DESIRED_AREA_CUBE; // y axis from perspective of the camera
-            yAdjustment = yAdjustment > 1 ? 1 : yAdjustment;
-    
-            adjustments[0] = LimeLight.getYAdjustment(); // x-axis adjustment
-    
-            adjustments[1] = yAdjustment; // y-axis adjustment
-    
-            adjustments[2] = LimeLight.getXAdjustment(); // z-axis adjustment
-    
-        }
-        else{
-
-            double xAdjustment = detectCone ? (DESIRED_AREA_CONE - LimeLight.getArea()) / DESIRED_AREA_CONE : 
-                    (DESIRED_AREA_CUBE - LimeLight.getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
-            xAdjustment = xAdjustment > 1 ? 1 : xAdjustment;
-    
-            adjustments[0] = xAdjustment; // x-axis adjustment
-    
-            adjustments[1] = LimeLight.getYAdjustment(); // y-axis adjustment
-    
-            adjustments[2] = LimeLight.getXAdjustment(); // z-axis adjustment
-    
-        }
-            
-        return adjustments;
-
     }
 
     // Primary arm control
@@ -76,7 +36,7 @@ public class ArmControlCommand extends CommandBase {
         if(this.arm.getControlMode()){ // only run when arm is in manual control
             if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
                 arm.setControlDimensions(false);
-                double[] adjustments = this.getAdjustmentFromError(this.arm.getFlipped());
+                double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
                 arm.moveVector(-adjustments[0] * X_SPEED, 0, -adjustments[2] * Z_SPEED);
                 System.out.println(adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
             }

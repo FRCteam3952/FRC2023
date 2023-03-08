@@ -4,6 +4,9 @@ import edu.wpi.first.math.controller.PIDController;
 import frc.robot.util.NetworkTablesUtil;
 
 public class LimeLight {
+    private static final double DESIRED_AREA_CONE = 5000; // tentative measurement, pixels
+    private static final double DESIRED_AREA_CUBE = 420; // measure later
+
     private static final PIDController clawRotationPID;
     private static final float kp = 0.003125f;
     private static final float ki = 0.01f;
@@ -58,6 +61,41 @@ public class LimeLight {
         // calculate the PID for the steering adjustment
         return -clawRotationPID.calculate(angle, angle > 180 ? 360 : 0); // Negated because claw rotation angle is inversely related to cone orientation angle
         // If cone angle measures greater than 180 (tip pointing towards right), it goes towards 360. If it measures less than 180 (tip pointing towards left), it goes towards 0. (360 and 0 both represent the cone pointing straight up)
+    }
+
+    // Gets adjustments from limelight and converts them to position adjustments
+    public static double[] getAdjustmentFromError(boolean flipped){
+        double[] adjustments = new double[3];
+
+        if(flipped){
+
+            double yAdjustment = NetworkTablesUtil.getLimeLightPipeline() == 1 ? (DESIRED_AREA_CONE - getArea()) / DESIRED_AREA_CONE : 
+                    (DESIRED_AREA_CUBE - getArea()) / DESIRED_AREA_CUBE; // y axis from perspective of the camera
+            yAdjustment = yAdjustment > 1 ? 1 : yAdjustment;
+    
+            adjustments[0] = getYAdjustment(); // x-axis adjustment
+    
+            adjustments[1] = yAdjustment; // y-axis adjustment
+    
+            adjustments[2] = getXAdjustment(); // z-axis adjustment
+    
+        }
+        else{
+
+            double xAdjustment = NetworkTablesUtil.getLimeLightPipeline() == 1 ? (DESIRED_AREA_CONE - getArea()) / DESIRED_AREA_CONE : 
+                    (DESIRED_AREA_CUBE - getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
+            xAdjustment = xAdjustment > 1 ? 1 : xAdjustment;
+    
+            adjustments[0] = xAdjustment; // x-axis adjustment
+    
+            adjustments[1] = getYAdjustment(); // y-axis adjustment
+    
+            adjustments[2] = getXAdjustment(); // z-axis adjustment
+    
+        }
+            
+        return adjustments;
+
     }
 
     public static void setIntendedAngle(double setpoint) {
