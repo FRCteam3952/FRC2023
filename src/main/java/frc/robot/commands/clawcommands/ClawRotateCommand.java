@@ -5,7 +5,7 @@ import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ClawRotationSubsystem;
 
 public class ClawRotateCommand extends CommandBase {
-    private static final double CLAW_ROTATION_SPEED = 0.5;
+    private static final double CLAW_ROTATION_SPEED = 2;
 
     private final ClawRotationSubsystem claw;
     private final XboxController joystick;
@@ -19,8 +19,9 @@ public class ClawRotateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)){
-            claw.autoRotateClaw();
+        if(this.joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)){
+            System.out.println("CLAW AUITO");
+            this.claw.autoRotateClaw();
         }
         else{
 
@@ -30,6 +31,8 @@ public class ClawRotateCommand extends CommandBase {
                 this.claw.changeAngle(CLAW_ROTATION_SPEED); // clockwise
             } else if(fov == 270) {
                 this.claw.changeAngle(-CLAW_ROTATION_SPEED); // counterclockwise
+            } else if(fov == 180) {
+                this.claw.setTargetAngle(0.0);
             }
 
         }

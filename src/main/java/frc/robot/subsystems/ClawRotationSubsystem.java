@@ -21,8 +21,8 @@ public class ClawRotationSubsystem extends SubsystemBase {
 
     
     private final PIDController clawPIDController;
-    private final float kp = 0.003125f;
-    private final float ki = 0.01f;
+    private final float kp = 0.001f;
+    private final float ki = 0f;
     private final float kd = 0f;
 
     private double targetAngle;
@@ -35,14 +35,21 @@ public class ClawRotationSubsystem extends SubsystemBase {
         this.clawPIDController = new PIDController(kp, ki, kd);
         this.clawPIDController.setTolerance(ClawConstants.CORRECT_CLAW_ROTATION_AT_DELTA);
         this.targetAngle = 0;
+        this.clawRotationEncoder.setPosition(0.0);
     }
     public void changeAngle(double changeBy){
         targetAngle += changeBy;
     }
 
+    public void setTargetAngle(double angle) {
+        targetAngle = angle;
+    }
+
     public void setAngle(double angle) {
         double clawSpeed = clawPIDController.calculate(getClawAngle(),angle);
         clawSpeed = Math.min(ClawConstants.ROTATE_MAX_OUTPUT, Math.max(clawSpeed, ClawConstants.ROTATE_MIN_OUTPUT));
+        //System.out.println("CLAW SPEED: " + clawSpeed);
+        //System.out.println("CLAW ENCODERS: " + this.getClawAngle());
         this.setClawRotateSpeed(clawSpeed);
     }
 
@@ -61,7 +68,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //setAngle(targetAngle);
+        setAngle(targetAngle);
     }
 
     @Override
