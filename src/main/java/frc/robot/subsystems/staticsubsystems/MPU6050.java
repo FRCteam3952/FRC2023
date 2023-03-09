@@ -2,10 +2,6 @@ package frc.robot.subsystems.staticsubsystems;
 
 import edu.wpi.first.wpilibj.I2C;
 
-/**
- * CODE FROM: <a href="https://howtomechatronics.com/tutorials/arduino/arduino-and-mpu6050-accelerometer-and-gyroscope-tutorial/">here</a> and
- * <a href="https://github.com/FRCteam3952/FRC2023/commit/7b3f5fbbcc7946d4214b9712bb282d753be9fc5e">also here</a>
- */
 public class MPU6050{
     private static final int MPU_I2C_ADDR = 0x68;
     private static final int GYRO_REGISTER = 0x43;
@@ -19,7 +15,8 @@ public class MPU6050{
     private static float accErrorX, accErrorY, gyroErrorX, gyroErrorY, gyroErrorZ;
     private static float elapsedTime, currentTime, previousTime;
 
-    public static double gyro_adjust = 0.0;
+    public static double gyro_adjust_roll = 0.0;
+    public static double gyro_adjust_pitch = 0.0;
 
     private static int c = 0;
 
@@ -40,19 +37,22 @@ public class MPU6050{
     }
 
     public static double getRoll(){
-        return roll - gyro_adjust;
+        return roll - gyro_adjust_roll;
     }
 
-    public static float getPitch() {
-        return pitch;
+    public static double getPitch() {
+        return pitch - gyro_adjust_pitch;
     }
 
-    public static float getYaw() {
+    public static double getYaw() {
         return yaw;
     }
 
     public static void resetAngle() {
-        gyro_adjust = roll;
+        gyro_adjust_roll = roll;
+    }
+    public static void resetAngleYaw(){
+        gyro_adjust_pitch = yaw;
     }
 
     private static void setup() throws InterruptedException {
