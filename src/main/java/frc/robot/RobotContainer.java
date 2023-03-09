@@ -4,11 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -18,16 +13,20 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
+import frc.robot.commands.autocommands.Autos;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
 import frc.robot.commands.drivecommands.BalanceChargeStationCommand;
 import frc.robot.commands.drivecommands.ManualDriveCommand;
 import frc.robot.controllers.FlightJoystick;
-import frc.robot.commands.autocommands.Autos;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
@@ -63,6 +62,7 @@ public class RobotContainer {
 
     public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
     public final BalanceChargeStationCommand balanceCommand = new BalanceChargeStationCommand(driveTrain);
+    public final BalanceChargeStationCommand balanceCommand2 = new BalanceChargeStationCommand(driveTrain); // Only here because compositions can't use commands that have already been used for other compositions
 
     // these ones got changed to xbox
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
@@ -74,15 +74,19 @@ public class RobotContainer {
     private String driveForwardOverChargeStationBlueJSON = "paths/DriveForwardOverChargeStationBlue.wpilib.json"; 
     private Trajectory driveForwardOverChargeStationBlueTraj = new Trajectory(); 
     public Command driveForwardOverChargeStationBlueCommand;
+    public Command driveForwardOverChargeStationBlueCommand2; // Only here because compositions can't use commands that have already been used for other compositions
     private String driveBackwardsOntoChargeStationBlueJSON = "paths/DriveBackwardsOntoChargeStationBlue.wpilib.json";
     private Trajectory driveBackwardsOntoChargeStationBlueTraj = new Trajectory();
     public Command driveBackwardsOntoChargeStationBlueCommand;
+    public Command driveBackwardsOntoChargeStationBlueCommand2; // Only here because compositions can't use commands that have already been used for other compositions
     private String driveForwardOverChargeStationRedJSON = "paths/DriveForwardOverChargeStationRed.wpilib.json"; 
     private Trajectory driveForwardOverChargeStationRedTraj = new Trajectory(); 
     public Command driveForwardOverChargeStationRedCommand;
+    public Command driveForwardOverChargeStationRedCommand2; // Only here because compositions can't use commands that have already been used for other compositions
     private String driveBackwardsOntoChargeStationRedJSON = "paths/DriveBackwardsOntoChargeStationRed.wpilib.json";
     private Trajectory driveBackwardsOntoChargeStationRedTraj = new Trajectory();
     public Command driveBackwardsOntoChargeStationRedCommand;
+    public Command driveBackwardsOntoChargeStationRedCommand2; // Only here because compositions can't use commands that have already been used for other compositions
 
     public String driveBackwardsToCubeBlueJSON = "paths/DriveBackwardsToCubeBlue.wpilib.json";
     public Trajectory driveBackwardsToCubeBlueTraj = new Trajectory();
@@ -229,6 +233,11 @@ public class RobotContainer {
         driveForwardOverChargeStationRedCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationRedTraj);
         driveBackwardsOntoChargeStationRedCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationRedTraj);
 
+        driveForwardOverChargeStationBlueCommand2 = driveTrain.generateRamseteCommand(driveForwardOverChargeStationBlueTraj);
+        driveBackwardsOntoChargeStationBlueCommand2 = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationBlueTraj);
+        driveForwardOverChargeStationRedCommand2 = driveTrain.generateRamseteCommand(driveForwardOverChargeStationRedTraj);
+        driveBackwardsOntoChargeStationRedCommand2 = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationRedTraj);
+
         driveBackwardsToCubeBlueCommand = driveTrain.generateRamseteCommand(driveBackwardsToCubeBlueTraj);
         driveForwardsToGridBlueCommand = driveTrain.generateRamseteCommand(driveForwardsToGridBlueTraj);
         driveBackwardsToCubeRedCommand = driveTrain.generateRamseteCommand(driveBackwardsToCubeRedTraj);
@@ -242,8 +251,8 @@ public class RobotContainer {
         placeConeCommandAuto = Autos.placeConeAuto(arm, clawGrip);
         doublePlacementAuto = Autos.doublePlacementAuto(arm, clawGrip, driveBackwardsToCubeBlueCommand, driveForwardsToGridBlueCommand,
                 driveBackwardsToCubeRedCommand, driveForwardsToGridRedCommand);
-        placeConeThenBalanceAuto = Autos.placeConeThenBalanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand, 
-                driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand, arm, clawGrip);
+        placeConeThenBalanceAuto = Autos.placeConeThenBalanceAuto(driveForwardOverChargeStationBlueCommand2, driveBackwardsOntoChargeStationBlueCommand2, 
+                driveForwardOverChargeStationRedCommand2, driveBackwardsOntoChargeStationRedCommand2, balanceCommand2, arm, clawGrip);
     }
 
     public void onAutonInit() {

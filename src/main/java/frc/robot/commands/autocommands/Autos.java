@@ -4,16 +4,14 @@
 
 package frc.robot.commands.autocommands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj.Timer;
-
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PositionConstants;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawGripSubsystem;
 
 public final class Autos {
     private static boolean blueTeam = true; // Whether we are on the blue team or not
@@ -44,26 +42,41 @@ public final class Autos {
 
     }
 
+    public static CommandBase balanceAutoFirstHalf(Command driveForwardOverChargeStationBlueCommand, 
+            Command driveForwardOverChargeStationRedCommand, ArmSubsystem arm) {
+
+        if (blueTeam) {
+            return Commands.runOnce(() -> {
+                    // Any neccessary calibration code
+                }).alongWith(arm.calibrateArm())
+                .alongWith(driveForwardOverChargeStationBlueCommand);
+        } else {
+            return Commands.runOnce(() -> {
+                // Any neccessary calibration code
+            }).alongWith(arm.calibrateArm())
+            .alongWith(driveForwardOverChargeStationRedCommand);
+        }
+    }
+
+    public static CommandBase balanceAutoSecondHalf(Command driveBackwardsOntoChargeStationBlueCommand, 
+            Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation) {
+
+        if (blueTeam) {    
+            return driveBackwardsOntoChargeStationBlueCommand
+                .andThen(balanceChargeStation);
+        } else {
+            return driveBackwardsOntoChargeStationRedCommand
+                .andThen(balanceChargeStation);
+        }
+    }
+
     // Autonomous mode for balancing charge station
     public static CommandBase balanceAuto(Command driveForwardOverChargeStationBlueCommand, 
             Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
             Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm) {
 
-        if (blueTeam) {
-            return Commands.runOnce(() -> {
-                // Any neccessary calibration code
-            }).alongWith(arm.calibrateArm())
-            .alongWith(driveForwardOverChargeStationBlueCommand)
-            .andThen(driveBackwardsOntoChargeStationBlueCommand)
-            .andThen(balanceChargeStation);
-        } else {
-            return Commands.runOnce(() -> {
-                // Any neccessary calibration code
-            }).alongWith(arm.calibrateArm())
-            .alongWith(driveForwardOverChargeStationRedCommand)
-            .andThen(driveBackwardsOntoChargeStationRedCommand)
-            .andThen(balanceChargeStation);
-        }
+        return balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)
+        .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation));
     }
 
     // Assumes robot is at a AprilTag
@@ -190,23 +203,11 @@ public final class Autos {
     public static CommandBase placeConeThenBalanceAuto(Command driveForwardOverChargeStationBlueCommand, 
     Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
     Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm, ClawGripSubsystem claw) {
-        if (blueTeam) {
-            return Commands.runOnce(() -> {
-                // Any neccessary calibration code
-            }).alongWith(arm.calibrateArm())
-            .alongWith(driveForwardOverChargeStationBlueCommand)
-            .andThen(placeConeAuto(arm, claw))
-            .andThen(driveBackwardsOntoChargeStationBlueCommand)
-            .andThen(balanceChargeStation);
-        } else {
-            return Commands.runOnce(() -> {
-                // Any neccessary calibration code
-            }).alongWith(arm.calibrateArm())
-            .alongWith(driveForwardOverChargeStationRedCommand)
-            .andThen(placeConeAuto(arm, claw))
-            .andThen(driveBackwardsOntoChargeStationRedCommand)
-            .andThen(balanceChargeStation);
-        }
+
+        return balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)
+        .andThen(placeConeAuto(arm, claw))
+        .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation));
+        
     }
 
     private Autos() {
