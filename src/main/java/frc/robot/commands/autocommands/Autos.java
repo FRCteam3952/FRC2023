@@ -67,6 +67,7 @@ public final class Autos {
     }
 
     // Assumes robot is at a AprilTag
+    // Might need to add calibration
     public static CommandBase placeConeAuto(ArmSubsystem arm, ClawGripSubsystem claw) {
         return Commands.runOnce(() -> {
             double[] newArmPosition = PositionConstants.TOP_RIGHT_POS; // or maybe top left pos?
@@ -92,6 +93,7 @@ public final class Autos {
 
     // Position values on trajectories may need to be adjusted
     // Adjustments can be made later lol
+    // Might need to add calibration 
     public static CommandBase doublePlacementAuto(ArmSubsystem arm, ClawGripSubsystem claw, Command driveBackwardsToCubeBlue, 
             Command driveForwardsToGridBlue, Command driveBackwardsToCubeRed, Command driveForwardsToGridRed) {
 
@@ -181,6 +183,29 @@ public final class Autos {
 
                 System.out.println("Auton finished");
             })));
+        }
+    }
+
+    // Might need to add calibration
+    public static CommandBase placeConeThenBalanceAuto(Command driveForwardOverChargeStationBlueCommand, 
+    Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
+    Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm, ClawGripSubsystem claw) {
+        if (blueTeam) {
+            return Commands.runOnce(() -> {
+                // Any neccessary calibration code
+            }).alongWith(arm.calibrateArm())
+            .alongWith(driveForwardOverChargeStationBlueCommand)
+            .andThen(placeConeAuto(arm, claw))
+            .andThen(driveBackwardsOntoChargeStationBlueCommand)
+            .andThen(balanceChargeStation);
+        } else {
+            return Commands.runOnce(() -> {
+                // Any neccessary calibration code
+            }).alongWith(arm.calibrateArm())
+            .alongWith(driveForwardOverChargeStationRedCommand)
+            .andThen(placeConeAuto(arm, claw))
+            .andThen(driveBackwardsOntoChargeStationRedCommand)
+            .andThen(balanceChargeStation);
         }
     }
 
