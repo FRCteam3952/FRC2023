@@ -18,7 +18,7 @@ import frc.robot.subsystems.staticsubsystems.MPU6050;
 public class Robot extends TimedRobot {
     public Robot() {
         super();
-        //addPeriodic(MPU6050::update, 0.05);
+        addPeriodic(MPU6050::update, 0.05);
     }
     private Command autonomousCommand;
 

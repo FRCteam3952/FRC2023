@@ -7,6 +7,8 @@ public class MPU6050{
     private static final int GYRO_REGISTER = 0x43;
     private static final int ACCEL_REGISTER = 0x3B;
 
+    private static final float ANGLE_MULTIPLIER = 4.4f;
+
     private static final int ERROR_CALC_ITERS = 200;
     private static float accX, accY, accZ;
     private static float gyroX, gyroY, gyroZ;
@@ -88,9 +90,11 @@ public class MPU6050{
         gyroZ -= gyroErrorZ;
 
         // "Complementary filter"
-        roll = 0.98f * (roll + gyroAngleX) + 0.02f * accAngleX;
-        pitch = 0.98f * (pitch + gyroAngleY) + 0.02f * accAngleY;
-        yaw = gyroAngleZ;
+        roll = (0.98f * (roll + gyroAngleX) + 0.02f * accAngleX) * ANGLE_MULTIPLIER;
+        pitch = (0.98f * (pitch + gyroAngleY) + 0.02f * accAngleY) * ANGLE_MULTIPLIER;
+        yaw = gyroAngleZ * ANGLE_MULTIPLIER;
+
+        System.out.println(roll);
 
         previousTime = currentTime;
     }
