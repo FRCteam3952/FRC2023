@@ -1,13 +1,12 @@
 package frc.robot.subsystems.staticsubsystems;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * CODE FROM: <a href="https://howtomechatronics.com/tutorials/arduino/arduino-and-mpu6050-accelerometer-and-gyroscope-tutorial/">here</a> and
  * <a href="https://github.com/FRCteam3952/FRC2023/commit/7b3f5fbbcc7946d4214b9712bb282d753be9fc5e">also here</a>
  */
-public class MPU6050 extends SubsystemBase{
+public class MPU6050{
     private static final int MPU_I2C_ADDR = 0x68;
     private static final int GYRO_REGISTER = 0x43;
     private static final int ACCEL_REGISTER = 0x3B;
@@ -20,23 +19,28 @@ public class MPU6050 extends SubsystemBase{
     private static float accErrorX, accErrorY, gyroErrorX, gyroErrorY, gyroErrorZ;
     private static float elapsedTime, currentTime, previousTime;
 
-    private int c = 0;
+    public static double gyro_adjust = 0.0;
 
-    private final I2C gyro = new I2C(I2C.Port.kOnboard, MPU_I2C_ADDR);
+    private static int c = 0;
 
-    private final byte[] buffer = new byte[6];
+    private static final I2C gyro = new I2C(I2C.Port.kOnboard, MPU_I2C_ADDR);
 
-    public MPU6050() {
+    private static final byte[] buffer = new byte[6];
+
+    static{
         try {
-            this.setup();
+            setup();
         } catch (InterruptedException e) {
             System.out.println("COULD NOT INITIALIZE MPU6050");
             e.printStackTrace();
         }
     }
+    public static void poke(){
+        System.out.println("Arm Gyro Initialized");
+    }
 
-    public static float getRoll() {
-        return roll;
+    public static double getRoll(){
+        return roll - gyro_adjust;
     }
 
     public static float getPitch() {
@@ -47,30 +51,35 @@ public class MPU6050 extends SubsystemBase{
         return yaw;
     }
 
-    private void setup() throws InterruptedException {
+    public static void resetAngle() {
+        gyro_adjust = roll;
+    }
+
+    private static void setup() throws InterruptedException {
         gyro.write(0x6B, 0x00); // Resets Gyro 
         gyro.write(0x1C, 0x10); // Talks to the ACCEL_CONFIG register (+- 8g)
         gyro.write(0x1B, 0x10); // Talks to the GYRO_CONFIG register (1000deg/s full scale whatever that means)
 
-        this.calculateIMUError();
+        Thread.sleep(10);
+        calculateIMUError();
+        Thread.sleep(10);
     }
 
-    @Override
-    public void periodic() {
+    public static void update() {
         readAccelerometerValues();
 
         accAngleX = (float) Math.atan(accY / Math.sqrt(accX * accX + accZ * accZ)) * 180f / (float) Math.PI; 
         accAngleY = (float) Math.atan(-accX / Math.sqrt(accY * accY + accZ * accZ)) * 180f / (float) Math.PI;
-
+ 
         accAngleX -= accErrorX;
         accAngleY -= accErrorY;
 
         readGyroValues();
-
+ 
         currentTime = System.nanoTime();
         elapsedTime = (currentTime - previousTime) / 1000000000.0f;
 
-        gyroAngleX = gyroX * elapsedTime;
+        gyroAngleX = gyroX * elapsedTime;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             gyroAngleX = gyroX * elapsedTime;
         gyroAngleY = gyroY * elapsedTime;
         gyroAngleZ = gyroZ * elapsedTime;
 
@@ -86,23 +95,25 @@ public class MPU6050 extends SubsystemBase{
         previousTime = currentTime;
     }
 
-    private void readAccelerometerValues() {
+    private static void readAccelerometerValues() {
         gyro.read(ACCEL_REGISTER, 6, buffer);
 
         accX = ((buffer[0] << 8) | buffer[1]) / 16384.0f;
         accY = ((buffer[2] << 8) | buffer[3]) / 16384.0f;
         accZ = ((buffer[4] << 8) | buffer[5]) / 16384.0f;
+
     }
 
-    private void readGyroValues() {
+    private static void readGyroValues() {
         gyro.read(GYRO_REGISTER, 6, buffer);
 
         gyroX = ((buffer[0] << 8) | buffer[1]) / 131.0f; // ??? idk where these came from
         gyroY = ((buffer[2] << 8) | buffer[3]) / 131.0f;
         gyroZ = ((buffer[4] << 8) | buffer[5]) / 131.0f;
-    }
+;    }
 
-    private void calculateIMUError() {
+
+    private static void calculateIMUError() {
         while(c < ERROR_CALC_ITERS) {
             readAccelerometerValues();
 

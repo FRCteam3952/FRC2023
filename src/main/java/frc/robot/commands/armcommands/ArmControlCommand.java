@@ -66,12 +66,12 @@ public class ArmControlCommand extends CommandBase {
             }
             
         }
-        if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)){
-            if (NetworkTablesUtil.getLimeLightPipeline() == 2){
+        if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PIPELINES)){
+            if (NetworkTablesUtil.getLimeLightPipeline() == 3){
                 NetworkTablesUtil.setLimelightPipeline(1);
             }
             else{
-                NetworkTablesUtil.setLimelightPipeline(2);
+                NetworkTablesUtil.setLimelightPipeline(3);
             }
         }
         if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)){

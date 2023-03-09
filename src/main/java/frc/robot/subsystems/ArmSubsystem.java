@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.commands.armcommands.FlipArmCommand;
-import frc.robot.subsystems.staticsubsystems.ArmGyro;
 import frc.robot.subsystems.staticsubsystems.MPU6050;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
@@ -117,7 +116,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
-        ArmGyro.resetAngle();
+        MPU6050.resetAngle();
     }
 
     public PIDController getPID1() {
@@ -144,7 +143,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double[] getCurrentAnglesDeg() {
         double angle1 = pivot1Encoder.getPosition();
-        double angle2 = (90 + angle1 + (ArmGyro.getGyroAngle()-80));
+        double angle2 = (90 + angle1 + (MPU6050.getRoll()-80));
         double angle3 = turretEncoder.getPosition();
 
         if (flipped) { //offset for when arm is flipped because our gearbox is lose for some reason
@@ -161,7 +160,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double[] getCurrentAnglesRad() {
         double angle1 = Math.toRadians(pivot1Encoder.getPosition());
-        double angle2 = Math.toRadians((90 + angle1 + (ArmGyro.getGyroAngle()-80)));
+        double angle2 = Math.toRadians((90 + angle1 + (MPU6050.getRoll()-80)));
         double angle3 = Math.toRadians(turretEncoder.getPosition());
 
         return new double[]{angle1, angle2, angle3};
@@ -389,8 +388,8 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
         //System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
-        System.out.println(MPU6050.getRoll());
-        //System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
+        MPU6050.update();
+        System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
         // System.out.println("CURRENT TARGET COORDS ARM: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM LIMIT SWITCHES: LIM1: " + this.getPivot1LimitPressed() + ", LIM2: " + this.getPivot2LimitPressed());
         
@@ -404,7 +403,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         if (resetPivot2) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
-            ArmGyro.resetAngle();
+            MPU6050.resetAngle();
         }
 
         if(resetPivot1 && resetPivot2) {

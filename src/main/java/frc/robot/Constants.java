@@ -92,6 +92,7 @@ public final class Constants {
             public static final int RETRACT_ARM_BUTTON_NUMBER = 2; // change to down arrow on d-pad
             public static final int FLIP_ARM_BUTTON_NUMBER = 5;
             public static final int TOGGLE_PID_BUTTON_NUMBER = 4;
+            public static final int TOGGLE_PIPELINES = 10;
             /**
              *  THIS IS THE XBOX NUMBER. Flight joystick original number: 1;
              */

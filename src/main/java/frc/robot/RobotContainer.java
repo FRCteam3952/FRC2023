@@ -32,8 +32,8 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.staticsubsystems.ArmGyro;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
+import frc.robot.subsystems.staticsubsystems.MPU6050;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.wrappers.TrajectoryReader;
 
@@ -121,7 +121,7 @@ public class RobotContainer {
         // Poke the static classes so their static initializers are run at startup.
         LimeLight.poke();
         RobotGyro.poke();
-        ArmGyro.poke();
+        MPU6050.poke();
     }
 
     /**

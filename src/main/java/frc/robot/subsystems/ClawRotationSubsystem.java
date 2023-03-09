@@ -21,7 +21,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
 
     
     private final PIDController clawPIDController;
-    private final float kp = 0.001f;
+    private final float kp = 0.002f;
     private final float ki = 0f;
     private final float kd = 0f;
 
