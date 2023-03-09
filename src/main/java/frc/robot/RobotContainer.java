@@ -161,14 +161,6 @@ public class RobotContainer {
     }
 
     public void onRobotInit() {
-        m_chooser.setDefaultOption("Default Auto", defaultAuto);
-        m_chooser.addOption("My Auto", customAuto);
-        m_chooser.addOption("Balance Charge Station Auto", balanceChargeStationAuto);
-        m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
-        m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
-        m_chooser.addOption("Place Cone Then Balance Auto", placeConeThenBalanceAuto);
-        SmartDashboard.putData("Auto choices", m_chooser);
-
         /**
          * Initialize Pathweaver trajectories/commands here
          */
@@ -243,8 +235,6 @@ public class RobotContainer {
         driveBackwardsToCubeRedCommand = driveTrain.generateRamseteCommand(driveBackwardsToCubeRedTraj);
         driveForwardsToGridRedCommand = driveTrain.generateRamseteCommand(driveForwardsToGridRedTraj);
 
-        
-
         // Initialize autonomous commands here
         balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
                 driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand, arm);
@@ -253,16 +243,28 @@ public class RobotContainer {
                 driveBackwardsToCubeRedCommand, driveForwardsToGridRedCommand);
         placeConeThenBalanceAuto = Autos.placeConeThenBalanceAuto(driveForwardOverChargeStationBlueCommand2, driveBackwardsOntoChargeStationBlueCommand2, 
                 driveForwardOverChargeStationRedCommand2, driveBackwardsOntoChargeStationRedCommand2, balanceCommand2, arm, clawGrip);
-    }
+
+        // Adds autonomous options to dashboard
+        m_chooser.setDefaultOption("Default Auto", defaultAuto);
+        m_chooser.addOption("My Auto", customAuto);
+        m_chooser.addOption("Balance Charge Station Auto", balanceChargeStationAuto);
+        m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
+        m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
+        m_chooser.addOption("Place Cone Then Balance Auto", placeConeThenBalanceAuto);
+        SmartDashboard.putData("Auto choices", m_chooser);
+}
 
     public void onAutonInit() {
         inTeleop = false;
-        
+
         m_autonomousCommand = this.getAutonomousCommand();
 
+        System.out.println("Autonomous initiated");
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
+            System.out.println("Begin autonomous scheduling");
             m_autonomousCommand.schedule();
+            System.out.println("Autonomous scheduled");
         }
     }
 

@@ -94,7 +94,7 @@ public class MPU6050{
         pitch = (0.98f * (pitch + gyroAngleY) + 0.02f * accAngleY) * ANGLE_MULTIPLIER;
         yaw = gyroAngleZ * ANGLE_MULTIPLIER;
 
-        System.out.println(roll);
+        //System.out.println(roll);
 
         previousTime = currentTime;
     }
