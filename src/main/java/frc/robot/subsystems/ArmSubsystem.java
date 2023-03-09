@@ -281,8 +281,8 @@ public class ArmSubsystem extends SubsystemBase {
             }
             setTurretSpeed(turretSpeed);
         }
-        setPivot1Speed(p1Speed);
-        setPivot2Speed(p2Speed);
+        // setPivot1Speed(p1Speed);
+        // setPivot2Speed(p2Speed);
 
         // System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
     }
