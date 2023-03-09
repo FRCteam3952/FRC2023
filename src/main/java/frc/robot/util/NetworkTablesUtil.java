@@ -31,21 +31,32 @@ public class NetworkTablesUtil {
     }
     public static void setLimelightPipeline(int pipeline){
         NetworkTable table = INSTANCE.getTable("limelight");
-        table.getEntry("pipeline").setInteger(pipeline);
+        table.getEntry("pipeline").setNumber(pipeline);
     }
     public static int getLimeLightPipeline(){
         NetworkTable table = INSTANCE.getTable("limelight");
-        return (int)table.getEntry("getpipe").getInteger(1);
+        return table.getEntry("getpipe").getNumber(1).intValue();
     }
 
     public static float getLimeLightErrorX() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[1].floatValue();
+        if (getLimeLightPipeline() == 1){
+            return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[1].floatValue();
+        }
+        else{
+            return table.getEntry("tx").getNumber(0.0).floatValue();
+        }
+        
     }
 
     public static float getLimeLightErrorY() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[2].floatValue();
+        if (getLimeLightPipeline() == 1){
+            return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[2].floatValue();
+        }
+        else{
+            return table.getEntry("ty").getNumber(0.0).floatValue();
+        }
     }
 
     public static float getLimeLightArea() {
