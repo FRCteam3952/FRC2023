@@ -60,7 +60,6 @@ public class ClawRotationSubsystem extends SubsystemBase {
     // Automatically rotates claw to match angle when designated button is held down
     public void autoRotateClaw(){
         this.targetAngle = LimeLight.getAngle();
-        System.out.println("TARGET ANGLE LIMEY: " + targetAngle);
     }
 
     public double getClawAngle() {
