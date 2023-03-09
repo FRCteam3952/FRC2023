@@ -102,6 +102,7 @@ public class RobotContainer {
     private Command placeConeCommandAuto;
     private Command balanceChargeStationAuto; 
     private Command doublePlacementAuto;
+    private Command placeConeThenBalanceAuto;
     
     private Command m_autonomousCommand;
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -161,6 +162,7 @@ public class RobotContainer {
         m_chooser.addOption("Balance Charge Station Auto", balanceChargeStationAuto);
         m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
+        m_chooser.addOption("Place Cone Then Balance Auto", placeConeThenBalanceAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
 
         /**
@@ -240,6 +242,8 @@ public class RobotContainer {
         placeConeCommandAuto = Autos.placeConeAuto(arm, clawGrip);
         doublePlacementAuto = Autos.doublePlacementAuto(arm, clawGrip, driveBackwardsToCubeBlueCommand, driveForwardsToGridBlueCommand,
                 driveBackwardsToCubeRedCommand, driveForwardsToGridRedCommand);
+        placeConeThenBalanceAuto = Autos.placeConeThenBalanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand, 
+                driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand, arm, clawGrip);
     }
 
     public void onAutonInit() {
