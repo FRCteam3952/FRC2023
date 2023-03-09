@@ -61,7 +61,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        setAngle(targetAngle);
+        //setAngle(targetAngle);
     }
 
     @Override
