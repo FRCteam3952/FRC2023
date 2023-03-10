@@ -67,6 +67,7 @@ public class RobotContainer {
     public final BalanceChargeStationCommand balanceCommand = new BalanceChargeStationCommand(driveTrain);
     public final BalanceChargeStationCommand balanceCommand2 = new BalanceChargeStationCommand(driveTrain); // Only here because compositions can't use commands that have already been used for other compositions
     public final BalanceChargeStationCommand balanceCommand3 = new BalanceChargeStationCommand(driveTrain); // Only here because compositions can't use commands that have already been used for other compositions
+    public final BalanceChargeStationCommand balanceCommand4 = new BalanceChargeStationCommand(driveTrain); // Only here because compositions can't use commands that have already been used for other compositions
 
     // these ones got changed to xbox
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
@@ -295,7 +296,7 @@ public class RobotContainer {
 
         // Initialize autonomous commands here
         balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
-                driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand, arm);
+                driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand4, arm);
         placeConeCommandAuto = Autos.placeConeAuto(clawGrip, goTowardsTopRight, goTowardsStartingPos4);
         doublePlacementAuto = Autos.doublePlacementAuto(arm, clawGrip, driveBackwardsToCubeBlueCommand, driveForwardsToGridBlueCommand,
                 driveBackwardsToCubeRedCommand, driveForwardsToGridRedCommand, goTowardsTopRight2, goTowardsStartingPos, goTowardsStartingPos2,

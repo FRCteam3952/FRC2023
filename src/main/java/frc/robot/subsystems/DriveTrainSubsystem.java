@@ -33,7 +33,6 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.MathUtil;
 import frc.robot.util.NetworkTablesUtil;
-import frc.robot.util.AprilTagUtil;
 
 import java.util.List;
 
@@ -332,6 +331,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
         Pose2d pose = odometry.getPoseMeters();
         double[] sendPose = {pose.getX(), pose.getY(), pose.getRotation().getRadians()};
         NetworkTablesUtil.getEntry("robot", "drive_odometry").setDoubleArray(sendPose);
+
+        System.out.println("Gyro Yaw: " + RobotGyro.getGyroAngleDegreesYaw());
+        System.out.println("Gyro Roll: " + RobotGyro.getGyroAngleDegreesRoll());
+        System.out.println("Gyro Pitch: " + RobotGyro.getGyroAngleDegreesPitch());
+
 
         // String currKey = NetworkTablesUtil.getKeyString();
         

@@ -2,7 +2,6 @@ package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.PositionConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class GoTowardsCoordinatesCommand extends CommandBase{

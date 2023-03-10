@@ -35,12 +35,16 @@ public class ArmControlCommand extends CommandBase {
 
         if(this.arm.getControlMode()){ // only run when arm is in manual control
             if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
-                arm.setControlDimensions(false);
-                double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
-                arm.moveVector(adjustments[0] * X_SPEED, 0, 0);
-                this.arm.setTurretSpeed(adjustments[2] * Z_SPEED);     
-    
-                System.out.println(adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
+                if(!this.arm.getFlipped()){
+                    arm.setControlDimensions(false);
+                    double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
+                    arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
+                    this.arm.setTurretSpeed(adjustments[2] * Z_SPEED);  
+                    //System.out.println(adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED); 
+                }
+                else{
+                    System.out.println("yo mama");
+                }
             }
             else{
                 this.arm.moveVector(-joystick.getLeftLateralMovement() * X_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);

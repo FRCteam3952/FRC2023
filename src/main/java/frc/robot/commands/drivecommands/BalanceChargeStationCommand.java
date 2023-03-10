@@ -5,7 +5,6 @@
 package frc.robot.commands.drivecommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.controllers.FlightJoystick;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 
@@ -16,7 +15,7 @@ public class BalanceChargeStationCommand extends CommandBase {
 
     private final DriveTrainSubsystem driveTrain;
 
-    private final double kP = 1/60;
+    private final double kP = 1d/90d;
     private final double MAX_SPEED = 0.69;
 
     public BalanceChargeStationCommand(DriveTrainSubsystem driveTrain) {
@@ -33,8 +32,12 @@ public class BalanceChargeStationCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double speed = RobotGyro.getGyroAngleDegreesPitch() * kP; // tune later
-        driveTrain.tankDrive(speed > MAX_SPEED ? speed : MAX_SPEED, 0);
+        double pitch = RobotGyro.getGyroAngleDegreesPitch();
+        double speed = pitch * kP; // tune later
+        if (Math.abs(pitch) < 3) {
+            speed = 0;
+        }
+        driveTrain.tankDrive(speed < MAX_SPEED ? speed : MAX_SPEED, 0);
     }
 
     // Called once the command ends or is interrupted.
