@@ -27,11 +27,11 @@ public class RobotGyro {
         return gyro.getAngle() + angleAdjust;
     }
 
-    public static double getGyroAngleDegreesPitch() {
+    public static double getGyroAngleDegreesRoll() {
         return gyro.getXComplementaryAngle() + angleAdjust;
     }
 
-    public static double getGyroAngleDegreesRoll() {
+    public static double getGyroAngleDegreesPitch() {
         return gyro.getYComplementaryAngle() + angleAdjust;
     }
     
