@@ -16,9 +16,9 @@ public class ArmControlCommand extends CommandBase {
     private final XboxController joystick;
 
     // Inches per 20ms
-    private static final double X_SPEED = 0.4;
-    private static final double Y_SPEED = 0.4;
-    private static final double Z_SPEED = 0.4;
+    private static final double X_SPEED = 1.0;
+    private static final double Y_SPEED = 1.0;
+    private static final double Z_SPEED = 1.0;
     private static final double EXTEND_RETRACT_SPEED = 0.02; // for possible testing later
 
     private static final double TURRET_SPEED = 0.6;
@@ -48,6 +48,7 @@ public class ArmControlCommand extends CommandBase {
                     this.arm.setFlipped(!this.arm.getFlipped());
                 }
 
+                /*
                 // test later for better understanding, if theres not enough time its okay - max
                 double turretAngleRad = this.arm.getCurrentAnglesRad()[2];
                 if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.EXTEND_ARM_BUTTON_NUMBER)) {
@@ -60,7 +61,7 @@ public class ArmControlCommand extends CommandBase {
                     this.arm.moveVector(Math.sin(turretAngleRad) * -EXTEND_RETRACT_SPEED, // x
                             0, // y
                             Math.cos(turretAngleRad) * -EXTEND_RETRACT_SPEED); // z
-                }
+                } */
                 
                 this.arm.setControlDimensions(true);
             }
