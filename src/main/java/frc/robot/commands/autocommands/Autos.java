@@ -20,13 +20,33 @@ public final class Autos {
     /**
      * Example static factory for an autonomous command.
      */
+
+     // This is used for testing for now
     public static CommandBase exampleAuto(/* if you need a subsystem, pass it in as a parameter here, and make sure to pass them in when the method is called inside RobotContainer */) {
         // You can also pass in commands as parameters if you want to use existing commands as part of your autonomouse command (such as BalanceChargeStation.java *wink wink hint hint*)
         // Example command case
         return Commands.runOnce(() -> {
             // Autonomous scenario code
-            
-        }) /* susbsystems that are used inside the curly braces above must be passed in here */;
+            int i = 0;
+            while (i < 100) {
+                System.out.println("Auton running1");
+                i++;
+            }
+        }).alongWith(Commands.runOnce(() -> {
+            // Autonomous scenario code
+            int i = 100;
+            while (i > 0) {
+                System.out.println("Auton running2");
+                i--;
+            }
+        })).andThen(Commands.runOnce(() -> {
+            // Autonomous scenario code
+            int i = 100;
+            while (i > 0) {
+                System.out.println("Auton running3");
+                i--;
+            }
+        })) /* susbsystems that are used inside the curly braces above must be passed in here */;
 
         // To implement a sequence of actions/commands use .andThen(), can be used to implement PathWeaver trajectories
         // To implement simultaneous actions/commands use .alongWith(), can also be used to implement PathWeaver trajectories
@@ -48,12 +68,14 @@ public final class Autos {
         if (blueTeam) {
             return Commands.runOnce(() -> {
                     // Any neccessary calibration code
-                }).alongWith(arm.calibrateArm())
+                    System.out.println("Balance Auto");
+                })/*.alongWith(arm.calibrateArm())*/
                 .alongWith(driveForwardOverChargeStationBlueCommand);
         } else {
             return Commands.runOnce(() -> {
+                System.out.println("Balance Auto");
                 // Any neccessary calibration code
-            }).alongWith(arm.calibrateArm())
+            })/*.alongWith(arm.calibrateArm())*/
             .alongWith(driveForwardOverChargeStationRedCommand);
         }
     }
@@ -74,6 +96,8 @@ public final class Autos {
     public static CommandBase balanceAuto(Command driveForwardOverChargeStationBlueCommand, 
             Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
             Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm) {
+        
+        System.out.println("Balance Auto init");
 
         return balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)
         .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation));
