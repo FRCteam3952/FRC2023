@@ -8,15 +8,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.PositionConstants;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 
 public final class Autos {
     private static boolean blueTeam = true; // Whether we are on the blue team or not
-    private static final Timer timer = new Timer();
 
     /**
      * Example static factory for an autonomous command.
@@ -58,6 +55,7 @@ public final class Autos {
     public static CommandBase defaultAuto() {
         // Example command case
         return Commands.runOnce(() -> {
+            System.out.println("Default Auto Running");
             // Autonomous scenario code
         });
 
@@ -70,8 +68,8 @@ public final class Autos {
             return Commands.runOnce(() -> {
                     // Any neccessary calibration code
                     System.out.println("Balance Auto Blue Start");
-                })/*.alongWith(arm.calibrateArm())*/
-                .alongWith(driveForwardOverChargeStationBlueCommand);
+            })/*.alongWith(arm.calibrateArm())*/
+            .alongWith(driveForwardOverChargeStationBlueCommand);
         } else {
             return Commands.runOnce(() -> {
                 System.out.println("Balance Auto Red Start");
@@ -86,16 +84,16 @@ public final class Autos {
 
         if (blueTeam) {    
             return driveBackwardsOntoChargeStationBlueCommand
-            .andThen(balanceChargeStation)
+            .andThen(balanceChargeStation
             .alongWith(Commands.runOnce(() -> {
                 System.out.println("Balance Auto Blue Finish");
-            }));
+            })));
         } else {
             return driveBackwardsOntoChargeStationRedCommand
-            .andThen(balanceChargeStation)
+            .andThen(balanceChargeStation
             .alongWith(Commands.runOnce(() -> {
                 System.out.println("Balance Auto Red Finish");
-            }));
+            })));
         }
     }
 
@@ -108,7 +106,7 @@ public final class Autos {
                 System.out.println("Balance Auto Start");
             }).andThen(balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm))
             .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation)
-            .alongWith(Commands.runOnce(() -> {
+            .andThen(Commands.runOnce(() -> {
                 System.out.println("Balance Auto Finish");
             }))));
     }
@@ -188,10 +186,10 @@ public final class Autos {
             System.out.println("Place Cone then Balance Auto Start");
         }).andThen(balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm))
         .andThen(placeConeAuto(claw, goTowardsTopRight, goTowardsStartingPos))
-        .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation))
+        .andThen((balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation))
         .alongWith(Commands.runOnce(() -> {
             System.out.println("Place Cone then Balance Auto Finish");
-        }));
+        })));
         
     }
 

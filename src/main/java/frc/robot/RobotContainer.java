@@ -189,7 +189,7 @@ public class RobotContainer {
 
         try {
             Path driveBackwardsOntoChargeStationBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationBlueJSON);
-            driveForwardOverChargeStationBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationBluePath);
+            driveBackwardsOntoChargeStationBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationBluePath);
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationBlueJSON, ex.getStackTrace());
         }
@@ -203,7 +203,7 @@ public class RobotContainer {
 
         try {
             Path driveBackwardsOntoChargeStationRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationRedJSON);
-            driveForwardOverChargeStationBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationRedPath);
+            driveBackwardsOntoChargeStationRedTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationRedPath);
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationRedJSON, ex.getStackTrace());
         }
@@ -217,7 +217,7 @@ public class RobotContainer {
 
         try {
             Path driveForwardsToGridBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardsToGridBlueJSON);
-            driveBackwardsToCubeBlueTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridBluePath);
+            driveForwardsToGridBlueTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridBluePath);
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + driveForwardsToGridBlueJSON, ex.getStackTrace());
         }
@@ -231,7 +231,7 @@ public class RobotContainer {
 
         try {
             Path driveForwardsToGridRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardsToGridRedJSON);
-            driveBackwardsToCubeBlueTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridRedPath);
+            driveForwardsToGridRedTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridRedPath);
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + driveForwardsToGridRedJSON, ex.getStackTrace());
         }
