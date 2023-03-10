@@ -11,9 +11,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
+import frc.robot.util.NetworkTablesUtil;
 
 public final class Autos {
-    private static boolean blueTeam = true; // Whether we are on the blue team or not
+    private static boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam(); // Whether we are on the blue team or not
 
     /**
      * Example static factory for an autonomous command.
@@ -83,7 +84,7 @@ public final class Autos {
     // Second half of balance auto
     public static CommandBase balanceAutoSecondHalf(Command driveBackwardsOntoChargeStationBlueCommand, 
             Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation) {
-
+        
         if (blueTeam) {    
             return driveBackwardsOntoChargeStationBlueCommand
             .andThen(balanceChargeStation // Balances charge station (Runs until the end of autonomous)
@@ -104,6 +105,7 @@ public final class Autos {
             Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
             Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm) {
 
+            blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
             return (Commands.runOnce(() -> {
                 System.out.println("Balance Auto Start");
             }).andThen(balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)) // Drive forward over charge station
@@ -115,6 +117,7 @@ public final class Autos {
 
     // Assumes robot is at a AprilTag
     // Might need to add calibration 
+    // Places cone on top right pole
     public static CommandBase placeConeAuto(ClawGripSubsystem claw, GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos) {
         return Commands.runOnce(() -> {
             // Any neccessary calibration code
@@ -131,11 +134,13 @@ public final class Autos {
     // Position values on trajectories may need to be adjusted
     // Adjustments can be made later lol
     // Might need to add calibration 
+    // Places pre-loaded cone, drives backwards to pick up cube, drives forwards to place cube on grid
     public static CommandBase doublePlacementAuto(ArmSubsystem arm, ClawGripSubsystem claw, Command driveBackwardsToCubeBlue, Command driveForwardsToGridBlue, 
             Command driveBackwardsToCubeRed, Command driveForwardsToGridRed, GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos,
             GoTowardsCoordinatesCommand goTowardsStartingPos2, GoTowardsCoordinatesCommand goTowardsStartingPos3, GoTowardsCoordinatesCommand goTowardsPickupPos, 
             GoTowardsCoordinatesCommand goTowardsTopCenter) {
 
+        blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
         if (blueTeam) {
             return Commands.runOnce(() -> {
                 System.out.println("Double Placement Auto Blue Start");
@@ -184,6 +189,7 @@ public final class Autos {
             Command driveForwardOverChargeStationRedCommand, Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm, ClawGripSubsystem claw,
             GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos) {
 
+        blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
         return Commands.runOnce(() -> {
             System.out.println("Place Cone then Balance Auto Start");
         }).andThen(balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)) // Drives forward over charge station to grid
@@ -192,9 +198,22 @@ public final class Autos {
         .andThen(Commands.runOnce(() -> {
             System.out.println("Place Cone then Balance Auto Finish"); // Shouldn't print until auton is over, if at all
         })));
-        
     }
 
+    // Runs double placement then balances charge station
+    // Might not use, don't know if there is enough time
+    public static CommandBase doublePlacementThenBalanceAuto(ArmSubsystem arm, ClawGripSubsystem claw, Command driveBackwardsToCubeBlue, Command driveForwardsToGridBlue, 
+            Command driveBackwardsToCubeRed, Command driveForwardsToGridRed, GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos,
+            GoTowardsCoordinatesCommand goTowardsStartingPos2, GoTowardsCoordinatesCommand goTowardsStartingPos3, GoTowardsCoordinatesCommand goTowardsPickupPos, 
+            GoTowardsCoordinatesCommand goTowardsTopCenter, Command driveBackwardsOntoChargeStationDPBlue, Command driveBackwardsOntoChargeStationDPRed, Command balanceCommand) {
+        
+        blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
+        return doublePlacementAuto(arm, claw, driveBackwardsToCubeBlue, driveForwardsToGridBlue, driveBackwardsToCubeRed, driveForwardsToGridRed, goTowardsTopRight, 
+                goTowardsStartingPos, goTowardsStartingPos2, goTowardsStartingPos3, goTowardsPickupPos, goTowardsTopCenter) // Runs double placement command
+        .andThen(blueTeam ? driveBackwardsOntoChargeStationDPBlue : driveBackwardsOntoChargeStationDPRed) // Drives backwards onto charge station
+        .andThen(balanceCommand); // Balances the charge station continuously
+    }
+    
     private Autos() {
         throw new UnsupportedOperationException("Autos is a utility class and cannot be instantiated!");
     }

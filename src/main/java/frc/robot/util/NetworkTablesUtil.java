@@ -92,6 +92,11 @@ public class NetworkTablesUtil {
         return new Translation2d(jetsonPoseXYZ[0], jetsonPoseXYZ[2]);
     }
 
+    public static boolean getIfOnBlueTeam() {
+        NetworkTable table = INSTANCE.getTable("FMSInfo");
+        return !table.getEntry("IsRedAlliance").getBoolean(true);
+    }
+
     /**
      * Returns the entry reference from NetworkTables
      *
