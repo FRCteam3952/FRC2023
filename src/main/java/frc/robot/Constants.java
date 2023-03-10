@@ -124,7 +124,7 @@ public final class Constants {
 
         public static final int PIVOT_1_LIMIT_PORT = 1;
         public static final int PIVOT_2_LIMIT_PORT = 0;
-        public static final int CLAW_LIMIT_SWITCH_PORT = 2; // change to whatever it is
+        public static final int TURRET_LIMIT_PORT = 2;
     }
 
     /**

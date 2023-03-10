@@ -14,7 +14,7 @@ public class LimeLight {
     }
 
     public static float getXAdjustment() {
-        float tx = (NetworkTablesUtil.getLimeLightErrorX() - 160) * kp;
+        float tx = (NetworkTablesUtil.getLimeLightErrorX()) * kp;
 
         // if tx is too big, return the max of 1 or -1
         if (Math.abs(tx) > 1) {
@@ -25,7 +25,7 @@ public class LimeLight {
     }
 
     public static float getYAdjustment() {
-        float ty = (NetworkTablesUtil.getLimeLightErrorY() - 120) * kp;
+        float ty = (NetworkTablesUtil.getLimeLightErrorY()) * kp;
 
         // if ty is too big, return the max of 1 or -1
         if (Math.abs(ty) > 1) {
@@ -61,7 +61,7 @@ public class LimeLight {
     
             adjustments[0] = getYAdjustment(); // x-axis adjustment
     
-            adjustments[1] = yAdjustment; // y-axis adjustment
+            adjustments[1] = 0; // y-axis adjustment
     
             adjustments[2] = getXAdjustment(); // z-axis adjustment
     
@@ -72,7 +72,7 @@ public class LimeLight {
                     (DESIRED_AREA_CUBE - getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
             xAdjustment = xAdjustment > 1 ? 1 : xAdjustment;
     
-            adjustments[0] = xAdjustment; // x-axis adjustment
+            adjustments[0] = 0; // x-axis adjustment
     
             adjustments[1] = getYAdjustment(); // y-axis adjustment
     

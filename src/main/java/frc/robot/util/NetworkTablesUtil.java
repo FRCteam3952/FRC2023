@@ -41,7 +41,7 @@ public class NetworkTablesUtil {
     public static float getLimeLightErrorX() {
         NetworkTable table = INSTANCE.getTable("limelight");
         if (getLimeLightPipeline() == 1){
-            return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[1].floatValue();
+            return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[1].floatValue() - 160.0f;
         }
         else{
             return table.getEntry("tx").getNumber(0.0).floatValue();
@@ -52,7 +52,7 @@ public class NetworkTablesUtil {
     public static float getLimeLightErrorY() {
         NetworkTable table = INSTANCE.getTable("limelight");
         if (getLimeLightPipeline() == 1){
-            return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[2].floatValue();
+            return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[2].floatValue() - 120.0f;
         }
         else{
             return table.getEntry("ty").getNumber(0.0).floatValue();
