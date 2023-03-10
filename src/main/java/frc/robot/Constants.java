@@ -86,6 +86,7 @@ public final class Constants {
             // Flight Joystick 0
             public static final int RUN_GUI_TRAJECTORY_BUTTON_NUMBER = 4; // idk i just picked a random number
             public static final int BALANCE_CHARGE_STATION_BUTTON_NUMBER = 5;
+            public static final int RESET_GYRO_BUTTON_NUMBER = 8;
 
             // Xbox Controller
             public static final int AIM_ASSIST_BUTTON_NUMBER = 1; // change to whatever it is
