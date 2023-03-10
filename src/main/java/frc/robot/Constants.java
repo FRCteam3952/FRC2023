@@ -137,7 +137,7 @@ public final class Constants {
         public static final double KA_VOLTS_SECONDS_SQ_PER_METER = 0.2;
         public static final double P_DRIVE_VEL = 8.5;
 
-        public static final double TRACKWIDTH_METERS = 0.69; // nice
+        public static final double TRACKWIDTH_METERS = 0.5842;
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACKWIDTH_METERS);
 
         public static final double ENCODER_CONVERSION_FACTOR = 1; //find out experimentally or some other way
@@ -149,8 +149,8 @@ public final class Constants {
          * Constants relating to trajectory generation
          */
         public static class TrajectoryConstants {
-            public static final double MAX_SPEED_METERS_PER_SECOND = 3;
-            public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
+            public static final double MAX_SPEED_METERS_PER_SECOND = 0.3048;
+            public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.1524;
 
             // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
             public static final double RAMSETE_B = 2;
