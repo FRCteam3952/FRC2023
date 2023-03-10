@@ -388,8 +388,8 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
         // System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
-        //System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
-        System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
+        // System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
+        // System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
         boolean resetPivot1 = getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle1 - ArmConstants.ARM_1_INITIAL_ANGLE) < 5;
         boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
 

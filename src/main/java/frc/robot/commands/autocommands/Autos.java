@@ -69,12 +69,12 @@ public final class Autos {
         if (blueTeam) {
             return Commands.runOnce(() -> {
                     // Any neccessary calibration code
-                    System.out.println("Balance Auto");
+                    System.out.println("Balance Auto Blue Start");
                 })/*.alongWith(arm.calibrateArm())*/
                 .alongWith(driveForwardOverChargeStationBlueCommand);
         } else {
             return Commands.runOnce(() -> {
-                System.out.println("Balance Auto");
+                System.out.println("Balance Auto Red Start");
                 // Any neccessary calibration code
             })/*.alongWith(arm.calibrateArm())*/
             .alongWith(driveForwardOverChargeStationRedCommand);
@@ -86,10 +86,16 @@ public final class Autos {
 
         if (blueTeam) {    
             return driveBackwardsOntoChargeStationBlueCommand
-                .andThen(balanceChargeStation);
+            .andThen(balanceChargeStation)
+            .alongWith(Commands.runOnce(() -> {
+                System.out.println("Balance Auto Blue Finish");
+            }));
         } else {
             return driveBackwardsOntoChargeStationRedCommand
-                .andThen(balanceChargeStation);
+            .andThen(balanceChargeStation)
+            .alongWith(Commands.runOnce(() -> {
+                System.out.println("Balance Auto Red Finish");
+            }));
         }
     }
 
@@ -97,11 +103,14 @@ public final class Autos {
     public static CommandBase balanceAuto(Command driveForwardOverChargeStationBlueCommand, 
             Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
             Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm) {
-        
-        System.out.println("Balance Auto init");
 
-        return balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)
-        .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation));
+            return (Commands.runOnce(() -> {
+                System.out.println("Balance Auto Start");
+            }).andThen(balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm))
+            .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation)
+            .alongWith(Commands.runOnce(() -> {
+                System.out.println("Balance Auto Finish");
+            }))));
     }
 
     // Assumes robot is at a AprilTag
@@ -109,10 +118,14 @@ public final class Autos {
     public static CommandBase placeConeAuto(ClawGripSubsystem claw, GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos) {
         return Commands.runOnce(() -> {
             // Any neccessary calibration code
+            System.out.println("Place Cone Auto Start");
         }).andThen(goTowardsTopRight)
         .andThen(Commands.runOnce(() -> {
             claw.setClawClosed(false); // open claw
-        }, claw).andThen(goTowardsStartingPos));
+        }, claw).andThen(goTowardsStartingPos))
+        .andThen(Commands.runOnce(() -> {
+            System.out.println("Place Cone Auto Finish");
+        }));
     }
 
     // Position values on trajectories may need to be adjusted
@@ -124,35 +137,45 @@ public final class Autos {
             GoTowardsCoordinatesCommand goTowardsTopCenter) {
 
         if (blueTeam) {
-            return placeConeAuto(claw, goTowardsTopRight, goTowardsStartingPos) // Drops pre-loaded cone onto top right pole
+            return Commands.runOnce(() -> {
+                System.out.println("Double Placement Auto Blue Start");
+            }).andThen(placeConeAuto(claw, goTowardsTopRight, goTowardsStartingPos)) // Drops pre-loaded cone onto top right pole
             .andThen(driveBackwardsToCubeBlue) // Drives backwards to cube
             .andThen(Commands.runOnce(() -> { 
                 claw.setClawClosed(false); // Opens claw
-            }).andThen(goTowardsPickupPos) // Arm goes to pickup position
+            }, claw)).andThen(goTowardsPickupPos) // Arm goes to pickup position
             .andThen(Commands.runOnce(() -> { 
                 claw.setClawClosed(true); // Closes claw
-            })
+            }, claw))
             .andThen(goTowardsStartingPos2) // Arm goes to starting position
-            .alongWith(driveForwardsToGridBlue) // Drive forwards to grid
+            .andThen(driveForwardsToGridBlue) // Drive forwards to grid
             .andThen(goTowardsTopCenter) // Arm goes to top center position on grid
             .andThen(Commands.runOnce(() -> {
                 claw.setClawClosed(false); // Open claw
-            }).andThen(goTowardsStartingPos3)))); // Arm goes to starting position
+            }, claw).andThen(goTowardsStartingPos3)) // Arm goes to starting position
+            .andThen(Commands.runOnce(() -> {
+                System.out.println("Double Placement Auto Blue Finish");
+            }));
         } else {
-            return placeConeAuto(claw, goTowardsTopRight, goTowardsStartingPos) // Drops pre-loaded cone onto top right pole
+            return Commands.runOnce(() -> {
+                System.out.println("Double Placement Auto Red Start");
+            }).andThen(placeConeAuto(claw, goTowardsTopRight, goTowardsStartingPos)) // Drops pre-loaded cone onto top right pole
             .andThen(driveBackwardsToCubeRed) // Drives backwards to cube
             .andThen(Commands.runOnce(() -> { 
                 claw.setClawClosed(false); // Opens claw
-            }).andThen(goTowardsPickupPos) // Arm goes to pickup position
+            }, claw)).andThen(goTowardsPickupPos) // Arm goes to pickup position
             .andThen(Commands.runOnce(() -> { 
                 claw.setClawClosed(true); // Closes claw
-            })
+            }, claw))
             .andThen(goTowardsStartingPos2) // Arm goes to starting position
-            .alongWith(driveForwardsToGridRed) // Drive forwards to grid
+            .andThen(driveForwardsToGridRed) // Drive forwards to grid
             .andThen(goTowardsTopCenter) // Arm goes to top center position on grid
             .andThen(Commands.runOnce(() -> {
                 claw.setClawClosed(false); // Open claw
-            }).andThen(goTowardsStartingPos3)))); // Arm goes to starting position
+            }, claw).andThen(goTowardsStartingPos3)) // Arm goes to starting position
+            .andThen(Commands.runOnce(() -> {
+                System.out.println("Double Placement Auto Red Finish");
+            }));
         }
     }
 
@@ -161,9 +184,14 @@ public final class Autos {
             Command driveForwardOverChargeStationRedCommand, Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm, ClawGripSubsystem claw,
             GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos) {
 
-        return balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)
+        return Commands.runOnce(() -> {
+            System.out.println("Place Cone then Balance Auto Start");
+        }).andThen(balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm))
         .andThen(placeConeAuto(claw, goTowardsTopRight, goTowardsStartingPos))
-        .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation));
+        .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation))
+        .alongWith(Commands.runOnce(() -> {
+            System.out.println("Place Cone then Balance Auto Finish");
+        }));
         
     }
 
