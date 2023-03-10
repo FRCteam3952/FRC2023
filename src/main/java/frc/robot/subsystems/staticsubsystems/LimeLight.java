@@ -1,10 +1,14 @@
 package frc.robot.subsystems.staticsubsystems;
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.util.NetworkTablesUtil;
 
 public class LimeLight {
     private static final double DESIRED_AREA_CONE = 5000; // tentative measurement, pixels
     private static final double DESIRED_AREA_CUBE = 420; // measure later
-    private static final float kp = 0.003125f;
+    private static final double kp = 0.02f;
+    private static final double ki = 0.002f;
+    private static final double kd = 0;
+    private static final PIDController adjustmentPID = new PIDController(kp, ki, kd);
 
     public static void poke() {
         System.out.println("LimeLight initialized");
@@ -13,19 +17,19 @@ public class LimeLight {
     public LimeLight() {
     }
 
-    public static float getXAdjustment() {
-        float tx = (NetworkTablesUtil.getLimeLightErrorX() - 160) * kp;
-
+    public static double getXAdjustment() {
+        double tx = adjustmentPID.calculate(NetworkTablesUtil.getLimeLightErrorX() - 160);
         // if tx is too big, return the max of 1 or -1
         if (Math.abs(tx) > 1) {
             // return 1 if tx is greater than 1, -1 if tx is less than -1
             return Math.copySign(1, tx);
         }
+        System.out.println("LIMELIGHT X ERR: " + tx);
         return tx;
     }
 
-    public static float getYAdjustment() {
-        float ty = (NetworkTablesUtil.getLimeLightErrorY() - 120) * kp;
+    public static double getYAdjustment() {
+        double ty = (NetworkTablesUtil.getLimeLightErrorY() - 120) * kp;
 
         // if ty is too big, return the max of 1 or -1
         if (Math.abs(ty) > 1) {
@@ -61,7 +65,7 @@ public class LimeLight {
     
             adjustments[0] = getYAdjustment(); // x-axis adjustment
     
-            adjustments[1] = yAdjustment; // y-axis adjustment
+            adjustments[1] = 0; // y-axis adjustment
     
             adjustments[2] = getXAdjustment(); // z-axis adjustment
     
@@ -72,7 +76,7 @@ public class LimeLight {
                     (DESIRED_AREA_CUBE - getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
             xAdjustment = xAdjustment > 1 ? 1 : xAdjustment;
     
-            adjustments[0] = xAdjustment; // x-axis adjustment
+            adjustments[0] = 0; // x-axis adjustment
     
             adjustments[1] = getYAdjustment(); // y-axis adjustment
     

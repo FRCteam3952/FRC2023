@@ -23,6 +23,7 @@ import frc.robot.Constants.PositionConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
+import frc.robot.commands.armcommands.CalibrateArmCommand;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommand;
 import frc.robot.commands.autocommands.Autos;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
@@ -159,7 +160,8 @@ public class RobotContainer {
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_RIGHT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawRight());
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
         // armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
-        xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
+        // xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
+        xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmCommand(arm));
     }
 
     /**

@@ -16,9 +16,9 @@ public class ArmControlCommand extends CommandBase {
     private final XboxController joystick;
 
     // Inches per 20ms
-    private static final double X_SPEED = 1.0;
-    private static final double Y_SPEED = 1.0;
-    private static final double Z_SPEED = 1.0;
+    private static final double X_SPEED = 0.8;
+    private static final double Y_SPEED = 0.8;
+    private static final double Z_SPEED = 0.8;
     private static final double EXTEND_RETRACT_SPEED = 0.02; // for possible testing later
 
     private static final double TURRET_SPEED = 0.6;
@@ -37,7 +37,9 @@ public class ArmControlCommand extends CommandBase {
             if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
                 arm.setControlDimensions(false);
                 double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
-                arm.moveVector(adjustments[0] * X_SPEED, 0, adjustments[2] * Z_SPEED);
+                arm.moveVector(adjustments[0] * X_SPEED, 0, 0);
+                this.arm.setTurretSpeed(adjustments[2] * Z_SPEED);     
+    
                 System.out.println(adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED);
             }
             else{
