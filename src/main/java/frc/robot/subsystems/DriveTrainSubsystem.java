@@ -329,8 +329,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
             }
         }
 
-        String currKey = NetworkTablesUtil.getKeyString();
+        Pose2d pose = odometry.getPoseMeters();
+        double[] sendPose = {pose.getX(), pose.getY(), pose.getRotation().getRadians()};
+        NetworkTablesUtil.getEntry("robot", "drive_odometry").setDoubleArray(sendPose);
+
+        // String currKey = NetworkTablesUtil.getKeyString();
         
+        /*
         // Generates trajectories from the robot's current position to a specific April Tag and schedules them to be followed
         if (blueTeam) { // TODO: adjust tag id's to be correct
             switch (currKey) {
@@ -362,7 +367,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
                     // System.out.println("No tag selected");
                     break;
             }
-        }
+        } */
         
         // var pose = odometry.getPoseMeters();
 

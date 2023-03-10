@@ -28,6 +28,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final DigitalInput arm1Limit;
     private final DigitalInput arm2Limit;
+    private final DigitalInput turretLimit;
 
     private final PIDController pidController1, pidController2, pidController3;
 
@@ -89,6 +90,7 @@ public class ArmSubsystem extends SubsystemBase {
         // Initialize arm limit switches
         this.arm1Limit = new DigitalInput(PortConstants.PIVOT_1_LIMIT_PORT);
         this.arm2Limit = new DigitalInput(PortConstants.PIVOT_2_LIMIT_PORT);
+        this.turretLimit = new DigitalInput(PortConstants.TURRET_LIMIT_PORT);
 
         // Set starting arm angles
         this.targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
@@ -175,7 +177,22 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void setTurretSpeed(double speed) {
-        this.turret.set(speed);
+        if (this.is2D) {
+            if (this.turretEncoder.getPosition() >= 360) {
+                this.turret.set(-0.2);
+            }
+            else if(this.turretEncoder.getPosition() <= -360){
+                this.turret.set(0.2);
+            }
+            else{
+                this.turret.set(speed);
+            }
+
+        }
+        else{
+            this.turret.set(speed);
+        }
+
     }
 
     public void setControlMode(boolean isManual){
@@ -240,6 +257,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     public boolean getPivot2LimitPressed() {
         return !this.arm2Limit.get();
+    }
+
+    public boolean getTurretLimitPressed(){
+        return !this.turretLimit.get();
     }
 
     public void setArm1SpeedMultiplier(double mult) {
@@ -390,8 +411,24 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
         boolean resetPivot1 = getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle1 - ArmConstants.ARM_1_INITIAL_ANGLE) < 5;
         boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
+
+        double tempAngle = this.turretEncoder.getPosition();
+
+        if(getTurretLimitPressed()){
+            if(tempAngle < 50 && tempAngle > -50){
+                this.turretEncoder.setPosition(0);
+            }
+            else if(tempAngle > 300){
+                this.turretEncoder.setPosition(360);
+            }
+            else{
+                this.turretEncoder.setPosition(-360);
+            }
+        }
+
         // System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", " + getPivot2LimitPressed());
         // handles limit switches
+
         if (resetPivot1) {
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         }
@@ -403,6 +440,7 @@ public class ArmSubsystem extends SubsystemBase {
         if(resetPivot1 && resetPivot2) {
             resetCoords();
         }
+
 
         /*
          * Moves arm to specific positions for placing game pieces. The robot is assumed to be positioned directly in front of an april tag.

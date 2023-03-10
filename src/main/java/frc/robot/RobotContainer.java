@@ -52,7 +52,7 @@ public class RobotContainer {
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     public final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
-    public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
+    // public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
     public final XboxController xboxController = new XboxController(new CommandXboxController(OperatorConstants.XBOX_CONTROLLER_PORT));
 
     // The robot's subsystems and commands are defined here...
@@ -66,6 +66,7 @@ public class RobotContainer {
     public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
     public final BalanceChargeStationCommand balanceCommand = new BalanceChargeStationCommand(driveTrain);
     public final BalanceChargeStationCommand balanceCommand2 = new BalanceChargeStationCommand(driveTrain); // Only here because compositions can't use commands that have already been used for other compositions
+    public final BalanceChargeStationCommand balanceCommand3 = new BalanceChargeStationCommand(driveTrain); // Only here because compositions can't use commands that have already been used for other compositions
 
     // these ones got changed to xbox
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
@@ -73,13 +74,20 @@ public class RobotContainer {
     public final GoTowardsCoordinatesCommand goTowardsTopRight = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS);
     public final GoTowardsCoordinatesCommand goTowardsTopRight2 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommand goTowardsTopRight3 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommand goTowardsTopRight4 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommand goTowardsTopCenter = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_CENTER_POS);
+    public final GoTowardsCoordinatesCommand goTowardsTopCenter2 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_CENTER_POS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommand goTowardsTopCenter3 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_CENTER_POS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommand goTowardsStartingPos = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS);
     public final GoTowardsCoordinatesCommand goTowardsStartingPos2 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommand goTowardsStartingPos3 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommand goTowardsStartingPos4 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommand goTowardsStartingPos5 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommand goTowardsStartingPos6 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommand goTowardsStartingPos7 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommand goTowardsStartingPos8 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommand goTowardsPickupPos = new GoTowardsCoordinatesCommand(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0});
+    public final GoTowardsCoordinatesCommand goTowardsPickupPos2 = new GoTowardsCoordinatesCommand(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}); // Only here because compositions can't use commands that have already been used for other compositions
 
     public final ClawOpenandCloseCommand clawOpenandCloseCommand = new ClawOpenandCloseCommand(clawGrip, xboxController);
     public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, xboxController);
@@ -105,15 +113,27 @@ public class RobotContainer {
     public String driveBackwardsToCubeBlueJSON = "paths/DriveBackwardsToCubeBlue.wpilib.json";
     public Trajectory driveBackwardsToCubeBlueTraj = new Trajectory();
     public Command driveBackwardsToCubeBlueCommand;
+    public Command driveBackwardsToCubeBlueCommand2;
     public String driveForwardsToGridBlueJSON = "paths/DriveForwardsToGridBlue.wpilib.json";
     public Trajectory driveForwardsToGridBlueTraj = new Trajectory();
     public Command driveForwardsToGridBlueCommand;
+    public Command driveForwardsToGridBlueCommand2;
     public String driveBackwardsToCubeRedJSON = "paths/DriveBackwardsToCubeRed.wpilib.json";
     public Trajectory driveBackwardsToCubeRedTraj = new Trajectory();
     public Command driveBackwardsToCubeRedCommand;
+    public Command driveBackwardsToCubeRedCommand2;
     public String driveForwardsToGridRedJSON = "paths/DriveForwardsToGridRed.wpilib.json";
     public Trajectory driveForwardsToGridRedTraj = new Trajectory();
     public Command driveForwardsToGridRedCommand;
+    public Command driveForwardsToGridRedCommand2;
+
+    public String driveBackwardsOntoChargeStationDPBlueJSON = "paths/DriveBackwardsOntoChargeStationDPBlue.wpilib.json";
+    public Trajectory driveBackwardsOntoChargeStationDPBlueTraj = new Trajectory();
+    public Command driveBackwardsOntoChargeStationDPBlueCommand;
+    public String driveBackwardsOntoChargeStationDPRedJSON = "paths/DriveBackwardsOntoChargeStationDPRed.wpilib.json";
+    public Trajectory driveBackwardsOntoChargeStationDPRedTraj = new Trajectory();
+    public Command driveBackwardsOntoChargeStationDPRedCommand;
+
 
     private Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
     private Command customAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
@@ -121,6 +141,7 @@ public class RobotContainer {
     private Command balanceChargeStationAuto; 
     private Command doublePlacementAuto;
     private Command placeConeThenBalanceAuto;
+    private Command doublePlacementThenBalanceAuto;
     
     private Command m_autonomousCommand;
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -162,6 +183,7 @@ public class RobotContainer {
         // armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
         // xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
         xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmCommand(arm));
+        driverController.joystick.button(ControllerConstants.BALANCE_CHARGE_STATION_BUTTON_NUMBER).whileTrue(balanceCommand);
     }
 
     /**
@@ -187,7 +209,7 @@ public class RobotContainer {
 
         try {
             Path driveBackwardsOntoChargeStationBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationBlueJSON);
-            driveForwardOverChargeStationBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationBluePath);
+            driveBackwardsOntoChargeStationBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationBluePath);
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationBlueJSON, ex.getStackTrace());
         }
@@ -201,7 +223,7 @@ public class RobotContainer {
 
         try {
             Path driveBackwardsOntoChargeStationRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationRedJSON);
-            driveForwardOverChargeStationBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationRedPath);
+            driveBackwardsOntoChargeStationRedTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationRedPath);
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationRedJSON, ex.getStackTrace());
         }
@@ -215,7 +237,7 @@ public class RobotContainer {
 
         try {
             Path driveForwardsToGridBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardsToGridBlueJSON);
-            driveBackwardsToCubeBlueTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridBluePath);
+            driveForwardsToGridBlueTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridBluePath);
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + driveForwardsToGridBlueJSON, ex.getStackTrace());
         }
@@ -229,9 +251,23 @@ public class RobotContainer {
 
         try {
             Path driveForwardsToGridRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardsToGridRedJSON);
-            driveBackwardsToCubeBlueTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridRedPath);
+            driveForwardsToGridRedTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridRedPath);
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + driveForwardsToGridRedJSON, ex.getStackTrace());
+        }
+
+        try {
+            Path driveBackwardsOntoChargeStationDPBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationDPBlueJSON);
+            driveBackwardsOntoChargeStationDPBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationDPBluePath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationDPBlueJSON, ex.getStackTrace());
+        }
+
+        try {
+            Path driveBackwardsOntoChargeStationDPRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationDPRedJSON);
+            driveBackwardsOntoChargeStationDPRedTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationDPRedPath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationDPRedJSON, ex.getStackTrace());
         }
 
         driveForwardOverChargeStationBlueCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationBlueTraj);
@@ -249,6 +285,14 @@ public class RobotContainer {
         driveBackwardsToCubeRedCommand = driveTrain.generateRamseteCommand(driveBackwardsToCubeRedTraj);
         driveForwardsToGridRedCommand = driveTrain.generateRamseteCommand(driveForwardsToGridRedTraj);
 
+        driveBackwardsToCubeBlueCommand2 = driveTrain.generateRamseteCommand(driveBackwardsToCubeBlueTraj);
+        driveForwardsToGridBlueCommand2 = driveTrain.generateRamseteCommand(driveForwardsToGridBlueTraj);
+        driveBackwardsToCubeRedCommand2 = driveTrain.generateRamseteCommand(driveBackwardsToCubeRedTraj);
+        driveForwardsToGridRedCommand2 = driveTrain.generateRamseteCommand(driveForwardsToGridRedTraj);
+
+        driveBackwardsOntoChargeStationDPBlueCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationDPBlueTraj);
+        driveBackwardsOntoChargeStationDPRedCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationDPRedTraj);
+
         // Initialize autonomous commands here
         balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
                 driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand, arm);
@@ -258,6 +302,9 @@ public class RobotContainer {
                 goTowardsStartingPos3, goTowardsPickupPos, goTowardsTopCenter);
         placeConeThenBalanceAuto = Autos.placeConeThenBalanceAuto(driveForwardOverChargeStationBlueCommand2, driveBackwardsOntoChargeStationBlueCommand2, 
                 driveForwardOverChargeStationRedCommand2, driveBackwardsOntoChargeStationRedCommand2, balanceCommand2, arm, clawGrip, goTowardsTopRight3, goTowardsStartingPos5);
+        doublePlacementThenBalanceAuto = Autos.doublePlacementThenBalanceAuto(arm, clawGrip, driveBackwardsToCubeBlueCommand2, driveForwardsToGridBlueCommand2, 
+                driveBackwardsToCubeRedCommand2, driveForwardsToGridRedCommand2, goTowardsTopRight4, goTowardsStartingPos6, goTowardsStartingPos7, goTowardsStartingPos8, 
+                goTowardsPickupPos2, goTowardsTopCenter3, driveBackwardsOntoChargeStationDPBlueCommand, driveBackwardsOntoChargeStationDPRedCommand, balanceCommand3);
 
         // Adds autonomous options to dashboard
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
@@ -266,6 +313,7 @@ public class RobotContainer {
         m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
         m_chooser.addOption("Place Cone Then Balance Auto", placeConeThenBalanceAuto);
+        m_chooser.addOption("Double Placement Then Balance Auto", doublePlacementThenBalanceAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
 }
 

@@ -85,6 +85,7 @@ public final class Constants {
         public static class ControllerConstants {
             // Flight Joystick 0
             public static final int RUN_GUI_TRAJECTORY_BUTTON_NUMBER = 4; // idk i just picked a random number
+            public static final int BALANCE_CHARGE_STATION_BUTTON_NUMBER = 5;
 
             // Xbox Controller
             public static final int AIM_ASSIST_BUTTON_NUMBER = 1; // change to whatever it is
@@ -124,7 +125,7 @@ public final class Constants {
 
         public static final int PIVOT_1_LIMIT_PORT = 1;
         public static final int PIVOT_2_LIMIT_PORT = 0;
-        public static final int CLAW_LIMIT_SWITCH_PORT = 2; // change to whatever it is
+        public static final int TURRET_LIMIT_PORT = 2;
     }
 
     /**

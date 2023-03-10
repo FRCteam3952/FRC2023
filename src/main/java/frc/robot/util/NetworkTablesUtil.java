@@ -41,7 +41,7 @@ public class NetworkTablesUtil {
     public static float getLimeLightErrorX() {
         NetworkTable table = INSTANCE.getTable("limelight");
         if (getLimeLightPipeline() == 1){
-            return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[1].floatValue();
+            return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[1].floatValue() - 160.0f;
         }
         else{
             return table.getEntry("tx").getNumber(0.0).floatValue();
@@ -52,7 +52,7 @@ public class NetworkTablesUtil {
     public static float getLimeLightErrorY() {
         NetworkTable table = INSTANCE.getTable("limelight");
         if (getLimeLightPipeline() == 1){
-            return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[2].floatValue();
+            return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[2].floatValue() - 120.0f;
         }
         else{
             return table.getEntry("ty").getNumber(0.0).floatValue();
@@ -90,6 +90,11 @@ public class NetworkTablesUtil {
         NetworkTable table = INSTANCE.getTable("jetson");
         var jetsonPoseXYZ = MathUtil.inchesArrayToMetersArray(table.getEntry("pose").getDoubleArray(new double[]{0.0, 0.0, 0.0})); // X, Y, Z
         return new Translation2d(jetsonPoseXYZ[0], jetsonPoseXYZ[2]);
+    }
+
+    public static boolean getIfOnBlueTeam() {
+        NetworkTable table = INSTANCE.getTable("FMSInfo");
+        return !table.getEntry("IsRedAlliance").getBoolean(true);
     }
 
     /**
