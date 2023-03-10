@@ -41,7 +41,7 @@ public class GoTowardsCoordinatesCommand extends CommandBase{
     @Override
     public boolean isFinished() {
         // Allowed error subject to change
-        return Math.abs(currentArmPosition[0] - newArmPosition[0]) < 1.0 && Math.abs(currentArmPosition[1] - newArmPosition[1]) < 1.0 && Math.abs(currentArmPosition[2] - newArmPosition[2]) < 1.0;
+        return arm.isAtCoords();
     }
 
 
