@@ -93,6 +93,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.joystick = joystick;
 
         this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
+        tankDrive.setSafetyEnabled(false);
         // m_dDrive.setSafetyEnabled(false);
         // resetEncoders();
 
