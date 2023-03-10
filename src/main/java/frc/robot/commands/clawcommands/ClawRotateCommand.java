@@ -20,7 +20,7 @@ public class ClawRotateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if(this.joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)){
+        if(this.joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_ROTATE_BUTTON_NUMBER)){
             if(NetworkTablesUtil.getLimeLightPipeline() == 1){
                 this.claw.autoRotateClaw();
             }

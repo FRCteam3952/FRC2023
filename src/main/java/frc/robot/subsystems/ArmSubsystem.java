@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.commands.armcommands.FlipArmCommand;
@@ -385,7 +386,7 @@ public class ArmSubsystem extends SubsystemBase {
             moveVector(0, 10, 0);
         }
         this.flipped = flipped;
-        (new FlipArmCommand(this, flipped)).schedule();
+        (new FlipArmCommand(this, flipped)).withInterruptBehavior(InterruptionBehavior.kCancelSelf).schedule();
     }
 
     public boolean isAtCoords(){

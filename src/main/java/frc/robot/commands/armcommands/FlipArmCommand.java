@@ -21,6 +21,7 @@ public class FlipArmCommand extends CommandBase {
     @Override
     public void initialize() {
         arm.setControlMode(false);
+        end = false;
         if(flipped) {
             arm.setArm1SpeedMultiplier(ArmConstants.SPEED_DEC_ON_FLIP); // set speed multipliers 
             arm.setArm2SpeedMultiplier(ArmConstants.COMPLEMENTING_FLIP_SPEED);

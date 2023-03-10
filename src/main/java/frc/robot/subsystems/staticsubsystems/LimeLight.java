@@ -5,9 +5,9 @@ import frc.robot.util.NetworkTablesUtil;
 public class LimeLight {
     private static final double DESIRED_AREA_CONE = 5000; // tentative measurement, pixels
     private static final double DESIRED_AREA_CUBE = 420; // measure later
-    private static final double kp = 0.0035f;
-    private static final double ki = 0.0001f;
-    private static final double kd = 0;
+    private static final double kp = 0.001;
+    private static final double ki = 0.0;
+    private static final double kd = 0.001;
     private static final PIDController adjustmentPID = new PIDController(kp, ki, kd);
 
     public static void poke() {
@@ -20,7 +20,6 @@ public class LimeLight {
     public static double getXAdjustment() {
         double tx = adjustmentPID.calculate(NetworkTablesUtil.getLimeLightErrorX());
         // if tx is too big, return the max of 1 or -1
-        System.out.println("LIMELIGHT X ERR: " + tx + "TU MADRE: " + NetworkTablesUtil.getLimeLightErrorX());
         if (Math.abs(tx) > 1) {
             // return 1 if tx is greater than 1, -1 if tx is less than -1
             return Math.copySign(1, tx);
