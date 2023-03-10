@@ -71,7 +71,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         // Arm Angle Conversion Factors
         this.pivot1Encoder.setPositionConversionFactor(2.86); // 125:1 gearbox
-        this.pivot2Encoder.setPositionConversionFactor(2.84); // 125:1 gearbox
+        this.pivot2Encoder.setPositionConversionFactor(2.80); // 125:1 gearbox
         this.turretEncoder.setPositionConversionFactor(1); // 60:1 gearbox with drive wheel to lazy susan ratio
         // END
 
@@ -116,7 +116,6 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
-        MPU6050.resetAngle();
     }
 
     public PIDController getPID1() {
@@ -143,7 +142,8 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double[] getCurrentAnglesDeg() {
         double angle1 = pivot1Encoder.getPosition();
-        double angle2 = (90 + angle1 + (MPU6050.getRoll()-80));
+        //double angle2 = (90 + angle1 + (MPU6050.getRoll()-80));
+        double angle2 = pivot2Encoder.getPosition();
         double angle3 = turretEncoder.getPosition();
 
         if (flipped) { //offset for when arm is flipped because our gearbox is lose for some reason
@@ -160,7 +160,8 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double[] getCurrentAnglesRad() {
         double angle1 = Math.toRadians(pivot1Encoder.getPosition());
-        double angle2 = Math.toRadians((90 + angle1 + (MPU6050.getRoll()-80)));
+        //double angle2 = Math.toRadians((90 + angle1 + (MPU6050.getRoll()-80)));
+        double angle2 = pivot2Encoder.getPosition();
         double angle3 = Math.toRadians(turretEncoder.getPosition());
 
         return new double[]{angle1, angle2, angle3};
@@ -281,8 +282,8 @@ public class ArmSubsystem extends SubsystemBase {
             }
             setTurretSpeed(turretSpeed);
         }
-        // setPivot1Speed(p1Speed);
-        // setPivot2Speed(p2Speed);
+        setPivot1Speed(p1Speed);
+        setPivot2Speed(p2Speed);
 
         // System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
     }
@@ -389,11 +390,8 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
         //System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
         System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
-        // System.out.println("CURRENT TARGET COORDS ARM: " + targetX + ", " + targetY + ", " + targetZ);
-        // System.out.println("ARM LIMIT SWITCHES: LIM1: " + this.getPivot1LimitPressed() + ", LIM2: " + this.getPivot2LimitPressed());
-        
         boolean resetPivot1 = getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle1 - ArmConstants.ARM_1_INITIAL_ANGLE) < 5;
-        boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(getCurrentAnglesDeg()[1] - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
+        boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
 
         // handles limit switches
         if (resetPivot1) {
@@ -402,7 +400,6 @@ public class ArmSubsystem extends SubsystemBase {
 
         if (resetPivot2) {
             this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
-            MPU6050.resetAngle();
         }
 
         if(resetPivot1 && resetPivot2) {

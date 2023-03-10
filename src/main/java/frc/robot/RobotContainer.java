@@ -272,8 +272,8 @@ public class RobotContainer {
         
 
         this.driveTrain.setDefaultCommand(this.manualDrive);
-        //this.arm.setDefaultCommand(this.testArmControl);
-        this.arm.setDefaultCommand(this.armControl);
+        this.arm.setDefaultCommand(this.testArmControl);
+        //this.arm.setDefaultCommand(this.armControl);
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand);
         this.clawRotation.setDefaultCommand(this.clawRotateCommand);
     }

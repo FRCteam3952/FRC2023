@@ -7,15 +7,15 @@ public class MPU6050{
     private static final int GYRO_REGISTER = 0x43;
     private static final int ACCEL_REGISTER = 0x3B;
 
-    private static final float ANGLE_MULTIPLIER = 4.4f;
+    private static final double ANGLE_MULTIPLIER = 4.4;
 
     private static final int ERROR_CALC_ITERS = 200;
-    private static float accX, accY, accZ;
-    private static float gyroX, gyroY, gyroZ;
-    private static float accAngleX, accAngleY, gyroAngleX, gyroAngleY, gyroAngleZ;
-    private static float roll, pitch, yaw;
-    private static float accErrorX, accErrorY, gyroErrorX, gyroErrorY, gyroErrorZ;
-    private static float elapsedTime, currentTime, previousTime;
+    private static double accX, accY, accZ;
+    private static double gyroX, gyroY, gyroZ;
+    private static double accAngleX, accAngleY, gyroAngleX, gyroAngleY, gyroAngleZ;
+    private static double roll, pitch, yaw;
+    private static double accErrorX, accErrorY, gyroErrorX, gyroErrorY, gyroErrorZ;
+    private static double elapsedTime, currentTime, previousTime;
 
     public static double gyro_adjust_roll = 0.0;
     public static double gyro_adjust_pitch = 0.0;
@@ -39,11 +39,11 @@ public class MPU6050{
     }
 
     public static double getRoll(){
-        return roll - gyro_adjust_roll;
+        return (roll - gyro_adjust_roll);
     }
 
     public static double getPitch() {
-        return pitch - gyro_adjust_pitch;
+        return (pitch - gyro_adjust_pitch);
     }
 
     public static double getYaw() {
@@ -63,40 +63,43 @@ public class MPU6050{
         gyro.write(0x1B, 0x10); // Talks to the GYRO_CONFIG register (1000deg/s full scale whatever that means)
 
         Thread.sleep(10);
+        
         calculateIMUError();
+
         Thread.sleep(10);
     }
 
     public static void update() {
         readAccelerometerValues();
 
-        accAngleX = (float) Math.atan(accY / Math.sqrt(accX * accX + accZ * accZ)) * 180f / (float) Math.PI; 
-        accAngleY = (float) Math.atan(-accX / Math.sqrt(accY * accY + accZ * accZ)) * 180f / (float) Math.PI;
+        accAngleX = Math.atan(accY / Math.sqrt(accX * accX + accZ * accZ)) * 180f / Math.PI; 
+        accAngleY = Math.atan(-accX / Math.sqrt(accY * accY + accZ * accZ)) * 180f / Math.PI;
  
         accAngleX -= accErrorX;
         accAngleY -= accErrorY;
 
-        readGyroValues();
- 
-        currentTime = System.nanoTime();
-        elapsedTime = (currentTime - previousTime) / 1000000000.0f;
+        previousTime = currentTime;
+        currentTime = System.currentTimeMillis();
+        elapsedTime = (currentTime - previousTime) / 1000;
 
-        gyroAngleX = gyroX * elapsedTime;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             gyroAngleX = gyroX * elapsedTime;
-        gyroAngleY = gyroY * elapsedTime;
-        gyroAngleZ = gyroZ * elapsedTime;
+        readGyroValues();
 
         gyroX -= gyroErrorX;
         gyroY -= gyroErrorY;
         gyroZ -= gyroErrorZ;
 
+        gyroAngleX += gyroX * elapsedTime;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             gyroAngleX = gyroX * elapsedTime;
+        gyroAngleY += gyroY * elapsedTime;
+        gyroAngleZ += gyroZ * elapsedTime;
+
+        //System.out.println(gyroAngleX + " " + elapsedTime);
+
         // "Complementary filter"
-        roll = (0.98f * (roll + gyroAngleX) + 0.02f * accAngleX) * ANGLE_MULTIPLIER;
-        pitch = (0.98f * (pitch + gyroAngleY) + 0.02f * accAngleY) * ANGLE_MULTIPLIER;
-        yaw = gyroAngleZ * ANGLE_MULTIPLIER;
+        roll = 0.98 * gyroAngleX + 0.02 * accAngleX;
+        pitch = 0.98 * gyroAngleY + 0.02 * accAngleY;
+        yaw = gyroAngleZ;
 
         System.out.println(roll);
-
-        previousTime = currentTime;
     }
 
     private static void readAccelerometerValues() {
