@@ -7,8 +7,6 @@ package frc.robot;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import javax.swing.text.Position;
-
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -38,7 +36,6 @@ import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
-import frc.robot.subsystems.staticsubsystems.MPU6050;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.wrappers.TrajectoryReader;
 
@@ -137,7 +134,6 @@ public class RobotContainer {
         // Poke the static classes so their static initializers are run at startup.
         LimeLight.poke();
         RobotGyro.poke();
-        MPU6050.poke();
     }
 
     /**
@@ -291,8 +287,7 @@ public class RobotContainer {
         
 
         this.driveTrain.setDefaultCommand(this.manualDrive);
-        this.arm.setDefaultCommand(this.testArmControl);
-        //this.arm.setDefaultCommand(this.armControl);
+        this.arm.setDefaultCommand(this.armControl);
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand);
         this.clawRotation.setDefaultCommand(this.clawRotateCommand);
     }

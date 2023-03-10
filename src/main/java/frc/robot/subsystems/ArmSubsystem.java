@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.commands.armcommands.FlipArmCommand;
-import frc.robot.subsystems.staticsubsystems.MPU6050;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 import frc.robot.util.MathUtil;
@@ -71,18 +70,17 @@ public class ArmSubsystem extends SubsystemBase {
 
         // Arm Angle Conversion Factors
         this.pivot1Encoder.setPositionConversionFactor(2.86); // 125:1 gearbox
-        this.pivot2Encoder.setPositionConversionFactor(2.80); // 125:1 gearbox
+        this.pivot2Encoder.setPositionConversionFactor(3.65); // 125:1 gearbox
         this.turretEncoder.setPositionConversionFactor(1); // 60:1 gearbox with drive wheel to lazy susan ratio
         // END
 
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
         this.turretEncoder.setPosition(0);
-
         // TODO: TUNE
         this.pidController1 = new PIDController(1.8e-2, 0, 0); // nice
         this.pidController1.setTolerance(ArmConstants.PID_TOLERANCE);
-        this.pidController2 = new PIDController(1e-2, 0, 0);
+        this.pidController2 = new PIDController(1.8e-2, 0, 0);
         this.pidController2.setTolerance(ArmConstants.PID_TOLERANCE);
         this.pidController3 = new PIDController(9.6e-3, 0, 0);
         this.pidController3.setTolerance(ArmConstants.PID_TOLERANCE);
@@ -389,10 +387,10 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
         // System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
-        // System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
+        System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
         boolean resetPivot1 = getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle1 - ArmConstants.ARM_1_INITIAL_ANGLE) < 5;
         boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
-
+        System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", " + getPivot2LimitPressed());
         // handles limit switches
         if (resetPivot1) {
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
@@ -470,6 +468,7 @@ public class ArmSubsystem extends SubsystemBase {
         
 
         //handles PID
+        System.out.println("PID STATE: " + pidOn);
         if (pidOn) {
             goTowardIntendedCoordinates();
         }
