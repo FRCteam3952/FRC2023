@@ -54,6 +54,7 @@ public class LimeLight {
     }
 
     // Gets adjustments from limelight and converts them to position adjustments
+    // Super messy right now, TODO: clean up later
     public static double[] getAdjustmentFromError(boolean flipped){
         double[] adjustments = new double[3];
 

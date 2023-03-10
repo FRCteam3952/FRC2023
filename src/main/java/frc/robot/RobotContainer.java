@@ -21,6 +21,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PositionConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
+import frc.robot.commands.armcommands.AimAssistCommand;
 import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.armcommands.CalibrateArmCommand;
@@ -72,6 +73,9 @@ public class RobotContainer {
     // these ones got changed to xbox
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
     public final ArmControlCommand armControl = new ArmControlCommand(arm, xboxController);
+    public final AimAssistCommand aimAssist = new AimAssistCommand(arm);
+    public final AimAssistCommand aimAssist2 = new AimAssistCommand(arm); // Only here because compositions can't use commands that have already been used for other compositions
+
     public final GoTowardsCoordinatesCommand goTowardsTopRight = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS);
     public final GoTowardsCoordinatesCommand goTowardsTopRight2 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommand goTowardsTopRight3 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
@@ -300,12 +304,12 @@ public class RobotContainer {
         placeConeCommandAuto = Autos.placeConeAuto(clawGrip, goTowardsTopRight, goTowardsStartingPos4);
         doublePlacementAuto = Autos.doublePlacementAuto(arm, clawGrip, driveBackwardsToCubeBlueCommand, driveForwardsToGridBlueCommand,
                 driveBackwardsToCubeRedCommand, driveForwardsToGridRedCommand, goTowardsTopRight2, goTowardsStartingPos, goTowardsStartingPos2,
-                goTowardsStartingPos3, goTowardsPickupPos, goTowardsTopCenter);
+                goTowardsStartingPos3, goTowardsPickupPos, goTowardsTopCenter, aimAssist);
         placeConeThenBalanceAuto = Autos.placeConeThenBalanceAuto(driveForwardOverChargeStationBlueCommand2, driveBackwardsOntoChargeStationBlueCommand2, 
                 driveForwardOverChargeStationRedCommand2, driveBackwardsOntoChargeStationRedCommand2, balanceCommand2, arm, clawGrip, goTowardsTopRight3, goTowardsStartingPos5);
         doublePlacementThenBalanceAuto = Autos.doublePlacementThenBalanceAuto(arm, clawGrip, driveBackwardsToCubeBlueCommand2, driveForwardsToGridBlueCommand2, 
                 driveBackwardsToCubeRedCommand2, driveForwardsToGridRedCommand2, goTowardsTopRight4, goTowardsStartingPos6, goTowardsStartingPos7, goTowardsStartingPos8, 
-                goTowardsPickupPos2, goTowardsTopCenter3, driveBackwardsOntoChargeStationDPBlueCommand, driveBackwardsOntoChargeStationDPRedCommand, balanceCommand3);
+                goTowardsPickupPos2, goTowardsTopCenter3, driveBackwardsOntoChargeStationDPBlueCommand, driveBackwardsOntoChargeStationDPRedCommand, balanceCommand3, aimAssist2);
 
         // Adds autonomous options to dashboard
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
