@@ -137,7 +137,7 @@ public final class Autos {
     public static CommandBase doublePlacementAuto(ArmSubsystem arm, ClawGripSubsystem claw, Command driveBackwardsToCubeBlue, Command driveForwardsToGridBlue, 
             Command driveBackwardsToCubeRed, Command driveForwardsToGridRed, GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos,
             GoTowardsCoordinatesCommand goTowardsStartingPos2, GoTowardsCoordinatesCommand goTowardsStartingPos3, GoTowardsCoordinatesCommand goTowardsPickupPos, 
-            GoTowardsCoordinatesCommand goTowardsTopCenter) {
+            GoTowardsCoordinatesCommand goTowardsTopCenter, Command aimAssist) {
 
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
         if (blueTeam) {
@@ -147,7 +147,9 @@ public final class Autos {
             .andThen(driveBackwardsToCubeBlue) // Drives backwards to cube
             .andThen(Commands.runOnce(() -> { 
                 claw.setClawClosed(false); // Opens claw
+                NetworkTablesUtil.setLimelightPipeline(3); // Sets vision pipeline to detect cubes
             }, claw)).andThen(goTowardsPickupPos) // Arm goes to pickup position
+            .andThen(aimAssist) // Guides claw to game piece
             .andThen(Commands.runOnce(() -> { 
                 claw.setClawClosed(true); // Closes claw
             }, claw))
@@ -167,7 +169,9 @@ public final class Autos {
             .andThen(driveBackwardsToCubeRed) // Drives backwards to cube
             .andThen(Commands.runOnce(() -> { 
                 claw.setClawClosed(false); // Opens claw
+                NetworkTablesUtil.setLimelightPipeline(3); // Sets vision pipeline to detect cubes
             }, claw)).andThen(goTowardsPickupPos) // Arm goes to pickup position
+            .andThen(aimAssist) // Guides claw to game piece
             .andThen(Commands.runOnce(() -> { 
                 claw.setClawClosed(true); // Closes claw
             }, claw))
@@ -204,13 +208,13 @@ public final class Autos {
     public static CommandBase doublePlacementThenBalanceAuto(ArmSubsystem arm, ClawGripSubsystem claw, Command driveBackwardsToCubeBlue, Command driveForwardsToGridBlue, 
             Command driveBackwardsToCubeRed, Command driveForwardsToGridRed, GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos,
             GoTowardsCoordinatesCommand goTowardsStartingPos2, GoTowardsCoordinatesCommand goTowardsStartingPos3, GoTowardsCoordinatesCommand goTowardsPickupPos, 
-            GoTowardsCoordinatesCommand goTowardsTopCenter, Command driveBackwardsOntoChargeStationDPBlue, Command driveBackwardsOntoChargeStationDPRed, Command balanceCommand) {
+            GoTowardsCoordinatesCommand goTowardsTopCenter, Command driveBackwardsOntoChargeStationDPBlue, Command driveBackwardsOntoChargeStationDPRed, Command balanceCommand, Command aimAssist) {
         
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
         return Commands.runOnce(() -> {
             System.out.println("Double Placement then Balance Auto Start");
         }).andThen(doublePlacementAuto(arm, claw, driveBackwardsToCubeBlue, driveForwardsToGridBlue, driveBackwardsToCubeRed, driveForwardsToGridRed, goTowardsTopRight, 
-                goTowardsStartingPos, goTowardsStartingPos2, goTowardsStartingPos3, goTowardsPickupPos, goTowardsTopCenter)) // Runs double placement command
+                goTowardsStartingPos, goTowardsStartingPos2, goTowardsStartingPos3, goTowardsPickupPos, goTowardsTopCenter, aimAssist)) // Runs double placement command
         .andThen(blueTeam ? driveBackwardsOntoChargeStationDPBlue : driveBackwardsOntoChargeStationDPRed) // Drives backwards onto charge station
         .andThen(balanceCommand) // Balances the charge station continuously
         .andThen(Commands.runOnce(() -> {
