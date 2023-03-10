@@ -7,6 +7,8 @@ package frc.robot;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import javax.swing.text.Position;
+
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,10 +19,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.PositionConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
+import frc.robot.commands.armcommands.GoTowardsCoordinatesCommand;
 import frc.robot.commands.autocommands.Autos;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
@@ -67,6 +72,17 @@ public class RobotContainer {
     // these ones got changed to xbox
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
     public final ArmControlCommand armControl = new ArmControlCommand(arm, xboxController);
+    public final GoTowardsCoordinatesCommand goTowardsTopRight = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS);
+    public final GoTowardsCoordinatesCommand goTowardsTopRight2 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommand goTowardsTopRight3 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommand goTowardsTopCenter = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_CENTER_POS);
+    public final GoTowardsCoordinatesCommand goTowardsStartingPos = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS);
+    public final GoTowardsCoordinatesCommand goTowardsStartingPos2 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommand goTowardsStartingPos3 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommand goTowardsStartingPos4 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommand goTowardsStartingPos5 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommand goTowardsPickupPos = new GoTowardsCoordinatesCommand(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0});
+
     public final ClawOpenandCloseCommand clawOpenandCloseCommand = new ClawOpenandCloseCommand(clawGrip, xboxController);
     public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, xboxController);
     // end change to xbox
@@ -238,11 +254,12 @@ public class RobotContainer {
         // Initialize autonomous commands here
         balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
                 driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand, arm);
-        placeConeCommandAuto = Autos.placeConeAuto(arm, clawGrip);
+        placeConeCommandAuto = Autos.placeConeAuto(clawGrip, goTowardsTopRight, goTowardsStartingPos4);
         doublePlacementAuto = Autos.doublePlacementAuto(arm, clawGrip, driveBackwardsToCubeBlueCommand, driveForwardsToGridBlueCommand,
-                driveBackwardsToCubeRedCommand, driveForwardsToGridRedCommand);
+                driveBackwardsToCubeRedCommand, driveForwardsToGridRedCommand, goTowardsTopRight2, goTowardsStartingPos, goTowardsStartingPos2,
+                goTowardsStartingPos3, goTowardsPickupPos, goTowardsTopCenter);
         placeConeThenBalanceAuto = Autos.placeConeThenBalanceAuto(driveForwardOverChargeStationBlueCommand2, driveBackwardsOntoChargeStationBlueCommand2, 
-                driveForwardOverChargeStationRedCommand2, driveBackwardsOntoChargeStationRedCommand2, balanceCommand2, arm, clawGrip);
+                driveForwardOverChargeStationRedCommand2, driveBackwardsOntoChargeStationRedCommand2, balanceCommand2, arm, clawGrip, goTowardsTopRight3, goTowardsStartingPos5);
 
         // Adds autonomous options to dashboard
         m_chooser.setDefaultOption("Default Auto", defaultAuto);

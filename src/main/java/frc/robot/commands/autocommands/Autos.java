@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PositionConstants;
+import frc.robot.commands.armcommands.GoTowardsCoordinatesCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 
@@ -105,131 +106,63 @@ public final class Autos {
 
     // Assumes robot is at a AprilTag
     // Might need to add calibration
-    public static CommandBase placeConeAuto(ArmSubsystem arm, ClawGripSubsystem claw) {
+    public static CommandBase placeConeAuto(ClawGripSubsystem claw, GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos) {
         return Commands.runOnce(() -> {
-            double[] newArmPosition = PositionConstants.TOP_RIGHT_POS; // or maybe top left pos?
-            double[] currentArmPosition = arm.getCurrentCoordinates();
-            arm.setTargetCoordinates(newArmPosition[0], newArmPosition[1], newArmPosition[2]);
-            while (Math.abs(currentArmPosition[0] - newArmPosition[0]) > 1.0 || Math.abs(currentArmPosition[1] - newArmPosition[1]) > 1.0 || Math.abs(currentArmPosition[2] - newArmPosition[2]) > 1.0) {
-                arm.goTowardIntendedCoordinates();
-                currentArmPosition = arm.getCurrentCoordinates();
-            }
-
+            // Any neccessary calibration code
+        }).andThen(goTowardsTopRight)
+        .andThen(Commands.runOnce(() -> {
             claw.setClawClosed(false); // open claw
-
-            arm.setTargetCoordinates(ArmConstants.STARTING_X, ArmConstants.STARTING_Y, ArmConstants.STARTING_Z); // Go back to starting position
-            currentArmPosition = arm.getCurrentCoordinates();
-            while (Math.abs(currentArmPosition[0] - ArmConstants.STARTING_X) > 1.0 || Math.abs(currentArmPosition[1] - ArmConstants.STARTING_Y) > 1.0 || Math.abs(currentArmPosition[2] - ArmConstants.STARTING_Z) > 1.0) {
-                arm.goTowardIntendedCoordinates();
-                currentArmPosition = arm.getCurrentCoordinates();
-            }
-
-            System.out.println("Auton finished");
-        }, arm, claw);
+        }, claw).andThen(goTowardsStartingPos));
     }
 
     // Position values on trajectories may need to be adjusted
     // Adjustments can be made later lol
     // Might need to add calibration 
-    public static CommandBase doublePlacementAuto(ArmSubsystem arm, ClawGripSubsystem claw, Command driveBackwardsToCubeBlue, 
-            Command driveForwardsToGridBlue, Command driveBackwardsToCubeRed, Command driveForwardsToGridRed) {
+    public static CommandBase doublePlacementAuto(ArmSubsystem arm, ClawGripSubsystem claw, Command driveBackwardsToCubeBlue, Command driveForwardsToGridBlue, 
+            Command driveBackwardsToCubeRed, Command driveForwardsToGridRed, GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos,
+            GoTowardsCoordinatesCommand goTowardsStartingPos2, GoTowardsCoordinatesCommand goTowardsStartingPos3, GoTowardsCoordinatesCommand goTowardsPickupPos, 
+            GoTowardsCoordinatesCommand goTowardsTopCenter) {
 
         if (blueTeam) {
-            return placeConeAuto(arm, claw) // Drops pre-loaded cone onto top right pole
-            .andThen(driveBackwardsToCubeBlue)
-            .andThen(Commands.runOnce(() -> { // Grabs cube off floor
-                claw.setClawClosed(false);
-                double[] currentArmPosition = arm.getCurrentCoordinates();
-                arm.setTargetCoordinates(-30, ArmConstants.PICK_UP_POSITION_Y, 0); // Supposed to be 30 inches in the opposite direction the robot is facing (towards middle of the field)
-                // Might want to add aim assist code here somewhere
-                while (Math.abs(currentArmPosition[0] - (-30)) > 1.0 || Math.abs(currentArmPosition[1] - ArmConstants.PICK_UP_POSITION_Y) > 1.0 || Math.abs(currentArmPosition[2] - 0) > 1.0) {
-                    arm.goTowardIntendedCoordinates();
-                    currentArmPosition = arm.getCurrentCoordinates();
-                }
-                claw.setClawClosed(true);
+            return placeConeAuto(claw, goTowardsTopRight, goTowardsStartingPos) // Drops pre-loaded cone onto top right pole
+            .andThen(driveBackwardsToCubeBlue) // Drives backwards to cube
+            .andThen(Commands.runOnce(() -> { 
+                claw.setClawClosed(false); // Opens claw
+            }).andThen(goTowardsPickupPos) // Arm goes to pickup position
+            .andThen(Commands.runOnce(() -> { 
+                claw.setClawClosed(true); // Closes claw
             })
-            .andThen(Commands.runOnce(() -> { // Returns claw to starting position
-                arm.setTargetCoordinates(ArmConstants.STARTING_X, ArmConstants.STARTING_Y, ArmConstants.STARTING_Z); // Go back to starting position
-                double[] currentArmPosition = arm.getCurrentCoordinates();
-                while (Math.abs(currentArmPosition[0] - ArmConstants.STARTING_X) > 1.0 || Math.abs(currentArmPosition[1] - ArmConstants.STARTING_Y) > 1.0 || Math.abs(currentArmPosition[2] - ArmConstants.STARTING_Z) > 1.0) {
-                    arm.goTowardIntendedCoordinates();
-                    currentArmPosition = arm.getCurrentCoordinates();
-                }
-            }))
-            .alongWith(driveForwardsToGridBlue)
-            .andThen(Commands.runOnce(() -> { // Drops cube onto center top position on grid
-                double[] newArmPosition = PositionConstants.TOP_CENTER_POS; 
-                double[] currentArmPosition = arm.getCurrentCoordinates();
-                arm.setTargetCoordinates(newArmPosition[0], newArmPosition[1], newArmPosition[2]);
-                while (Math.abs(currentArmPosition[0] - newArmPosition[0]) > 1.0 || Math.abs(currentArmPosition[1] - newArmPosition[1]) > 1.0 || Math.abs(currentArmPosition[2] - newArmPosition[2]) > 1.0) {
-                    arm.goTowardIntendedCoordinates();
-                    currentArmPosition = arm.getCurrentCoordinates();
-                }
-
-                claw.setClawClosed(false); // open claw
-
-                arm.setTargetCoordinates(ArmConstants.STARTING_X, ArmConstants.STARTING_Y, ArmConstants.STARTING_Z); // Go back to starting position
-                currentArmPosition = arm.getCurrentCoordinates();
-                while (Math.abs(currentArmPosition[0] - ArmConstants.STARTING_X) > 1.0 || Math.abs(currentArmPosition[1] - ArmConstants.STARTING_Y) > 1.0 || Math.abs(currentArmPosition[2] - ArmConstants.STARTING_Z) > 1.0) {
-                    arm.goTowardIntendedCoordinates();
-                    currentArmPosition = arm.getCurrentCoordinates();
-                }
-
-                System.out.println("Auton finished");
-            })));
+            .andThen(goTowardsStartingPos2) // Arm goes to starting position
+            .alongWith(driveForwardsToGridBlue) // Drive forwards to grid
+            .andThen(goTowardsTopCenter) // Arm goes to top center position on grid
+            .andThen(Commands.runOnce(() -> {
+                claw.setClawClosed(false); // Open claw
+            }).andThen(goTowardsStartingPos3)))); // Arm goes to starting position
         } else {
-            return placeConeAuto(arm, claw) // Drops pre-loaded cone onto top right pole
-            .andThen(driveBackwardsToCubeRed)
-            .andThen(Commands.runOnce(() -> { // Grabs cube off floor
-                claw.setClawClosed(false);
-                double[] currentArmPosition = arm.getCurrentCoordinates();
-                arm.setTargetCoordinates(-30, ArmConstants.PICK_UP_POSITION_Y, 0); // Supposed to be 30 inches in the opposite direction the robot is facing (towards middle of the field)
-                // Might want to add aim assist code here somewhere
-                while (Math.abs(currentArmPosition[0] - (-30)) > 1.0 || Math.abs(currentArmPosition[1] - ArmConstants.PICK_UP_POSITION_Y) > 1.0 || Math.abs(currentArmPosition[2] - 0) > 1.0) {
-                    arm.goTowardIntendedCoordinates();
-                    currentArmPosition = arm.getCurrentCoordinates();
-                }
-                claw.setClawClosed(true);
+            return placeConeAuto(claw, goTowardsTopRight, goTowardsStartingPos) // Drops pre-loaded cone onto top right pole
+            .andThen(driveBackwardsToCubeRed) // Drives backwards to cube
+            .andThen(Commands.runOnce(() -> { 
+                claw.setClawClosed(false); // Opens claw
+            }).andThen(goTowardsPickupPos) // Arm goes to pickup position
+            .andThen(Commands.runOnce(() -> { 
+                claw.setClawClosed(true); // Closes claw
             })
-            .andThen(Commands.runOnce(() -> { // Returns claw to starting position
-                arm.setTargetCoordinates(ArmConstants.STARTING_X, ArmConstants.STARTING_Y, ArmConstants.STARTING_Z); // Go back to starting position
-                double[] currentArmPosition = arm.getCurrentCoordinates();
-                while (Math.abs(currentArmPosition[0] - ArmConstants.STARTING_X) > 1.0 || Math.abs(currentArmPosition[1] - ArmConstants.STARTING_Y) > 1.0 || Math.abs(currentArmPosition[2] - ArmConstants.STARTING_Z) > 1.0) {
-                    arm.goTowardIntendedCoordinates();
-                    currentArmPosition = arm.getCurrentCoordinates();
-                }
-            }))
-            .alongWith(driveForwardsToGridRed)
-            .andThen(Commands.runOnce(() -> { // Drops cube onto center top position on grid
-                double[] newArmPosition = PositionConstants.TOP_CENTER_POS; 
-                double[] currentArmPosition = arm.getCurrentCoordinates();
-                arm.setTargetCoordinates(newArmPosition[0], newArmPosition[1], newArmPosition[2]);
-                while (Math.abs(currentArmPosition[0] - newArmPosition[0]) > 1.0 || Math.abs(currentArmPosition[1] - newArmPosition[1]) > 1.0 || Math.abs(currentArmPosition[2] - newArmPosition[2]) > 1.0) {
-                    arm.goTowardIntendedCoordinates();
-                    currentArmPosition = arm.getCurrentCoordinates();
-                }
-
-                claw.setClawClosed(false); // open claw
-
-                arm.setTargetCoordinates(ArmConstants.STARTING_X, ArmConstants.STARTING_Y, ArmConstants.STARTING_Z); // Go back to starting position
-                currentArmPosition = arm.getCurrentCoordinates();
-                while (Math.abs(currentArmPosition[0] - ArmConstants.STARTING_X) > 1.0 || Math.abs(currentArmPosition[1] - ArmConstants.STARTING_Y) > 1.0 || Math.abs(currentArmPosition[2] - ArmConstants.STARTING_Z) > 1.0) {
-                    arm.goTowardIntendedCoordinates();
-                    currentArmPosition = arm.getCurrentCoordinates();
-                }
-
-                System.out.println("Auton finished");
-            })));
+            .andThen(goTowardsStartingPos2) // Arm goes to starting position
+            .alongWith(driveForwardsToGridRed) // Drive forwards to grid
+            .andThen(goTowardsTopCenter) // Arm goes to top center position on grid
+            .andThen(Commands.runOnce(() -> {
+                claw.setClawClosed(false); // Open claw
+            }).andThen(goTowardsStartingPos3)))); // Arm goes to starting position
         }
     }
 
     // Might need to add calibration
-    public static CommandBase placeConeThenBalanceAuto(Command driveForwardOverChargeStationBlueCommand, 
-    Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
-    Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm, ClawGripSubsystem claw) {
+    public static CommandBase placeConeThenBalanceAuto(Command driveForwardOverChargeStationBlueCommand, Command driveBackwardsOntoChargeStationBlueCommand, 
+            Command driveForwardOverChargeStationRedCommand, Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm, ClawGripSubsystem claw,
+            GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos) {
 
         return balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)
-        .andThen(placeConeAuto(arm, claw))
+        .andThen(placeConeAuto(claw, goTowardsTopRight, goTowardsStartingPos))
         .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation));
         
     }
