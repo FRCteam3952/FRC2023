@@ -208,12 +208,17 @@ public final class Autos {
             GoTowardsCoordinatesCommand goTowardsTopCenter, Command driveBackwardsOntoChargeStationDPBlue, Command driveBackwardsOntoChargeStationDPRed, Command balanceCommand) {
         
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
-        return doublePlacementAuto(arm, claw, driveBackwardsToCubeBlue, driveForwardsToGridBlue, driveBackwardsToCubeRed, driveForwardsToGridRed, goTowardsTopRight, 
-                goTowardsStartingPos, goTowardsStartingPos2, goTowardsStartingPos3, goTowardsPickupPos, goTowardsTopCenter) // Runs double placement command
+        return Commands.runOnce(() -> {
+            System.out.println("Double Placement then Balance Auto Start");
+        }).andThen(doublePlacementAuto(arm, claw, driveBackwardsToCubeBlue, driveForwardsToGridBlue, driveBackwardsToCubeRed, driveForwardsToGridRed, goTowardsTopRight, 
+                goTowardsStartingPos, goTowardsStartingPos2, goTowardsStartingPos3, goTowardsPickupPos, goTowardsTopCenter)) // Runs double placement command
         .andThen(blueTeam ? driveBackwardsOntoChargeStationDPBlue : driveBackwardsOntoChargeStationDPRed) // Drives backwards onto charge station
-        .andThen(balanceCommand); // Balances the charge station continuously
+        .andThen(balanceCommand) // Balances the charge station continuously
+        .andThen(Commands.runOnce(() -> {
+            System.out.println("Double Placement then Balance Auto Finish"); // Shouldn't print until auton is over, if at all
+        }));
     }
-    
+
     private Autos() {
         throw new UnsupportedOperationException("Autos is a utility class and cannot be instantiated!");
     }
