@@ -29,10 +29,7 @@ public class ClawRotateCommand extends CommandBase {
                 this.claw.changeAngle(CLAW_ROTATION_SPEED); // clockwise
             } else if(fov == 270) {
                 this.claw.changeAngle(-CLAW_ROTATION_SPEED); // counterclockwise
-            } else if(fov == 180) {
-                this.claw.setTargetAngle(0.0);
             }
-
         }
 
     }
