@@ -7,7 +7,7 @@ package frc.robot.commands.autocommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.armcommands.GoTowardsCoordinatesCommand;
+import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.util.NetworkTablesUtil;
@@ -117,7 +117,7 @@ public final class Autos {
     // Assumes robot is at a AprilTag
     // Might need to add calibration 
     // Places cone on top right pole
-    public static CommandBase placeConeAuto(ClawGripSubsystem claw, GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos) {
+    public static CommandBase placeConeAuto(ClawGripSubsystem claw, GoTowardsCoordinatesCommandAuto goTowardsTopRight, GoTowardsCoordinatesCommandAuto goTowardsStartingPos) {
         return Commands.runOnce(() -> {
             // Any neccessary calibration code
             System.out.println("Place Cone Auto Start");
@@ -135,9 +135,9 @@ public final class Autos {
     // Might need to add calibration 
     // Places pre-loaded cone, drives backwards to pick up cube, drives forwards to place cube on grid
     public static CommandBase doublePlacementAuto(ArmSubsystem arm, ClawGripSubsystem claw, Command driveBackwardsToCubeBlue, Command driveForwardsToGridBlue, 
-            Command driveBackwardsToCubeRed, Command driveForwardsToGridRed, GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos,
-            GoTowardsCoordinatesCommand goTowardsStartingPos2, GoTowardsCoordinatesCommand goTowardsStartingPos3, GoTowardsCoordinatesCommand goTowardsPickupPos, 
-            GoTowardsCoordinatesCommand goTowardsTopCenter, Command aimAssist) {
+            Command driveBackwardsToCubeRed, Command driveForwardsToGridRed, GoTowardsCoordinatesCommandAuto goTowardsTopRight, GoTowardsCoordinatesCommandAuto goTowardsStartingPos,
+            GoTowardsCoordinatesCommandAuto goTowardsStartingPos2, GoTowardsCoordinatesCommandAuto goTowardsStartingPos3, GoTowardsCoordinatesCommandAuto goTowardsPickupPos, 
+            GoTowardsCoordinatesCommandAuto goTowardsTopCenter, Command aimAssist) {
 
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
         if (blueTeam) {
@@ -190,7 +190,7 @@ public final class Autos {
     // Might need to add calibration
     public static CommandBase placeConeThenBalanceAuto(Command driveForwardOverChargeStationBlueCommand, Command driveBackwardsOntoChargeStationBlueCommand, 
             Command driveForwardOverChargeStationRedCommand, Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm, ClawGripSubsystem claw,
-            GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos) {
+            GoTowardsCoordinatesCommandAuto goTowardsTopRight, GoTowardsCoordinatesCommandAuto goTowardsStartingPos) {
 
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
         return Commands.runOnce(() -> {
@@ -206,9 +206,9 @@ public final class Autos {
     // Runs double placement then balances charge station
     // Might not use, don't know if there is enough time
     public static CommandBase doublePlacementThenBalanceAuto(ArmSubsystem arm, ClawGripSubsystem claw, Command driveBackwardsToCubeBlue, Command driveForwardsToGridBlue, 
-            Command driveBackwardsToCubeRed, Command driveForwardsToGridRed, GoTowardsCoordinatesCommand goTowardsTopRight, GoTowardsCoordinatesCommand goTowardsStartingPos,
-            GoTowardsCoordinatesCommand goTowardsStartingPos2, GoTowardsCoordinatesCommand goTowardsStartingPos3, GoTowardsCoordinatesCommand goTowardsPickupPos, 
-            GoTowardsCoordinatesCommand goTowardsTopCenter, Command driveBackwardsOntoChargeStationDPBlue, Command driveBackwardsOntoChargeStationDPRed, Command balanceCommand, Command aimAssist) {
+            Command driveBackwardsToCubeRed, Command driveForwardsToGridRed, GoTowardsCoordinatesCommandAuto goTowardsTopRight, GoTowardsCoordinatesCommandAuto goTowardsStartingPos,
+            GoTowardsCoordinatesCommandAuto goTowardsStartingPos2, GoTowardsCoordinatesCommandAuto goTowardsStartingPos3, GoTowardsCoordinatesCommandAuto goTowardsPickupPos, 
+            GoTowardsCoordinatesCommandAuto goTowardsTopCenter, Command driveBackwardsOntoChargeStationDPBlue, Command driveBackwardsOntoChargeStationDPRed, Command balanceCommand, Command aimAssist) {
         
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
         return Commands.runOnce(() -> {

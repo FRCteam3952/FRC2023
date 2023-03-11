@@ -54,6 +54,9 @@ public class ArmSubsystem extends SubsystemBase {
     private boolean isManual = true;
     private boolean is2D = true;
 
+    private double maxOutput = ArmConstants.MAX_OUTPUT;
+    private double minOutput = ArmConstants.MIN_OUTPUT;
+
     // arm control constructor
     public ArmSubsystem() {
         // Initialize arm motors
@@ -117,6 +120,11 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+    }
+
+    public void setMaxAndMinOutput(double speed) {
+        minOutput = speed;
+        maxOutput = speed;
     }
 
     public double resetTurretEncoder() {
@@ -190,7 +198,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     }
 
-    public void setControlMode(boolean isManual){
+    public void setManualControlMode(boolean isManual){
         this.isManual = isManual;
     }
 
@@ -242,7 +250,7 @@ public class ArmSubsystem extends SubsystemBase {
      * 
      * @return [x, y, z], where y is the height above ground
      */
-    public double[] getIntendedCoordinates() {
+    public double[] getTargetCoordinates() {
         return new double[]{this.targetX, this.targetY, this.targetZ};
     }
 
@@ -266,7 +274,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.arm2SpeedMultiplier = mult;
     }
 
-    public void goTowardIntendedCoordinates() {
+    public void goTowardTargetCoordinates() {
         double[] angles = getCurrentAnglesDeg(); // gets the current angles read from motor encoders
 
         if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) || Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
@@ -285,8 +293,8 @@ public class ArmSubsystem extends SubsystemBase {
             return;
         }
 
-        p1Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p1Speed, ArmConstants.MIN_OUTPUT));
-        p2Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p2Speed, ArmConstants.MIN_OUTPUT));
+        p1Speed = Math.min(maxOutput, Math.max(p1Speed, minOutput));
+        p2Speed = Math.min(maxOutput, Math.max(p2Speed, minOutput));
 
         if (!is2D) { //only control turret or Z axis when auto
             turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
@@ -502,7 +510,7 @@ public class ArmSubsystem extends SubsystemBase {
         //handles PID
         // System.out.println("PID STATE: " + pidOn);
         if (pidOn) {
-            goTowardIntendedCoordinates();
+            goTowardTargetCoordinates();
         }
     }
 

@@ -27,7 +27,7 @@ import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.armcommands.CalibrateArmPivotsCommand;
 import frc.robot.commands.armcommands.CalibrateArmTurretCommand;
-import frc.robot.commands.armcommands.GoTowardsCoordinatesCommand;
+import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
 import frc.robot.commands.autocommands.Autos;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
@@ -78,23 +78,23 @@ public class RobotContainer {
     public final AimAssistCommand aimAssist = new AimAssistCommand(arm);
     public final AimAssistCommand aimAssist2 = new AimAssistCommand(arm); // Only here because compositions can't use commands that have already been used for other compositions
 
-    public final GoTowardsCoordinatesCommand goTowardsTopRight = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS);
-    public final GoTowardsCoordinatesCommand goTowardsTopRight2 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsTopRight3 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsTopRight4 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsTopCenter = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_CENTER_POS);
-    public final GoTowardsCoordinatesCommand goTowardsTopCenter2 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_CENTER_POS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsTopCenter3 = new GoTowardsCoordinatesCommand(arm, PositionConstants.TOP_CENTER_POS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsStartingPos = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS);
-    public final GoTowardsCoordinatesCommand goTowardsStartingPos2 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsStartingPos3 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsStartingPos4 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsStartingPos5 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsStartingPos6 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsStartingPos7 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsStartingPos8 = new GoTowardsCoordinatesCommand(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommand goTowardsPickupPos = new GoTowardsCoordinatesCommand(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0});
-    public final GoTowardsCoordinatesCommand goTowardsPickupPos2 = new GoTowardsCoordinatesCommand(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsTopRight = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_RIGHT_POS);
+    public final GoTowardsCoordinatesCommandAuto goTowardsTopRight2 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsTopRight3 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsTopRight4 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_RIGHT_POS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS);
+    public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter2 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter3 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS);
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos2 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos3 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos4 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos5 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos6 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos7 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos8 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0});
+    public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos2 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}); // Only here because compositions can't use commands that have already been used for other compositions
 
     public final ClawOpenandCloseCommand clawOpenandCloseCommand = new ClawOpenandCloseCommand(clawGrip, xboxController);
     public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, xboxController);
@@ -194,7 +194,7 @@ public class RobotContainer {
         xboxController.controller.pov(0).onTrue(new CalibrateArmTurretCommand(arm));
 
         driverController.joystick.button(7).onTrue(Commands.runOnce(() -> {
-            double[] currIntendCoords = arm.getIntendedCoordinates();
+            double[] currIntendCoords = arm.getTargetCoordinates();
             arm.setTargetCoordinates(currIntendCoords[0] + 2, currIntendCoords[1], currIntendCoords[2]);
         }, arm));
     }
