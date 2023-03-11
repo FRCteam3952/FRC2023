@@ -199,7 +199,7 @@ public final class Constants {
         public static final double[] CENTER_RIGHT_POS = {X_RIGHT, Y_MIDDLE_POLE_HEIGHT, Z_MIDDLE_DISTANCE};
 
         public static final double[] TOP_LEFT_POS = {X_LEFT, Y_TOP_POLE_HEIGHT, Z_TOP_DISTANCE};
-        public static final double[] TOP_CENTER_POS = {X_MIDDLE, Y_TOP_PLATFORM_HEIGHT, Z_TOP_DISTANCE};
+        public static final double[] TOP_CENTER_POS = {X_MIDDLE, Y_TOP_PLATFORM_HEIGHT+5, Z_TOP_DISTANCE};
         public static final double[] TOP_RIGHT_POS = {X_RIGHT, Y_TOP_POLE_HEIGHT, Z_TOP_DISTANCE};
     }
 

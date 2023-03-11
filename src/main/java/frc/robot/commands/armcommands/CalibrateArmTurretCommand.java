@@ -9,7 +9,7 @@ public class CalibrateArmTurretCommand extends CommandBase {
     private final ArmSubsystem arm;
     private double initialAngle = 0;
     private double endAngle = 0;
-    private static final double kp = 0.008;
+    private static final double kp = 0.01;
     private static final double ki = 0.0;
     private static final double kd = 0.0;
     private static final PIDController turretPID = new PIDController(kp, ki, kd);
@@ -46,7 +46,7 @@ public class CalibrateArmTurretCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return (Math.abs(arm.getTurretAngleDeg()) < 5)  || Math.abs(this.initialAngle) < 30;
+        return (Math.abs(arm.getTurretAngleDeg()) < 10)  || Math.abs(this.initialAngle) < 30;
     }
 
 }

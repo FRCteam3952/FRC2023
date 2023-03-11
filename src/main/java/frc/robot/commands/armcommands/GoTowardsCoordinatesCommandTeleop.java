@@ -12,7 +12,6 @@ public class GoTowardsCoordinatesCommandTeleop extends CommandBase{
 
 
     private double[] newArmPosition;
-    private double[] currentArmPosition;
     private double speed1;
     private double speed2;
 
@@ -20,7 +19,6 @@ public class GoTowardsCoordinatesCommandTeleop extends CommandBase{
     public GoTowardsCoordinatesCommandTeleop(ArmSubsystem arm, double[] newArmPosition, XboxController xboxController, double speed1, double speed2) {
         this.arm = arm;
         this.newArmPosition = ArmConstants.STARTING_COORDS;
-        this.currentArmPosition = arm.getCurrentCoordinates();
         this.xboxController = xboxController;
         this.speed1 = speed1;
         this.speed2 = speed2;
