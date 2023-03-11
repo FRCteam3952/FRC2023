@@ -36,11 +36,11 @@ public class ArmControlCommand extends CommandBase {
     private void setYPosition() {
         if (joystick.getRawButtonPressedWrapper(ControllerConstants.HUMAN_STATION_HEIGHT_BUTTON_NUMBER)) {
             double[] currentCoords = arm.getTargetCoordinates();
-            (new GoTowardsCoordinatesCommandTeleop(this.arm,(new double[]{currentCoords[0],ArmConstants.HUMAN_PLAYER_HEIGHT,currentCoords[2]}),this.joystick,1,1)).schedule();
+            (new GoTowardsCoordinatesCommandTeleop(this.arm,(new double[]{currentCoords[0],ArmConstants.HUMAN_PLAYER_HEIGHT,currentCoords[2]}),this.joystick,0.4,0.4)).schedule();
     
         } else if (joystick.getRawButtonPressedWrapper(ControllerConstants.PICK_UP_HEIGHT_BUTTON_NUMBER)) {
             double[] currentCoords = arm.getTargetCoordinates();
-            (new GoTowardsCoordinatesCommandTeleop(this.arm,(new double[]{currentCoords[0],ArmConstants.PICK_UP_POSITION_Y,currentCoords[2]}),this.joystick,0.2,1)).schedule();
+            (new GoTowardsCoordinatesCommandTeleop(this.arm,(new double[]{currentCoords[0],ArmConstants.PICK_UP_POSITION_Y,currentCoords[2]}),this.joystick,0.2,0.4)).schedule();
         }
     }
 
