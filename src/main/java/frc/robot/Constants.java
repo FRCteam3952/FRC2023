@@ -50,8 +50,8 @@ public final class Constants {
 
         public static final double ARM_1_INITIAL_ANGLE = 10.0;
         public static final double ARM_2_INITIAL_ANGLE = 20.0;
-        public static final double MAX_OUTPUT = 0.6;
-        public static final double MIN_OUTPUT = -0.6;
+        public static final double MAX_OUTPUT = 0.8;
+        public static final double MIN_OUTPUT = -0.8;
         public static final double SPEED_DEC_ON_UNFLIP = 0.2;
         public static final double SPEED_DEC_ON_FLIP = 1.0;
         public static final double COMPLEMENTING_FLIP_SPEED = 1.2;

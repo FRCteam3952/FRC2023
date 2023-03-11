@@ -23,7 +23,7 @@ public class ArmControlCommand extends CommandBase {
     private static final double EXTEND_RETRACT_SPEED = 0.02; // for possible testing later
     private static double turret_adjust = 0.0;
 
-    private static final double TURRET_SPEED = 0.6;
+    private static final double TURRET_SPEED = 1;
 
     public ArmControlCommand(ArmSubsystem arm, XboxController joystick) {
         this.arm = arm;
@@ -35,11 +35,12 @@ public class ArmControlCommand extends CommandBase {
     // Assumes goTowardsIntendedCoordinates() is running and PID is on
     private void setYPosition() {
         if (joystick.getRawButtonPressedWrapper(ControllerConstants.HUMAN_STATION_HEIGHT_BUTTON_NUMBER)) {
-            double[] currentTargetCoords = arm.getTargetCoordinates();
-            arm.setTargetCoordinates(currentTargetCoords[0], ArmConstants.HUMAN_PLAYER_HEIGHT, currentTargetCoords[2]);
+            double[] currentCoords = arm.getTargetCoordinates();
+            (new GoTowardsCoordinatesCommandTeleop(this.arm,(new double[]{currentCoords[0],ArmConstants.HUMAN_PLAYER_HEIGHT,currentCoords[2]}),this.joystick,1,1)).schedule();
+    
         } else if (joystick.getRawButtonPressedWrapper(ControllerConstants.PICK_UP_HEIGHT_BUTTON_NUMBER)) {
             double[] currentCoords = arm.getTargetCoordinates();
-            arm.setTargetCoordinates(currentCoords[0], ArmConstants.PICK_UP_POSITION_Y, currentCoords[2]);
+            (new GoTowardsCoordinatesCommandTeleop(this.arm,(new double[]{currentCoords[0],ArmConstants.PICK_UP_POSITION_Y,currentCoords[2]}),this.joystick,0.2,1)).schedule();
         }
     }
 

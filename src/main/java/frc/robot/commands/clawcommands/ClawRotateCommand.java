@@ -5,7 +5,7 @@ import frc.robot.subsystems.ClawRotationSubsystem;
 import frc.robot.util.NetworkTablesUtil;
 
 public class ClawRotateCommand extends CommandBase {
-    private static final double CLAW_ROTATION_SPEED = 2;
+    private static final double CLAW_ROTATION_SPEED = 4;
 
     private final ClawRotationSubsystem claw;
     private final XboxController joystick;

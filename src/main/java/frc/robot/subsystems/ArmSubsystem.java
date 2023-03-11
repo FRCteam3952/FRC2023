@@ -56,6 +56,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     private double maxOutput = ArmConstants.MAX_OUTPUT;
     private double minOutput = ArmConstants.MIN_OUTPUT;
+    private double maxOutput2 = ArmConstants.MAX_OUTPUT;
+    private double minOutput2 = ArmConstants.MIN_OUTPUT;
 
     // arm control constructor
     public ArmSubsystem() {
@@ -122,9 +124,13 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
     }
 
-    public void setMaxAndMinOutput(double speed) {
-        minOutput = speed;
-        maxOutput = speed;
+    public void setMaxAndMinOutput1(double speed) {
+        this.minOutput = -speed;
+        this.maxOutput = speed;
+    }
+    public void setMaxAndMinOutput2(double speed){
+        this.minOutput2 = -speed;
+        this.maxOutput2 = speed;
     }
 
     public double resetTurretEncoder() {
@@ -294,11 +300,11 @@ public class ArmSubsystem extends SubsystemBase {
         }
 
         p1Speed = Math.min(maxOutput, Math.max(p1Speed, minOutput));
-        p2Speed = Math.min(maxOutput, Math.max(p2Speed, minOutput));
+        p2Speed = Math.min(maxOutput2, Math.max(p2Speed, minOutput2));
 
         if (!is2D) { //only control turret or Z axis when auto
             turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
-            turretSpeed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(turretSpeed, ArmConstants.MIN_OUTPUT));
+            turretSpeed = Math.min(maxOutput, Math.max(turretSpeed, minOutput));
             if(Double.isNaN(turretSpeed)){
                 return;
             }
