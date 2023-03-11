@@ -64,15 +64,19 @@ public final class Autos {
 
     }
 
+    // 6.9 seconds driving at 0.25 power goes RIGHT to the edge of the community
     public static CommandBase taxiAuto(DriveTrainSubsystem driveTrain) {
         return Commands.runOnce(() -> {
             System.out.println("Taxi Auto Start");
             timer.reset();
             timer.start();
-        }).andThen(Commands.run(() -> {
-            if (timer.get() < 6.9) {
-                System.out.println(timer.get());
-                driveTrain.tankDrive(0.25, 0);
+        }).andThen(Commands.run(() -> {      
+            if (timer.get() < 1.15) {
+                System.out.println("Slow Drive");
+                driveTrain.tankDrive(0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
+            } else if (timer.get() < 2.65) {
+                System.out.println("Fast Drive");
+                driveTrain.tankDrive(0.5, 0); // Drives faster up onto charge station for 1.5 seconds
             } else {
                 driveTrain.tankDrive(0, 0);
                 System.out.println("Taxi Auto Finish");          
@@ -115,7 +119,7 @@ public final class Autos {
         
         return Commands.runOnce(() -> {
             System.out.println("Taxi Auto then Balance Start");
-        }).andThen(taxiAuto(driveTrain).until(() -> timer.get() > 6.969))
+        }).andThen(taxiAuto(driveTrain).until(() -> timer.get() > 5))
         .andThen(balanceCommand);
     }
 
