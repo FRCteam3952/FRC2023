@@ -11,17 +11,23 @@ public class GoTowardsCoordinatesCommandAuto extends CommandBase{
 
     private double[] newArmPosition;
     private double[] currentArmPosition;
+    private double speed1;
+    private double speed2;
     
-    public GoTowardsCoordinatesCommandAuto(ArmSubsystem arm, double[] newArmPosition) {
+    public GoTowardsCoordinatesCommandAuto(ArmSubsystem arm, double[] newArmPosition, double speed1, double speed2) {
         this.arm = arm;
-        this.newArmPosition = ArmConstants.STARTING_COORDS;
+        this.newArmPosition = newArmPosition;
         this.currentArmPosition = arm.getCurrentCoordinates();
+        this.speed1 = speed1;
+        this.speed2 = speed2;
         addRequirements(arm);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        arm.setMaxAndMinOutput1(speed1);
+        arm.setMaxAndMinOutput2(speed2);
         currentArmPosition = arm.getCurrentCoordinates();
         arm.setTargetCoordinates(newArmPosition[0], newArmPosition[1], newArmPosition[2]);
     }
@@ -35,6 +41,8 @@ public class GoTowardsCoordinatesCommandAuto extends CommandBase{
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        arm.setMaxAndMinOutput1(ArmConstants.MAX_OUTPUT);
+        arm.setMaxAndMinOutput2(ArmConstants.MAX_OUTPUT);
     }
 
     // Returns true when the command should end.
