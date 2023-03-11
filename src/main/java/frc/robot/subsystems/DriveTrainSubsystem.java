@@ -60,7 +60,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     private boolean swapDirection = false;
 
-    private boolean blueTeam = true; // We can toggle this with the slider on the drive joystick, TODO: implement later
+    private boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
 
 
     public DriveTrainSubsystem(FlightJoystick joystick) {
@@ -333,9 +333,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
         double[] sendPose = {pose.getX(), pose.getY(), pose.getRotation().getRadians()};
         NetworkTablesUtil.getEntry("robot", "drive_odometry").setDoubleArray(sendPose);
 
-        System.out.println("Gyro Yaw: " + RobotGyro.getGyroAngleDegreesYaw());
-        System.out.println("Gyro Roll: " + RobotGyro.getGyroAngleDegreesRoll());
-        System.out.println("Gyro Pitch: " + RobotGyro.getGyroAngleDegreesPitch());
+        // System.out.println("Gyro Yaw: " + RobotGyro.getGyroAngleDegreesYaw());
+        // System.out.println("Gyro Roll: " + RobotGyro.getGyroAngleDegreesRoll());
+        // System.out.println("Gyro Pitch: " + RobotGyro.getGyroAngleDegreesPitch());
+        //System.out.println("Drive motor value: " + this.getWheelSpeeds());
 
         if (joystick.getRawButtonReleasedWrapper(ControllerConstants.RESET_GYRO_BUTTON_NUMBER)) {
             RobotGyro.resetGyroAngle();
