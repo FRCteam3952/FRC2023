@@ -85,9 +85,23 @@ public final class Autos {
             System.out.println("Place Cube then Taxi Auto Start");
         }).andThen(goToTopCenter)
         .andThen(Commands.runOnce(() -> {
+            timer.reset();
+            timer.start();
+        })).andThen(Commands.run(() -> {
+            // Wait
+            System.out.println("Waiting");
+        }).until(() -> timer.get() > 0.5))
+        .andThen(Commands.runOnce(() -> {
             System.out.println("Place Cube then Taxi Auto Running");
             claw.setClawClosed(false); // Opens claw
         }, claw))
+        .andThen(Commands.runOnce(() -> {
+            timer.reset();
+            timer.start();
+        })).andThen(Commands.run(() -> {
+            // Wait
+            System.out.println("Waiting");
+        }).until(() -> timer.get() > 0.5))
         .andThen(goToStartingPos)
         .andThen(taxiAuto(driveTrain));
     }
