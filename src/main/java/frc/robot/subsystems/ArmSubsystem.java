@@ -437,7 +437,7 @@ public class ArmSubsystem extends SubsystemBase {
         boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
 
         double tempAngle = this.turretEncoder.getPosition();
-        System.out.println("TURRET SPEED: " + turret.get() + ", ANG: " + getTurretAngleDeg());
+        // System.out.println("TURRET SPEED: " + turret.get() + ", ANG: " + getTurretAngleDeg());
         
         if(getTurretLimitPressed()){
             if(tempAngle < 180 && tempAngle > -180){
