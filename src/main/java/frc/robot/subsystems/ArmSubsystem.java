@@ -76,6 +76,8 @@ public class ArmSubsystem extends SubsystemBase {
     private double maxOutput2 = ArmConstants.MAX_OUTPUT;
     private double minOutput2 = ArmConstants.MIN_OUTPUT;
 
+    private int turretDirection = 1;
+
     // arm control constructor
     public ArmSubsystem() {
         // Initialize arm motors
@@ -93,7 +95,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.turretEncoder = this.turret.getEncoder();
 
         // Arm Angle Conversion Factors
-        this.pivot1Encoder.setPositionConversionFactor(2.8); // 125:1 gearbox
+        this.pivot1Encoder.setPositionConversionFactor(2.7); // 125:1 gearbox
         this.pivot2Encoder.setPositionConversionFactor(3.65); // 125:1 gearbox
         this.turretEncoder.setPositionConversionFactor(1); // 60:1 gearbox with drive wheel to lazy susan ratio
         // END
@@ -124,6 +126,22 @@ public class ArmSubsystem extends SubsystemBase {
         resetCoords();
     }
 
+    /**
+     * Sets the turret direction. Must be 1 or -1.
+     * @param dir The direction. This acts as a sign multiplier for the turret to flip the direction as needed.
+     */
+    public void setTurretDirection(int dir) {
+        this.turretDirection = dir;
+    }
+
+    /**
+     * Gets the turret direction
+     * @return The turret direction. Should be 1 or -1 (unless someone trolled us)
+     */
+    public int getTurretDirection() {
+        return this.turretDirection;
+    }
+
     public void reset() {
         this.pidOn = false;
         resetCoords();
@@ -139,6 +157,10 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+    }
+
+    public void setTargetDirection(int direction){
+        this.turretDirection = direction;
     }
 
     public void setMaxAndMinOutput1(double speed) {
@@ -344,6 +366,9 @@ public class ArmSubsystem extends SubsystemBase {
     public void setTargetCoordinates(double x, double y, double z) {
         if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
             return;
+        }
+        if(y > 60){
+            y = 60;
         }
 
         if(this.is2D){
