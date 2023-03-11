@@ -5,8 +5,8 @@ import frc.robot.util.NetworkTablesUtil;
 public class LimeLight {
     private static final double DESIRED_AREA_CONE = 5000; // tentative measurement, pixels
     private static final double DESIRED_AREA_CUBE = 420; // measure later
-    private static final double kp = 0.0017;
-    private static final double ki = 0.0;
+    private static final double kp = 0.002;
+    private static final double ki = 0.00;
     private static final double kd = 0.001;
     private static final PIDController adjustmentPID = new PIDController(kp, ki, kd);
 
