@@ -81,9 +81,15 @@ public final class Autos {
     }
 
     public static CommandBase placeCubeThenTaxiAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos) {
+        return placeCubeAuto(claw, goToTopCenter, goToStartingPos)
+        .andThen(taxiAuto(driveTrain));
+    }
+
+    public static CommandBase placeCubeAuto(ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos) {
         return Commands.runOnce(() -> {
-            System.out.println("Place Cube then Taxi Auto Start");
-        }).andThen(goToTopCenter)
+            System.out.println("Place Cube Auto Start");
+            claw.setClawClosed(true);
+        }, claw).andThen(goToTopCenter)
         .andThen(Commands.runOnce(() -> {
             timer.reset();
             timer.start();
@@ -92,7 +98,7 @@ public final class Autos {
             System.out.println("Waiting");
         }).until(() -> timer.get() > 0.5))
         .andThen(Commands.runOnce(() -> {
-            System.out.println("Place Cube then Taxi Auto Running");
+            System.out.println("Place Cube Auto Running");
             claw.setClawClosed(false); // Opens claw
         }, claw))
         .andThen(Commands.runOnce(() -> {
@@ -102,16 +108,20 @@ public final class Autos {
             // Wait
             System.out.println("Waiting");
         }).until(() -> timer.get() > 0.5))
-        .andThen(goToStartingPos)
-        .andThen(taxiAuto(driveTrain));
+        .andThen(goToStartingPos);
     }
 
-    public static CommandBase taxiAutoThenBalance(DriveTrainSubsystem driveTrain, Command balanceCommand) {
+    public static CommandBase taxiThenBalanceAuto(DriveTrainSubsystem driveTrain, Command balanceCommand) {
         
         return Commands.runOnce(() -> {
             System.out.println("Taxi Auto then Balance Start");
         }).andThen(taxiAuto(driveTrain).until(() -> timer.get() > 6.969))
         .andThen(balanceCommand);
+    }
+
+    public static CommandBase placeCubeThenTaxiThenBalanceAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos, Command balanceCommand) {
+        return placeCubeAuto(claw, goToTopCenter, goToStartingPos)
+        .andThen(taxiThenBalanceAuto(driveTrain, balanceCommand));
     }
 
     // First half of balance auto
