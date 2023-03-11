@@ -451,7 +451,7 @@ public class ArmSubsystem extends SubsystemBase {
             }
         }
 
-        // System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed());
+        System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed());
         // handles limit switches
 
         if (resetPivot1) {
