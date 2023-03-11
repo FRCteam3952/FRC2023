@@ -81,31 +81,23 @@ public final class Autos {
     }
 
     public static CommandBase placeCubeThenTaxiAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos) {
-        return goToTopCenter
+        return Commands.runOnce(() -> {
+            System.out.println("Place Cube then Taxi Auto Start");
+        }).andThen(goToTopCenter)
         .andThen(Commands.runOnce(() -> {
+            System.out.println("Place Cube then Taxi Auto Running");
             claw.setClawClosed(false); // Opens claw
-        }))
+        }, claw))
         .andThen(goToStartingPos)
         .andThen(taxiAuto(driveTrain));
     }
 
     public static CommandBase taxiAutoThenBalance(DriveTrainSubsystem driveTrain, Command balanceCommand) {
-        Command taxi = Commands.run(() -> {
-            if (timer.get() < 5) {
-                System.out.println(timer.get());
-                driveTrain.tankDrive(0.5, 0);
-            } else {
-                driveTrain.tankDrive(0, 0);
-                System.out.println("Taxi Auto Finish");
-            }
-        }, driveTrain);
         
         return Commands.runOnce(() -> {
-            System.out.println("Taxi Auto Start");
-            timer.reset();
-            timer.start();
-        }).andThen((Runnable) taxi, driveTrain);
-            
+            System.out.println("Taxi Auto then Balance Start");
+        }).andThen(taxiAuto(driveTrain).until(() -> timer.get() > 6.969))
+        .andThen(balanceCommand);
     }
 
     // First half of balance auto
