@@ -1,6 +1,5 @@
 package frc.robot.commands.armcommands;
 
-import frc.robot.controllers.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
@@ -10,14 +9,12 @@ public class GoTowardsCoordinatesCommandAuto extends CommandBase{
     private final ArmSubsystem arm;
 
     private double[] newArmPosition;
-    private double[] currentArmPosition;
     private double speed1;
     private double speed2;
     
     public GoTowardsCoordinatesCommandAuto(ArmSubsystem arm, double[] newArmPosition, double speed1, double speed2) {
         this.arm = arm;
         this.newArmPosition = newArmPosition;
-        this.currentArmPosition = arm.getCurrentCoordinates();
         this.speed1 = speed1;
         this.speed2 = speed2;
         addRequirements(arm);
@@ -28,14 +25,12 @@ public class GoTowardsCoordinatesCommandAuto extends CommandBase{
     public void initialize() {
         arm.setMaxAndMinOutput1(speed1);
         arm.setMaxAndMinOutput2(speed2);
-        currentArmPosition = arm.getCurrentCoordinates();
         arm.setTargetCoordinates(newArmPosition[0], newArmPosition[1], newArmPosition[2]);
     }
 
     @Override
     public void execute() {
         arm.goTowardTargetCoordinates();
-        currentArmPosition = arm.getCurrentCoordinates();
     }
 
     // Called once the command ends or is interrupted.
