@@ -84,6 +84,28 @@ public final class Autos {
         }, driveTrain));
     }
 
+    public static CommandBase taxiForBalanceAuto(DriveTrainSubsystem driveTrain) {
+        return Commands.runOnce(() -> {
+            System.out.println("Taxi For Balance Auto Start");
+            timer.reset();
+            timer.start();
+        }).andThen(Commands.run(() -> {      
+            if (timer.get() < 1.15) {
+                System.out.println("Slow Drive Backwards");
+                driveTrain.tankDrive(0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
+            } else if (timer.get() < 3.65) {
+                System.out.println("Fast Drive Backwards");
+                driveTrain.tankDrive(0.5, 0); // Drives backwards faster over charge station for 2.5 seconds
+            } else if (timer.get() < 5.15) {
+                System.out.println("Fast Drive Forwards");
+                driveTrain.tankDrive(-0.5, 0); // Drives forwards onto charge station for 1.5 seconds
+            } else {
+                driveTrain.tankDrive(0, 0);
+                System.out.println("Taxi For Balance Auto Finish");          
+            }
+        }, driveTrain));
+    }
+
     public static CommandBase placeCubeThenTaxiAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos) {
         return placeCubeAuto(claw, goToTopCenter, goToStartingPos)
         .andThen(taxiAuto(driveTrain));
@@ -92,7 +114,7 @@ public final class Autos {
     public static CommandBase placeCubeAuto(ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos) {
         return Commands.runOnce(() -> {
             System.out.println("Place Cube Auto Start");
-            claw.setClawClosed(false);
+            claw.setClawOpened(false);
         }, claw).andThen(goToTopCenter)
         .andThen(Commands.runOnce(() -> {
             timer.reset();
@@ -103,7 +125,7 @@ public final class Autos {
         }).until(() -> timer.get() > 0.5))
         .andThen(Commands.runOnce(() -> {
             System.out.println("Place Cube Auto Running");
-            claw.setClawClosed(true); // Opens claw
+            claw.setClawOpened(true); // Opens claw
         }, claw))
         .andThen(Commands.runOnce(() -> {
             timer.reset();
@@ -119,7 +141,7 @@ public final class Autos {
         
         return Commands.runOnce(() -> {
             System.out.println("Taxi Auto then Balance Start");
-        }).andThen(taxiAuto(driveTrain).until(() -> timer.get() > 5))
+        }).andThen(taxiForBalanceAuto(driveTrain).until(() -> timer.get() > 6))
         .andThen(balanceCommand);
     }
 
@@ -190,7 +212,7 @@ public final class Autos {
             System.out.println("Place Cone Auto Start");
         }).andThen(goTowardsTopRight) // Arm goes to top right position on grid
         .andThen(Commands.runOnce(() -> {
-            claw.setClawClosed(false); // Opens claw
+            claw.setClawOpened(false); // Opens claw
         }, claw).andThen(goTowardsStartingPos)) // Returns arm to starting position
         .andThen(Commands.runOnce(() -> {
             System.out.println("Place Cone Auto Finish");
@@ -213,18 +235,18 @@ public final class Autos {
             }).andThen(placeConeAuto(claw, goTowardsTopRight, goTowardsStartingPos)) // Drops pre-loaded cone onto top right pole
             .andThen(driveBackwardsToCubeBlue) // Drives backwards to cube
             .andThen(Commands.runOnce(() -> { 
-                claw.setClawClosed(false); // Opens claw
+                claw.setClawOpened(false); // Opens claw
                 NetworkTablesUtil.setLimelightPipeline(3); // Sets vision pipeline to detect cubes
             }, claw)).andThen(goTowardsPickupPos) // Arm goes to pickup position
             .andThen(aimAssist) // Guides claw to game piece
             .andThen(Commands.runOnce(() -> { 
-                claw.setClawClosed(true); // Closes claw
+                claw.setClawOpened(true); // Closes claw
             }, claw))
             .andThen(goTowardsStartingPos2 // Arm goes to starting position
             .alongWith(driveForwardsToGridBlue)) // Drive forwards to grid
             .andThen(goTowardsTopCenter) // Arm goes to top center position on grid
             .andThen(Commands.runOnce(() -> {
-                claw.setClawClosed(false); // Opens claw
+                claw.setClawOpened(false); // Opens claw
             }, claw).andThen(goTowardsStartingPos3)) // Arm goes to starting position
             .andThen(Commands.runOnce(() -> {
                 System.out.println("Double Placement Auto Blue Finish");
@@ -235,18 +257,18 @@ public final class Autos {
             }).andThen(placeConeAuto(claw, goTowardsTopRight, goTowardsStartingPos)) // Drops pre-loaded cone onto top right pole
             .andThen(driveBackwardsToCubeRed) // Drives backwards to cube
             .andThen(Commands.runOnce(() -> { 
-                claw.setClawClosed(false); // Opens claw
+                claw.setClawOpened(false); // Opens claw
                 NetworkTablesUtil.setLimelightPipeline(3); // Sets vision pipeline to detect cubes
             }, claw)).andThen(goTowardsPickupPos) // Arm goes to pickup position
             .andThen(aimAssist) // Guides claw to game piece
             .andThen(Commands.runOnce(() -> { 
-                claw.setClawClosed(true); // Closes claw
+                claw.setClawOpened(true); // Closes claw
             }, claw))
             .andThen(goTowardsStartingPos2 // Arm goes to starting position
             .alongWith(driveForwardsToGridRed)) // Drive forwards to grid
             .andThen(goTowardsTopCenter) // Arm goes to top center position on grid
             .andThen(Commands.runOnce(() -> {
-                claw.setClawClosed(false); // Opens claw
+                claw.setClawOpened(false); // Opens claw
             }, claw).andThen(goTowardsStartingPos3)) // Arm goes to starting position
             .andThen(Commands.runOnce(() -> {
                 System.out.println("Double Placement Auto Red Finish");

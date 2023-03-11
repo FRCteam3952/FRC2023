@@ -151,6 +151,7 @@ public class RobotContainer {
     private Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
     private Command testAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
     private Command taxiAuto;
+    private Command taxiForBalanceAuto;
     private Command taxiThenBalanceAuto;
     private Command placeCubeThenTaxiAuto;
     private Command placeCubeThenTaxiThenBalanceAuto;
@@ -320,6 +321,7 @@ public class RobotContainer {
         // Initialize autonomous commands here
 
         taxiAuto = Autos.taxiAuto(driveTrain);
+        taxiForBalanceAuto = Autos.taxiForBalanceAuto(driveTrain);
         placeCubeThenTaxiAuto = Autos.placeCubeThenTaxiAuto(driveTrain, clawGrip, goTowardsTopCenter4, goTowardsStartingPos9);
         taxiThenBalanceAuto = Autos.taxiThenBalanceAuto(driveTrain, balanceCommand5);
         placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(driveTrain, clawGrip, goTowardsTopCenter5, goTowardsStartingPos10, balanceCommand6);
@@ -339,6 +341,7 @@ public class RobotContainer {
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
         m_chooser.addOption("Test Auto", testAuto);
         m_chooser.addOption("Taxi Auto", taxiAuto);
+        m_chooser.addOption("Taxi for Balance Auto", taxiForBalanceAuto);
         m_chooser.addOption("Taxi then Balance Auto", taxiThenBalanceAuto);
         m_chooser.addOption("Place Cube then Taxi Auto", placeCubeThenTaxiAuto);
         m_chooser.addOption("Place Cube then Taxi then Balance Auto", placeCubeThenTaxiThenBalanceAuto);
