@@ -164,43 +164,44 @@ public final class Constants {
     public static class PositionConstants { // current coordinates are placeholders, replace with actual coordinates (xyz in inches)
         // https://firstfrc.blob.core.windows.net/frc2023/FieldAssets/TeamVersions/Drawings/TE-23001-Grid-Dwg.pdf
 
-        public static final double ROBOT_LENGTH = 27.0;
+        public static final double ROBOT_LENGTH = 40.0; // checked irl
 
-        public static final double Y_MIDDLE_POLE_HEIGHT = 34.0;
+        public static final double Y_MIDDLE_POLE_HEIGHT = 34.0; // confirmed w/solidwork
         public static final double Y_TOP_POLE_HEIGHT = 46.0;
 
-        public static final double Y_MIDDLE_PLATFORM_HEIGHT = 23.5;
+        public static final double Y_MIDDLE_PLATFORM_HEIGHT = 23.5; // confirmed
         public static final double Y_TOP_PLATFORM_HEIGHT = 35.5;
 
-        public static final double Y_FLOOR = 0.0;
+        public static final double Y_FLOOR = 0.0; // obvious
+        public static final double VERTICAL_PLACEMENT_OFFSET = 5;
 
-        public static final double Z_MIDDLE_DISTANCE = 22.75 + (ROBOT_LENGTH / 2);
-        public static final double Z_TOP_DISTANCE = 39.75 + (ROBOT_LENGTH / 2);
-        public static final double Z_BOTTOM_DISTANCE = 8.75 + (ROBOT_LENGTH / 2); // APPROXIMATION, TODO get better value & test
+        public static final double X_MIDDLE_DISTANCE = 22.75 + (ROBOT_LENGTH / 2);
+        public static final double X_TOP_DISTANCE = 39.75 + (ROBOT_LENGTH / 2);
+        public static final double X_BOTTOM_DISTANCE = 7.15 + (ROBOT_LENGTH / 2); 
 
-        public static final double X_BETWEEN_AREA_SPACE = 3.47;
-        public static final double X_AREA_WIDTH = 18.5;
+        public static final double Z_BETWEEN_AREA_SPACE = 3.47;
+        public static final double Z_AREA_WIDTH = 18.5;
 
         // see top PDF to explain this
         // two halves of X_AREA_WIDTH added together and then added to X_BETWEEN_AREA_SPACE
-        public static final double X_DISTANCE_TO_SIDE = X_BETWEEN_AREA_SPACE + X_AREA_WIDTH;
+        public static final double Z_DISTANCE_TO_SIDE = Z_BETWEEN_AREA_SPACE + Z_AREA_WIDTH;
 
-        public static final double X_LEFT = -X_DISTANCE_TO_SIDE;
-        public static final double X_MIDDLE = 0.0;
-        public static final double X_RIGHT = X_DISTANCE_TO_SIDE;
+        public static final double Z_LEFT = -Z_DISTANCE_TO_SIDE;
+        public static final double Z_MIDDLE = 0.0;
+        public static final double Z_RIGHT = Z_DISTANCE_TO_SIDE;
 
         // relative to the center of the robot
-        public static final double[] BOTTOM_LEFT_POS = {X_LEFT, Y_FLOOR, Z_BOTTOM_DISTANCE};
-        public static final double[] BOTTOM_MIDDLE_POS = {X_MIDDLE, Y_FLOOR, Z_BOTTOM_DISTANCE};
-        public static final double[] BOTTOM_RIGHT_POS = {X_RIGHT, Y_FLOOR, Z_BOTTOM_DISTANCE};
+        public static final double[] BOTTOM_LEFT_POS = {X_BOTTOM_DISTANCE, Y_FLOOR + VERTICAL_PLACEMENT_OFFSET, Z_LEFT};
+        public static final double[] BOTTOM_MIDDLE_POS = {X_BOTTOM_DISTANCE, Y_FLOOR + VERTICAL_PLACEMENT_OFFSET, Z_MIDDLE};
+        public static final double[] BOTTOM_RIGHT_POS = {X_BOTTOM_DISTANCE, Y_FLOOR + VERTICAL_PLACEMENT_OFFSET, Z_RIGHT};
 
-        public static final double[] CENTER_LEFT_POS = {X_LEFT, Y_MIDDLE_POLE_HEIGHT, Z_MIDDLE_DISTANCE};
-        public static final double[] CENTER_MIDDLE_POS = {X_MIDDLE, Y_MIDDLE_PLATFORM_HEIGHT, Z_MIDDLE_DISTANCE};
-        public static final double[] CENTER_RIGHT_POS = {X_RIGHT, Y_MIDDLE_POLE_HEIGHT, Z_MIDDLE_DISTANCE};
+        public static final double[] CENTER_LEFT_POS = {X_MIDDLE_DISTANCE, Y_MIDDLE_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_LEFT};
+        public static final double[] CENTER_MIDDLE_POS = {X_MIDDLE_DISTANCE, Y_MIDDLE_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_MIDDLE};
+        public static final double[] CENTER_RIGHT_POS = {X_MIDDLE_DISTANCE, Y_MIDDLE_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_RIGHT};
 
-        public static final double[] TOP_LEFT_POS = {X_LEFT, Y_TOP_POLE_HEIGHT, Z_TOP_DISTANCE};
-        public static final double[] TOP_CENTER_POS = {X_MIDDLE, Y_TOP_PLATFORM_HEIGHT+5, Z_TOP_DISTANCE};
-        public static final double[] TOP_RIGHT_POS = {X_RIGHT, Y_TOP_POLE_HEIGHT, Z_TOP_DISTANCE};
+        public static final double[] TOP_LEFT_POS = {X_TOP_DISTANCE, Y_TOP_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_LEFT};
+        public static final double[] TOP_CENTER_POS = {X_TOP_DISTANCE, Y_TOP_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_MIDDLE};
+        public static final double[] TOP_RIGHT_POS = {X_TOP_DISTANCE, Y_TOP_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_RIGHT};
     }
 
     /**
