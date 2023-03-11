@@ -85,6 +85,7 @@ public class RobotContainer {
     public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS);
     public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter2 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter3 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter4 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS);
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos2 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos3 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
@@ -93,6 +94,7 @@ public class RobotContainer {
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos6 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos7 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos8 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos9 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0});
     public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos2 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}); // Only here because compositions can't use commands that have already been used for other compositions
 
@@ -143,7 +145,9 @@ public class RobotContainer {
 
 
     private Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
-    private Command customAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
+    private Command testAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
+    private Command taxiAuto;
+    private Command placeCubeThenTaxiAuto;
     private Command placeConeCommandAuto;
     private Command balanceChargeStationAuto; 
     private Command doublePlacementAuto;
@@ -307,6 +311,9 @@ public class RobotContainer {
         driveBackwardsOntoChargeStationDPRedCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationDPRedTraj);
 
         // Initialize autonomous commands here
+
+        taxiAuto = Autos.taxiAuto(driveTrain);
+        placeCubeThenTaxiAuto = Autos.placeCubeThenTaxiAuto(driveTrain, clawGrip, goTowardsTopCenter4, goTowardsStartingPos9);
         balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
                 driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand4, arm);
         placeConeCommandAuto = Autos.placeConeAuto(clawGrip, goTowardsTopRight, goTowardsStartingPos4);
@@ -321,7 +328,9 @@ public class RobotContainer {
 
         // Adds autonomous options to dashboard
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
-        m_chooser.addOption("My Auto", customAuto);
+        m_chooser.addOption("Test Auto", testAuto);
+        m_chooser.addOption("Taxi Auto", taxiAuto);
+        m_chooser.addOption("Place Cube then Taxi Auto", placeCubeThenTaxiAuto);
         m_chooser.addOption("Balance Charge Station Auto", balanceChargeStationAuto);
         m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);

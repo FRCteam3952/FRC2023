@@ -17,6 +17,23 @@ import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 import frc.robot.util.MathUtil;
 
+/*
+ * Arm axis control scheme:
+ * 
+ * Top down view:
+ *                           x-axis
+ *                         0 degrees
+ *                             |
+ *                             |
+ *  z-axis  270 degrees --------------- 90 degrees
+ *                             |
+ *                             |
+ *                        180 degrees
+ *  
+ * y-axis is the vertical axis (perpendicular to x and z axes)
+ *
+ */
+
 public class ArmSubsystem extends SubsystemBase {
 
     private final CANSparkMax pivot1;
@@ -426,7 +443,7 @@ public class ArmSubsystem extends SubsystemBase {
         boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
 
         double tempAngle = this.turretEncoder.getPosition();
-        System.out.println("TURRET SPEED: " + turret.get() + ", ANG: " + getTurretAngleDeg());
+        // System.out.println("TURRET SPEED: " + turret.get() + ", ANG: " + getTurretAngleDeg());
         
         if(getTurretLimitPressed()){
             if(tempAngle < 180 && tempAngle > -180){
@@ -511,7 +528,10 @@ public class ArmSubsystem extends SubsystemBase {
                 
         }
         */
-        
+        // double[] angles = InverseKinematicsUtil.getAnglesFromCoordinates(30, ArmConstants.ORIGIN_HEIGHT, 30, false);
+        // System.out.println(angles[0] + " " + angles[1] + " " + angles[2]);
+        // double[] coords = ForwardKinematicsUtil.getCoordinatesFromAngles(angles[0], angles[1], angles[2]);
+        // System.out.println(coords[0] + " " + coords[1] + " " + coords[2]);
 
         //handles PID
         // System.out.println("PID STATE: " + pidOn);

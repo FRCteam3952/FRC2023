@@ -7,14 +7,17 @@ package frc.robot.commands.autocommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj.Timer;
+
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.util.NetworkTablesUtil;
 
 public final class Autos {
     private static boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam(); // Whether we are on the blue team or not
-
+    private static Timer timer = new Timer();
     /**
      * Example static factory for an autonomous command.
      */
@@ -61,6 +64,50 @@ public final class Autos {
 
     }
 
+    public static CommandBase taxiAuto(DriveTrainSubsystem driveTrain) {
+        return Commands.runOnce(() -> {
+            System.out.println("Taxi Auto Start");
+            timer.reset();
+            timer.start();
+        }).andThen(Commands.run(() -> {
+            if (timer.get() < 6.9) {
+                System.out.println(timer.get());
+                driveTrain.tankDrive(0.25, 0);
+            } else {
+                driveTrain.tankDrive(0, 0);
+                System.out.println("Taxi Auto Finish");          
+            }
+        }, driveTrain));
+    }
+
+    public static CommandBase placeCubeThenTaxiAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos) {
+        return goToTopCenter
+        .andThen(Commands.runOnce(() -> {
+            claw.setClawClosed(false); // Opens claw
+        }))
+        .andThen(goToStartingPos)
+        .andThen(taxiAuto(driveTrain));
+    }
+
+    public static CommandBase taxiAutoThenBalance(DriveTrainSubsystem driveTrain, Command balanceCommand) {
+        Command taxi = Commands.run(() -> {
+            if (timer.get() < 5) {
+                System.out.println(timer.get());
+                driveTrain.tankDrive(0.5, 0);
+            } else {
+                driveTrain.tankDrive(0, 0);
+                System.out.println("Taxi Auto Finish");
+            }
+        }, driveTrain);
+        
+        return Commands.runOnce(() -> {
+            System.out.println("Taxi Auto Start");
+            timer.reset();
+            timer.start();
+        }).andThen((Runnable) taxi, driveTrain);
+            
+    }
+
     // First half of balance auto
     public static CommandBase balanceAutoFirstHalf(Command driveForwardOverChargeStationBlueCommand, 
             Command driveForwardOverChargeStationRedCommand, ArmSubsystem arm) {
@@ -104,14 +151,14 @@ public final class Autos {
             Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
             Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm) {
 
-            blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
-            return (Commands.runOnce(() -> {
-                System.out.println("Balance Auto Start");
-            }).andThen(balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)) // Drive forward over charge station
-            .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation) // Drive backwards onto charge station and balance it continuously
-            .andThen(Commands.runOnce(() -> {
-                System.out.println("Balance Auto Finish"); // Shouldn't print until auton is over, if at all
-            }))));
+        blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
+        return (Commands.runOnce(() -> {
+            System.out.println("Balance Auto Start");
+        }).andThen(balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)) // Drive forward over charge station
+        .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation) // Drive backwards onto charge station and balance it continuously
+        .andThen(Commands.runOnce(() -> {
+            System.out.println("Balance Auto Finish"); // Shouldn't print until auton is over, if at all
+        }))));
     }
 
     // Assumes robot is at a AprilTag
