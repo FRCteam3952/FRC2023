@@ -45,7 +45,7 @@ public class ClawGripSubsystem extends SubsystemBase {
      *
      * @param state True for closing, False for not closing
      */
-    public void setClawClosed(boolean state) {
+    public void setClawOpened(boolean state) {
         this.clawClosed = state;
     }
 
