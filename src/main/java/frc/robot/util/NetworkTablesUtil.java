@@ -44,7 +44,7 @@ public class NetworkTablesUtil {
             return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[1].floatValue() - 160.0f;
         }
         else{
-            return table.getEntry("tx").getNumber(0.0).floatValue()*5;
+            return table.getEntry("tx").getNumber(0.0).floatValue()*5.369f;
         }
         
     }
@@ -55,7 +55,7 @@ public class NetworkTablesUtil {
             return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[2].floatValue() - 120.0f;
         }
         else{
-            return table.getEntry("ty").getNumber(0.0).floatValue()*5;
+            return table.getEntry("ty").getNumber(0.0).floatValue()*5.2516f;
         }
     }
 

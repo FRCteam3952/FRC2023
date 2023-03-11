@@ -71,6 +71,9 @@ public class ArmSubsystem extends SubsystemBase {
     private boolean isManual = true;
     private boolean is2D = true;
 
+    private double maxOutput = ArmConstants.MAX_OUTPUT;
+    private double minOutput = ArmConstants.MIN_OUTPUT;
+
     // arm control constructor
     public ArmSubsystem() {
         // Initialize arm motors
@@ -136,6 +139,15 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
     }
 
+    public void setMaxAndMinOutput(double speed) {
+        minOutput = speed;
+        maxOutput = speed;
+    }
+
+    public double resetTurretEncoder() {
+        return this.turretEncoder.getPosition();
+    }
+
     public PIDController getPID1() {
         return this.pidController1;
     }
@@ -185,6 +197,10 @@ public class ArmSubsystem extends SubsystemBase {
         return new double[]{angle1, angle2, angle3};
     }
 
+    public double getTurretAngleDeg() {
+        return this.turretEncoder.getPosition();
+    }
+
 
     public void setPivot1Speed(double speed) {
         this.pivot1.set(speed);
@@ -195,25 +211,11 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void setTurretSpeed(double speed) {
-        if (this.is2D) {
-            if (this.turretEncoder.getPosition() >= 360) {
-                this.turret.set(-0.2);
-            }
-            else if(this.turretEncoder.getPosition() <= -360){
-                this.turret.set(0.2);
-            }
-            else{
-                this.turret.set(speed);
-            }
-
-        }
-        else{
-            this.turret.set(speed);
-        }
+        this.turret.set(speed);
 
     }
 
-    public void setControlMode(boolean isManual){
+    public void setManualControlMode(boolean isManual){
         this.isManual = isManual;
     }
 
@@ -265,7 +267,7 @@ public class ArmSubsystem extends SubsystemBase {
      * 
      * @return [x, y, z], where y is the height above ground
      */
-    public double[] getIntendedCoordinates() {
+    public double[] getTargetCoordinates() {
         return new double[]{this.targetX, this.targetY, this.targetZ};
     }
 
@@ -289,7 +291,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.arm2SpeedMultiplier = mult;
     }
 
-    public void goTowardIntendedCoordinates() {
+    public void goTowardTargetCoordinates() {
         double[] angles = getCurrentAnglesDeg(); // gets the current angles read from motor encoders
 
         if (Double.isNaN(angles[0]) || Double.isNaN(angles[1]) || Double.isNaN(angles[2]) || Double.isNaN(targetAngle1) || Double.isNaN(targetAngle2) || Double.isNaN(targetAngleTurret)) {
@@ -308,8 +310,8 @@ public class ArmSubsystem extends SubsystemBase {
             return;
         }
 
-        p1Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p1Speed, ArmConstants.MIN_OUTPUT));
-        p2Speed = Math.min(ArmConstants.MAX_OUTPUT, Math.max(p2Speed, ArmConstants.MIN_OUTPUT));
+        p1Speed = Math.min(maxOutput, Math.max(p1Speed, minOutput));
+        p2Speed = Math.min(maxOutput, Math.max(p2Speed, minOutput));
 
         if (!is2D) { //only control turret or Z axis when auto
             turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
@@ -336,6 +338,10 @@ public class ArmSubsystem extends SubsystemBase {
     public void setTargetCoordinates(double x, double y, double z) {
         if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
             return;
+        }
+
+        if(this.is2D){
+            z = 0;
         }
 
         // Updates target Angles
@@ -431,20 +437,15 @@ public class ArmSubsystem extends SubsystemBase {
         boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
 
         double tempAngle = this.turretEncoder.getPosition();
-
+        System.out.println("TURRET SPEED: " + turret.get() + ", ANG: " + getTurretAngleDeg());
+        
         if(getTurretLimitPressed()){
-            if(tempAngle < 50 && tempAngle > -50){
+            if(tempAngle < 180 && tempAngle > -180){
                 this.turretEncoder.setPosition(0);
-            }
-            else if(tempAngle > 300){
-                this.turretEncoder.setPosition(360);
-            }
-            else{
-                this.turretEncoder.setPosition(-360);
             }
         }
 
-        // System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", " + getPivot2LimitPressed());
+        // System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed());
         // handles limit switches
 
         if (resetPivot1) {
@@ -529,7 +530,7 @@ public class ArmSubsystem extends SubsystemBase {
         //handles PID
         // System.out.println("PID STATE: " + pidOn);
         if (pidOn) {
-            goTowardIntendedCoordinates();
+            goTowardTargetCoordinates();
         }
     }
 

@@ -3,7 +3,7 @@ package frc.robot.commands.armcommands;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class CalibrateArmCommand extends CommandBase {
+public class CalibrateArmPivotsCommand extends CommandBase {
     private final ArmSubsystem arm;
 
     private static enum CalibrationStates {
@@ -14,7 +14,7 @@ public class CalibrateArmCommand extends CommandBase {
 
     private CalibrationStates calibrationState;
 
-    public CalibrateArmCommand(ArmSubsystem arm) {
+    public CalibrateArmPivotsCommand(ArmSubsystem arm) {
         this.arm = arm;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(arm);
