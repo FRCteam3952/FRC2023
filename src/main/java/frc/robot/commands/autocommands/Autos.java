@@ -92,7 +92,7 @@ public final class Autos {
     public static CommandBase placeCubeAuto(ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos) {
         return Commands.runOnce(() -> {
             System.out.println("Place Cube Auto Start");
-            claw.setClawClosed(true);
+            claw.setClawClosed(false);
         }, claw).andThen(goToTopCenter)
         .andThen(Commands.runOnce(() -> {
             timer.reset();
@@ -103,7 +103,7 @@ public final class Autos {
         }).until(() -> timer.get() > 0.5))
         .andThen(Commands.runOnce(() -> {
             System.out.println("Place Cube Auto Running");
-            claw.setClawClosed(false); // Opens claw
+            claw.setClawClosed(true); // Opens claw
         }, claw))
         .andThen(Commands.runOnce(() -> {
             timer.reset();

@@ -16,6 +16,12 @@ public class CalibrateArmTurretCommand extends CommandBase {
 
     private static final double MAX_SPEED = 0.5;
 
+    public CalibrateArmTurretCommand(ArmSubsystem arm, double endAngle) {
+        this.arm = arm;
+        this.endAngle = endAngle;
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(arm);
+    }
     public CalibrateArmTurretCommand(ArmSubsystem arm) {
         this.arm = arm;
         // Use addRequirements() here to declare subsystem dependencies.
@@ -46,7 +52,7 @@ public class CalibrateArmTurretCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return (Math.abs(arm.getTurretAngleDeg()) < 10)  || Math.abs(this.initialAngle) < 30;
+        return (Math.abs(arm.getTurretAngleDeg() - endAngle) < 10);
     }
 
 }

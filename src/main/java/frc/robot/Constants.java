@@ -173,7 +173,7 @@ public final class Constants {
         public static final double Y_TOP_PLATFORM_HEIGHT = 35.5;
 
         public static final double Y_FLOOR = 0.0; // obvious
-        public static final double VERTICAL_PLACEMENT_OFFSET = 5;
+        public static final double VERTICAL_PLACEMENT_OFFSET = 10;
 
         public static final double X_MIDDLE_DISTANCE = 22.75 + (ROBOT_LENGTH / 2);
         public static final double X_TOP_DISTANCE = 39.75 + (ROBOT_LENGTH / 2);

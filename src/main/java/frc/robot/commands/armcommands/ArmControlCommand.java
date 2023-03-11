@@ -23,7 +23,7 @@ public class ArmControlCommand extends CommandBase {
     private static final double EXTEND_RETRACT_SPEED = 0.02; // for possible testing later
     private static double turret_adjust = 0.0;
 
-    private static final double TURRET_SPEED = 1;
+    private static final double TURRET_SPEED = 0.2;
 
     public ArmControlCommand(ArmSubsystem arm, XboxController joystick) {
         this.arm = arm;
