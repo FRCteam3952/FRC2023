@@ -35,25 +35,35 @@ public class ArmControlCommand extends CommandBase {
     private void primaryArmControl() {
         
         if(this.arm.getControlMode()){ // only run when arm is in manual control
-            if (joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_BUTTON_NUMBER)) { // Aim assist
+            boolean rightTrigger = this.joystick.controller.getRightTriggerAxis() > 0.2, leftTrigger = this.joystick.controller.getLeftTriggerAxis() > 0.2;
+
+            if(rightTrigger && leftTrigger) {
+                NetworkTablesUtil.setLimelightPipeline(4);
+            } else if(rightTrigger) { // cone PID, if > 0.9 do rotation as well but we don't do that here (look in ClawRotateCommand)
+                NetworkTablesUtil.setLimelightPipeline(1);
+            } else if(leftTrigger) { // just cube PID
+                NetworkTablesUtil.setLimelightPipeline(3);
+            }
+
+            if(rightTrigger || leftTrigger) {
                 if(!this.arm.getFlipped()){
                     arm.setControlDimensions(false);
                     double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
                     //arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
                     turret_adjust = adjustments[2];
-                }
-                else{
+                } else {
                     System.out.println("yo mama");
                 }
-            }
-            else{
+            } else {
                 turret_adjust = 0;
             }
+
             this.arm.moveVector(-joystick.getLeftLateralMovement() * X_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
-            this.arm.setTurretSpeed(TURRET_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()) + turret_adjust);     
+            this.arm.setTurretSpeed(-joystick.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust);
+            // this.arm.setTurretSpeed(TURRET_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()) + turret_adjust);     
 
             if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.FLIP_ARM_BUTTON_NUMBER)) {
-                this.arm.setFlipped(!this.arm.getFlipped());
+                // this.arm.setFlipped(!this.arm.getFlipped());
             }
 
             /*
@@ -74,6 +84,8 @@ public class ArmControlCommand extends CommandBase {
             this.arm.setControlDimensions(true);
             
         }
+
+        /*
         if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PIPELINES)){
             if (NetworkTablesUtil.getLimeLightPipeline() == 3){
                 NetworkTablesUtil.setLimelightPipeline(1);
@@ -81,6 +93,7 @@ public class ArmControlCommand extends CommandBase {
             else{
                 NetworkTablesUtil.setLimelightPipeline(3);
             }
+            
         }
         if(this.joystick.getRawButtonPressedWrapper(3)){
             if(NetworkTablesUtil.getLimeLightPipeline() != 4){
@@ -90,7 +103,7 @@ public class ArmControlCommand extends CommandBase {
                 NetworkTablesUtil.setLimelightPipeline(1);
             }
 
-        }
+        } */
         if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)){
             this.arm.setPIDControlState(!this.arm.getPIDControlOn());
         }

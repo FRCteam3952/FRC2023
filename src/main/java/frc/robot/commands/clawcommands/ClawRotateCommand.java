@@ -1,6 +1,5 @@
 package frc.robot.commands.clawcommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ClawRotationSubsystem;
 import frc.robot.util.NetworkTablesUtil;
@@ -20,13 +19,10 @@ public class ClawRotateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if(this.joystick.getRawButtonWrapper(ControllerConstants.AIM_ASSIST_ROTATE_BUTTON_NUMBER)){
-            if(NetworkTablesUtil.getLimeLightPipeline() == 1){
-                this.claw.autoRotateClaw();
-            }
+        if(this.joystick.controller.getRightTriggerAxis() > 0.9 && !(this.joystick.controller.getLeftTriggerAxis() > 0.2)) { // if > 0.9 we do PID and also rotate
+            this.claw.autoRotateClaw();
         }
         else{
-
             int fov = this.joystick.controller.getHID().getPOV();
 
             if(fov == 90) {

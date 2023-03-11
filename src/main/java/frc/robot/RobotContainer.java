@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -24,7 +25,8 @@ import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.commands.armcommands.AimAssistCommand;
 import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
-import frc.robot.commands.armcommands.CalibrateArmCommand;
+import frc.robot.commands.armcommands.CalibrateArmPivotsCommand;
+import frc.robot.commands.armcommands.CalibrateArmTurretCommand;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommand;
 import frc.robot.commands.autocommands.Autos;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
@@ -187,8 +189,14 @@ public class RobotContainer {
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
         // armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
         // xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
-        xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmCommand(arm));
-        driverController.joystick.button(ControllerConstants.BALANCE_CHARGE_STATION_BUTTON_NUMBER).whileTrue(balanceCommand);
+        xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmPivotsCommand(arm));
+        driverController.joystick.button(ControllerConstants.BALANCE_CHARGE_STATION_BUTTON_NUMBER).whileTrue(new BalanceChargeStationCommand(driveTrain));
+        xboxController.controller.pov(0).onTrue(new CalibrateArmTurretCommand(arm));
+
+        driverController.joystick.button(7).onTrue(Commands.runOnce(() -> {
+            double[] currIntendCoords = arm.getIntendedCoordinates();
+            arm.setTargetCoordinates(currIntendCoords[0] + 2, currIntendCoords[1], currIntendCoords[2]);
+        }, arm));
     }
 
     /**
@@ -340,7 +348,6 @@ public class RobotContainer {
         inTeleop = true;
         this.arm.setPIDControlState(false);
         
-
         this.driveTrain.setDefaultCommand(this.manualDrive);
         this.arm.setDefaultCommand(this.armControl);
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand);
