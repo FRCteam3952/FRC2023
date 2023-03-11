@@ -31,6 +31,8 @@ public final class Constants {
         public static final double LIMB1_LENGTH = 32.5;
         public static final double LIMB2_LENGTH = 29d;
 
+        public static final double HUMAN_PLAYER_HEIGHT = 39;
+
         public static final double ANGLE_DELTA = 5.0;
         public static final double MAX_REACH_REDUCTION = 0; // change to be correct later
         public static final double MIN_HOR_DISTANCE = 6; // change to be correct later
@@ -42,14 +44,14 @@ public final class Constants {
         public static final double STARTING_Y = 0;
         public static final double STARTING_Z = 0;
 
-        public static final double PICK_UP_POSITION_Y = 5;
+        public static final double PICK_UP_POSITION_Y = 10;
 
         public static final double PID_TOLERANCE = 1.0;
 
         public static final double ARM_1_INITIAL_ANGLE = 10.0;
         public static final double ARM_2_INITIAL_ANGLE = 20.0;
-        public static final double MAX_OUTPUT = 0.8;
-        public static final double MIN_OUTPUT = -0.8;
+        public static final double MAX_OUTPUT = 0.6;
+        public static final double MIN_OUTPUT = -0.6;
         public static final double SPEED_DEC_ON_UNFLIP = 0.2;
         public static final double SPEED_DEC_ON_FLIP = 1.0;
         public static final double COMPLEMENTING_FLIP_SPEED = 1.2;
@@ -89,8 +91,8 @@ public final class Constants {
             public static final int RESET_GYRO_BUTTON_NUMBER = 8;
 
             // Xbox Controller
-            public static final int AIM_ASSIST_BUTTON_NUMBER = 1; // change to whatever it is
-            public static final int AIM_ASSIST_ROTATE_BUTTON_NUMBER = 2;
+            public static final int HUMAN_STATION_HEIGHT_BUTTON_NUMBER = 1;
+            public static final int PICK_UP_HEIGHT_BUTTON_NUMBER = 2;
             public static final int EXTEND_ARM_BUTTON_NUMBER = 3; // change to up arrow on d-pad
             public static final int FLIP_ARM_BUTTON_NUMBER = 5;
             public static final int TOGGLE_PID_BUTTON_NUMBER = 4;

@@ -1,6 +1,7 @@
 package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
@@ -16,9 +17,9 @@ public class ArmControlCommand extends CommandBase {
     private final XboxController joystick;
 
     // Inches per 20ms
-    private static final double X_SPEED = 0.8;
-    private static final double Y_SPEED = 0.8;
-    private static final double Z_SPEED = 0.8;
+    private static final double X_SPEED = 0.9;
+    private static final double Y_SPEED = 0.9;
+    private static final double Z_SPEED = 0.9;
     private static final double EXTEND_RETRACT_SPEED = 0.02; // for possible testing later
     private static double turret_adjust = 0.0;
 
@@ -29,6 +30,17 @@ public class ArmControlCommand extends CommandBase {
         this.joystick = joystick;
 
         addRequirements(arm);
+    }
+
+    // Assumes goTowardsIntendedCoordinates() is running and PID is on
+    private void setYPosition() {
+        if (joystick.getRawButtonPressedWrapper(ControllerConstants.HUMAN_STATION_HEIGHT_BUTTON_NUMBER)) {
+            double[] currentTargetCoords = arm.getTargetCoordinates();
+            arm.setTargetCoordinates(currentTargetCoords[0], ArmConstants.HUMAN_PLAYER_HEIGHT, currentTargetCoords[2]);
+        } else if (joystick.getRawButtonPressedWrapper(ControllerConstants.PICK_UP_HEIGHT_BUTTON_NUMBER)) {
+            double[] currentCoords = arm.getTargetCoordinates();
+            arm.setTargetCoordinates(currentCoords[0], ArmConstants.PICK_UP_POSITION_Y, currentCoords[2]);
+        }
     }
 
     // Primary arm control
@@ -118,6 +130,8 @@ public class ArmControlCommand extends CommandBase {
     @Override
     public void execute() {
         primaryArmControl();
+        setYPosition();
+
     }
 
     // Called once the command ends or is interrupted.
