@@ -104,14 +104,14 @@ public final class Autos {
             Command driveBackwardsOntoChargeStationBlueCommand, Command driveForwardOverChargeStationRedCommand, 
             Command driveBackwardsOntoChargeStationRedCommand, Command balanceChargeStation, ArmSubsystem arm) {
 
-            blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
-            return (Commands.runOnce(() -> {
-                System.out.println("Balance Auto Start");
-            }).andThen(balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)) // Drive forward over charge station
-            .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation) // Drive backwards onto charge station and balance it continuously
-            .andThen(Commands.runOnce(() -> {
-                System.out.println("Balance Auto Finish"); // Shouldn't print until auton is over, if at all
-            }))));
+        blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
+        return (Commands.runOnce(() -> {
+            System.out.println("Balance Auto Start");
+        }).andThen(balanceAutoFirstHalf(driveForwardOverChargeStationBlueCommand, driveForwardOverChargeStationRedCommand, arm)) // Drive forward over charge station
+        .andThen(balanceAutoSecondHalf(driveBackwardsOntoChargeStationBlueCommand, driveBackwardsOntoChargeStationRedCommand, balanceChargeStation) // Drive backwards onto charge station and balance it continuously
+        .andThen(Commands.runOnce(() -> {
+            System.out.println("Balance Auto Finish"); // Shouldn't print until auton is over, if at all
+        }))));
     }
 
     // Assumes robot is at a AprilTag
