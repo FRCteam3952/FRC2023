@@ -15,6 +15,7 @@ import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
+import frc.robot.subsystems.staticsubsystems.RobotGyro;
 
 public final class Autos {
     private static boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam(); // Whether we are on the blue team or not
@@ -66,12 +67,12 @@ public final class Autos {
     }
 
     // 6.9 seconds driving at 0.25 power goes RIGHT to the edge of the community
+    // Robot drives backwards
     public static CommandBase taxiAuto(DriveTrainSubsystem driveTrain) {
         return Commands.runOnce(() -> {
             System.out.println("Taxi Auto Start");
-            timer.reset();
-            timer.start();
-        }).andThen(Commands.run(() -> {      
+        }).andThen(resetTimerCommand())
+        .andThen(Commands.run(() -> {      
             if (timer.get() < 1.15) {
                 System.out.println("Slow Drive");
                 driveTrain.tankDrive(0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
@@ -85,13 +86,12 @@ public final class Autos {
         }, driveTrain));
     }
 
+    // Robot drives backwards then forwards onto charge station
     public static CommandBase taxiForBalanceAuto(DriveTrainSubsystem driveTrain) {
         return Commands.runOnce(() -> {
             System.out.println("Taxi For Balance Auto Start");
-            timer.reset();
-            timer.start();
-            RobotGyro.resetGyroAngle();
-        }).andThen(Commands.run(() -> {      
+        }).andThen(resetTimerCommand())
+        .andThen(Commands.run(() -> {      
             if (timer.get() < 1.15) {
                 System.out.println("Slow Drive Backwards");
                 driveTrain.tankDrive(0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
@@ -108,49 +108,125 @@ public final class Autos {
         }, driveTrain));
     }
 
-    public static CommandBase placeCubeThenTaxiAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos) {
-        return placeCubeAuto(claw, goToTopCenter, goToStartingPos)
-        .andThen(taxiAuto(driveTrain));
+    // Might want to test later if we have time
+    // Robot drives backwards then forwards onto charge station based off on gyro pitch
+    public static CommandBase dynamicTaxiForBalanceAuto(DriveTrainSubsystem driveTrain) {
+        // TODO make sure pitch isn't broken
+        return Commands.runOnce(() -> {
+            System.out.println("Dynamic Taxi For Balance Auto Start ");
+            RobotGyro.resetGyroAngle();
+        }).andThen(resetTimerCommand())
+        .andThen(Commands.run(() -> {// Drive until the robot is on the far edge of the charge station
+            driveTrain.tankDrive(0.5, 0);
+        }, driveTrain))
+        .until(() -> RobotGyro.getGyroAngleDegreesPitch() > 8 || timer.get() > 2.8) // TODO CHECK TIMER VALUES
+        .andThen(Commands.run(() -> { // Drive until the robot is past the charge station and level
+            driveTrain.tankDrive(0.5, 0);
+        }))
+        .until(() -> (Math.abs(RobotGyro.getGyroAngleDegreesPitch()) < 2 || timer.get() > 2.8)) // TODO CHECK TIMER VALUES
+        .andThen(resetTimerCommand())
+        .andThen(Commands.run(() -> { // Drive until the robot is at the far edge again
+            driveTrain.tankDrive(-0.5, 0);
+        }))
+        .until(() -> (Math.abs(RobotGyro.getGyroAngleDegreesPitch()) > 8 || timer.get() > 1))// TODO CHECK TIMER VALUES
+        .andThen(Commands.run(() -> { // Drive until in the center of the charge station
+            driveTrain.tankDrive(-0.5, 0);
+        }))
+        .until(() -> (Math.abs(RobotGyro.getGyroAngleDegreesPitch()) < 2 || timer.get() > 1))// TODO CHECK TIMER VALUES
+        .andThen(Commands.run(() -> {
+            driveTrain.tankDrive(0, 0); // stop
+        }));
     }
 
+    // Places cube on top center platform then runs taxi
+    public static CommandBase placeCubeThenTaxiAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos) {
+        return placeCubeAuto(claw, goToTopCenter, goToStartingPos) // Places cube on top center grid position
+        .andThen(taxiAuto(driveTrain)); // Initiates taxi (drives backwards)
+    }
+
+    // Places cube on top center platform
     public static CommandBase placeCubeAuto(ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos) {
-        return Commands.runOnce(() -> {
+        return Commands.runOnce(() -> { // Closes the claw around pre-loaded cube
             System.out.println("Place Cube Auto Start");
-            claw.setClawOpened(false);
-        }, claw).andThen(goToTopCenter)
-        .andThen(Commands.runOnce(() -> {
-            timer.reset();
-            timer.start();
-        })).andThen(Commands.run(() -> {
-            // Wait
-            System.out.println("Waiting");
-        }).until(() -> timer.get() > 0.5))
-        .andThen(Commands.runOnce(() -> {
+            claw.setClawOpened(false); // Closes claw
+        }, claw).andThen(goToTopCenter) // Moves arm to top center position on grid to place cube
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(Commands.runOnce(() -> { // Opens claw to drop pre-loaded cube onto top center platform
             System.out.println("Place Cube Auto Running");
             claw.setClawOpened(true); // Opens claw
         }, claw))
-        .andThen(Commands.runOnce(() -> {
-            timer.reset();
-            timer.start();
-        })).andThen(Commands.run(() -> {
-            // Wait
-            System.out.println("Waiting");
-        }).until(() -> timer.get() > 0.5))
-        .andThen(goToStartingPos);
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(goToStartingPos); // Moves arm to starting position
     }
 
+    // Runs taxi for balance then balances charge station
     public static CommandBase taxiThenBalanceAuto(DriveTrainSubsystem driveTrain, Command balanceCommand) {
-        
         return Commands.runOnce(() -> {
             System.out.println("Taxi Auto then Balance Start");
         }).andThen(taxiForBalanceAuto(driveTrain).until(() -> timer.get() > 5))
         .andThen(balanceCommand);
     }
 
+    // Places cube on top center platform, runs taxi for balance, then balances charge station
     public static CommandBase placeCubeThenTaxiThenBalanceAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos, Command balanceCommand) {
         return placeCubeAuto(claw, goToTopCenter, goToStartingPos)
         .andThen(taxiThenBalanceAuto(driveTrain, balanceCommand));
     }
+
+    // Double placement: places cube on top center platform, drives backwards to pick up cone, drives forward towards grid, places cone on top right pole
+    public static CommandBase placeCubeThenConeAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos, Command goToStartingPos2, 
+            Command goToStartingPos3, Command goToPickupPosition, Command goTowardsTopRight, Command aimAssist) {
+        return placeCubeAuto(claw, goToTopCenter, goToStartingPos) // Places cube on top center section of grid
+        .andThen(resetTimerCommand()) // Resets timer
+        .andThen(Commands.run(() -> {
+            driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.95 seconds to pick up cone
+        }, driveTrain).until(() -> timer.get() > 4.95)
+        .alongWith(goToPickupPosition)) // Goes to pickup position
+        .andThen(aimAssist) // Guides claw to game piece
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(Commands.runOnce(() -> { // Closes claw around game piece
+            System.out.println("Place Cube then Cone Auto Running");
+            claw.setClawOpened(false); // Closes claw
+        }, claw))
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(goToStartingPos2 // Arm goes to starting position
+        .alongWith(resetTimerCommand() // Resets timer
+        .andThen(Commands.run(() -> {
+            driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.95 seconds towards grid
+        }, driveTrain).until(() -> timer.get() > 4.95))))
+        .andThen(goTowardsTopRight) // Arm goes to top right pole to place cone
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds 
+        .andThen(Commands.runOnce(() -> { // Opens claw to drop cone onto pole
+            System.out.println("Place Cube then Cone Auto Running");
+            claw.setClawOpened(true); // Opens claw
+        }, claw))
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(goToStartingPos3);  // Arm goes to starting position
+    }
+
+    // Has the robot do nothing for a set time (in seconds)
+    public static CommandBase waitCommand(double seconds) {
+        return resetTimerCommand()
+        .andThen(() -> {
+            System.out.println("Waiting for " + seconds + " seconds | " + timer.get());
+        })
+        .until(() -> timer.get() > seconds);
+    }
+
+    // Resets the timer
+    public static CommandBase resetTimerCommand() {
+        return Commands.runOnce(() -> {
+            timer.reset();
+            timer.start();
+        });
+    }
+
+    /*
+     * EVERYTHING BELOW USES PATHWEAVER TRAJECTORIES, WHICH CURRENTLY PROBSBLY DON'T WORK
+     * TRY TO GET THEM WORKING BEFORE LA REGIONALS, BUT NOT THE MOST IMPORTANT 
+     * THERES A LOT OF THINGS THAT NEED TO BE ADJUSTED
+     */
+
 
     // First half of balance auto
     public static CommandBase balanceAutoFirstHalf(Command driveForwardOverChargeStationBlueCommand, 

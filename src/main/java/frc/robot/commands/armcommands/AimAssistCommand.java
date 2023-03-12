@@ -31,8 +31,8 @@ public class AimAssistCommand extends CommandBase{
         if(!this.arm.getFlipped()){
             arm.setControlDimensions(false);
             double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
-            arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
-            this.arm.setTurretSpeed(adjustments[2] * Z_SPEED);  
+            // arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
+            this.arm.setTurretSpeed(adjustments[2]);  
             //System.out.println(adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED); 
         }
         else{
