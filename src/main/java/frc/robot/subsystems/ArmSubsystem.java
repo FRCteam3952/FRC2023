@@ -76,8 +76,6 @@ public class ArmSubsystem extends SubsystemBase {
     private double maxOutput2 = ArmConstants.MAX_OUTPUT;
     private double minOutput2 = ArmConstants.MIN_OUTPUT;
 
-    private int turretDirection = 1;
-
     // arm control constructor
     public ArmSubsystem() {
         // Initialize arm motors
@@ -130,17 +128,11 @@ public class ArmSubsystem extends SubsystemBase {
      * Sets the turret direction. Must be 1 or -1.
      * @param dir The direction. This acts as a sign multiplier for the turret to flip the direction as needed.
      */
-    public void setTurretDirection(int dir) {
-        this.turretDirection = dir;
-    }
 
     /**
      * Gets the turret direction
      * @return The turret direction. Should be 1 or -1 (unless someone trolled us)
      */
-    public int getTurretDirection() {
-        return this.turretDirection;
-    }
 
     public void reset() {
         this.pidOn = false;
@@ -157,10 +149,6 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
-    }
-
-    public void setTargetDirection(int direction){
-        this.turretDirection = direction;
     }
 
     public void setMaxAndMinOutput1(double speed) {
@@ -367,8 +355,8 @@ public class ArmSubsystem extends SubsystemBase {
         if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
             return;
         }
-        if(y > 60){
-            y = 60;
+        if(y > 75){
+            y = 75;
         }
 
         if(this.is2D){
@@ -490,6 +478,8 @@ public class ArmSubsystem extends SubsystemBase {
         if(resetPivot1 && resetPivot2) {
             resetCoords();
         }
+
+        
 
 
         /*

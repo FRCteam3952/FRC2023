@@ -1,5 +1,6 @@
 package frc.robot.commands.armcommands;
 
+import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -29,7 +30,11 @@ public class ArmTestCommand extends CommandBase {
 
         arm.setTurretSpeed((joystick.controller.getLeftTriggerAxis() - joystick.controller.getRightTriggerAxis()) * 0.5);
 
-        System.out.println(LimeLight.getArea());
+        // System.out.println(LimeLight.getArea());
+
+        if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)){
+            this.arm.setPIDControlState(true);
+        }
         /*
         if (joystick.getRawButtonWrapper(5)) { // THIS IS THE XBOX VALUE. Original FlightJoystick 8
             arm.setTurretSpeed(0.3);

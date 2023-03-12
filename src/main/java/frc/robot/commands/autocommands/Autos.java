@@ -13,6 +13,7 @@ import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 
@@ -94,10 +95,10 @@ public final class Autos {
             if (timer.get() < 1.15) {
                 System.out.println("Slow Drive Backwards");
                 driveTrain.tankDrive(0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
-            } else if (timer.get() < 3.65) {
+            } else if (timer.get() < 3.45) {
                 System.out.println("Fast Drive Backwards");
                 driveTrain.tankDrive(0.5, 0); // Drives backwards faster over charge station for 2.5 seconds
-            } else if (timer.get() < 5.15) {
+            } else if (timer.get() < 4.90) {
                 System.out.println("Fast Drive Forwards");
                 driveTrain.tankDrive(-0.5, 0); // Drives forwards onto charge station for 1.5 seconds
             } else {
@@ -162,7 +163,7 @@ public final class Autos {
     public static CommandBase taxiThenBalanceAuto(DriveTrainSubsystem driveTrain, Command balanceCommand) {
         return Commands.runOnce(() -> {
             System.out.println("Taxi Auto then Balance Start");
-        }).andThen(taxiForBalanceAuto(driveTrain).until(() -> timer.get() > 6))
+        }).andThen(taxiForBalanceAuto(driveTrain).until(() -> timer.get() > 5))
         .andThen(balanceCommand);
     }
 
