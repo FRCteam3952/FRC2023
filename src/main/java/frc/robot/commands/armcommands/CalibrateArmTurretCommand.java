@@ -17,12 +17,6 @@ public class CalibrateArmTurretCommand extends CommandBase {
     private static final double MAX_SPEED = 0.5;
 
     public CalibrateArmTurretCommand(ArmSubsystem arm, double endAngle) {
-        if(Math.abs(endAngle) < 0.5){
-            arm.setTurretDirection(1);
-        }
-        else if(Math.abs(endAngle) > 179.5 && Math.abs(endAngle) < 180.5){
-            arm.setTurretDirection(-1);
-        }
         this.arm = arm;
         this.endAngle = endAngle;
         // Use addRequirements() here to declare subsystem dependencies.
@@ -46,6 +40,14 @@ public class CalibrateArmTurretCommand extends CommandBase {
     public void execute() {
         double turretSpeed = turretPID.calculate(this.arm.getTurretAngleDeg(),endAngle);
         arm.setTurretSpeed(MathUtil.clamp(turretSpeed, -MAX_SPEED, MAX_SPEED));
+        
+        if(Math.abs(endAngle) < 0.5) {
+            // System.out.println("ANGLE IS 0");
+            ArmControlCommand.turret_direction = 1;
+        } else if(Math.abs(180 - endAngle) < 0.5) {
+            // System.out.println("ANGLE IS 180");
+            ArmControlCommand.turret_direction = -1;
+        }
     }
 
     // Called once the command ends or is interrupted.

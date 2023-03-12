@@ -200,10 +200,10 @@ public class RobotContainer {
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
         // armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
         // xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
-        xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmPivotsCommand(arm));
+        xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmPivotsCommand(arm, xboxController));
         driverController.joystick.button(ControllerConstants.BALANCE_CHARGE_STATION_BUTTON_NUMBER).whileTrue(new BalanceChargeStationCommand(driveTrain));
-        xboxController.controller.pov(0).onTrue(new CalibrateArmTurretCommand(arm));
-        xboxController.controller.pov(180).onTrue(new CalibrateArmTurretCommand(arm, 180));
+        xboxController.controller.pov(180).onTrue(new CalibrateArmTurretCommand(arm));
+        xboxController.controller.pov(0).onTrue(new CalibrateArmTurretCommand(arm, 180));
 
         driverController.joystick.button(7).onTrue(Commands.runOnce(() -> {
             double[] currIntendCoords = arm.getTargetCoordinates();

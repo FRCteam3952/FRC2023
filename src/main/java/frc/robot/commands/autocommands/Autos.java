@@ -13,6 +13,7 @@ import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
 
 public final class Autos {
@@ -89,6 +90,7 @@ public final class Autos {
             System.out.println("Taxi For Balance Auto Start");
             timer.reset();
             timer.start();
+            RobotGyro.resetGyroAngle();
         }).andThen(Commands.run(() -> {      
             if (timer.get() < 1.15) {
                 System.out.println("Slow Drive Backwards");
@@ -141,7 +143,7 @@ public final class Autos {
         
         return Commands.runOnce(() -> {
             System.out.println("Taxi Auto then Balance Start");
-        }).andThen(taxiForBalanceAuto(driveTrain).until(() -> timer.get() > 6))
+        }).andThen(taxiForBalanceAuto(driveTrain).until(() -> timer.get() > 5))
         .andThen(balanceCommand);
     }
 

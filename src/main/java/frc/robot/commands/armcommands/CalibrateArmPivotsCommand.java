@@ -1,10 +1,15 @@
 package frc.robot.commands.armcommands;
 
+import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class CalibrateArmPivotsCommand extends CommandBase {
+    private static final double INIT_SPEED = -0.2;
+    private static final double BOOST = -0.2;
+
     private final ArmSubsystem arm;
+    private final XboxController controller;
 
     private static enum CalibrationStates {
         CALIB_PIVOT_2,
@@ -14,8 +19,9 @@ public class CalibrateArmPivotsCommand extends CommandBase {
 
     private CalibrationStates calibrationState;
 
-    public CalibrateArmPivotsCommand(ArmSubsystem arm) {
+    public CalibrateArmPivotsCommand(ArmSubsystem arm, XboxController controller) {
         this.arm = arm;
+        this.controller = controller;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(arm);
     }
@@ -33,10 +39,14 @@ public class CalibrateArmPivotsCommand extends CommandBase {
     @Override
     public void execute() {
         this.arm.setPIDControlState(false);
+        double speed = INIT_SPEED;
+        if(this.controller.getRawButtonWrapper(4)) {
+            speed += BOOST;
+        }
         switch(this.calibrationState) {
             case CALIB_PIVOT_2:
                 if(!this.arm.getPivot2LimitPressed()) {
-                    this.arm.setPivot2Speed(-0.2);
+                    this.arm.setPivot2Speed(speed);
                 } else {
                     this.arm.setPivot2Speed(0);
                     this.calibrationState = CalibrationStates.CALIB_PIVOT_1;
@@ -44,7 +54,7 @@ public class CalibrateArmPivotsCommand extends CommandBase {
                 break;
             case CALIB_PIVOT_1:
                 if(!this.arm.getPivot1LimitPressed()) {
-                    this.arm.setPivot1Speed(-0.2);
+                    this.arm.setPivot1Speed(speed);
                 } else {
                     this.arm.setPivot1Speed(0);
                     this.calibrationState = CalibrationStates.FINISH;
