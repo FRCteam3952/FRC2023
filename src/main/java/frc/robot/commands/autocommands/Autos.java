@@ -7,6 +7,7 @@ package frc.robot.commands.autocommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.Timer;
 
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
@@ -174,14 +175,17 @@ public final class Autos {
     }
 
     // Double placement: places cube on top center platform, drives backwards to pick up cone, drives forward towards grid, places cone on top right pole
-    public static CommandBase placeCubeThenConeAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos, Command goToStartingPos2, 
-            Command goToStartingPos3, Command goToPickupPosition, Command goTowardsTopRight, Command aimAssist) {
-        return placeCubeAuto(claw, goToTopCenter, goToStartingPos) // Places cube on top center section of grid
+    public static CommandBase placeCubeThenConeAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goTowardsCenterMiddle, Command goToStartingPos, Command goToStartingPos2, 
+            Command goToStartingPos3, Command goToPickupPosition, Command goTowardsCenterRight, Command aimAssist) {
+        return placeCubeAuto(claw, goTowardsCenterMiddle, goToStartingPos) // Places cube on top center section of grid
         .andThen(resetTimerCommand()) // Resets timer
         .andThen(Commands.run(() -> {
             driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.95 seconds to pick up cone
-        }, driveTrain).until(() -> timer.get() > 4.95)
+        }, driveTrain).until(() -> timer.get() > 4.25)
         .alongWith(goToPickupPosition)) // Goes to pickup position
+        .andThen(Commands.runOnce(() -> {
+            NetworkTablesUtil.setLimelightPipeline(1);
+        }))
         .andThen(aimAssist) // Guides claw to game piece
         .andThen(waitCommand(0.5)) // Waits 0.5 seconds
         .andThen(Commands.runOnce(() -> { // Closes claw around game piece
@@ -193,8 +197,8 @@ public final class Autos {
         .alongWith(resetTimerCommand() // Resets timer
         .andThen(Commands.run(() -> {
             driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.95 seconds towards grid
-        }, driveTrain).until(() -> timer.get() > 4.95))))
-        .andThen(goTowardsTopRight) // Arm goes to top right pole to place cone
+        }, driveTrain).until(() -> timer.get() > 4.25))))
+        .andThen(goTowardsCenterRight) // Arm goes to top right pole to place cone
         .andThen(waitCommand(0.5)) // Waits 0.5 seconds 
         .andThen(Commands.runOnce(() -> { // Opens claw to drop cone onto pole
             System.out.println("Place Cube then Cone Auto Running");
@@ -207,10 +211,9 @@ public final class Autos {
     // Has the robot do nothing for a set time (in seconds)
     public static CommandBase waitCommand(double seconds) {
         return resetTimerCommand()
-        .andThen(() -> {
+        .andThen(Commands.run(() -> {
             System.out.println("Waiting for " + seconds + " seconds | " + timer.get());
-        })
-        .until(() -> timer.get() > seconds);
+        }).until(() -> timer.get() > seconds));
     }
 
     // Resets the timer

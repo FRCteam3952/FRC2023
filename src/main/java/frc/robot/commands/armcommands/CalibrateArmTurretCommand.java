@@ -14,7 +14,7 @@ public class CalibrateArmTurretCommand extends CommandBase {
     private static final double kd = 0.0;
     private static final PIDController turretPID = new PIDController(kp, ki, kd);
 
-    private static final double MAX_SPEED = 0.5;
+    private static final double MAX_SPEED = 0.8;
 
     public CalibrateArmTurretCommand(ArmSubsystem arm, double endAngle) {
         this.arm = arm;

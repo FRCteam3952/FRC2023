@@ -20,7 +20,7 @@ public class ClawRotateCommand extends CommandBase {
     @Override
     public void execute() {
         if(this.joystick.controller.getRightTriggerAxis() > 0.9 && !(this.joystick.controller.getLeftTriggerAxis() > 0.2)) { // if > 0.9 we do PID and also rotate
-            this.claw.autoRotateClaw();
+            // this.claw.autoRotateClaw();
         }
         else{
             int fov = this.joystick.controller.getHID().getPOV();

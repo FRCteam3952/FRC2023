@@ -45,7 +45,7 @@ public class ManualDriveCommand extends CommandBase {
         if(pov == 0) {
             this.driveTrain.tankDrive(MICRO_PP, 0);
         } else if (pov == 180) {
-            this.driveTrain.tankDrive(MICRO_PP, 0);
+            this.driveTrain.tankDrive(-MICRO_PP, 0);
         }
     }
 

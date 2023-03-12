@@ -23,6 +23,7 @@ public class GoTowardsCoordinatesCommandAuto extends CommandBase{
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        arm.setControlDimensions(false);
         arm.setMaxAndMinOutput1(speed1);
         arm.setMaxAndMinOutput2(speed2);
         arm.setTargetCoordinates(newArmPosition[0], newArmPosition[1], newArmPosition[2]);
@@ -38,6 +39,7 @@ public class GoTowardsCoordinatesCommandAuto extends CommandBase{
     public void end(boolean interrupted) {
         arm.setMaxAndMinOutput1(ArmConstants.MAX_OUTPUT);
         arm.setMaxAndMinOutput2(ArmConstants.MAX_OUTPUT);
+        arm.setControlDimensions(true);
     }
 
     // Returns true when the command should end.

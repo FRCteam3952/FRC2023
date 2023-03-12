@@ -44,7 +44,7 @@ public final class Constants {
         public static final double STARTING_Y = 0;
         public static final double STARTING_Z = 0;
 
-        public static final double PICK_UP_POSITION_Y = 10;
+        public static final double PICK_UP_POSITION_Y = 5;
 
         public static final double PID_TOLERANCE = 1.0;
 
@@ -186,9 +186,9 @@ public final class Constants {
         // two halves of X_AREA_WIDTH added together and then added to X_BETWEEN_AREA_SPACE
         public static final double Z_DISTANCE_TO_SIDE = Z_BETWEEN_AREA_SPACE + Z_AREA_WIDTH;
 
-        public static final double Z_LEFT = -Z_DISTANCE_TO_SIDE;
+        public static final double Z_LEFT = Z_DISTANCE_TO_SIDE;
         public static final double Z_MIDDLE = 0.0;
-        public static final double Z_RIGHT = Z_DISTANCE_TO_SIDE;
+        public static final double Z_RIGHT = -Z_DISTANCE_TO_SIDE;
 
         // relative to the center of the robot
         public static final double[] BOTTOM_LEFT_POS = {X_BOTTOM_DISTANCE, Y_FLOOR + VERTICAL_PLACEMENT_OFFSET, Z_LEFT};
