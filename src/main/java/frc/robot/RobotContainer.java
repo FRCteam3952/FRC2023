@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
@@ -84,11 +85,13 @@ public class RobotContainer {
     public final GoTowardsCoordinatesCommandAuto goTowardsTopRight2 = new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_RIGHT_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsTopRight3 = new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_RIGHT_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsTopRight4 = new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_RIGHT_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsTopRight5 = new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_RIGHT_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter = new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_CENTER_POS, 0.4, 0.4);
     public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter2 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter3 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter4 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter5 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter6 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos = new GoTowardsCoordinatesCommandAuto(arm,  ArmConstants.STARTING_COORDS , 0.2, 0.4);
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos2 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos3 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
@@ -99,8 +102,14 @@ public class RobotContainer {
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos8 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos9 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos10 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos11 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos12 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos13 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4);
     public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos2 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
+    public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos3 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
+
+    public final Supplier<GoTowardsCoordinatesCommandAuto> newGoTowardsPickupCommand = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Implement later during downtime
 
     public final ClawOpenandCloseCommand clawOpenandCloseCommand = new ClawOpenandCloseCommand(clawGrip, xboxController);
     public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, xboxController);
@@ -155,6 +164,7 @@ public class RobotContainer {
     private Command taxiThenBalanceAuto;
     private Command placeCubeThenTaxiAuto;
     private Command placeCubeThenTaxiThenBalanceAuto;
+    private Command placeCubeThenConeAuto;
     private Command placeConeCommandAuto;
     private Command balanceChargeStationAuto; 
     private Command doublePlacementAuto;
@@ -325,6 +335,10 @@ public class RobotContainer {
         placeCubeThenTaxiAuto = Autos.placeCubeThenTaxiAuto(driveTrain, clawGrip, goTowardsTopCenter4, goTowardsStartingPos9);
         taxiThenBalanceAuto = Autos.taxiThenBalanceAuto(driveTrain, balanceCommand5);
         placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(driveTrain, clawGrip, goTowardsTopCenter5, goTowardsStartingPos10, balanceCommand6);
+        placeCubeThenConeAuto = Autos.placeCubeThenConeAuto(driveTrain, clawGrip, goTowardsTopCenter6, goTowardsStartingPos11, goTowardsStartingPos12, goTowardsStartingPos13,
+            goTowardsPickupPos3, goTowardsTopRight5);
+
+        // All below autos use Pathweaver trajectories and probably don't work right now
         balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
                 driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand4, arm);
         placeConeCommandAuto = Autos.placeConeAuto(clawGrip, goTowardsTopRight, goTowardsStartingPos4);
@@ -345,11 +359,15 @@ public class RobotContainer {
         m_chooser.addOption("Taxi then Balance Auto", taxiThenBalanceAuto);
         m_chooser.addOption("Place Cube then Taxi Auto", placeCubeThenTaxiAuto);
         m_chooser.addOption("Place Cube then Taxi then Balance Auto", placeCubeThenTaxiThenBalanceAuto);
+        m_chooser.addOption("Place Cube then Cone Auto", placeCubeThenConeAuto);
+
+        // These autons use Pathweaver, not using right now
         m_chooser.addOption("Balance Charge Station Auto", balanceChargeStationAuto);
         m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
         m_chooser.addOption("Place Cone Then Balance Auto", placeConeThenBalanceAuto);
         m_chooser.addOption("Double Placement Then Balance Auto", doublePlacementThenBalanceAuto);
+        
         SmartDashboard.putData("Auto choices", m_chooser);
 }
 

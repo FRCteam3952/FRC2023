@@ -123,7 +123,10 @@ public final class Autos {
             driveTrain.tankDrive(0.5, 0);
         }))
         .until(() -> (Math.abs(RobotGyro.getGyroAngleDegreesPitch()) < 2 || timer.get() > 2.8)) // TODO CHECK TIMER VALUES
-        .andThen(Commands.run(() -> timer.reset()))
+        .andThen(Commands.run(() -> {
+            timer.reset();
+            timer.start();
+        }))
         .andThen(Commands.run(() -> { // Drive until the robot is at the far edge again
             driveTrain.tankDrive(-0.5, 0);
         }))
@@ -181,6 +184,59 @@ public final class Autos {
     public static CommandBase placeCubeThenTaxiThenBalanceAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos, Command balanceCommand) {
         return placeCubeAuto(claw, goToTopCenter, goToStartingPos)
         .andThen(taxiThenBalanceAuto(driveTrain, balanceCommand));
+    }
+
+    public static CommandBase placeCubeThenConeAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos, Command goToStartingPos2, 
+            Command goToStartingPos3, Command goToPickupPosition, Command goTowardsTopRight) {
+        return placeCubeAuto(claw, goToTopCenter, goToStartingPos) // Places cube on top center section of grid
+        .andThen(Commands.run(() -> {
+            driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.95 seconds to pick up cone
+        }, driveTrain).until(() -> timer.get() > 4.95))
+        .andThen(goToPickupPosition) // Goes to pickup position
+        .andThen(Commands.runOnce(() -> { // Starts timer
+            timer.reset();
+            timer.start();
+        }))
+        .andThen(Commands.run(() -> { // Waits for 0.5 seconds
+            // Wait
+            System.out.println("Waiting"); 
+        }).until(() -> timer.get() > 0.5))
+        .andThen(Commands.runOnce(() -> { // Closes claw around game piece
+            System.out.println("Place Cube then Cone Auto Running");
+            claw.setClawOpened(false); // Closes claw
+        }, claw))
+        .andThen(Commands.runOnce(() -> { // Starts timer
+            timer.reset();
+            timer.start();
+        })).andThen(Commands.run(() -> { // Waits for 0.5 seconds
+            // Wait 
+            System.out.println("Waiting");
+        }).until(() -> timer.get() > 0.5))
+        .andThen(goToStartingPos2) // Arm goes to starting position
+        .andThen(Commands.run(() -> {
+            driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.95 seconds towards grid
+        }, driveTrain).until(() -> timer.get() > 4.95))
+        .andThen(goTowardsTopRight) // Arm goes to top right pole to place cone
+        .andThen(Commands.runOnce(() -> { // Starts timer
+            timer.reset();
+            timer.start();
+        }))
+        .andThen(Commands.run(() -> { // Waits for 0.5 seconds
+            // Wait
+            System.out.println("Waiting");
+        }).until(() -> timer.get() > 0.5)) 
+        .andThen(Commands.runOnce(() -> { // Opens claw to drop cone onto pole
+            System.out.println("Place Cube then Cone Auto Running");
+            claw.setClawOpened(true); // Opens claw
+        }, claw))
+        .andThen(Commands.runOnce(() -> { // Starts timer
+            timer.reset();
+            timer.start();
+        })).andThen(Commands.run(() -> { // Waits for 0.5 seconds
+            // Wait
+            System.out.println("Waiting");
+        }).until(() -> timer.get() > 0.5))
+        .andThen(goToStartingPos3);  // Arm goes to starting position
     }
 
     /*
