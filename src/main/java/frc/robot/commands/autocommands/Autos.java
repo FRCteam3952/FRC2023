@@ -65,6 +65,21 @@ public final class Autos {
 
     }
 
+    public static CommandBase waitCommand(double seconds) {
+        return resetTimerCommand()
+        .andThen(() -> {
+            System.out.println("Waiting for " + seconds + " seconds | " + timer.get());
+        })
+        .until(() -> timer.get() > seconds);
+    }
+
+    public static CommandBase resetTimerCommand() {
+        return Commands.runOnce(() -> {
+            timer.reset();
+            timer.start();
+        });
+    }
+
     // 6.9 seconds driving at 0.25 power goes RIGHT to the edge of the community
     public static CommandBase taxiAuto(DriveTrainSubsystem driveTrain) {
         return Commands.runOnce(() -> {
