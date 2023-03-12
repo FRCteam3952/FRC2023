@@ -44,6 +44,8 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.wrappers.TrajectoryReader;
 
+import frc.robot.util.CommandGenerator;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -68,44 +70,17 @@ public class RobotContainer {
     public final TrajectoryReader trajectoryReader = new TrajectoryReader("robogui", "trajectory");
 
     public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
-    public final BalanceChargeStationCommand balanceCommand = new BalanceChargeStationCommand(driveTrain);
-    public final BalanceChargeStationCommand balanceCommand2 = new BalanceChargeStationCommand(driveTrain); // Only here because compositions can't use commands that have already been used for other compositions
-    public final BalanceChargeStationCommand balanceCommand3 = new BalanceChargeStationCommand(driveTrain); // Only here because compositions can't use commands that have already been used for other compositions
-    public final BalanceChargeStationCommand balanceCommand4 = new BalanceChargeStationCommand(driveTrain); // Only here because compositions can't use commands that have already been used for other compositions
-    public final BalanceChargeStationCommand balanceCommand5 = new BalanceChargeStationCommand(driveTrain); // Only here because compositions can't use commands that have already been used for other compositions
-    public final BalanceChargeStationCommand balanceCommand6 = new BalanceChargeStationCommand(driveTrain); // Only here because compositions can't use commands that have already been used for other compositions
 
+    
     // these ones got changed to xbox
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
     public final ArmControlCommand armControl = new ArmControlCommand(arm, xboxController);
-    public final AimAssistCommand aimAssist = new AimAssistCommand(arm);
-    public final AimAssistCommand aimAssist2 = new AimAssistCommand(arm); // Only here because compositions can't use commands that have already been used for other compositions
-    public final AimAssistCommand aimAssist3 = new AimAssistCommand(arm); // Only here because compositions can't use commands that have already been used for other compositions
-
-    public final GoTowardsCoordinatesCommandAuto goTowardsTopRight = new GoTowardsCoordinatesCommandAuto(arm,   PositionConstants.TOP_RIGHT_POS, 0.4, 0.4);
-    public final GoTowardsCoordinatesCommandAuto goTowardsTopRight2 = new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_RIGHT_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsTopRight3 = new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_RIGHT_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsTopRight4 = new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_RIGHT_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsTopRight5 = new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_RIGHT_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter = new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_CENTER_POS, 0.4, 0.4);
-    public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter2 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter3 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter4 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter5 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsTopCenter6 = new GoTowardsCoordinatesCommandAuto(arm, PositionConstants.TOP_CENTER_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos = new GoTowardsCoordinatesCommandAuto(arm,  ArmConstants.STARTING_COORDS , 0.2, 0.4);
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos2 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos3 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos4 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos5 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos6 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos7 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos8 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos9 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos10 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos11 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos12 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsStartingPos13 = new GoTowardsCoordinatesCommandAuto(arm, ArmConstants.STARTING_COORDS, 0.2, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
+    
+    public final Supplier<AimAssistCommand> newAimAssistCommand = () -> new AimAssistCommand(arm);
+    public final Supplier<GoTowardsCoordinatesCommandAuto> newGoTowardsTopRight = () -> new GoTowardsCoordinatesCommandAuto(arm,   PositionConstants.TOP_RIGHT_POS, 0.4, 0.4);
+    public final Supplier<GoTowardsCoordinatesCommandAuto> newGoTowardsStartingPos = () -> new GoTowardsCoordinatesCommandAuto(arm,  ArmConstants.STARTING_COORDS , 0.2, 0.4);
+    public final Supplier<BalanceChargeStationCommand> newBalanceCommand = () -> new BalanceChargeStationCommand(driveTrain);
+    
     public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4);
     public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos2 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos3 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
@@ -116,46 +91,17 @@ public class RobotContainer {
     public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, xboxController);
     // end change to xbox
 
-    private String driveForwardOverChargeStationBlueJSON = "paths/DriveForwardOverChargeStationBlue.wpilib.json"; 
-    private Trajectory driveForwardOverChargeStationBlueTraj = new Trajectory(); 
-    public Command driveForwardOverChargeStationBlueCommand;
-    public Command driveForwardOverChargeStationBlueCommand2; // Only here because compositions can't use commands that have already been used for other compositions
-    private String driveBackwardsOntoChargeStationBlueJSON = "paths/DriveBackwardsOntoChargeStationBlue.wpilib.json";
-    private Trajectory driveBackwardsOntoChargeStationBlueTraj = new Trajectory();
-    public Command driveBackwardsOntoChargeStationBlueCommand;
-    public Command driveBackwardsOntoChargeStationBlueCommand2; // Only here because compositions can't use commands that have already been used for other compositions
-    private String driveForwardOverChargeStationRedJSON = "paths/DriveForwardOverChargeStationRed.wpilib.json"; 
-    private Trajectory driveForwardOverChargeStationRedTraj = new Trajectory(); 
-    public Command driveForwardOverChargeStationRedCommand;
-    public Command driveForwardOverChargeStationRedCommand2; // Only here because compositions can't use commands that have already been used for other compositions
-    private String driveBackwardsOntoChargeStationRedJSON = "paths/DriveBackwardsOntoChargeStationRed.wpilib.json";
-    private Trajectory driveBackwardsOntoChargeStationRedTraj = new Trajectory();
-    public Command driveBackwardsOntoChargeStationRedCommand;
-    public Command driveBackwardsOntoChargeStationRedCommand2; // Only here because compositions can't use commands that have already been used for other compositions
 
-    public String driveBackwardsToCubeBlueJSON = "paths/DriveBackwardsToCubeBlue.wpilib.json";
-    public Trajectory driveBackwardsToCubeBlueTraj = new Trajectory();
-    public Command driveBackwardsToCubeBlueCommand;
-    public Command driveBackwardsToCubeBlueCommand2;
-    public String driveForwardsToGridBlueJSON = "paths/DriveForwardsToGridBlue.wpilib.json";
-    public Trajectory driveForwardsToGridBlueTraj = new Trajectory();
-    public Command driveForwardsToGridBlueCommand;
-    public Command driveForwardsToGridBlueCommand2;
-    public String driveBackwardsToCubeRedJSON = "paths/DriveBackwardsToCubeRed.wpilib.json";
-    public Trajectory driveBackwardsToCubeRedTraj = new Trajectory();
-    public Command driveBackwardsToCubeRedCommand;
-    public Command driveBackwardsToCubeRedCommand2;
-    public String driveForwardsToGridRedJSON = "paths/DriveForwardsToGridRed.wpilib.json";
-    public Trajectory driveForwardsToGridRedTraj = new Trajectory();
-    public Command driveForwardsToGridRedCommand;
-    public Command driveForwardsToGridRedCommand2;
-
-    public String driveBackwardsOntoChargeStationDPBlueJSON = "paths/DriveBackwardsOntoChargeStationDPBlue.wpilib.json";
-    public Trajectory driveBackwardsOntoChargeStationDPBlueTraj = new Trajectory();
-    public Command driveBackwardsOntoChargeStationDPBlueCommand;
-    public String driveBackwardsOntoChargeStationDPRedJSON = "paths/DriveBackwardsOntoChargeStationDPRed.wpilib.json";
-    public Trajectory driveBackwardsOntoChargeStationDPRedTraj = new Trajectory();
-    public Command driveBackwardsOntoChargeStationDPRedCommand;
+    public CommandGenerator driveForwardOverChargeStationBlue     = new CommandGenerator("paths/DriveForwardOverChargeStationBlue.wpilib.json");
+    public CommandGenerator driveBackwardsOntoChargeStationBlue   = new CommandGenerator("paths/DriveBackwardsOntoChargeStationBlue.wpilib.json");
+    public CommandGenerator driveForwardOverChargeStationRed      = new CommandGenerator("paths/DriveForwardOverChargeStationRed.wpilib.json");
+    public CommandGenerator driveBackwardsOntoChargeStationRed    = new CommandGenerator("paths/DriveBackwardsOntoChargeStationRed.wpilib.json");
+    public CommandGenerator driveBackwardsToCubeBlue              = new CommandGenerator("paths/DriveBackwardsToCubeBlue.wpilib.json");
+    public CommandGenerator driveForwardsToGridBlue               = new CommandGenerator("paths/DriveForwardsToGridBlue.wpilib.json");
+    public CommandGenerator driveBackwardsToCubeRed               = new CommandGenerator("paths/DriveBackwardsToCubeRed.wpilib.json");
+    public CommandGenerator driveForwardsToGridRed                = new CommandGenerator("paths/DriveForwardsToGridRed.wpilib.json");
+    public CommandGenerator driveBackwardsOntoChargeStationDPRed  = new CommandGenerator("paths/DriveBackwardsOntoChargeStationDP.wpilib.json");
+    public CommandGenerator driveBackwardsOntoChargeStationDPBlue = new CommandGenerator("paths/DriveBackwardsOntoChargeStationDPBlue.wpilib.json");
 
 
     private Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
@@ -236,121 +182,40 @@ public class RobotContainer {
         /**
          * Initialize Pathweaver trajectories/commands here
          */
-        try {
-            Path driveForwardOverChargeStationBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardOverChargeStationBlueJSON);
-            driveForwardOverChargeStationBlueTraj = TrajectoryUtil.fromPathweaverJson(driveForwardOverChargeStationBluePath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + driveForwardOverChargeStationBlueJSON, ex.getStackTrace());
-        }
 
-        try {
-            Path driveBackwardsOntoChargeStationBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationBlueJSON);
-            driveBackwardsOntoChargeStationBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationBluePath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationBlueJSON, ex.getStackTrace());
-        }
-
-        try {
-            Path driveForwardOverChargeStationRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardOverChargeStationRedJSON);
-            driveForwardOverChargeStationRedTraj = TrajectoryUtil.fromPathweaverJson(driveForwardOverChargeStationRedPath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + driveForwardOverChargeStationRedJSON, ex.getStackTrace());
-        }
-
-        try {
-            Path driveBackwardsOntoChargeStationRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationRedJSON);
-            driveBackwardsOntoChargeStationRedTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationRedPath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationRedJSON, ex.getStackTrace());
-        }
-
-        try {
-            Path driveBackwardsToCubeBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsToCubeBlueJSON);
-            driveBackwardsToCubeBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsToCubeBluePath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsToCubeBlueJSON, ex.getStackTrace());
-        }
-
-        try {
-            Path driveForwardsToGridBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardsToGridBlueJSON);
-            driveForwardsToGridBlueTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridBluePath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + driveForwardsToGridBlueJSON, ex.getStackTrace());
-        }
-
-        try {
-            Path driveBackwardsToCubeRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsToCubeRedJSON);
-            driveBackwardsToCubeRedTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsToCubeRedPath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsToCubeRedJSON, ex.getStackTrace());
-        }
-
-        try {
-            Path driveForwardsToGridRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveForwardsToGridRedJSON);
-            driveForwardsToGridRedTraj = TrajectoryUtil.fromPathweaverJson(driveForwardsToGridRedPath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + driveForwardsToGridRedJSON, ex.getStackTrace());
-        }
-
-        try {
-            Path driveBackwardsOntoChargeStationDPBluePath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationDPBlueJSON);
-            driveBackwardsOntoChargeStationDPBlueTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationDPBluePath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationDPBlueJSON, ex.getStackTrace());
-        }
-
-        try {
-            Path driveBackwardsOntoChargeStationDPRedPath = Filesystem.getDeployDirectory().toPath().resolve(driveBackwardsOntoChargeStationDPRedJSON);
-            driveBackwardsOntoChargeStationDPRedTraj = TrajectoryUtil.fromPathweaverJson(driveBackwardsOntoChargeStationDPRedPath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + driveBackwardsOntoChargeStationDPRedJSON, ex.getStackTrace());
-        }
-
-        driveForwardOverChargeStationBlueCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationBlueTraj);
-        driveBackwardsOntoChargeStationBlueCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationBlueTraj);
-        driveForwardOverChargeStationRedCommand = driveTrain.generateRamseteCommand(driveForwardOverChargeStationRedTraj);
-        driveBackwardsOntoChargeStationRedCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationRedTraj);
-
-        driveForwardOverChargeStationBlueCommand2 = driveTrain.generateRamseteCommand(driveForwardOverChargeStationBlueTraj);
-        driveBackwardsOntoChargeStationBlueCommand2 = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationBlueTraj);
-        driveForwardOverChargeStationRedCommand2 = driveTrain.generateRamseteCommand(driveForwardOverChargeStationRedTraj);
-        driveBackwardsOntoChargeStationRedCommand2 = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationRedTraj);
-
-        driveBackwardsToCubeBlueCommand = driveTrain.generateRamseteCommand(driveBackwardsToCubeBlueTraj);
-        driveForwardsToGridBlueCommand = driveTrain.generateRamseteCommand(driveForwardsToGridBlueTraj);
-        driveBackwardsToCubeRedCommand = driveTrain.generateRamseteCommand(driveBackwardsToCubeRedTraj);
-        driveForwardsToGridRedCommand = driveTrain.generateRamseteCommand(driveForwardsToGridRedTraj);
-
-        driveBackwardsToCubeBlueCommand2 = driveTrain.generateRamseteCommand(driveBackwardsToCubeBlueTraj);
-        driveForwardsToGridBlueCommand2 = driveTrain.generateRamseteCommand(driveForwardsToGridBlueTraj);
-        driveBackwardsToCubeRedCommand2 = driveTrain.generateRamseteCommand(driveBackwardsToCubeRedTraj);
-        driveForwardsToGridRedCommand2 = driveTrain.generateRamseteCommand(driveForwardsToGridRedTraj);
-
-        driveBackwardsOntoChargeStationDPBlueCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationDPBlueTraj);
-        driveBackwardsOntoChargeStationDPRedCommand = driveTrain.generateRamseteCommand(driveBackwardsOntoChargeStationDPRedTraj);
+        driveForwardOverChargeStationBlue       .initialize(driveTrain);
+        driveBackwardsOntoChargeStationBlue     .initialize(driveTrain);
+        driveForwardOverChargeStationRed        .initialize(driveTrain);
+        driveBackwardsOntoChargeStationRed      .initialize(driveTrain);
+        driveBackwardsToCubeBlue                .initialize(driveTrain);
+        driveForwardsToGridBlue                 .initialize(driveTrain);
+        driveBackwardsToCubeRed                 .initialize(driveTrain);
+        driveForwardsToGridRed                  .initialize(driveTrain);
+        driveBackwardsOntoChargeStationDPRed    .initialize(driveTrain);
+        driveBackwardsOntoChargeStationDPBlue   .initialize(driveTrain);
 
         // Initialize autonomous commands here
 
         taxiAuto = Autos.taxiAuto(driveTrain);
         taxiForBalanceAuto = Autos.taxiForBalanceAuto(driveTrain);
-        placeCubeThenTaxiAuto = Autos.placeCubeThenTaxiAuto(driveTrain, clawGrip, goTowardsTopCenter4, goTowardsStartingPos9);
-        taxiThenBalanceAuto = Autos.taxiThenBalanceAuto(driveTrain, balanceCommand5);
-        placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(driveTrain, clawGrip, goTowardsTopCenter5, goTowardsStartingPos10, balanceCommand6);
-        placeCubeThenConeAuto = Autos.placeCubeThenConeAuto(driveTrain, clawGrip, goTowardsTopCenter6, goTowardsStartingPos11, goTowardsStartingPos12, goTowardsStartingPos13,
-            goTowardsPickupPos3, goTowardsTopRight5, aimAssist3);
+        placeCubeThenTaxiAuto = Autos.placeCubeThenTaxiAuto(driveTrain, clawGrip, newGoTowardsTopRight.get(), newGoTowardsStartingPos.get());
+        taxiThenBalanceAuto = Autos.taxiThenBalanceAuto(driveTrain, newBalanceCommand.get());
+        placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(driveTrain, clawGrip, newGoTowardsTopRight.get(), newGoTowardsStartingPos.get(), newBalanceCommand.get());
+        placeCubeThenConeAuto = Autos.placeCubeThenConeAuto(driveTrain, clawGrip, newGoTowardsTopRight.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(),
+            goTowardsPickupPos3, newGoTowardsTopRight.get(), newAimAssistCommand.get());
 
         // All below autos use Pathweaver trajectories and probably don't work right now
-        balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
-                driveForwardOverChargeStationRedCommand, driveBackwardsOntoChargeStationRedCommand, balanceCommand4, arm);
-        placeConeCommandAuto = Autos.placeConeAuto(clawGrip, goTowardsTopRight, goTowardsStartingPos4);
-        doublePlacementAuto = Autos.doublePlacementAuto(arm, clawGrip, driveBackwardsToCubeBlueCommand, driveForwardsToGridBlueCommand,
-                driveBackwardsToCubeRedCommand, driveForwardsToGridRedCommand, goTowardsTopRight2, goTowardsStartingPos, goTowardsStartingPos2,
-                goTowardsStartingPos3, goTowardsPickupPos, goTowardsTopCenter, aimAssist);
-        placeConeThenBalanceAuto = Autos.placeConeThenBalanceAuto(driveForwardOverChargeStationBlueCommand2, driveBackwardsOntoChargeStationBlueCommand2, 
-                driveForwardOverChargeStationRedCommand2, driveBackwardsOntoChargeStationRedCommand2, balanceCommand2, arm, clawGrip, goTowardsTopRight3, goTowardsStartingPos5);
-        doublePlacementThenBalanceAuto = Autos.doublePlacementThenBalanceAuto(arm, clawGrip, driveBackwardsToCubeBlueCommand2, driveForwardsToGridBlueCommand2, 
-                driveBackwardsToCubeRedCommand2, driveForwardsToGridRedCommand2, goTowardsTopRight4, goTowardsStartingPos6, goTowardsStartingPos7, goTowardsStartingPos8, 
-                goTowardsPickupPos2, goTowardsTopCenter3, driveBackwardsOntoChargeStationDPBlueCommand, driveBackwardsOntoChargeStationDPRedCommand, balanceCommand3, aimAssist2);
+        balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlue.get(), driveBackwardsOntoChargeStationBlue.get(),
+                driveForwardOverChargeStationRed.get(), driveBackwardsOntoChargeStationRed.get(), newBalanceCommand.get(), arm);
+        placeConeCommandAuto = Autos.placeConeAuto(clawGrip, newGoTowardsTopRight.get(), newGoTowardsStartingPos.get());
+        doublePlacementAuto = Autos.doublePlacementAuto(arm, clawGrip, driveBackwardsToCubeBlue.get(), driveForwardsToGridBlue.get(),
+                driveBackwardsToCubeRed.get(), driveForwardsToGridRed.get(), newGoTowardsTopRight.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(),
+                newGoTowardsStartingPos.get(), goTowardsPickupPos, newGoTowardsTopRight.get(), newAimAssistCommand.get());
+        placeConeThenBalanceAuto = Autos.placeConeThenBalanceAuto(driveForwardOverChargeStationBlue.get(), driveBackwardsOntoChargeStationBlue.get(), 
+                driveForwardOverChargeStationRed.get(), driveBackwardsOntoChargeStationRed.get(), newBalanceCommand.get(), arm, clawGrip, newGoTowardsTopRight.get(), newGoTowardsStartingPos.get());
+        doublePlacementThenBalanceAuto = Autos.doublePlacementThenBalanceAuto(arm, clawGrip, driveBackwardsToCubeBlue.get(), driveForwardsToGridBlue.get(), 
+                driveBackwardsToCubeRed.get(), driveForwardsToGridRed.get(), newGoTowardsTopRight.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(), 
+                goTowardsPickupPos2, newGoTowardsTopRight.get(), driveBackwardsOntoChargeStationDPBlue.get(), driveBackwardsOntoChargeStationDPRed.get(), newBalanceCommand.get(), newAimAssistCommand.get());
 
         // Adds autonomous options to dashboard
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
