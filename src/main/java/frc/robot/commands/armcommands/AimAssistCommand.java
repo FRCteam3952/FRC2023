@@ -33,7 +33,7 @@ public class AimAssistCommand extends CommandBase{
             double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
             // arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
             this.arm.setTurretSpeed(adjustments[2]);  
-            //System.out.println(adjustments[0] * X_SPEED + ", " + adjustments[1] * Y_SPEED + ", " + adjustments[2] * Z_SPEED); 
+            System.out.println(LimeLight.getXAdjustment()); 
         }
         else{
             System.out.println("yo mama");
@@ -48,6 +48,6 @@ public class AimAssistCommand extends CommandBase{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(LimeLight.getXAdjustment()) < 0.1; // Might require tuning
+        return Math.abs(LimeLight.getXAdjustment()) < 0.05; // Might require tuning
     }
 }

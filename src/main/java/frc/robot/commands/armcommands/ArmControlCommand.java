@@ -22,7 +22,7 @@ public class ArmControlCommand extends CommandBase {
     private static final double Z_SPEED = 0.9;
     private static final double EXTEND_RETRACT_SPEED = 0.02; // for possible testing later
     private static double turret_adjust = 0.0;
-    private static int turret_flip = 1;
+    private static int direction_flip = 1;
 
     private static final double TURRET_SPEED = 0.2;
 
@@ -73,27 +73,27 @@ public class ArmControlCommand extends CommandBase {
                 turret_adjust = 0;
             }
 
-            this.arm.moveVector(-joystick.getLeftLateralMovement() * X_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
+            this.arm.moveVector(direction_flip * joystick.getLeftLateralMovement() * X_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
 
             
             int pov = this.joystick.controller.getHID().getPOV();
             if(pov == 90){
-                this.arm.setTurretSpeed(1);
+                this.arm.setTurretSpeed(1 * direction_flip);
             }
             else if(pov == 270){
-                this.arm.setTurretSpeed(-1);
+                this.arm.setTurretSpeed(-1 * direction_flip);
             }
             else{
-                this.arm.setTurretSpeed(joystick.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust);
+                this.arm.setTurretSpeed(direction_flip * joystick.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust);
             }
             // this.arm.setTurretSpeed(TURRET_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()) + turret_adjust);     
 
             if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.FLIP_TURRET_BUTTON_NUMBER)) {
-                if(turret_flip == 1){
-                    turret_flip = -1;
+                if(direction_flip == 1){
+                    direction_flip = -1;
                 }
                 else{
-                    turret_flip = 1;
+                    direction_flip = 1;
                 }
                 
             }

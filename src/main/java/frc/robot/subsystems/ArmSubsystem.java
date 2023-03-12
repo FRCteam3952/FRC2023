@@ -106,7 +106,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.pidController1.setTolerance(ArmConstants.PID_TOLERANCE);
         this.pidController2 = new PIDController(1.6e-2, 0, 0);
         this.pidController2.setTolerance(ArmConstants.PID_TOLERANCE);
-        this.pidController3 = new PIDController(9.6e-3, 0, 0);
+        this.pidController3 = new PIDController(1e-2, 0, 0);
         this.pidController3.setTolerance(ArmConstants.PID_TOLERANCE);
         // END
 

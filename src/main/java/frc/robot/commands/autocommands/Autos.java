@@ -177,14 +177,17 @@ public final class Autos {
         return placeCubeAuto(claw, goToTopCenter, goToStartingPos) // Places cube on top center section of grid
         .andThen(resetTimerCommand()) // Resets timer
         .andThen(Commands.run(() -> {
-            driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.25 seconds to pick up cone
+            // driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.25 seconds to pick up cone
         }, driveTrain).until(() -> timer.get() > 4.25)
-        .alongWith(goToAbovePickUpPosition)) // Goes to 10 inches above pickup position
-        .andThen(goToPickupPosition) // Goes to pickup position
         .andThen(Commands.runOnce(() -> {
-            NetworkTablesUtil.setLimelightPipeline(1);
+            driveTrain.tankDrive(0, 0);
+        }, driveTrain))
+        .alongWith(goToAbovePickUpPosition)) // Goes to 10 inches above pickup position
+        .andThen(Commands.runOnce(() -> {
+            NetworkTablesUtil.setLimelightPipeline(1); // Changes pipeline to detect cones
         }))
         .andThen(aimAssist) // Guides claw to game piece
+        .andThen(goToPickupPosition) // Goes to pickup position
         .andThen(waitCommand(0.5)) // Waits 0.5 seconds
         .andThen(Commands.runOnce(() -> { // Closes claw around game piece
             System.out.println("Place Cube then Cone Auto Running");
@@ -194,8 +197,11 @@ public final class Autos {
         .andThen(goToStartingPos2 // Arm goes to starting position
         .alongWith(resetTimerCommand() // Resets timer
         .andThen(Commands.run(() -> {
-            driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.25 seconds towards grid
+            // driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.25 seconds towards grid
         }, driveTrain).until(() -> timer.get() > 4.25))))
+        .andThen(Commands.runOnce(() -> {
+            driveTrain.tankDrive(0, 0);
+        }, driveTrain))
         .andThen(goTowardsTopRight) // Arm goes to top right pole to place cone
         .andThen(waitCommand(0.5)) // Waits 0.5 seconds 
         .andThen(Commands.runOnce(() -> { // Opens claw to drop cone onto pole

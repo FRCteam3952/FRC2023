@@ -192,7 +192,7 @@ public class RobotContainer {
         taxiThenBalanceAuto = Autos.taxiThenBalanceAuto(driveTrain, newBalanceCommand.get());
         placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(driveTrain, clawGrip, newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get(), newBalanceCommand.get());
         placeCubeThenConeAuto = Autos.placeCubeThenConeAuto(driveTrain, clawGrip, newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(),
-            goTowardsPickupPos3, goTowardsPickupPos4, newGoTowardsCenterRight.get(), newAimAssistCommand.get());
+            goTowardsPickupPos3, goTowardsPickupPos4, newGoTowardsTopRight.get(), newAimAssistCommand.get());
 
         // All below autos use Pathweaver trajectories and probably don't work right now
         balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlue.get(), driveBackwardsOntoChargeStationBlue.get(),

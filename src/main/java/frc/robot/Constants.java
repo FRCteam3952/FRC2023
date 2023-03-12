@@ -44,7 +44,7 @@ public final class Constants {
         public static final double STARTING_Y = 0;
         public static final double STARTING_Z = 0;
 
-        public static final double PICK_UP_POSITION_Y = 5;
+        public static final double PICK_UP_POSITION_Y = 2;
 
         public static final double PID_TOLERANCE = 1.0;
 
