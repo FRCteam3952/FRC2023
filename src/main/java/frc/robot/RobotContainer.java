@@ -183,7 +183,7 @@ public class RobotContainer {
          * Initialize Pathweaver trajectories/commands here
          */
 
-        CommandGenerator.initializeAll(driveTrain);
+        CommandGenerator.initializeAll(driveTrain); // ez
 
         // Initialize autonomous commands here
 
