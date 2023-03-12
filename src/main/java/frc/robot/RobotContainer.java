@@ -80,6 +80,7 @@ public class RobotContainer {
     public final ArmControlCommand armControl = new ArmControlCommand(arm, xboxController);
     public final AimAssistCommand aimAssist = new AimAssistCommand(arm);
     public final AimAssistCommand aimAssist2 = new AimAssistCommand(arm); // Only here because compositions can't use commands that have already been used for other compositions
+    public final AimAssistCommand aimAssist3 = new AimAssistCommand(arm); // Only here because compositions can't use commands that have already been used for other compositions
 
     public final GoTowardsCoordinatesCommandAuto goTowardsTopRight = new GoTowardsCoordinatesCommandAuto(arm,   PositionConstants.TOP_RIGHT_POS, 0.4, 0.4);
     public final GoTowardsCoordinatesCommandAuto goTowardsTopRight2 = new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_RIGHT_POS, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
@@ -336,7 +337,7 @@ public class RobotContainer {
         taxiThenBalanceAuto = Autos.taxiThenBalanceAuto(driveTrain, balanceCommand5);
         placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(driveTrain, clawGrip, goTowardsTopCenter5, goTowardsStartingPos10, balanceCommand6);
         placeCubeThenConeAuto = Autos.placeCubeThenConeAuto(driveTrain, clawGrip, goTowardsTopCenter6, goTowardsStartingPos11, goTowardsStartingPos12, goTowardsStartingPos13,
-            goTowardsPickupPos3, goTowardsTopRight5);
+            goTowardsPickupPos3, goTowardsTopRight5, aimAssist3);
 
         // All below autos use Pathweaver trajectories and probably don't work right now
         balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlueCommand, driveBackwardsOntoChargeStationBlueCommand,
@@ -367,7 +368,7 @@ public class RobotContainer {
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
         m_chooser.addOption("Place Cone Then Balance Auto", placeConeThenBalanceAuto);
         m_chooser.addOption("Double Placement Then Balance Auto", doublePlacementThenBalanceAuto);
-        
+
         SmartDashboard.putData("Auto choices", m_chooser);
 }
 
