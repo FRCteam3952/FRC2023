@@ -176,6 +176,7 @@ public final class Autos {
     public static CommandBase placeCubeThenConeAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos, Command goToStartingPos2, 
             Command goToStartingPos3, Command goToPickupPosition, Command goTowardsTopRight, Command aimAssist) {
         return placeCubeAuto(claw, goToTopCenter, goToStartingPos) // Places cube on top center section of grid
+        .andThen(resetTimerCommand()) // Resets timer
         .andThen(Commands.run(() -> {
             driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.95 seconds to pick up cone
         }, driveTrain).until(() -> timer.get() > 4.95)
@@ -188,9 +189,10 @@ public final class Autos {
         }, claw))
         .andThen(waitCommand(0.5)) // Waits 0.5 seconds
         .andThen(goToStartingPos2 // Arm goes to starting position
-        .alongWith(Commands.run(() -> {
+        .alongWith(resetTimerCommand() // Resets timer
+        .andThen(Commands.run(() -> {
             driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.95 seconds towards grid
-        }, driveTrain).until(() -> timer.get() > 4.95)))
+        }, driveTrain).until(() -> timer.get() > 4.95))))
         .andThen(goTowardsTopRight) // Arm goes to top right pole to place cone
         .andThen(waitCommand(0.5)) // Waits 0.5 seconds 
         .andThen(Commands.runOnce(() -> { // Opens claw to drop cone onto pole
