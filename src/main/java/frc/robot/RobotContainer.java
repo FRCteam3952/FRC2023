@@ -183,16 +183,7 @@ public class RobotContainer {
          * Initialize Pathweaver trajectories/commands here
          */
 
-        driveForwardOverChargeStationBlue       .initialize(driveTrain);
-        driveBackwardsOntoChargeStationBlue     .initialize(driveTrain);
-        driveForwardOverChargeStationRed        .initialize(driveTrain);
-        driveBackwardsOntoChargeStationRed      .initialize(driveTrain);
-        driveBackwardsToCubeBlue                .initialize(driveTrain);
-        driveForwardsToGridBlue                 .initialize(driveTrain);
-        driveBackwardsToCubeRed                 .initialize(driveTrain);
-        driveForwardsToGridRed                  .initialize(driveTrain);
-        driveBackwardsOntoChargeStationDPRed    .initialize(driveTrain);
-        driveBackwardsOntoChargeStationDPBlue   .initialize(driveTrain);
+        CommandGenerator.initializeAll(driveTrain);
 
         // Initialize autonomous commands here
 
