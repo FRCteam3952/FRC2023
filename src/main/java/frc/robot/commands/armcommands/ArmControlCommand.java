@@ -72,7 +72,7 @@ public class ArmControlCommand extends CommandBase {
             }
 
             this.arm.moveVector(-joystick.getLeftLateralMovement() * X_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
-            this.arm.setTurretSpeed(joystick.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust);
+            this.arm.setTurretSpeed(-arm.getTurretDirection()*joystick.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust);
             // this.arm.setTurretSpeed(TURRET_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()) + turret_adjust);     
 
             if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.FLIP_ARM_BUTTON_NUMBER)) {

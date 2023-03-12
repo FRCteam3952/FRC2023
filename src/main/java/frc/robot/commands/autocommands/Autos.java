@@ -14,6 +14,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.util.NetworkTablesUtil;
+import frc.robot.subsystems.staticsubsystems.RobotGyro;
 
 public final class Autos {
     private static boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam(); // Whether we are on the blue team or not
@@ -105,6 +106,38 @@ public final class Autos {
             }
         }, driveTrain));
     }
+
+    public static CommandBase dynamicTaxiForBalanceAuto(DriveTrainSubsystem driveTrain) {
+        // TODO make sure pitch isn't broken
+        return Commands.runOnce(() -> {
+            System.out.println("Dynamic Taxi For Balance Auto Start ");
+            timer.reset();
+            timer.start();
+            RobotGyro.resetGyroAngle();
+        })
+        .andThen(Commands.run(() -> {// Drive until the robot is on the far edge of the charge station
+            driveTrain.tankDrive(0.5, 0);
+        }, driveTrain))
+        .until(() -> RobotGyro.getGyroAngleDegreesPitch() > 8 || timer.get() > 2.8) // TODO CHECK TIMER VALUES
+        .andThen(Commands.run(() -> { // Drive until the robot is past the charge station and level
+            driveTrain.tankDrive(0.5, 0);
+        }))
+        .until(() -> (Math.abs(RobotGyro.getGyroAngleDegreesPitch()) < 2 || timer.get() > 2.8)) // TODO CHECK TIMER VALUES
+        .andThen(Commands.run(() -> timer.reset()))
+        .andThen(Commands.run(() -> { // Drive until the robot is at the far edge again
+            driveTrain.tankDrive(-0.5, 0);
+        }))
+        .until(() -> (Math.abs(RobotGyro.getGyroAngleDegreesPitch()) > 8 || timer.get() > 1))// TODO CHECK TIMER VALUES
+        .andThen(Commands.run(() -> { // Drive until in the center of the charge station
+            driveTrain.tankDrive(-0.5, 0);
+        }))
+        .until(() -> (Math.abs(RobotGyro.getGyroAngleDegreesPitch()) < 2 || timer.get() > 1))// TODO CHECK TIMER VALUES
+        .andThen(Commands.run(() -> {
+            driveTrain.tankDrive(0, 0); // stop
+        }));
+    }
+
+
 
     public static CommandBase placeCubeThenTaxiAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos) {
         return placeCubeAuto(claw, goToTopCenter, goToStartingPos)

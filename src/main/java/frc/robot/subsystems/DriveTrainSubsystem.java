@@ -335,7 +335,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
         // System.out.println("Gyro Yaw: " + RobotGyro.getGyroAngleDegreesYaw());
         // System.out.println("Gyro Roll: " + RobotGyro.getGyroAngleDegreesRoll());
-        // System.out.println("Gyro Pitch: " + RobotGyro.getGyroAngleDegreesPitch());
+        System.out.println("Gyro Pitch: " + RobotGyro.getGyroAngleDegreesPitch());
         //System.out.println("Drive motor value: " + this.getWheelSpeeds());
 
         if (joystick.getRawButtonReleasedWrapper(ControllerConstants.RESET_GYRO_BUTTON_NUMBER)) {
