@@ -150,6 +150,13 @@ public final class Autos {
         .andThen(taxiThenBalanceAuto(driveTrain, balanceCommand));
     }
 
+    /*
+     * EVERYTHING BELOW USES PATHWEAVER TRAJECTORIES, WHICH CURRENTLY PROBSBLY DON'T WORK
+     * TRY TO GET THEM WORKING BEFORE LA REGIONALS
+     * THERES A LOT OF THINGS THAT NEED TO 
+     */
+
+
     // First half of balance auto
     public static CommandBase balanceAutoFirstHalf(Command driveForwardOverChargeStationBlueCommand, 
             Command driveForwardOverChargeStationRedCommand, ArmSubsystem arm) {
