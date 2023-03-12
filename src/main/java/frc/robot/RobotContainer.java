@@ -87,7 +87,7 @@ public class RobotContainer {
     public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4);
     public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos2 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
     public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos3 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto rotateTurretToBack = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-ArmConstants.STARTING_X, ArmConstants.STARTING_Y, ArmConstants.STARTING_Z}, 0, 0);
+    public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos4 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y + 10, 0}, 0.4, 0.4);
 
     public final Supplier<GoTowardsCoordinatesCommandAuto> newGoTowardsPickupCommand = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Implement later during downtime
 
@@ -192,7 +192,7 @@ public class RobotContainer {
         taxiThenBalanceAuto = Autos.taxiThenBalanceAuto(driveTrain, newBalanceCommand.get());
         placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(driveTrain, clawGrip, newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get(), newBalanceCommand.get());
         placeCubeThenConeAuto = Autos.placeCubeThenConeAuto(driveTrain, clawGrip, newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(),
-            goTowardsPickupPos3, newGoTowardsCenterRight.get(), newAimAssistCommand.get());
+            goTowardsPickupPos3, goTowardsPickupPos4, newGoTowardsCenterRight.get(), newAimAssistCommand.get());
 
         // All below autos use Pathweaver trajectories and probably don't work right now
         balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlue.get(), driveBackwardsOntoChargeStationBlue.get(),
