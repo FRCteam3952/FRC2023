@@ -25,9 +25,9 @@ public class ClawRotateCommand extends CommandBase {
         else{
             int fov = this.joystick.controller.getHID().getPOV();
 
-            if(fov == 90) {
+            if(fov == 0) {
                 this.claw.changeAngle(CLAW_ROTATION_SPEED); // clockwise
-            } else if(fov == 270) {
+            } else if(fov == 180) {
                 this.claw.changeAngle(-CLAW_ROTATION_SPEED); // counterclockwise
             }
         }

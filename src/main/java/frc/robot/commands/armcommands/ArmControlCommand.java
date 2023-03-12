@@ -22,7 +22,6 @@ public class ArmControlCommand extends CommandBase {
     private static final double Z_SPEED = 0.9;
     private static final double EXTEND_RETRACT_SPEED = 0.02; // for possible testing later
     private static double turret_adjust = 0.0;
-    public static int turret_direction = 1;
 
     private static final double TURRET_SPEED = 0.2;
 
@@ -58,18 +57,6 @@ public class ArmControlCommand extends CommandBase {
             } else if(leftTrigger) { // just cube PID
                 NetworkTablesUtil.setLimelightPipeline(3);
             }
-
-            /*
-            int pov = this.joystick.controller.getHID().getPOV();
-            System.out.println("POV: " + pov);
-            if(pov == 0){
-                System.out.println("POV IS 0");
-                turret_direction = 1;
-            }
-            if(pov == 180){
-                System.out.println("POV IS 180");
-                turret_direction = -1;
-            }*/
             // System.out.println("turret" + turret_direction);
 
             if(rightTrigger || leftTrigger) {
@@ -86,7 +73,18 @@ public class ArmControlCommand extends CommandBase {
             }
 
             this.arm.moveVector(-joystick.getLeftLateralMovement() * X_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
-            this.arm.setTurretSpeed(turret_direction* joystick.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust);
+
+            
+            int pov = this.joystick.controller.getHID().getPOV();
+            if(pov == 90){
+                this.arm.setTurretSpeed(-1);
+            }
+            else if(pov == 270){
+                this.arm.setTurretSpeed(1);
+            }
+            else{
+                this.arm.setTurretSpeed(joystick.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust);
+            }
             // this.arm.setTurretSpeed(TURRET_SPEED * (this.joystick.controller.getRightTriggerAxis() - this.joystick.controller.getLeftTriggerAxis()) + turret_adjust);     
 
             if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.FLIP_ARM_BUTTON_NUMBER)) {

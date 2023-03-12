@@ -74,12 +74,9 @@ public final class Autos {
             System.out.println("Taxi Auto Start");
         }).andThen(resetTimerCommand())
         .andThen(Commands.run(() -> {      
-            if (timer.get() < 1.15) {
+            if (timer.get() < 6) {
                 System.out.println("Slow Drive");
                 driveTrain.tankDrive(0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
-            } else if (timer.get() < 2.65) {
-                System.out.println("Fast Drive");
-                driveTrain.tankDrive(0.5, 0); // Drives faster up onto charge station for 1.5 seconds
             } else {
                 driveTrain.tankDrive(0, 0);
                 System.out.println("Taxi Auto Finish");          
@@ -176,9 +173,8 @@ public final class Autos {
 
     // Double placement: places cube on top center platform, drives backwards to pick up cone, drives forward towards grid, places cone on top right pole
     public static CommandBase placeCubeThenConeAuto(DriveTrainSubsystem driveTrain, ClawGripSubsystem claw, Command goToTopCenter, Command goToStartingPos, Command goToStartingPos2, 
-            Command goToStartingPos3, Command goToPickupPosition, Command rotateTurretToBack, Command goTowardsTopRight, Command aimAssist) {
+            Command goToStartingPos3, Command goToPickupPosition, Command goTowardsTopRight, Command aimAssist) {
         return placeCubeAuto(claw, goToTopCenter, goToStartingPos) // Places cube on top center section of grid
-        .andThen(rotateTurretToBack) // Rotates turret 180 degrees to the back
         .andThen(resetTimerCommand()) // Resets timer
         .andThen(Commands.run(() -> {
             driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.25 seconds to pick up cone

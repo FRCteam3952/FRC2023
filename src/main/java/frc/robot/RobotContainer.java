@@ -27,7 +27,6 @@ import frc.robot.commands.armcommands.AimAssistCommand;
 import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.armcommands.CalibrateArmPivotsCommand;
-import frc.robot.commands.armcommands.CalibrateArmTurretCommand;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandTeleop;
 import frc.robot.commands.autocommands.Autos;
@@ -164,8 +163,6 @@ public class RobotContainer {
         // xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
         xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmPivotsCommand(arm, xboxController));
         driverController.joystick.button(ControllerConstants.BALANCE_CHARGE_STATION_BUTTON_NUMBER).whileTrue(new BalanceChargeStationCommand(driveTrain));
-        xboxController.controller.pov(180).onTrue(new CalibrateArmTurretCommand(arm));
-        xboxController.controller.pov(0).onTrue(new CalibrateArmTurretCommand(arm, -180));
 
         driverController.joystick.button(7).onTrue(new GoTowardsCoordinatesCommandTeleop(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, xboxController, 0.2, 0.2, false));
     }
@@ -193,9 +190,9 @@ public class RobotContainer {
         taxiForBalanceAuto = Autos.taxiForBalanceAuto(driveTrain);
         placeCubeThenTaxiAuto = Autos.placeCubeThenTaxiAuto(driveTrain, clawGrip, newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get());
         taxiThenBalanceAuto = Autos.taxiThenBalanceAuto(driveTrain, newBalanceCommand.get());
-        placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(driveTrain, clawGrip, newGoTowardsTopRight.get(), newGoTowardsStartingPos.get(), newBalanceCommand.get());
-        placeCubeThenConeAuto = Autos.placeCubeThenConeAuto(driveTrain, clawGrip, newGoTowardsTopRight.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(),
-            goTowardsPickupPos3, rotateTurretToBack, newGoTowardsTopRight.get(), newAimAssistCommand.get());
+        placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(driveTrain, clawGrip, newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get(), newBalanceCommand.get());
+        placeCubeThenConeAuto = Autos.placeCubeThenConeAuto(driveTrain, clawGrip, newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(),
+            goTowardsPickupPos3, newGoTowardsCenterRight.get(), newAimAssistCommand.get());
 
         // All below autos use Pathweaver trajectories and probably don't work right now
         balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlue.get(), driveBackwardsOntoChargeStationBlue.get(),

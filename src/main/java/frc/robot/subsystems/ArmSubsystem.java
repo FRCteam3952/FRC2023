@@ -459,12 +459,14 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("TURRET SPEED: " + turret.get() + ", ANG: " + getTurretAngleDeg());
         
         if(getTurretLimitPressed()){
-            if(tempAngle < 180 && tempAngle > -180){
+            //if(tempAngle < 180 && tempAngle > -180){
+                //System.out.println("RESET TURRTE");
                 this.turretEncoder.setPosition(0);
-            }
+            //}
         }
 
         // System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed());
+        // System.out.println("Turret Limit: " + getTurretLimitPressed());
         // handles limit switches
 
         if (resetPivot1) {
