@@ -150,12 +150,12 @@ public final class Autos {
             System.out.println("Place Cube Auto Start");
             claw.setClawOpened(false); // Closes claw
         }, claw).andThen(goToTopCenter) // Moves arm to top center position on grid to place cube
-        .andThen(new waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
         .andThen(Commands.runOnce(() -> { // Opens claw to drop pre-loaded cube onto top center platform
             System.out.println("Place Cube Auto Running");
             claw.setClawOpened(true); // Opens claw
         }, claw))
-        .andThen(new waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
         .andThen(goToStartingPos); // Moves arm to starting position
     }
 
@@ -183,24 +183,24 @@ public final class Autos {
         }, driveTrain).until(() -> timer.get() > 4.95)
         .alongWith(goToPickupPosition)) // Goes to pickup position
         .andThen(aimAssist) // Guides claw to game piece
-        .andThen(new waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
         .andThen(Commands.runOnce(() -> { // Closes claw around game piece
             System.out.println("Place Cube then Cone Auto Running");
             claw.setClawOpened(false); // Closes claw
         }, claw))
-        .andThen(new waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
         .andThen(goToStartingPos2 // Arm goes to starting position
         .alongWith(resetTimerCommand() // Resets timer
         .andThen(Commands.run(() -> {
             driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.95 seconds towards grid
         }, driveTrain).until(() -> timer.get() > 4.95))))
         .andThen(goTowardsTopRight) // Arm goes to top right pole to place cone
-        .andThen(new waitCommand(0.5)) // Waits 0.5 seconds 
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds 
         .andThen(Commands.runOnce(() -> { // Opens claw to drop cone onto pole
             System.out.println("Place Cube then Cone Auto Running");
             claw.setClawOpened(true); // Opens claw
         }, claw))
-        .andThen(new waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
         .andThen(goToStartingPos3);  // Arm goes to starting position
     }
 
