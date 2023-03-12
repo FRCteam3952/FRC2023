@@ -93,10 +93,10 @@ public final class Autos {
             if (timer.get() < 1.15) {
                 System.out.println("Slow Drive Backwards");
                 driveTrain.tankDrive(0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
-            } else if (timer.get() < 3.65) {
+            } else if (timer.get() < 3.45) {
                 System.out.println("Fast Drive Backwards");
                 driveTrain.tankDrive(0.5, 0); // Drives backwards faster over charge station for 2.5 seconds
-            } else if (timer.get() < 5.15) {
+            } else if (timer.get() < 4.90) {
                 System.out.println("Fast Drive Forwards");
                 driveTrain.tankDrive(-0.5, 0); // Drives forwards onto charge station for 1.5 seconds
             } else {
