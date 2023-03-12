@@ -94,7 +94,7 @@ public final class Constants {
             public static final int HUMAN_STATION_HEIGHT_BUTTON_NUMBER = 1;
             public static final int PICK_UP_HEIGHT_BUTTON_NUMBER = 2;
             public static final int EXTEND_ARM_BUTTON_NUMBER = 3; // change to up arrow on d-pad
-            public static final int FLIP_ARM_BUTTON_NUMBER = 5;
+            public static final int FLIP_TURRET_BUTTON_NUMBER = 5;
             public static final int TOGGLE_PID_BUTTON_NUMBER = 4;
             public static final int TOGGLE_PIPELINES = 10;
             /**
