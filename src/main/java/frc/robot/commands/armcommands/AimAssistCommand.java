@@ -48,6 +48,6 @@ public class AimAssistCommand extends CommandBase{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(LimeLight.getXAdjustment()) < 0.08; // Might require tuning
+        return Math.abs(LimeLight.getXAdjustment()) < 0.1; // Might require tuning
     }
 }
