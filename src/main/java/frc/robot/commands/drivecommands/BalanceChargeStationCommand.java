@@ -4,6 +4,7 @@
 
 package frc.robot.commands.drivecommands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
@@ -16,7 +17,9 @@ public class BalanceChargeStationCommand extends CommandBase {
     private final DriveTrainSubsystem driveTrain;
 
     private final double kP = 1d/120d;
-    private final double MAX_SPEED = 0.35; // not nice
+    private final double MAX_SPEED = 0.3; // not nice
+    private final double MIN_SPEED = 0;
+    private final double ANGLE_DELTA = 3;
 
     public BalanceChargeStationCommand(DriveTrainSubsystem driveTrain) {
         this.driveTrain = driveTrain;
@@ -33,16 +36,18 @@ public class BalanceChargeStationCommand extends CommandBase {
     @Override
     public void execute() {
         double pitch = RobotGyro.getGyroAngleDegreesPitch();
-        double speed = pitch * kP; // tune later
-        if (Math.abs(pitch) < 3) {
+        double speed = pitch * kP;
+        speed = MathUtil.clamp(speed, MIN_SPEED, MAX_SPEED);
+        if (Math.abs(pitch) < ANGLE_DELTA) {
             speed = 0;
         }
-        driveTrain.tankDrive(speed < MAX_SPEED ? speed : MAX_SPEED, 0);
+        driveTrain.tankDrive(speed, 0);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+
     }
 
     // Returns true when the command should end.
