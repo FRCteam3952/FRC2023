@@ -11,9 +11,9 @@ public class AimAssistCommand extends CommandBase{
     private final ArmSubsystem arm;
 
     // Inches per 20ms
-    private static final double X_SPEED = 0.8;
-    private static final double Y_SPEED = 0.8;
-    private static final double Z_SPEED = 0.8;
+    //private static final double X_SPEED = 0.8;
+    //private static final double Y_SPEED = 0.8;
+    private static final double TURRET_SPEED = 1;
     
     public AimAssistCommand(ArmSubsystem arm) {
         this.arm = arm;
@@ -33,7 +33,7 @@ public class AimAssistCommand extends CommandBase{
             double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
             // arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
             this.arm.setTurretSpeed(adjustments[2]);  
-            System.out.println(LimeLight.getXAdjustment()); 
+            System.out.println(LimeLight.getXAdjustment() * TURRET_SPEED); 
         }
         else{
             System.out.println("yo mama");
