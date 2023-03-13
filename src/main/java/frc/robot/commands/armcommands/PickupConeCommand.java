@@ -12,21 +12,23 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
 public class PickupConeCommand extends CommandBase{
     private final ArmSubsystem arm;
     private final ClawGripSubsystem claw;
-    private static final double X_SPEED = 0.8;
-    private static final double Y_SPEED = 0.8;
-    private static final double TURRET_SPEED = 1;
-    private static Timer timer = new Timer();
-    private static enum states {
+    private final double X_SPEED = 0.8;
+    private final double Y_SPEED = 0.8;
+    private final double TURRET_SPEED = 1;
+    private Timer timer = new Timer();
+    private enum states {
         AIM,
         CLOSE_CLAW,
         RETRACT,
         END
     }
-    private static states currentState;
+    private states currentState;
+    private double height;
     
-    public PickupConeCommand(ArmSubsystem arm, ClawGripSubsystem claw) {
+    public PickupConeCommand(ArmSubsystem arm, ClawGripSubsystem claw, double height) {
         this.arm = arm;
         this.claw = claw;
+        this.height = height;
         addRequirements(arm);
         addRequirements(claw);
     }
@@ -34,35 +36,37 @@ public class PickupConeCommand extends CommandBase{
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        currentState = states.AIM;
+        this.currentState = states.AIM;
         timer.start();
+        double[] currentCoords = arm.getTargetCoordinates();
+        this.arm.setTargetCoordinates(currentCoords[0], this.height, currentCoords[2]); //set the wanted height of the arm
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        switch(currentState){
+        switch(currentState){ //use limelight and ultrasonic sensor to move to cone or cube
             case AIM:
-                double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
-                arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
+                double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped()); 
+                this.arm.moveVector(adjustments[0] * X_SPEED, 0, 0);
                 this.arm.setTurretSpeed(TURRET_SPEED * adjustments[2]); 
 
                 if(adjustments[0] + adjustments[1] + adjustments[2] < 5){
-                    currentState = states.CLOSE_CLAW;
+                    this.currentState = states.CLOSE_CLAW;
                     timer.reset();
                 }
                 break;
 
-            case CLOSE_CLAW:
+            case CLOSE_CLAW: //close claw
                 claw.setClawOpened(false);
                 if (timer.get() > 0.2){
-                    currentState = states.RETRACT;
+                    this.currentState = states.RETRACT;
                 }
                 break;
 
-            case RETRACT:
+            case RETRACT: //move arm back to position
                 arm.calibrateArm();
-                currentState = states.END;
+                this.currentState = states.END;
                 break;
 
             default:
