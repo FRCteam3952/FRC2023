@@ -138,7 +138,7 @@ public final class Constants {
         public static final double KV_VOLTS_SECONDS_PER_METER = 1.98;
         public static final double KA_VOLTS_SECONDS_SQ_PER_METER = 0.2;
         public static final double P_DRIVE_VEL = 8.5;
-        public static final double K_WHEEL_RADIUS = 0.1016;
+        public static final double K_WHEEL_RADIUS = 0.0508;
 
         public static final double TRACKWIDTH_METERS = 0.5842;
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACKWIDTH_METERS);
