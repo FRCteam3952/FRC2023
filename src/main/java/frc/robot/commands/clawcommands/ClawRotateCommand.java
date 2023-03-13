@@ -2,7 +2,6 @@ package frc.robot.commands.clawcommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ClawRotationSubsystem;
-import frc.robot.util.NetworkTablesUtil;
 
 public class ClawRotateCommand extends CommandBase {
     private static final double CLAW_ROTATION_SPEED = 4;

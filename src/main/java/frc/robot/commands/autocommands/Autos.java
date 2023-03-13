@@ -7,7 +7,7 @@ package frc.robot.commands.autocommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+//import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.Timer;
 
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
@@ -16,7 +16,6 @@ import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
-import frc.robot.subsystems.staticsubsystems.RobotGyro;
 
 public final class Autos {
     private static boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam(); // Whether we are on the blue team or not
@@ -148,12 +147,12 @@ public final class Autos {
             System.out.println("Place Cube Auto Start");
             claw.setClawOpened(false); // Closes claw
         }, claw).andThen(goToTopCenter) // Moves arm to top center position on grid to place cube
-        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(waitCommand(0.2)) // Waits 0.5 seconds
         .andThen(Commands.runOnce(() -> { // Opens claw to drop pre-loaded cube onto top center platform
             System.out.println("Place Cube Auto Running");
             claw.setClawOpened(true); // Opens claw
         }, claw))
-        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(waitCommand(0.2)) // Waits 0.5 seconds
         .andThen(goToStartingPos); // Moves arm to starting position
     }
 

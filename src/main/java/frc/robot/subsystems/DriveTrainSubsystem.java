@@ -17,7 +17,6 @@ import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
@@ -37,9 +36,7 @@ import frc.robot.Constants.FieldConstants.AprilTagConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.PortConstants;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
-import frc.robot.util.MathUtil;
 import frc.robot.util.NetworkTablesUtil;
 
 import java.util.List;
@@ -64,9 +61,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     private final FlightJoystick joystick;
 
-    private boolean swapDirection = false;
+    //private boolean swapDirection = false; commented because I don't like yellow file
 
-    private boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
+    //private boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
 
     private final Encoder m_leftEncoder;
     private final Encoder m_rightEncoder;
