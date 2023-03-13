@@ -5,6 +5,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
 import frc.robot.util.NetworkTablesUtil;
 
@@ -15,6 +16,7 @@ public class ArmControlCommand extends CommandBase {
 
     private final ArmSubsystem arm;
     private final XboxController joystick;
+    private final ClawGripSubsystem claw;
 
     // Inches per 20ms
     private static final double X_SPEED = 0.9;
@@ -22,18 +24,21 @@ public class ArmControlCommand extends CommandBase {
     private static final double TURRET_SPEED = 0.2;
     private static double turret_adjust = 0.0;
 
-    public ArmControlCommand(ArmSubsystem arm, XboxController joystick) {
+    public ArmControlCommand(ArmSubsystem arm, ClawGripSubsystem claw, XboxController joystick) {
         this.arm = arm;
         this.joystick = joystick;
+        this.claw = claw;
 
         addRequirements(arm);
+        addRequirements(claw);
     }
 
-    // Assumes goTowardsIntendedCoordinates() is running and PID is on
+    /*
+     * Pick up game piece commands
+     */
     private void setYPosition() {
         if (joystick.getRawButtonPressedWrapper(ControllerConstants.HUMAN_STATION_HEIGHT_BUTTON_NUMBER)) {
-            double[] currentCoords = arm.getTargetCoordinates();
-            (new GoTowardsCoordinatesCommandTeleop(this.arm,(new double[]{currentCoords[0],ArmConstants.HUMAN_PLAYER_HEIGHT,currentCoords[2]}),this.joystick,0.4,0.4)).schedule();
+            (new PickupPieceCommand(this.arm,this.claw,ArmConstants.HUMAN_PLAYER_HEIGHT)).schedule();
     
         } else if (joystick.getRawButtonPressedWrapper(ControllerConstants.PICK_UP_HEIGHT_BUTTON_NUMBER)) {
             double[] currentCoords = arm.getTargetCoordinates();
@@ -41,32 +46,16 @@ public class ArmControlCommand extends CommandBase {
         }
     }
 
-    // Primary arm control
+    /*
+     * Primary arm control
+     */
     private void primaryArmControl() {
         
         if(this.arm.getControlMode()) { // only run when arm is in manual control
 
             this.arm.setControlDimensions(true); //manual arm control is in 2D (no Z axis calculations)
             
-            boolean rightTrigger = this.joystick.controller.getRightTriggerAxis() > 0.2, leftTrigger = this.joystick.controller.getLeftTriggerAxis() > 0.2;
-            if(rightTrigger && leftTrigger) {
-                NetworkTablesUtil.setLimelightPipeline(4);
-            } else if(rightTrigger) { // cone PID, if > 0.9 do rotation as well but we don't do that here (look in ClawRotateCommand)
-                NetworkTablesUtil.setLimelightPipeline(1);
-            } else if(leftTrigger) { // just cube PID
-                NetworkTablesUtil.setLimelightPipeline(3);
-            }
-            if(rightTrigger || leftTrigger) {
-                if(!this.arm.getFlipped()){
-                    arm.setControlDimensions(false);
-                    double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
-                    //arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
-                    turret_adjust = adjustments[2];
-                } else {
-                }
-            } else {
-                turret_adjust = 0;
-            }
+            armAimAssist();
 
             this.arm.moveVector(joystick.getLeftLateralMovement() * X_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
             this.arm.setTurretSpeed(joystick.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust); 
@@ -76,6 +65,31 @@ public class ArmControlCommand extends CommandBase {
             this.arm.setPIDControlState(false);
         }
         
+    }
+
+    /*
+     * Handles Limelight aim assist for arm
+     */
+    private void armAimAssist(){
+        boolean rightTrigger = this.joystick.controller.getRightTriggerAxis() > 0.2, leftTrigger = this.joystick.controller.getLeftTriggerAxis() > 0.2;
+        if(rightTrigger && leftTrigger) {
+            NetworkTablesUtil.setLimelightPipeline(4);
+        } else if(rightTrigger) { // cone PID, if > 0.9 do rotation as well but we don't do that here (look in ClawRotateCommand)
+            NetworkTablesUtil.setLimelightPipeline(1);
+        } else if(leftTrigger) { // just cube PID
+            NetworkTablesUtil.setLimelightPipeline(3);
+        }
+        if(rightTrigger || leftTrigger) {
+            if(!this.arm.getFlipped()){
+                arm.setControlDimensions(false);
+                double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
+                //arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
+                turret_adjust = adjustments[2];
+            } else {
+            }
+        } else {
+            turret_adjust = 0;
+        }
     }
 
     // Called when the command is initially scheduled.

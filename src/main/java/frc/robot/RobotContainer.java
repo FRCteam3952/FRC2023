@@ -74,7 +74,7 @@ public class RobotContainer {
     
     // these ones got changed to xbox
     public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
-    public final ArmControlCommand armControl = new ArmControlCommand(arm, xboxController);
+    public final ArmControlCommand armControl = new ArmControlCommand(arm, clawGrip, xboxController);
     
     public final Supplier<AimAssistCommand> newAimAssistCommand = () -> new AimAssistCommand(arm);
     public final Supplier<GoTowardsCoordinatesCommandAuto> newGoTowardsTopCenter = () -> new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_CENTER_POS, 0.4, 0.4);

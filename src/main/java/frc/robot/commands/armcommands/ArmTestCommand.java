@@ -29,8 +29,6 @@ public class ArmTestCommand extends CommandBase {
 
         arm.setTurretSpeed((joystick.controller.getLeftTriggerAxis() - joystick.controller.getRightTriggerAxis()) * 0.5);
 
-        // System.out.println(LimeLight.getArea());
-
         if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)){
             this.arm.setPIDControlState(true);
         }

@@ -9,11 +9,11 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
 /**
  * This is here for implementation in Autonomous mode, for teleop there is already an implementation in ArmControlCommand
  */
-public class PickupConeCommand extends CommandBase{
+public class PickupPieceCommand extends CommandBase{
     private final ArmSubsystem arm;
     private final ClawGripSubsystem claw;
     private final double X_SPEED = 0.8;
-    private final double Y_SPEED = 0.8;
+    //private final double Y_SPEED = 0.8;
     private final double TURRET_SPEED = 1;
     private Timer timer = new Timer();
     private enum states {
@@ -25,7 +25,7 @@ public class PickupConeCommand extends CommandBase{
     private states currentState;
     private double height;
     
-    public PickupConeCommand(ArmSubsystem arm, ClawGripSubsystem claw, double height) {
+    public PickupPieceCommand(ArmSubsystem arm, ClawGripSubsystem claw, double height) {
         this.arm = arm;
         this.claw = claw;
         this.height = height;
