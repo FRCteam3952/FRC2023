@@ -9,6 +9,7 @@ public class LimeLight {
     private static final double ki = 0.00;
     private static final double kd = 0.001;
     private static final PIDController adjustmentPID = new PIDController(kp, ki, kd);
+    private static final PIDController adjustmentPID2 = new PIDController(kp, ki, kd);
 
     public static void poke() {
         System.out.println("LimeLight initialized");
@@ -28,7 +29,7 @@ public class LimeLight {
     }
 
     public static double getYAdjustment() {
-        double ty = (NetworkTablesUtil.getLimeLightErrorY()) * kp;
+        double ty =  adjustmentPID2.calculate(NetworkTablesUtil.getLimeLightErrorY());
 
         // if ty is too big, return the max of 1 or -1
         if (Math.abs(ty) > 1) {
@@ -58,12 +59,8 @@ public class LimeLight {
         double[] adjustments = new double[3];
 
         if(flipped){
-
-            double yAdjustment = NetworkTablesUtil.getLimeLightPipeline() == 1 ? (DESIRED_AREA_CONE - getArea()) / DESIRED_AREA_CONE : 
-                    (DESIRED_AREA_CUBE - getArea()) / DESIRED_AREA_CUBE; // y axis from perspective of the camera
-            yAdjustment = yAdjustment > 1 ? 1 : yAdjustment;
     
-            adjustments[0] = getYAdjustment(); // x-axis adjustment
+            adjustments[0] = UltrasonicSensor.getDistanceInches(); // x-axis adjustment
     
             adjustments[1] = 0; // y-axis adjustment
     
@@ -76,9 +73,9 @@ public class LimeLight {
                     (DESIRED_AREA_CUBE - getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
             xAdjustment = xAdjustment > 1 ? 1 : xAdjustment;
     
-            adjustments[0] = 0; // x-axis adjustment
+            adjustments[0] = getYAdjustment(); // x-axis adjustment
     
-            adjustments[1] = 0; // y-axis adjustment
+            adjustments[1] = UltrasonicSensor.getDistanceInches(); // y-axis adjustment
     
             adjustments[2] = getXAdjustment(); // z-axis adjustment
     

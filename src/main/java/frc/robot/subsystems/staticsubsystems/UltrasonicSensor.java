@@ -5,18 +5,18 @@ import frc.robot.util.MathUtil;
 
 public class UltrasonicSensor {
     private static AnalogInput distanceFinder;
-    private final int SCALING_FACTOR = 1;
+    private static final int SCALING_FACTOR = 1;
 
     static{
         distanceFinder = new AnalogInput(0); //port 0
         distanceFinder.setAverageBits(2); // change later
     }
-    public double getDistanceInches(){
+    public static double getDistanceInches(){
         double volts = distanceFinder.getAverageVoltage();
         return (double) (volts * SCALING_FACTOR);
     }
 
-    public double getDistanceMeters(){
+    public static double getDistanceMeters(){
         return MathUtil.inchesToMeters(getDistanceInches());
     }
 }
