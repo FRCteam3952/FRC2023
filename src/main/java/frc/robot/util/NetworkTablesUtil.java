@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.*;
+import frc.robot.subsystems.staticsubsystems.RobotGyro;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,8 +92,8 @@ public class NetworkTablesUtil {
     public static Pose2d getJetsonPoseMeters() {
         NetworkTable table = INSTANCE.getTable("jetson");
         double[] jetsonPoseXYZ = MathUtil.inchesArrayToMetersArray(table.getEntry("pose").getDoubleArray(new double[]{0.0, 0.0, 0.0})); // X, Y, Z
-        return new Pose2d(jetsonPoseXYZ[0],jetsonPoseXYZ[2],new Rotation2d(0));
-    }   
+        return new Pose2d(jetsonPoseXYZ[0],jetsonPoseXYZ[2],RobotGyro.getRotation2d());
+    }  
 
     public static boolean getIfOnBlueTeam() {
         NetworkTable table = INSTANCE.getTable("FMSInfo");
