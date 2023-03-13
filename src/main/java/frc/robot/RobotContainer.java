@@ -94,7 +94,6 @@ public class RobotContainer {
     public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, xboxController);
     // end change to xbox
 
-
     public CommandGenerator driveForwardOverChargeStationBlue     = new CommandGenerator("paths/DriveForwardOverChargeStationBlue.wpilib.json");
     public CommandGenerator driveBackwardsOntoChargeStationBlue   = new CommandGenerator("paths/DriveBackwardsOntoChargeStationBlue.wpilib.json");
     public CommandGenerator driveForwardOverChargeStationRed      = new CommandGenerator("paths/DriveForwardOverChargeStationRed.wpilib.json");
