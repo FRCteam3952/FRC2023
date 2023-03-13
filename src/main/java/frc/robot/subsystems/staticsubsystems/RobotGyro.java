@@ -1,5 +1,6 @@
 package frc.robot.subsystems.staticsubsystems;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 
 /**
@@ -22,6 +23,10 @@ public class RobotGyro {
     }
 
     private static double angleAdjust = 0;
+
+    public static Rotation2d getRotation2d(){
+        return new Rotation2d(Math.toRadians(gyro.getAngle() + angleAdjust));
+    }
 
     public static double getGyroAngleDegreesYaw() {
         return gyro.getAngle() + angleAdjust;
@@ -52,5 +57,9 @@ public class RobotGyro {
 
     public static void robotCalibrate() {
         gyro.calibrate();
+    }
+
+    public static double getGyroGeneralAcceleration(){
+        return gyro.getAccelX() + gyro.getAccelY();
     }
 }

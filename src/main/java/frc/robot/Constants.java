@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import frc.robot.util.ForwardKinematicsUtil;
-import frc.robot.util.InverseKinematicsUtil;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -139,6 +138,7 @@ public final class Constants {
         public static final double KV_VOLTS_SECONDS_PER_METER = 1.98;
         public static final double KA_VOLTS_SECONDS_SQ_PER_METER = 0.2;
         public static final double P_DRIVE_VEL = 8.5;
+        public static final double K_WHEEL_RADIUS = 0.1016;
 
         public static final double TRACKWIDTH_METERS = 0.5842;
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACKWIDTH_METERS);
@@ -359,6 +359,8 @@ public final class Constants {
                     {40.45,  108.19, 18.22, 0},
                     {40.45,  42.19,  18.22, 0}
             };
+
+            public static final double LATENCY = 0.2; //average april tag latency (I'm guessing in seconds)
         }
     }
 }

@@ -7,9 +7,13 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,6 +23,8 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.TrajectoryConstants;
+import frc.robot.Constants.FieldConstants.AprilTagConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.PortConstants;
@@ -54,7 +61,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     private final RelativeEncoder[] encoders;
 
     private final DifferentialDrive tankDrive;
-    private final DifferentialDriveOdometry odometry;
 
     private final FlightJoystick joystick;
 
@@ -62,6 +68,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     private boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
 
+    private final Encoder m_leftEncoder;
+    private final Encoder m_rightEncoder;
+    private static final int kEncoderResolution = 4096;
+
+    private final DifferentialDrivePoseEstimator m_poseEstimator;
 
     public DriveTrainSubsystem(FlightJoystick joystick) {
         this.frontLeftMotor = new CANSparkMax(PortConstants.FRONT_LEFT_MOTOR_PORT, MotorType.kBrushless);
@@ -88,14 +99,30 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.frontLeftMotor.setInverted(true);
         this.rearLeftMotor.setInverted(true);
 
-        this.odometry = new DifferentialDriveOdometry(new Rotation2d(RobotGyro.getGyroAngleDegreesYaw()), 0, 0);
+        this.m_leftEncoder = new Encoder(0, 1);
+        this.m_rightEncoder = new Encoder(2, 3);
+
+        this.m_leftEncoder.setDistancePerPulse(2 * Math.PI * DriveConstants.K_WHEEL_RADIUS / kEncoderResolution);
+        this.m_rightEncoder.setDistancePerPulse(2 * Math.PI * DriveConstants.K_WHEEL_RADIUS / kEncoderResolution);
+
+        this.m_leftEncoder.reset();
+        this.m_rightEncoder.reset();
+
+        this.m_poseEstimator = new DifferentialDrivePoseEstimator(
+            DriveConstants.DRIVE_KINEMATICS,
+            RobotGyro.getRotation2d(),
+            m_leftEncoder.getDistance(), 
+            m_rightEncoder.getDistance(), 
+            new Pose2d(), 
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02,0.02,0.01), 
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1,0.1,0.01)
+        );
 
         this.joystick = joystick;
 
         this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
         tankDrive.setSafetyEnabled(false);
-        // m_dDrive.setSafetyEnabled(false);
-        // resetEncoders();
+
 
     }
 
@@ -113,109 +140,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // }
     }
 
-    /**
-     * Simulates a MecanumDrive on ArcadeDrive/TankDrive
-     *
-     * @param x The x movement speed
-     * @param y The y movement speed
-     */
-    public void tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(double x, double y) {
-        if (x == 0 && y == 0) { // If no movement, make sure robot is stopped
-            tankDrive.arcadeDrive(0, 0);
-            return;
-        }
-        double speed = MathUtil.distance(0, x, 0, y); // Speed should take the distance to move into account
-        double target = normalizeAngle(Math.toDegrees((Math.atan2(y, x))) - 90); // Normalize the target angle based on the slope from (0,0) to the point on the unit circle from joystick
-        double current = swapDirection ? normalizeAngle(RobotGyro.getGyroAngleDegreesYaw() + 180) : normalizeAngle(RobotGyro.getGyroAngleDegreesYaw()); // Our current angle, normalized and accounting for if we're going "backwards"
-
-        // The largest possible movement is 90 degrees because our robot is bi-directional (forwards or backwards does not matter on the tank drive)
-        // Since the maximum distance from the x axis is 90 degrees, we check for the shortest angle between the two. If the smallest angle is greater than 90, we need to switch the side we're looking at.
-        if (getShortestAngleApart(target, current) > 90) {
-            swapDirection = !swapDirection; // Swap the direction
-            current = normalizeAngle(current + 180); // And re-normalize our new angle
-            double angleError = getAngleError(current, target); // Get the angle difference, which we now know to be the smallest.
-            if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA) { // If it's within the delta, we can stop to avoid jittering and indecisiveness.
-                this.tankDrive(speed * (swapDirection ? -1 : 1), 0); // zRotation = 0, so no turning
-            } else {
-                double turningSpeed = angleError * DriveConstants.TURN_CONSTANT; // Scale the angleError to our turn constant
-                // Make sure turningSpeed is at least 0.2 away from 0
-                turningSpeed = Math.abs(turningSpeed) < 0.2 ? Math.copySign(0.2, turningSpeed) : turningSpeed;
-                this.tankDrive(speed * (swapDirection ? -1 : 1), turningSpeed); // Drive
-            }
-        } else { // No swap necessary
-            double angleError = getAngleError(current, target); // Same code as above, without the swap logic.
-            if (Math.abs(angleError) < DriveConstants.ANGLE_DELTA) {
-                this.tankDrive(speed * (swapDirection ? -1 : 1), 0);
-            } else {
-                double turningSpeed = -angleError * DriveConstants.TURN_CONSTANT;
-                // Make sure turningSpeed is at least 0.2 away from 0
-                turningSpeed = Math.abs(turningSpeed) < 0.2 ? Math.copySign(0.2, turningSpeed) : turningSpeed;
-                this.tankDrive(speed * (swapDirection ? -1 : 1), turningSpeed);
-            }
-        }
-    }
-
-
-    public double normalizeAngle(double angle) {
-        angle %= 360;
-        angle = angle < 0 ? 360 + angle : angle;
-        if (Math.abs(360 - angle) < 0.5) {
-            angle = 0;
-        }
-        return angle;
-    }
-
-
-    public double getShortestAngleApart(double a1, double a2) {
-        double difference = Math.abs(a1 - a2);
-        return difference > 180 ? 360 - difference : difference;
-    }
-
-
-    public double getAngleError(double current, double target) {
-        double angle = getShortestAngleApart(current, target);
-        if (Math.abs(current + angle - target) < 0.25) {
-            return angle;
-        }
-        if (Math.abs((target + angle) % 360 - current) < 0.25) {
-            return -angle;
-        }
-        return angle;
-    }
-
-
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         this.leftMotorGroup.setVoltage(leftVolts);
         this.rightMotorGroup.setVoltage(rightVolts);
         this.tankDrive.feed();
-    }
-
-    public double findZRotationSpeedFromAngle(double angle) {
-
-        double angleDifference = angle - RobotGyro.getGyroAngleDegreesYaw(); // gets angle difference
-
-        if (Math.abs(angleDifference) >= 180) {
-            /*
-             * ensures that angleDifference is the smallest possible movement to the
-             * destination
-             */
-            angleDifference = angleDifference + (angleDifference > 0 ? -360 : 360);
-        }
-
-        /*
-         * positive angleDifference -> turn clockwise, negative angleDifference -> turn
-         * counterclockwise
-         * strength of turning power is proportional to size of angleDifference
-         */
-        double zRotation = angleDifference / 120;
-
-        if (zRotation > 1) {
-            zRotation = 1;
-        } else if (zRotation < -1) {
-            zRotation = -1;
-        }
-
-        return zRotation;
     }
 
     public void resetEncoders() {
@@ -232,7 +160,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        odometry.resetPosition(new Rotation2d(RobotGyro.getGyroAngleDegreesYaw()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), pose);
+        m_poseEstimator.resetPosition(new Rotation2d(RobotGyro.getGyroAngleDegreesYaw()), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), pose);
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -240,11 +168,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     public Pose2d getPoseMeters() {
-        return odometry.getPoseMeters();
+        return m_poseEstimator.getEstimatedPosition();
     }
 
     public Pose2d getPoseInches() {
-        Pose2d poseMeters = odometry.getPoseMeters();
+        Pose2d poseMeters = getPoseMeters();
         double conversionFactor = 39.3700787402;
         Pose2d poseInches = new Pose2d(poseMeters.getX() * conversionFactor, poseMeters.getY() * conversionFactor, poseMeters.getRotation());
         return poseInches;
@@ -252,6 +180,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     public Command resetOdometryCommand(Pose2d pose) {
         return new InstantCommand(() -> resetOdometry(pose), this);
+    }
+
+    public void updateOdometry() {
+        m_poseEstimator.update(RobotGyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance()); //update pose
+    
+        // Also apply vision measurements
+        m_poseEstimator.addVisionMeasurement(
+            NetworkTablesUtil.getJetsonPoseMeters(),
+            Timer.getFPGATimestamp() - AprilTagConstants.LATENCY);
     }
 
     // Generate command for following a trajectory
@@ -320,16 +257,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometry.update(new Rotation2d(Math.toRadians(RobotGyro.getGyroAngleDegreesYaw())), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition());
 
-        if (RobotContainer.inTeleop) {
+        /*if (RobotContainer.inTeleop) {
             if (Math.abs(this.joystick.getHorizontalMovement()) < 0.1 && Math.abs(this.joystick.getLateralMovement()) < 0.1) {
                 var gyroRad = Math.toRadians(RobotGyro.getGyroAngleDegreesYaw());
                 odometry.resetPosition(new Rotation2d(gyroRad), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), new Pose2d(NetworkTablesUtil.getJetsonPoseMeters(), new Rotation2d(gyroRad)));
             }
-        }
+        }*/
+        updateOdometry();
 
-        Pose2d pose = odometry.getPoseMeters();
+        Pose2d pose = getPoseMeters();
         double[] sendPose = {pose.getX(), pose.getY(), pose.getRotation().getRadians()};
         NetworkTablesUtil.getEntry("robot", "drive_odometry").setDoubleArray(sendPose);
 

@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.*;
 
@@ -86,11 +88,11 @@ public class NetworkTablesUtil {
      *
      * @return A {@link Translation2d} representing the robot's pose ([x, y, radians])
      */
-    public static Translation2d getJetsonPoseMeters() {
+    public static Pose2d getJetsonPoseMeters() {
         NetworkTable table = INSTANCE.getTable("jetson");
-        var jetsonPoseXYZ = MathUtil.inchesArrayToMetersArray(table.getEntry("pose").getDoubleArray(new double[]{0.0, 0.0, 0.0})); // X, Y, Z
-        return new Translation2d(jetsonPoseXYZ[0], jetsonPoseXYZ[2]);
-    }
+        double[] jetsonPoseXYZ = MathUtil.inchesArrayToMetersArray(table.getEntry("pose").getDoubleArray(new double[]{0.0, 0.0, 0.0})); // X, Y, Z
+        return new Pose2d(jetsonPoseXYZ[0],jetsonPoseXYZ[2],new Rotation2d(0));
+    }   
 
     public static boolean getIfOnBlueTeam() {
         NetworkTable table = INSTANCE.getTable("FMSInfo");
