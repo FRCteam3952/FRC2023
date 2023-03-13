@@ -132,9 +132,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     public void tankDrive(double xSpeed, double zRotation) {
         tankDrive.arcadeDrive(xSpeed, zRotation, false);
-        // if (RobotContainer.primaryJoystick.joystick.getRawButtonPressed(Constants.resetGyroButtonNumber)) {
-        //   Gyro.resetGyroAngle();
-        // }
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
