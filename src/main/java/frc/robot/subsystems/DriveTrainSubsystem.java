@@ -238,12 +238,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        /*if (RobotContainer.inTeleop) {
-            if (Math.abs(this.joystick.getHorizontalMovement()) < 0.1 && Math.abs(this.joystick.getLateralMovement()) < 0.1) {
-                var gyroRad = Math.toRadians(RobotGyro.getGyroAngleDegreesYaw());
-                odometry.resetPosition(new Rotation2d(gyroRad), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), new Pose2d(NetworkTablesUtil.getJetsonPoseMeters(), new Rotation2d(gyroRad)));
-            }
-        }*/
         updateOdometry();
 
         Pose2d pose = getPoseMeters();

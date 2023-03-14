@@ -11,7 +11,6 @@ public class PoseAimArmCommand extends CommandBase{
     private final ArmSubsystem arm;
     private final DriveTrainSubsystem drive;
     private Translation3d armPose;
-
     public PoseAimArmCommand(ArmSubsystem arm, DriveTrainSubsystem drive, Translation3d armPose){
         this.arm = arm;
         this.drive = drive;
@@ -73,6 +72,6 @@ public class PoseAimArmCommand extends CommandBase{
     @Override
     public boolean isFinished() {
         // Allowed error subject to change
-        return arm.isAtCoords();
+        return false;
     }
 }
