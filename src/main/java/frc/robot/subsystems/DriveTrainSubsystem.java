@@ -63,7 +63,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     //private boolean swapDirection = false; commented because I don't like yellow file
 
     //private boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
-    private static final int kEncoderResolution = 4096;
 
     private final DifferentialDrivePoseEstimator m_poseEstimator;
 
@@ -178,7 +177,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     public Command generateRamseteCommand(Pose2d startPoint, Pose2d endPoint, boolean reversed) {
         // A trajectory to follow. All units in meters.
         Trajectory trajectory = this.generateTrajectory(startPoint, List.of(), endPoint, reversed);
-
         return this.generateRamseteCommand(trajectory);
     }
 
@@ -230,7 +228,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // Reset odometry to the starting pose of the trajectory.
         // this.resetOdometry(trajectory.getInitialPose());
 
-        // Reset odometry, run path following command, then stop at the end.
+        // Reset odometry, run path following command, then stop at the end.    
         return this.resetOdometryCommand(trajectory.getInitialPose()).andThen(ramseteCommand).andThen(() -> this.tankDriveVolts(0, 0), this);
 
         // ORIGINAL:
