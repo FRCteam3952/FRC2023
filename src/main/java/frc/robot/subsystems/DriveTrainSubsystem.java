@@ -88,10 +88,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.leftMotorGroup = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
         this.rightMotorGroup = new MotorControllerGroup(frontRightMotor, rearRightMotor);
 
-        this.frontRightMotor.setInverted(false);
-        this.rearRightMotor.setInverted(false);
-        this.frontLeftMotor.setInverted(true);
-        this.rearLeftMotor.setInverted(true);
+        this.frontRightMotor.setInverted(true);
+        this.rearRightMotor.setInverted(true);
+        this.frontLeftMotor.setInverted(false);
+        this.rearLeftMotor.setInverted(false);
 
         this.m_poseEstimator = new DifferentialDrivePoseEstimator(
             DriveConstants.DRIVE_KINEMATICS,
