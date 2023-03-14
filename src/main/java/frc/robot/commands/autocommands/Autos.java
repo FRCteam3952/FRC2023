@@ -10,10 +10,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 //import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
-import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawGripSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
 
