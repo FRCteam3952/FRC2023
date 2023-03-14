@@ -468,101 +468,94 @@ public final class Autos {
     // Might need to add calibration 
     // Places pre-loaded cone, drives backwards to pick up cube, drives forwards to place cube on grid
     public static CommandBase doublePlacementAuto(RobotContainer robot) {
-
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
+        // TODO someone make this code into smaller chunks or something
         if (blueTeam) {
             return Commands.runOnce(
+                () -> {
+                    System.out.println("Double Placement Auto Blue Start");
+                }
+            )
+            .andThen(placeGamePieceAuto(robot)) // Drops pre-loaded cube onto top center platform
+            .andThen(robot.driveBackwardsToConeBlue.get() // Drives backwards to cone
+            .alongWith(robot.goToAbovePickupPos.get())) // Goes to 10 inches above pickup position
+            .andThen(
+                Commands.runOnce(
                     () -> {
-                        System.out.println("Double Placement Auto Blue Start");
+                        NetworkTablesUtil.setLimelightPipeline(1); // Changes pipeline to detect cones
                     }
                 )
-                .andThen(placeConeAuto(robot)) // Drops pre-loaded cone onto top right pole
-                .andThen(robot.driveBackwardsToCubeBlue.get()) // Drives backwards to cube
-                .andThen(
-                    Commands.runOnce(
-                        () -> { 
-                            robot.clawGrip.setClawOpened(false); // Opens claw
-                            NetworkTablesUtil.setLimelightPipeline(3); // Sets vision pipeline to detect cubes
-                        }, 
-                        robot.clawGrip
-                    )
+            )
+            .andThen(robot.aimAssist.get()) // Guides claw to game piece
+            .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
+            .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+            .andThen(
+                Commands.runOnce(
+                    () -> { // Closes claw around game piece
+                        System.out.println("Double Placement Auto Blue Running");
+                        robot.clawGrip.setClawOpened(false); // Closes claw
+                    }, 
+                    robot.clawGrip
                 )
-                .andThen(robot.goToPickupPosX30.get()) // Arm goes to pickup position
-                .andThen(robot.aimAssist.get()) // Guides claw to game piece
-                .andThen(
-                    Commands.runOnce(
-                        () -> { 
-                            robot.clawGrip.setClawOpened(true); // Closes claw
-                        }, 
-                        robot.clawGrip
-                    )
+            )
+            .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+            .andThen(
+                robot.goToStartingPos.get() // Arm goes to starting position
+                .alongWith(robot.driveForwardsToGridBlue.get())
+            ) // Drive forwards to grid
+            .andThen(placeGamePieceAuto(robot)) // Drops cone onto top right pole
+            .andThen(
+                Commands.runOnce(
+                    () -> {
+                        System.out.println("Double Placement Auto Blue Finish");
+                    }
                 )
-                .andThen(robot.goToStartingPos.get() // Arm goes to starting position
-                .alongWith(robot.driveForwardsToGridBlue.get())) // Drive forwards to grid
-                .andThen(robot.goToTopCenter.get()) // Arm goes to top center position on grid
-                .andThen(
-                    Commands.runOnce(
-                        () -> {
-                            robot.clawGrip.setClawOpened(false); // Opens claw
-                        }, 
-                        robot.clawGrip
-                    )
-                .andThen(robot.goToStartingPos.get())) // Arm goes to starting position
-                .andThen(
-                    Commands.runOnce(
-                        () -> {
-                            System.out.println("Double Placement Auto Blue Finish");
-                        }
-                    )
-                );
-            
+            );
+
         } else {
             return Commands.runOnce(
+                () -> {
+                    System.out.println("Double Placement Auto Red Start");
+                }
+            )
+            .andThen(placeConeAuto(robot)) // Drops pre-loaded cone onto top right pole
+            .andThen(
+                robot.driveBackwardsToConeRed.get() // Drives backwards to cone
+                .alongWith(robot.goToAbovePickupPos.get())
+            ) // Goes to 10 inches above pickup position
+            .andThen(
+                Commands.runOnce(
                     () -> {
-                        System.out.println("Double Placement Auto Red Start");
+                        NetworkTablesUtil.setLimelightPipeline(1); // Changes pipeline to detect cones
                     }
                 )
-                .andThen(placeConeAuto(robot)) // Drops pre-loaded cone onto top right pole
-                .andThen(robot.driveBackwardsToCubeRed.get()) // Drives backwards to cube
-                .andThen(
-                    Commands.runOnce(
-                        () -> { 
-                            robot.clawGrip.setClawOpened(false); // Opens claw
-                            NetworkTablesUtil.setLimelightPipeline(3); // Sets vision pipeline to detect cubes
-                        }, 
-                        robot.clawGrip
-                    )
+            )
+            .andThen(robot.aimAssist.get()) // Guides claw to game piece
+            .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
+            .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+            .andThen(
+                Commands.runOnce(
+                    () -> { // Closes claw around game piece
+                        System.out.println("Double Placement Auto Red Running");
+                        robot.clawGrip.setClawOpened(false); // Closes claw
+                    }, 
+                    robot.clawGrip
                 )
-                .andThen(robot.goToPickupPosX30.get()) // Arm goes to pickup position
-                .andThen(robot.aimAssist.get()) // Guides claw to game piece
-                .andThen(
-                    Commands.runOnce(
-                        () -> { 
-                            robot.clawGrip.setClawOpened(true); // Closes claw
-                        }, 
-                        robot.clawGrip
-                    )
+            )
+            .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+            .andThen(
+                robot.goToStartingPos.get() // Arm goes to starting position
+                .alongWith(robot.driveForwardsToGridRed.get()) // Drive forwards to grid
+            )
+            .andThen(placeGamePieceAuto(robot)) // Drops cone onto top left pole
+            .andThen(
+                Commands.runOnce(
+                    () -> {
+                        System.out.println("Double Placement Auto Red Finish");
+                    }
                 )
-                .andThen(robot.goToStartingPos.get() // Arm goes to starting position
-                .alongWith(robot.driveForwardsToGridRed.get())) // Drive forwards to grid
-                .andThen(robot.goToTopCenter.get()) // Arm goes to top center position on grid
-                .andThen(
-                    Commands.runOnce(
-                        () -> {
-                            robot.clawGrip.setClawOpened(false); // Opens claw
-                        }, 
-                        robot.clawGrip
-                    )
-                    .andThen(robot.goToStartingPos.get()) // Arm goes to starting position
-                )
-                .andThen(
-                    Commands.runOnce(
-                        () -> {
-                            System.out.println("Double Placement Auto Red Finish");
-                        }
-                    )
-                );
-            }
+            );
+        }
     }
 
     // Might need to add calibration

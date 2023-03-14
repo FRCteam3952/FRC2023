@@ -184,28 +184,19 @@ public class RobotContainer {
 
         // Initialize autonomous commands here
 
-        taxiAuto = Autos.taxiAuto(this);
-
-        taxiForBalanceAuto = Autos.taxiForBalanceAuto(this);
-        
-        placeCubeThenTaxiAuto = Autos.placeCubeThenTaxiAuto(this);
-        
-        taxiThenBalanceAuto = Autos.taxiThenBalanceAuto(this);
-
+        taxiAuto                         = Autos.taxiAuto(this);
+        taxiForBalanceAuto               = Autos.taxiForBalanceAuto(this);
+        placeCubeThenTaxiAuto            = Autos.placeCubeThenTaxiAuto(this);
+        taxiThenBalanceAuto              = Autos.taxiThenBalanceAuto(this);
         placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(this);
-        
-        placeCubeThenConeAuto = Autos.placeCubeThenConeAuto(this);
+        placeCubeThenConeAuto            = Autos.placeCubeThenConeAuto(this);
 
         // All below autos use Pathweaver trajectories and probably don't work right now
-        balanceChargeStationAuto = Autos.balanceAuto(this);
-        
-        placeConeCommandAuto = Autos.placeConeAuto(this);
-        
-        doublePlacementAuto = Autos.doublePlacementAuto(this);
-        
-        placeConeThenBalanceAuto = Autos.placeConeThenBalanceAuto(this);
-        
-        doublePlacementThenBalanceAuto = Autos.doublePlacementThenBalanceAuto(this);
+        balanceChargeStationAuto         = Autos.balanceAuto(this);
+        placeConeCommandAuto             = Autos.placeConeAuto(this);
+        doublePlacementAuto              = Autos.doublePlacementAuto(this);
+        placeConeThenBalanceAuto         = Autos.placeConeThenBalanceAuto(this);
+        doublePlacementThenBalanceAuto   = Autos.doublePlacementThenBalanceAuto(this);
 
 
         // Adds autonomous options to dashboard
