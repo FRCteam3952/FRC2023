@@ -360,14 +360,14 @@ public final class Constants {
              * </pre>
              */
             public static final double[][] APRILTAG_LOCATIONS = new double[][]{
-                    {610.77, 42.19,  18.22, 180},
+                    {610.77, 42.19,  18.22, 180}, // RED SIDE COMMUNITY TAGS
                     {610.77, 108.19, 18.22, 180},
                     {610.77, 174.19, 18.22, 180},
-                    {636.96, 265.74, 27.38, 180},
-                    {14.25,  265.74, 27.38, 0},
+                    {636.96, 265.74, 27.38, 180}, // RED SIDE, BLUE HUMAN PLAYER TAG
+                    {14.25,  265.74, 27.38, 0}, // BLUE SIDE COMMUNITY TAGS
                     {40.45,  174.19, 18.22, 0},
                     {40.45,  108.19, 18.22, 0},
-                    {40.45,  42.19,  18.22, 0}
+                    {40.45,  42.19,  18.22, 0}  // BLUE SIDE, RED HUMAN PLAYER TAG
             };
 
             public static final double LATENCY = 0.2; //average april tag latency (I'm guessing in seconds)
