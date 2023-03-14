@@ -206,7 +206,7 @@ public final class Autos {
             }, 
             robot.clawGrip
         )
-        .andThen( robot.goToTopCenter.get() ) // Moves arm to top center position on grid to place cube
+        .andThen(robot.goToTopCenter.get()) // Moves arm to top center position on grid to place cube
         .andThen( waitCommand(0.2) ) // Waits 0.5 seconds
         .andThen(
             Commands.runOnce(
@@ -218,7 +218,7 @@ public final class Autos {
             )
         )
         .andThen( waitCommand(0.2) ) // Waits 0.5 seconds
-        .andThen( robot.goToStartingPos.get() ); // Moves arm to starting position
+        .andThen(robot.goToStartingPos.get()); // Moves arm to starting position
     }
 
     // Runs taxi for balance then balances charge station
@@ -253,7 +253,7 @@ public final class Autos {
                 }, 
                 robot.driveTrain
             )
-            .until( () -> timer.get() > 4.25 )
+            .until(() -> timer.get() > 4.25)
             .andThen(
                 Commands.runOnce(
                     () -> {
@@ -262,7 +262,7 @@ public final class Autos {
                     robot.driveTrain
                 )
             )
-            .alongWith( robot.goToAbovePickupPos.get() ) // Goes to 10 inches above pickup position
+            .alongWith(robot.goToAbovePickupPos.get()) // Goes to 10 inches above pickup position
         ) 
         .andThen(
             Commands.runOnce(
@@ -271,8 +271,8 @@ public final class Autos {
                 }
             )
         )
-        .andThen( robot.aimAssist.get() ) // Guides claw to game piece
-        .andThen( robot.goToPickupPosX30.get() ) // Goes to pickup position
+        .andThen(robot.aimAssist.get()) // Guides claw to game piece
+        .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
         .andThen( waitCommand(0.5) ) // Waits 0.5 seconds
         .andThen(
             Commands.runOnce(
@@ -306,8 +306,8 @@ public final class Autos {
                 robot.driveTrain
             )
         )
-        .andThen( robot.goToTopRight.get() ) // Arm goes to top right pole to place cone
-        .andThen( waitCommand(0.5) ) // Waits 0.5 seconds 
+        .andThen(robot.goToTopRight.get()) // Arm goes to top right pole to place cone
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds 
         .andThen(
             Commands.runOnce(
                 () -> { // Opens claw to drop cone onto pole
@@ -317,8 +317,8 @@ public final class Autos {
                 robot.clawGrip
             )
         )
-        .andThen( waitCommand(0.5) ) // Waits 0.5 seconds
-        .andThen( robot.goToStartingPos.get() );  // Arm goes to starting position
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+        .andThen(robot.goToStartingPos.get());  // Arm goes to starting position
     }
 
     // Has the robot do nothing for a set time (in seconds)
@@ -368,7 +368,7 @@ public final class Autos {
                     // Any neccessary calibration code
                 }
             )/*.alongWith(arm.calibrateArm())*/
-            .andThen( robot.driveForwardOverChargeStationRed.get() ); // Drives forward over charge station
+            .andThen(robot.driveForwardOverChargeStationRed.get()); // Drives forward over charge station
         }
     }
 
@@ -437,7 +437,7 @@ public final class Autos {
                 System.out.println("Place Cone Auto Start");
             }
         )
-        .andThen( robot.goToTopRight.get() ) // Arm goes to top right position on grid
+        .andThen(robot.goToTopRight.get()) // Arm goes to top right position on grid
         .andThen(
             Commands.runOnce(
                 () -> {
@@ -445,7 +445,7 @@ public final class Autos {
                 }, 
                 robot.clawGrip
             )
-            .andThen( robot.goToStartingPos.get())
+            .andThen(robot.goToStartingPos.get())
         ) // Returns arm to starting position
         .andThen(
             Commands.runOnce(
@@ -464,81 +464,146 @@ public final class Autos {
 
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
         if (blueTeam) {
-            return Commands.runOnce(() -> {
-                System.out.println("Double Placement Auto Blue Start");
-            }).andThen(placeConeAuto(robot)) // Drops pre-loaded cone onto top right pole
-            .andThen(robot.driveBackwardsToCubeBlue.get()) // Drives backwards to cube
-            .andThen(Commands.runOnce(() -> { 
-                robot.clawGrip.setClawOpened(false); // Opens claw
-                NetworkTablesUtil.setLimelightPipeline(3); // Sets vision pipeline to detect cubes
-            }, robot.clawGrip)).andThen(robot.goToPickupPosX30.get()) // Arm goes to pickup position
-            .andThen(robot.aimAssist.get()) // Guides claw to game piece
-            .andThen(Commands.runOnce(() -> { 
-                robot.clawGrip.setClawOpened(true); // Closes claw
-            }, robot.clawGrip))
-            .andThen(robot.goToStartingPos.get() // Arm goes to starting position
-            .alongWith(robot.driveForwardsToGridBlue.get())) // Drive forwards to grid
-            .andThen(robot.goToTopCenter.get()) // Arm goes to top center position on grid
-            .andThen(Commands.runOnce(() -> {
-                robot.clawGrip.setClawOpened(false); // Opens claw
-            }, robot.clawGrip).andThen(robot.goToStartingPos.get())) // Arm goes to starting position
-            .andThen(Commands.runOnce(() -> {
-                System.out.println("Double Placement Auto Blue Finish");
-            }));
+            return Commands.runOnce(
+                    () -> {
+                        System.out.println("Double Placement Auto Blue Start");
+                    }
+                )
+                .andThen(placeConeAuto(robot)) // Drops pre-loaded cone onto top right pole
+                .andThen(robot.driveBackwardsToCubeBlue.get()) // Drives backwards to cube
+                .andThen(
+                    Commands.runOnce(
+                        () -> { 
+                            robot.clawGrip.setClawOpened(false); // Opens claw
+                            NetworkTablesUtil.setLimelightPipeline(3); // Sets vision pipeline to detect cubes
+                        }, 
+                        robot.clawGrip
+                    )
+                )
+                .andThen(robot.goToPickupPosX30.get()) // Arm goes to pickup position
+                .andThen(robot.aimAssist.get()) // Guides claw to game piece
+                .andThen(
+                    Commands.runOnce(
+                        () -> { 
+                            robot.clawGrip.setClawOpened(true); // Closes claw
+                        }, 
+                        robot.clawGrip
+                    )
+                )
+                .andThen(robot.goToStartingPos.get() // Arm goes to starting position
+                .alongWith(robot.driveForwardsToGridBlue.get())) // Drive forwards to grid
+                .andThen(robot.goToTopCenter.get()) // Arm goes to top center position on grid
+                .andThen(
+                    Commands.runOnce(
+                        () -> {
+                            robot.clawGrip.setClawOpened(false); // Opens claw
+                        }, 
+                        robot.clawGrip
+                    )
+                .andThen(robot.goToStartingPos.get())) // Arm goes to starting position
+                .andThen(
+                    Commands.runOnce(
+                        () -> {
+                            System.out.println("Double Placement Auto Blue Finish");
+                        }
+                    )
+                );
             
         } else {
-            return Commands.runOnce(() -> {
-                System.out.println("Double Placement Auto Red Start");
-            }).andThen(placeConeAuto(robot)) // Drops pre-loaded cone onto top right pole
-            .andThen(robot.driveBackwardsToCubeRed.get()) // Drives backwards to cube
-            .andThen(Commands.runOnce(() -> { 
-                robot.clawGrip.setClawOpened(false); // Opens claw
-                NetworkTablesUtil.setLimelightPipeline(3); // Sets vision pipeline to detect cubes
-            }, robot.clawGrip)).andThen(robot.goToPickupPosX30.get()) // Arm goes to pickup position
-            .andThen(robot.aimAssist.get()) // Guides claw to game piece
-            .andThen(Commands.runOnce(() -> { 
-                robot.clawGrip.setClawOpened(true); // Closes claw
-            }, robot.clawGrip))
-            .andThen(robot.goToStartingPos.get() // Arm goes to starting position
-            .alongWith(robot.driveForwardsToGridRed.get())) // Drive forwards to grid
-            .andThen(robot.goToTopCenter.get()) // Arm goes to top center position on grid
-            .andThen(Commands.runOnce(() -> {
-                robot.clawGrip.setClawOpened(false); // Opens claw
-            }, robot.clawGrip).andThen(robot.goToStartingPos.get())) // Arm goes to starting position
-            .andThen(Commands.runOnce(() -> {
-                System.out.println("Double Placement Auto Red Finish");
-            }));
-        }
+            return Commands.runOnce(
+                    () -> {
+                        System.out.println("Double Placement Auto Red Start");
+                    }
+                )
+                .andThen(placeConeAuto(robot)) // Drops pre-loaded cone onto top right pole
+                .andThen(robot.driveBackwardsToCubeRed.get()) // Drives backwards to cube
+                .andThen(
+                    Commands.runOnce(
+                        () -> { 
+                            robot.clawGrip.setClawOpened(false); // Opens claw
+                            NetworkTablesUtil.setLimelightPipeline(3); // Sets vision pipeline to detect cubes
+                        }, 
+                        robot.clawGrip
+                    )
+                )
+                .andThen(robot.goToPickupPosX30.get()) // Arm goes to pickup position
+                .andThen(robot.aimAssist.get()) // Guides claw to game piece
+                .andThen(
+                    Commands.runOnce(
+                        () -> { 
+                            robot.clawGrip.setClawOpened(true); // Closes claw
+                        }, 
+                        robot.clawGrip
+                    )
+                )
+                .andThen(robot.goToStartingPos.get() // Arm goes to starting position
+                .alongWith(robot.driveForwardsToGridRed.get())) // Drive forwards to grid
+                .andThen(robot.goToTopCenter.get()) // Arm goes to top center position on grid
+                .andThen(
+                    Commands.runOnce(
+                        () -> {
+                            robot.clawGrip.setClawOpened(false); // Opens claw
+                        }, 
+                        robot.clawGrip
+                    )
+                    .andThen(robot.goToStartingPos.get()) // Arm goes to starting position
+                )
+                .andThen(
+                    Commands.runOnce(
+                        () -> {
+                            System.out.println("Double Placement Auto Red Finish");
+                        }
+                    )
+                );
+            }
     }
 
     // Might need to add calibration
     public static CommandBase placeConeThenBalanceAuto(RobotContainer robot) {
 
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
-        return Commands.runOnce(() -> {
-            System.out.println("Place Cone then Balance Auto Start");
-        }).andThen(balanceAutoFirstHalf(robot)) // Drives forward over charge station to grid
-        .andThen(placeConeAuto(robot)) // Places pre-loaded cone on top right pole
-        .andThen((balanceAutoSecondHalf(robot)) // Drives backwards onto charge station and balances it continuously
-        .andThen(Commands.runOnce(() -> {
-            System.out.println("Place Cone then Balance Auto Finish"); // Shouldn't print until auton is over, if at all
-        })));
+
+        return Commands.runOnce(
+                () -> {
+                    System.out.println("Place Cone then Balance Auto Start");
+                }
+            )
+            .andThen(balanceAutoFirstHalf(robot)) // Drives forward over charge station to grid
+            .andThen(placeConeAuto(robot)) // Places pre-loaded cone on top right pole
+            .andThen(
+                balanceAutoSecondHalf(robot) // Drives backwards onto charge station and balances it continuously
+                .andThen(
+                    Commands.runOnce(
+                        () -> {
+                            System.out.println("Place Cone then Balance Auto Finish"); // Shouldn't print until auton is over, if at all
+                        }
+                    )
+                )
+            );
     }
+
+    
 
     // Runs double placement then balances charge station
     // Might not use, don't know if there is enough time
     public static CommandBase doublePlacementThenBalanceAuto(RobotContainer robot) {
         
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
-        return Commands.runOnce(() -> {
-            System.out.println("Double Placement then Balance Auto Start");
-        })
-        .andThen(doublePlacementAuto(robot)) // Runs double placement command
-        .andThen(blueTeam ? robot.driveBackwardsOntoChargeStationDPBlue.get() : robot.driveBackwardsOntoChargeStationDPRed.get()) // Drives backwards onto charge station
-        .andThen(robot.balanceCommand.get()) // Balances the charge station continuously
-        .andThen(Commands.runOnce(() -> {
-            System.out.println("Double Placement then Balance Auto Finish"); // Shouldn't print until auton is over, if at all
-        }));
+        return Commands.runOnce(
+                () -> {
+                    System.out.println("Double Placement then Balance Auto Start");
+                }
+            )
+            .andThen(doublePlacementAuto(robot)) // Runs double placement command
+            .andThen(blueTeam ? robot.driveBackwardsOntoChargeStationDPBlue.get() : robot.driveBackwardsOntoChargeStationDPRed.get()) // Drives backwards onto charge station
+            .andThen(robot.balanceCommand.get()) // Balances the charge station continuously
+            .andThen(
+                Commands.runOnce(
+                    () -> {
+                        System.out.println("Double Placement then Balance Auto Finish"); // Shouldn't print until auton is over, if at all
+                    }
+                )
+            );
     }
 
     private Autos() {
