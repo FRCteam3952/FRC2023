@@ -20,6 +20,7 @@ public class PoseAimArmCommand extends CommandBase{
 
     @Override
     public void initialize() {
+        arm.setManualControlMode(false);
         /*int targetPoseID = NetworkTablesUtil.getKeyInteger();
         switch(targetPoseID){
             case 1:
@@ -66,7 +67,7 @@ public class PoseAimArmCommand extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-
+        arm.setManualControlMode(true);
     }
 
     @Override
