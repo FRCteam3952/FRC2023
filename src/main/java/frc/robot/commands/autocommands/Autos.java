@@ -473,16 +473,18 @@ public final class Autos {
     // Places pre-loaded cone, drives backwards to pick up cube, drives forwards to place cube on grid
     public static CommandBase doublePlacementAuto(RobotContainer robot) {
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
+        
         // TODO someone make this code into smaller chunks or something
-        if (blueTeam) {
-            return Commands.runOnce(
+        return Commands.runOnce(
                 () -> {
-                    System.out.println("Double Placement Auto Blue Start");
+                    System.out.println("Double Placement Auto Start");
                 }
             )
             .andThen(placeGamePieceAuto(robot)) // Drops pre-loaded cube onto top center platform
-            .andThen(robot.driveBackwardsToConeBlue.get() // Drives backwards to cone
-            .alongWith(robot.goToAbovePickupPos.get())) // Goes to 10 inches above pickup position
+            .andThen(
+                ( blueTeam ? robot.driveBackwardsToConeBlue.get() : robot.driveBackwardsToConeRed.get() ) // Drives backwards to cone
+                .alongWith(robot.goToAbovePickupPos.get()) // Goes to 10 inches above pickup position
+            )
             .andThen(
                 Commands.runOnce(
                     () -> {
@@ -515,61 +517,16 @@ public final class Autos {
                     }
                 )
             );
-
-        } else {
-            return Commands.runOnce(
-                () -> {
-                    System.out.println("Double Placement Auto Red Start");
-                }
-            )
-            .andThen(placeGamePieceAuto(robot)) // Drops pre-loaded cube onto top center platform
-            .andThen(
-                robot.driveBackwardsToConeRed.get() // Drives backwards to cone
-                .alongWith(robot.goToAbovePickupPos.get()) // Goes to 10 inches above pickup position
-            ) 
-            .andThen(
-                Commands.runOnce(
-                    () -> {
-                        NetworkTablesUtil.setLimelightPipeline(1); // Changes pipeline to detect cones
-                    }
-                )
-            )
-            .andThen(robot.aimAssist.get()) // Guides claw to game piece
-            .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
-            .andThen(waitCommand(0.5)) // Waits 0.5 seconds
-            .andThen(
-                Commands.runOnce(
-                    () -> { // Closes claw around game piece
-                        System.out.println("Double Placement Auto Red Running");
-                        robot.clawGrip.setClawOpened(false); // Closes claw
-                    }, 
-                    robot.clawGrip
-                )
-            )
-            .andThen(waitCommand(0.5)) // Waits 0.5 seconds
-            .andThen(
-                robot.goToStartingPos.get() // Arm goes to starting position
-                .alongWith(robot.driveForwardsToGridRed.get()) // Drive forwards to grid
-            )
-            .andThen(placeGamePieceAuto(robot)) // Drops cone onto top left pole
-            .andThen(
-                Commands.runOnce(
-                    () -> {
-                        System.out.println("Double Placement Auto Red Finish");
-                    }
-                )
-            );
-        }
     }
 
     // Might need to add calibration
     public static CommandBase placeConeThenBalanceAuto(RobotContainer robot) {
-
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
+        String teamName = blueTeam ? "blue" : "red";
 
         return Commands.runOnce(
                 () -> {
-                    System.out.println("Place Cone then Balance Auto Start");
+                    System.out.println(String.format("Place Cone then Balance Auto %s Start", teamName));
                 }
             )
             .andThen(balanceAutoFirstHalf(robot)) // Drives forward over charge station to grid
@@ -579,7 +536,8 @@ public final class Autos {
                 .andThen(
                     Commands.runOnce(
                         () -> {
-                            System.out.println("Place Cone then Balance Auto Finish"); // Shouldn't print until auton is over, if at all
+                            // Shouldn't print until auton is over, if at all
+                            System.out.println(String.format("Place Cone then Balance Auto %s Finish", teamName));
                         }
                     )
                 )
