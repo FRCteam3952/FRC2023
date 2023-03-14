@@ -13,6 +13,7 @@ public class RobotGyro {
     static {
         gyro.setYawAxis(ADIS16470_IMU.IMUAxis.kZ);
         gyro.calibrate();
+        gyro.reset();
     }
 
     /**

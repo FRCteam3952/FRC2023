@@ -3,7 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import java.util.List;
 import java.util.function.Supplier;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -82,19 +86,21 @@ public class RobotContainer {
     public final Supplier<GoTowardsCoordinatesCommandAuto> goToAbovePickupPos      = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y + 10, 0}, 0.4, 0.4); 
 
     public final Supplier<GoTowardsCoordinatesCommandAuto> goTowardsPickupCommand  = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Implement later during downtime
-    
 
-    // Command generators for trajectories
+
     public CommandGenerator driveForwardOverChargeStationBlue     = new CommandGenerator("DriveForwardOverChargeStationBlue");
     public CommandGenerator driveBackwardsOntoChargeStationBlue   = new CommandGenerator("DriveBackwardsOntoChargeStationBlue");
     public CommandGenerator driveForwardOverChargeStationRed      = new CommandGenerator("DriveForwardOverChargeStationRed");
     public CommandGenerator driveBackwardsOntoChargeStationRed    = new CommandGenerator("DriveBackwardsOntoChargeStationRed");
-    public CommandGenerator driveBackwardsToCubeBlue              = new CommandGenerator("DriveBackwardsToCubeBlue");
+    public CommandGenerator driveBackwardsToConeBlue              = new CommandGenerator("DriveBackwardsToConeBlue");
     public CommandGenerator driveForwardsToGridBlue               = new CommandGenerator("DriveForwardsToGridBlue");
-    public CommandGenerator driveBackwardsToCubeRed               = new CommandGenerator("DriveBackwardsToCubeRed");
+    public CommandGenerator driveBackwardsToConeRed               = new CommandGenerator("DriveBackwardsToConeRed");
     public CommandGenerator driveForwardsToGridRed                = new CommandGenerator("DriveForwardsToGridRed");
     public CommandGenerator driveBackwardsOntoChargeStationDPRed  = new CommandGenerator("DriveBackwardsOntoChargeStationDPRed");
     public CommandGenerator driveBackwardsOntoChargeStationDPBlue = new CommandGenerator("DriveBackwardsOntoChargeStationDPBlue");
+    public CommandGenerator moveOneMeter                          = new CommandGenerator("MoveOneMeter");
+    public CommandGenerator driveBackwardsToCubeBlue              = new CommandGenerator("DriveBackwardsToCubeBlue");
+    public CommandGenerator driveBackwardsToCubeRed               = new CommandGenerator("DriveBackwardsToCubeRed");
 
 
     private Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
@@ -163,6 +169,9 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
+        // var traj = this.driveTrain.generateTrajectory(new Pose2d(0, 0, new Rotation2d()), List.of(), new Pose2d(1, 0, new Rotation2d()), false);
+        // System.out.println(traj);
+        // return this.driveTrain.generateRamseteCommand(traj);
         return m_chooser.getSelected();
     }
 
@@ -210,6 +219,8 @@ public class RobotContainer {
         m_chooser.addOption("Place Cube then Cone Auto", placeCubeThenConeAuto);
 
         // These autons use Pathweaver, not using right now
+        m_chooser.addOption("Move one meter test", moveOneMeter.get());
+        m_chooser.addOption("Double placement blue test", driveForwardsToGridBlue.get().andThen(driveBackwardsToConeBlue.get()));
         m_chooser.addOption("Balance Charge Station Auto", balanceChargeStationAuto);
         m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
@@ -238,8 +249,8 @@ public class RobotContainer {
         this.arm.setPIDControlState(false);
         
         this.driveTrain.setDefaultCommand(this.manualDrive);
-        this.arm.setDefaultCommand(this.armControl);
-        this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand);
-        this.clawRotation.setDefaultCommand(this.clawRotateCommand);
+        this.arm.setDefaultCommand(this.armControl.get());
+        this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand.get());
+        this.clawRotation.setDefaultCommand(this.clawRotateCommand.get());
     }
 }

@@ -191,12 +191,6 @@ public final class Autos {
         );
     }
 
-    // Places cube on top center platform then runs taxi
-    public static CommandBase placeCubeThenTaxiAuto(RobotContainer robot) {
-        return placeCubeAuto(robot) // Places cube on top center grid position
-        .andThen( taxiAuto(robot) ); // Initiates taxi (drives backwards)
-    }
-
     // Places cube on top center platform
     public static CommandBase placeCubeAuto(RobotContainer robot) {
         return Commands.runOnce(
@@ -221,6 +215,28 @@ public final class Autos {
         .andThen(robot.goToStartingPos.get()); // Moves arm to starting position
     }
 
+    // Places cube on top center platform then runs taxi
+    public static CommandBase placeCubeThenTaxiAuto(RobotContainer robot) {
+        return placeGamePieceAuto(robot) // Places cube on top center grid position
+        .andThen(taxiAuto(robot)); // Initiates taxi (drives backwards)
+    }
+
+    // Places cube on top center platform
+    public static CommandBase placeGamePieceAuto(RobotContainer robot) {
+        return Commands.runOnce(() -> { // Closes the claw around pre-loaded cube
+            System.out.println("Place Cube Auto Start");
+            robot.clawGrip.setClawOpened(false); // Closes claw
+        }, robot.clawGrip)
+        .andThen(robot.goToTopCenter.get()) // Moves arm to top center position on grid to place cube
+        .andThen(waitCommand(0.2)) // Waits 0.5 seconds
+        .andThen(Commands.runOnce(() -> { // Opens claw to drop pre-loaded cube onto top center platform
+            System.out.println("Place Cube Auto Running");
+            robot.clawGrip.setClawOpened(true); // Opens claw
+        }, robot.clawGrip))
+        .andThen(waitCommand(0.2)) // Waits 0.5 seconds
+        .andThen(robot.goToStartingPos.get()); // Moves arm to starting position
+    }
+
     // Runs taxi for balance then balances charge station
     public static CommandBase taxiThenBalanceAuto(RobotContainer robot) {
         return Commands.runOnce(
@@ -234,12 +250,6 @@ public final class Autos {
             .until(() -> timer.get() > 5) // reformatting, does this need to be in the andThen block?
         )
         .andThen(robot.balanceCommand.get());
-    }
-
-    // Places cube on top center platform, runs taxi for balance, then balances charge station
-    public static CommandBase placeCubeThenTaxiThenBalanceAuto(RobotContainer robot) {
-        return placeCubeAuto(robot)
-        .andThen( taxiThenBalanceAuto(robot) );
     }
 
     // Double placement: places cube on top center platform, drives backwards to pick up cone, drives forward towards grid, places cone on top right pole
@@ -306,19 +316,12 @@ public final class Autos {
                 robot.driveTrain
             )
         )
-        .andThen(robot.goToTopRight.get()) // Arm goes to top right pole to place cone
-        .andThen(waitCommand(0.5)) // Waits 0.5 seconds 
-        .andThen(
-            Commands.runOnce(
-                () -> { // Opens claw to drop cone onto pole
-                    System.out.println("Place Cube then Cone Auto Running");
-                    robot.clawGrip.setClawOpened(true); // Opens claw
-                }, 
-                robot.clawGrip
-            )
-        )
-        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
-        .andThen(robot.goToStartingPos.get());  // Arm goes to starting position
+        .andThen(robot.goToTopRight.get()); // Arm goes to top right pole to place cone
+    }
+
+    public static CommandBase placeCubeThenTaxiThenBalanceAuto(RobotContainer robot) {
+        return placeGamePieceAuto(robot)
+        .andThen(taxiThenBalanceAuto(robot));
     }
 
     // Has the robot do nothing for a set time (in seconds)
@@ -343,10 +346,14 @@ public final class Autos {
     }
 
     /*
-     * EVERYTHING BELOW USES PATHWEAVER TRAJECTORIES, WHICH CURRENTLY PROBSBLY DON'T WORK
-     * TRY TO GET THEM WORKING BEFORE LA REGIONALS, BUT NOT THE MOST IMPORTANT 
-     * THERES A LOT OF THINGS THAT NEED TO BE ADJUSTED
+     * EVERYTHING BELOW USES PATHWEAVER TRAJECTORIES, WHICH CURRENTLY MIGHT WORK
+     * TRY TO GET THEM WORKING BEFORE LA REGIONALS, BUT IS NOW PRETTY IMPORTANT
+     * THERES A LOT OF THINGS THAT NEED TO BE ADJUSTED (STILL TRUE)
      */
+
+    public static CommandBase moveOneMeter(Command moveOneMeter) {
+        return (CommandBase) moveOneMeter;
+    }
 
 
     // First half of balance auto
