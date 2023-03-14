@@ -33,11 +33,11 @@ public final class Constants {
         /**
          * Measured from the pivot of arm 1 to the pivot of arm 2.
          */
-        public static final double LIMB1_LENGTH = 28.5;
+        public static final double LIMB1_LENGTH = 28.5d;
         /**
          * Measured from the pivot of arm 2 to the middle of the claw.
          */
-        public static final double LIMB2_LENGTH = 29d;
+        public static final double LIMB2_LENGTH = 32d;
 
         public static final double HUMAN_PLAYER_HEIGHT = 39;
 
@@ -52,7 +52,7 @@ public final class Constants {
         public static final double STARTING_Y = 0;
         public static final double STARTING_Z = 0;
 
-        public static final double PICK_UP_POSITION_Y = 2;
+        public static final double PICK_UP_POSITION_Y = 10;
 
         public static final double PID_TOLERANCE = 1.0;
 
