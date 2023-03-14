@@ -3,7 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import java.util.List;
 import java.util.function.Supplier;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -165,6 +169,9 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
+        // var traj = this.driveTrain.generateTrajectory(new Pose2d(0, 0, new Rotation2d()), List.of(), new Pose2d(1, 0, new Rotation2d()), false);
+        // System.out.println(traj);
+        // return this.driveTrain.generateRamseteCommand(traj);
         return m_chooser.getSelected();
     }
 
@@ -209,7 +216,8 @@ public class RobotContainer {
         m_chooser.addOption("Place Cube then Cone Auto", placeCubeThenConeAuto);
 
         // These autons use Pathweaver, not using right now
-        m_chooser.addOption("Move one meter", moveOneMeter.get());
+        m_chooser.addOption("Move one meter test", moveOneMeter.get());
+        m_chooser.addOption("Double placement blue test", driveForwardsToGridBlue.get().andThen(driveBackwardsToCubeBlue.get()));
         m_chooser.addOption("Balance Charge Station Auto", balanceChargeStationAuto);
         m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
