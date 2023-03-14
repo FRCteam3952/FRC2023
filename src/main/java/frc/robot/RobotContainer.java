@@ -96,6 +96,7 @@ public class RobotContainer {
     public CommandGenerator driveForwardsToGridRed                = new CommandGenerator("paths/DriveForwardsToGridRed.wpilib.json");
     public CommandGenerator driveBackwardsOntoChargeStationDPRed  = new CommandGenerator("paths/DriveBackwardsOntoChargeStationDPRed.wpilib.json");
     public CommandGenerator driveBackwardsOntoChargeStationDPBlue = new CommandGenerator("paths/DriveBackwardsOntoChargeStationDPBlue.wpilib.json");
+    public CommandGenerator moveOneMeter                          = new CommandGenerator("paths/MoveOneMeter.wpilib.json");
 
 
     private Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
@@ -208,6 +209,7 @@ public class RobotContainer {
         m_chooser.addOption("Place Cube then Cone Auto", placeCubeThenConeAuto);
 
         // These autons use Pathweaver, not using right now
+        m_chooser.addOption("Move one meter", moveOneMeter.get());
         m_chooser.addOption("Balance Charge Station Auto", balanceChargeStationAuto);
         m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);

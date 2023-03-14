@@ -233,6 +233,10 @@ public final class Autos {
      * THERES A LOT OF THINGS THAT NEED TO BE ADJUSTED
      */
 
+    public static CommandBase moveOneMeter(Command moveOneMeter) {
+        return (CommandBase) moveOneMeter;
+    }
+
 
     // First half of balance auto
     public static CommandBase balanceAutoFirstHalf(Command driveForwardOverChargeStationBlueCommand, 

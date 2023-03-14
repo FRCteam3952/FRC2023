@@ -22,7 +22,6 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -64,9 +63,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     //private boolean swapDirection = false; commented because I don't like yellow file
 
     //private boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
-
-    private final Encoder m_leftEncoder;
-    private final Encoder m_rightEncoder;
     private static final int kEncoderResolution = 4096;
 
     private final DifferentialDrivePoseEstimator m_poseEstimator;
@@ -88,6 +84,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
             encoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
         }
 
+        resetEncoders();
+
         this.leftMotorGroup = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
         this.rightMotorGroup = new MotorControllerGroup(frontRightMotor, rearRightMotor);
 
@@ -96,25 +94,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.frontLeftMotor.setInverted(true);
         this.rearLeftMotor.setInverted(true);
 
-        this.m_leftEncoder = new Encoder(0, 1);
-        this.m_rightEncoder = new Encoder(2, 3);
-
-        this.m_leftEncoder.setDistancePerPulse(2 * Math.PI * DriveConstants.K_WHEEL_RADIUS / kEncoderResolution);
-        this.m_rightEncoder.setDistancePerPulse(2 * Math.PI * DriveConstants.K_WHEEL_RADIUS / kEncoderResolution);
-
-        this.m_leftEncoder.reset();
-        this.m_rightEncoder.reset();
-
         this.m_poseEstimator = new DifferentialDrivePoseEstimator(
             DriveConstants.DRIVE_KINEMATICS,
             RobotGyro.getRotation2d(),
-            m_leftEncoder.getDistance(), 
-            m_rightEncoder.getDistance(), 
+            frontLeftEncoder.getPosition(), 
+            frontRightEncoder.getPosition(), 
             new Pose2d(), 
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02,0.02,0.01), 
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1,0.1,0.01)
         );
-
         this.joystick = joystick;
 
         this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
@@ -135,6 +123,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
+        System.out.println("L VOLTS: " + leftVolts + ", R VOLTS; " + rightVolts);
         this.leftMotorGroup.setVoltage(leftVolts);
         this.rightMotorGroup.setVoltage(rightVolts);
         this.tankDrive.feed();
@@ -177,12 +166,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     public void updateOdometry() {
-        m_poseEstimator.update(RobotGyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance()); //update pose
+        m_poseEstimator.update(RobotGyro.getRotation2d(), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition()); //update pose
     
         // Also apply vision measurements
-        m_poseEstimator.addVisionMeasurement(
-            NetworkTablesUtil.getJetsonPoseMeters(),
-            Timer.getFPGATimestamp() - AprilTagConstants.LATENCY);
+        // m_poseEstimator.addVisionMeasurement(
+        //     NetworkTablesUtil.getJetsonPoseMeters(),
+        //    Timer.getFPGATimestamp() - AprilTagConstants.LATENCY);
     }
 
     // Generate command for following a trajectory
@@ -232,7 +221,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
                 DriveConstants.DRIVE_KINEMATICS,
                 this::getWheelSpeeds,
                 new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
-             new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
+                new PIDController(DriveConstants.P_DRIVE_VEL, 0, 0),
                 // RamseteCommand passes volts to the callback
                 this::tankDriveVolts,
                 this
@@ -242,7 +231,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // this.resetOdometry(trajectory.getInitialPose());
 
         // Reset odometry, run path following command, then stop at the end.
-        return /*this.resetOdometryCommand(trajectory.getInitialPose()).andThen*/(ramseteCommand).andThen(() -> this.tankDriveVolts(0, 0), this);
+        return this.resetOdometryCommand(trajectory.getInitialPose()).andThen(ramseteCommand).andThen(() -> this.tankDriveVolts(0, 0), this);
 
         // ORIGINAL:
         // Run path following command, then stop at the end.
@@ -273,41 +262,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
             RobotGyro.resetGyroAngle();
         }
 
+        // System.out.println(pose);
+
+        System.out.println("FL: " + frontLeftEncoder.getPosition() + ", FR: " + frontRightEncoder.getPosition() + ", RL: " + rearLeftEncoder.getPosition() + ", RR: " + rearRightEncoder.getPosition());
+
         // String currKey = NetworkTablesUtil.getKeyString();
-        
-        /*
-        // Generates trajectories from the robot's current position to a specific April Tag and schedules them to be followed
-        if (blueTeam) { // TODO: adjust tag id's to be correct
-            switch (currKey) {
-                case "q":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(1), false).schedule();
-                    break;
-                case "w":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(2), false).schedule();
-                    break;
-                case "e":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(3), false).schedule();
-                    break;
-                default:
-                    // System.out.println("No tag selected");
-                    break;
-            }
-        } else {
-            switch (currKey) {
-                case "q":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(6), false).schedule();
-                    break;
-                case "w":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(7), false).schedule();
-                    break;
-                case "e":
-                    generateRamseteCommand(this.getPoseInches(), AprilTagUtil.poseOfTag2d(8), false).schedule();
-                    break;
-                default:
-                    // System.out.println("No tag selected");
-                    break;
-            }
-        } */
         
         // var pose = odometry.getPoseMeters();
 

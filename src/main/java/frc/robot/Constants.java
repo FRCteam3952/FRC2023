@@ -26,8 +26,17 @@ public final class Constants {
     public static class ArmConstants {
 
         // All constants are in inches
-        public static final double ORIGIN_HEIGHT = 42d;
-        public static final double LIMB1_LENGTH = 32.5;
+        /**
+         * Measured from the floor to the pivot of arm 1.
+         */
+        public static final double ORIGIN_HEIGHT = 50d;
+        /**
+         * Measured from the pivot of arm 1 to the pivot of arm 2.
+         */
+        public static final double LIMB1_LENGTH = 28.5;
+        /**
+         * Measured from the pivot of arm 2 to the middle of the claw.
+         */
         public static final double LIMB2_LENGTH = 29d;
 
         public static final double HUMAN_PLAYER_HEIGHT = 39;
@@ -134,16 +143,16 @@ public final class Constants {
      * Constants relating to the drive train
      */
     public static class DriveConstants {// All constants below are examples; must correct to robot's specification when it is finished being built
-        public static final double KS_VOLTS = 0.22;
-        public static final double KV_VOLTS_SECONDS_PER_METER = 1.98;
-        public static final double KA_VOLTS_SECONDS_SQ_PER_METER = 0.2;
-        public static final double P_DRIVE_VEL = 8.5;
+        public static final double KS_VOLTS = 0.94462; // 0.23433;
+        public static final double KV_VOLTS_SECONDS_PER_METER = 3.3159; // 3.1434;
+        public static final double KA_VOLTS_SECONDS_SQ_PER_METER = 0.58863; // 0.38465;
+        public static final double P_DRIVE_VEL = 4.8822; // 3.9965;
         public static final double K_WHEEL_RADIUS = 0.0508;
 
-        public static final double TRACKWIDTH_METERS = 0.5842;
+        public static final double TRACKWIDTH_METERS = 1.9248;
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACKWIDTH_METERS);
 
-        public static final double ENCODER_CONVERSION_FACTOR = 1; //find out experimentally or some other way
+        public static final double ENCODER_CONVERSION_FACTOR = 0.0397368; //find out experimentally or some other way
 
         public static final double TURN_CONSTANT = 0.02; // was 0.015
         public static final double ANGLE_DELTA = 1;
