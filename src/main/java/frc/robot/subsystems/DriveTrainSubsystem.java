@@ -125,7 +125,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         //System.out.println("L VOLTS: " + leftVolts + ", R VOLTS; " + rightVolts);
         this.leftMotorGroup.setVoltage(leftVolts);
-        this.rightMotorGroup.setVoltage(leftVolts);
+        this.rightMotorGroup.setVoltage(rightVolts);
         this.tankDrive.feed();
     }
 
@@ -196,7 +196,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         TrajectoryConfig config = new TrajectoryConfig(TrajectoryConstants.MAX_SPEED_METERS_PER_SECOND, TrajectoryConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
                 // Add kinematics to ensure max speed is actually obeyed
                 .setKinematics(DriveConstants.DRIVE_KINEMATICS)
-                // Apply the voltage constraint
+                // Apply the voltage constraint   
                 .addConstraint(autoVoltageConstraint)
                 // Set reversed
                 .setReversed(reversed);
@@ -252,9 +252,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
         double[] sendPose = {pose.getX(), pose.getY(), pose.getRotation().getRadians()};
         NetworkTablesUtil.getEntry("robot", "drive_odometry").setDoubleArray(sendPose);
 
-        var wheelspeeds = getWheelSpeeds();
-        // System.out.println("CURRENT VELOCITY: L " + wheelspeeds.leftMetersPerSecond + ", R " + wheelspeeds.rightMetersPerSecond);
-
         // System.out.println("Gyro Yaw: " + RobotGyro.getGyroAngleDegreesYaw());
         // System.out.println("Gyro Roll: " + RobotGyro.getGyroAngleDegreesRoll());
         // System.out.println("Gyro Pitch: " + RobotGyro.getGyroAngleDegreesPitch());
@@ -264,9 +261,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
             RobotGyro.resetGyroAngle();
         }
 
-        System.out.println(pose);
+        // System.out.println(pose);
 
-        // System.out.println("FL: " + frontLeftEncoder.getPosition() + ", FR: " + frontRightEncoder.getPosition() + ", RL: " + rearLeftEncoder.getPosition() + ", RR: " + rearRightEncoder.getPosition());
+        System.out.println("FL: " + frontLeftEncoder.getPosition() + ", FR: " + frontRightEncoder.getPosition() + ", RL: " + rearLeftEncoder.getPosition() + ", RR: " + rearRightEncoder.getPosition());
 
         // String currKey = NetworkTablesUtil.getKeyString();
         
