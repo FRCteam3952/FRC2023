@@ -81,6 +81,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
         for (RelativeEncoder encoder : encoders) {
             encoder.setPositionConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
+            encoder.setVelocityConversionFactor(DriveConstants.ENCODER_CONVERSION_FACTOR);
         }
 
         resetEncoders();
@@ -122,9 +123,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        System.out.println("L VOLTS: " + leftVolts + ", R VOLTS; " + rightVolts);
+        //System.out.println("L VOLTS: " + leftVolts + ", R VOLTS; " + rightVolts);
         this.leftMotorGroup.setVoltage(leftVolts);
-        this.rightMotorGroup.setVoltage(rightVolts);
+        this.rightMotorGroup.setVoltage(leftVolts);
         this.tankDrive.feed();
     }
 
@@ -146,7 +147,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(frontLeftEncoder.getVelocity(), frontRightEncoder.getVelocity());
+        return new DifferentialDriveWheelSpeeds(frontLeftEncoder.getVelocity() / 60d, frontRightEncoder.getVelocity() / 60d);
     }
 
     public Pose2d getPoseMeters() {
@@ -251,6 +252,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
         double[] sendPose = {pose.getX(), pose.getY(), pose.getRotation().getRadians()};
         NetworkTablesUtil.getEntry("robot", "drive_odometry").setDoubleArray(sendPose);
 
+        var wheelspeeds = getWheelSpeeds();
+        // System.out.println("CURRENT VELOCITY: L " + wheelspeeds.leftMetersPerSecond + ", R " + wheelspeeds.rightMetersPerSecond);
+
         // System.out.println("Gyro Yaw: " + RobotGyro.getGyroAngleDegreesYaw());
         // System.out.println("Gyro Roll: " + RobotGyro.getGyroAngleDegreesRoll());
         // System.out.println("Gyro Pitch: " + RobotGyro.getGyroAngleDegreesPitch());
@@ -260,9 +264,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
             RobotGyro.resetGyroAngle();
         }
 
-        // System.out.println(pose);
+        System.out.println(pose);
 
-        System.out.println("FL: " + frontLeftEncoder.getPosition() + ", FR: " + frontRightEncoder.getPosition() + ", RL: " + rearLeftEncoder.getPosition() + ", RR: " + rearRightEncoder.getPosition());
+        // System.out.println("FL: " + frontLeftEncoder.getPosition() + ", FR: " + frontRightEncoder.getPosition() + ", RL: " + rearLeftEncoder.getPosition() + ", RR: " + rearRightEncoder.getPosition());
 
         // String currKey = NetworkTablesUtil.getKeyString();
         
