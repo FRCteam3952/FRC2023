@@ -67,42 +67,40 @@ public class RobotContainer {
     public final ManualDriveCommand manualDrive = new ManualDriveCommand(driveTrain, driverController);
 
     
-    // these ones got changed to xbox
-    public final ArmTestCommand testArmControl = new ArmTestCommand(arm, xboxController);
-    public final ArmControlCommand armControl = new ArmControlCommand(arm, clawGrip, xboxController);
-    
-    public final Supplier<AimAssistCommand> newAimAssistCommand = () -> new AimAssistCommand(arm);
-    public final Supplier<GoTowardsCoordinatesCommandAuto> newGoTowardsTopCenter = () -> new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_CENTER_POS, 0.4, 0.4);
-    public final Supplier<GoTowardsCoordinatesCommandAuto> newGoTowardsCenterMiddle = () -> new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.CENTER_MIDDLE_POS, 0.4, 0.4);
-    public final Supplier<GoTowardsCoordinatesCommandAuto> newGoTowardsTopRight = () -> new GoTowardsCoordinatesCommandAuto(arm,   PositionConstants.TOP_RIGHT_POS, 0.4, 0.4);
-    public final Supplier<GoTowardsCoordinatesCommandAuto> newGoTowardsCenterRight = () -> new GoTowardsCoordinatesCommandAuto(arm,   PositionConstants.CENTER_RIGHT_POS, 0.4, 0.4);
-    public final Supplier<GoTowardsCoordinatesCommandAuto> newGoTowardsStartingPos = () -> new GoTowardsCoordinatesCommandAuto(arm,  ArmConstants.STARTING_COORDS , 0.2, 0.4);
-    public final Supplier<BalanceChargeStationCommand> newBalanceCommand = () -> new BalanceChargeStationCommand(driveTrain);
-    
-    public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4);
-    public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos2 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos3 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Only here because compositions can't use commands that have already been used for other compositions
-    public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos4 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y + 10, 0}, 0.4, 0.4);
-    public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos5 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y + 10, 0}, 0.4, 0.4);
-    public final GoTowardsCoordinatesCommandAuto goTowardsPickupPos6 = new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y + 10, 0}, 0.4, 0.4);
+    // Command suppliers
+    public final Supplier<ArmTestCommand>                  testArmControl          = () -> new ArmTestCommand(arm, xboxController);
+    public final Supplier<ArmControlCommand>               armControl              = () -> new ArmControlCommand(arm, clawGrip, xboxController);
+    public final Supplier<AimAssistCommand>                aimAssist               = () -> new AimAssistCommand(arm);
 
-    public final Supplier<GoTowardsCoordinatesCommandAuto> newGoTowardsPickupCommand = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Implement later during downtime
+    public final Supplier<ClawOpenandCloseCommand>         clawOpenandCloseCommand = () -> new ClawOpenandCloseCommand(clawGrip, xboxController);
+    public final Supplier<ClawRotateCommand>               clawRotateCommand       = () -> new ClawRotateCommand(clawRotation, xboxController);
 
-    public final ClawOpenandCloseCommand clawOpenandCloseCommand = new ClawOpenandCloseCommand(clawGrip, xboxController);
-    public final ClawRotateCommand clawRotateCommand = new ClawRotateCommand(clawRotation, xboxController);
-    // end change to xbox
+    public final Supplier<GoTowardsCoordinatesCommandAuto> goToTopCenter           = () -> new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_CENTER_POS, 0.4, 0.4);
+    public final Supplier<GoTowardsCoordinatesCommandAuto> goToCenterMiddle        = () -> new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.CENTER_MIDDLE_POS, 0.4, 0.4);
+    public final Supplier<GoTowardsCoordinatesCommandAuto> goToTopRight            = () -> new GoTowardsCoordinatesCommandAuto(arm,   PositionConstants.TOP_RIGHT_POS, 0.4, 0.4);
+    public final Supplier<GoTowardsCoordinatesCommandAuto> goToCenterRight         = () -> new GoTowardsCoordinatesCommandAuto(arm,   PositionConstants.CENTER_RIGHT_POS, 0.4, 0.4);
+    public final Supplier<GoTowardsCoordinatesCommandAuto> goToStartingPos         = () -> new GoTowardsCoordinatesCommandAuto(arm,  ArmConstants.STARTING_COORDS , 0.2, 0.4);
+    public final Supplier<BalanceChargeStationCommand>     balanceCommand          = () -> new BalanceChargeStationCommand(driveTrain);
+    public final Supplier<GoTowardsCoordinatesCommandAuto> goToPickupPosX30        = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4);
+    public final Supplier<GoTowardsCoordinatesCommandAuto> goToPickupPosX35        = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); 
+    public final Supplier<GoTowardsCoordinatesCommandAuto> goToAbovePickupPos      = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y + 10, 0}, 0.4, 0.4); 
 
-    public CommandGenerator driveForwardOverChargeStationBlue     = new CommandGenerator("paths/DriveForwardOverChargeStationBlue.wpilib.json");
-    public CommandGenerator driveBackwardsOntoChargeStationBlue   = new CommandGenerator("paths/DriveBackwardsOntoChargeStationBlue.wpilib.json");
-    public CommandGenerator driveForwardOverChargeStationRed      = new CommandGenerator("paths/DriveForwardOverChargeStationRed.wpilib.json");
-    public CommandGenerator driveBackwardsOntoChargeStationRed    = new CommandGenerator("paths/DriveBackwardsOntoChargeStationRed.wpilib.json");
-    public CommandGenerator driveBackwardsToConeBlue              = new CommandGenerator("paths/DriveBackwardsToConeBlue.wpilib.json");
-    public CommandGenerator driveForwardsToGridBlue               = new CommandGenerator("paths/DriveForwardsToGridBlue.wpilib.json");
-    public CommandGenerator driveBackwardsToConeRed               = new CommandGenerator("paths/DriveBackwardsToConeRed.wpilib.json");
-    public CommandGenerator driveForwardsToGridRed                = new CommandGenerator("paths/DriveForwardsToGridRed.wpilib.json");
-    public CommandGenerator driveBackwardsOntoChargeStationDPRed  = new CommandGenerator("paths/DriveBackwardsOntoChargeStationDPRed.wpilib.json");
-    public CommandGenerator driveBackwardsOntoChargeStationDPBlue = new CommandGenerator("paths/DriveBackwardsOntoChargeStationDPBlue.wpilib.json");
-    public CommandGenerator moveOneMeter                          = new CommandGenerator("paths/MoveOneMeter.wpilib.json");
+    public final Supplier<GoTowardsCoordinatesCommandAuto> goTowardsPickupCommand  = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Implement later during downtime
+
+
+    public CommandGenerator driveForwardOverChargeStationBlue     = new CommandGenerator("DriveForwardOverChargeStationBlue");
+    public CommandGenerator driveBackwardsOntoChargeStationBlue   = new CommandGenerator("DriveBackwardsOntoChargeStationBlue");
+    public CommandGenerator driveForwardOverChargeStationRed      = new CommandGenerator("DriveForwardOverChargeStationRed");
+    public CommandGenerator driveBackwardsOntoChargeStationRed    = new CommandGenerator("DriveBackwardsOntoChargeStationRed");
+    public CommandGenerator driveBackwardsToConeBlue              = new CommandGenerator("DriveBackwardsToConeBlue");
+    public CommandGenerator driveForwardsToGridBlue               = new CommandGenerator("DriveForwardsToGridBlue");
+    public CommandGenerator driveBackwardsToConeRed               = new CommandGenerator("DriveBackwardsToConeRed");
+    public CommandGenerator driveForwardsToGridRed                = new CommandGenerator("DriveForwardsToGridRed");
+    public CommandGenerator driveBackwardsOntoChargeStationDPRed  = new CommandGenerator("DriveBackwardsOntoChargeStationDPRed");
+    public CommandGenerator driveBackwardsOntoChargeStationDPBlue = new CommandGenerator("DriveBackwardsOntoChargeStationDPBlue");
+    public CommandGenerator moveOneMeter                          = new CommandGenerator("MoveOneMeter");
+    public CommandGenerator driveBackwardsToCubeBlue              = new CommandGenerator("DriveBackwardsToCubeBlue");
+    public CommandGenerator driveBackwardsToCubeRed               = new CommandGenerator("DriveBackwardsToCubeRed");
 
 
     private Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
@@ -186,26 +184,20 @@ public class RobotContainer {
 
         // Initialize autonomous commands here
 
-        taxiAuto = Autos.taxiAuto(driveTrain);
-        taxiForBalanceAuto = Autos.taxiForBalanceAuto(driveTrain);
-        placeCubeThenTaxiAuto = Autos.placeCubeThenTaxiAuto(driveTrain, clawGrip, newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get());
-        taxiThenBalanceAuto = Autos.taxiThenBalanceAuto(driveTrain, newBalanceCommand.get());
-        placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(driveTrain, clawGrip, newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get(), newBalanceCommand.get());
-        placeCubeThenConeAuto = Autos.placeCubeThenConeAuto(driveTrain, clawGrip, newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(),
-            goTowardsPickupPos3, goTowardsPickupPos4, newGoTowardsTopRight.get(), newAimAssistCommand.get());
+        taxiAuto                         = Autos.taxiAuto(this);
+        taxiForBalanceAuto               = Autos.taxiForBalanceAuto(this);
+        placeCubeThenTaxiAuto            = Autos.placeCubeThenTaxiAuto(this);
+        taxiThenBalanceAuto              = Autos.taxiThenBalanceAuto(this);
+        placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(this);
+        placeCubeThenConeAuto            = Autos.placeCubeThenConeAuto(this);
 
-        // All below autos use Pathweaver trajectories and might work now
-        balanceChargeStationAuto = Autos.balanceAuto(driveForwardOverChargeStationBlue.get(), driveBackwardsOntoChargeStationBlue.get(),
-                driveForwardOverChargeStationRed.get(), driveBackwardsOntoChargeStationRed.get(), newBalanceCommand.get(), arm);
-        placeConeCommandAuto = Autos.placeConeAuto(clawGrip, newGoTowardsTopRight.get(), newGoTowardsStartingPos.get());
-        doublePlacementAuto = Autos.doublePlacementAuto(arm, clawGrip, driveBackwardsToConeBlue.get(), driveForwardsToGridBlue.get(),
-                driveBackwardsToConeRed.get(), driveForwardsToGridRed.get(), newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(),
-                newGoTowardsStartingPos.get(), goTowardsPickupPos, goTowardsPickupPos5, newGoTowardsTopCenter.get(), newAimAssistCommand.get());
-        placeConeThenBalanceAuto = Autos.placeConeThenBalanceAuto(driveForwardOverChargeStationBlue.get(), driveBackwardsOntoChargeStationBlue.get(), 
-                driveForwardOverChargeStationRed.get(), driveBackwardsOntoChargeStationRed.get(), newBalanceCommand.get(), arm, clawGrip, newGoTowardsTopRight.get(), newGoTowardsStartingPos.get());
-        doublePlacementThenBalanceAuto = Autos.doublePlacementThenBalanceAuto(arm, clawGrip, driveBackwardsToConeBlue.get(), driveForwardsToGridBlue.get(), 
-                driveBackwardsToConeRed.get(), driveForwardsToGridRed.get(), newGoTowardsTopCenter.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(), newGoTowardsStartingPos.get(), 
-                goTowardsPickupPos2, goTowardsPickupPos6, newGoTowardsTopCenter.get(), driveBackwardsOntoChargeStationDPBlue.get(), driveBackwardsOntoChargeStationDPRed.get(), newBalanceCommand.get(), newAimAssistCommand.get());
+        // All below autos use Pathweaver trajectories and probably don't work right now
+        balanceChargeStationAuto         = Autos.balanceAuto(this);
+        placeConeCommandAuto             = Autos.placeConeAuto(this);
+        doublePlacementAuto              = Autos.doublePlacementAuto(this);
+        placeConeThenBalanceAuto         = Autos.placeConeThenBalanceAuto(this);
+        doublePlacementThenBalanceAuto   = Autos.doublePlacementThenBalanceAuto(this);
+
 
         // Adds autonomous options to dashboard
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
@@ -248,8 +240,8 @@ public class RobotContainer {
         this.arm.setPIDControlState(false);
         
         this.driveTrain.setDefaultCommand(this.manualDrive);
-        this.arm.setDefaultCommand(this.armControl);
-        this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand);
-        this.clawRotation.setDefaultCommand(this.clawRotateCommand);
+        this.arm.setDefaultCommand(this.armControl.get());
+        this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand.get());
+        this.clawRotation.setDefaultCommand(this.clawRotateCommand.get());
     }
 }
