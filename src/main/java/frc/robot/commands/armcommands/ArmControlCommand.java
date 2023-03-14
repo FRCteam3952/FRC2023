@@ -15,7 +15,7 @@ import frc.robot.util.NetworkTablesUtil;
 public class ArmControlCommand extends CommandBase {
 
     private final ArmSubsystem arm;
-    private final XboxController joystick;
+    private final XboxController controller;
     private final ClawGripSubsystem claw;
 
     // Inches per 20ms
@@ -24,9 +24,9 @@ public class ArmControlCommand extends CommandBase {
     private static final double TURRET_SPEED = 0.2;
     private static double turret_adjust = 0.0;
 
-    public ArmControlCommand(ArmSubsystem arm, ClawGripSubsystem claw, XboxController joystick) {
+    public ArmControlCommand(ArmSubsystem arm, ClawGripSubsystem claw, XboxController controller) {
         this.arm = arm;
-        this.joystick = joystick;
+        this.controller = controller;
         this.claw = claw;
 
         addRequirements(arm);
@@ -37,12 +37,12 @@ public class ArmControlCommand extends CommandBase {
      * Pick up game piece commands
      */
     private void setYPosition() {
-        if (joystick.getRawButtonPressedWrapper(ControllerConstants.HUMAN_STATION_HEIGHT_BUTTON_NUMBER)) {
-            (new PickupPieceCommand(this.arm,this.claw,ArmConstants.HUMAN_PLAYER_HEIGHT)).schedule();
+        if (controller.getRawButtonPressedWrapper(ControllerConstants.HUMAN_STATION_HEIGHT_BUTTON_NUMBER)) {
+            (new PickupPieceCommand(this.arm, this.claw, this.controller, ArmConstants.HUMAN_PLAYER_HEIGHT)).schedule();
     
-        } else if (joystick.getRawButtonPressedWrapper(ControllerConstants.PICK_UP_HEIGHT_BUTTON_NUMBER)) {
+        } else if (controller.getRawButtonPressedWrapper(ControllerConstants.PICK_UP_HEIGHT_BUTTON_NUMBER)) {
             double[] currentCoords = arm.getTargetCoordinates();
-            (new GoTowardsCoordinatesCommandTeleop(this.arm,(new double[]{currentCoords[0],ArmConstants.PICK_UP_POSITION_Y,currentCoords[2]}),this.joystick,0.2,0.4)).schedule();
+            (new GoTowardsCoordinatesCommandTeleop(this.arm,(new double[]{currentCoords[0],ArmConstants.PICK_UP_POSITION_Y,currentCoords[2]}),this.controller,0.2,0.4)).schedule();
         }
     }
 
@@ -57,11 +57,11 @@ public class ArmControlCommand extends CommandBase {
             
             armAimAssist();
 
-            this.arm.moveVector(joystick.getLeftLateralMovement() * X_SPEED, -joystick.getRightLateralMovement() * Y_SPEED, 0);
-            this.arm.setTurretSpeed(joystick.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust); 
+            this.arm.moveVector(controller.getLeftLateralMovement() * X_SPEED, -controller.getRightLateralMovement() * Y_SPEED, 0);
+            this.arm.setTurretSpeed(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust); 
             
         }
-        if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)) { //toggle PID on and off
+        if(this.controller.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)) { //toggle PID on and off
             this.arm.setPIDControlState(false);
         }
         
@@ -71,7 +71,7 @@ public class ArmControlCommand extends CommandBase {
      * Handles Limelight aim assist for arm
      */
     private void armAimAssist(){
-        boolean rightTrigger = this.joystick.controller.getRightTriggerAxis() > 0.2, leftTrigger = this.joystick.controller.getLeftTriggerAxis() > 0.2;
+        boolean rightTrigger = this.controller.controller.getRightTriggerAxis() > 0.2, leftTrigger = this.controller.controller.getLeftTriggerAxis() > 0.2;
         if(rightTrigger && leftTrigger) {
             NetworkTablesUtil.setLimelightPipeline(4);
         } else if(rightTrigger) { // cone PID, if > 0.9 do rotation as well but we don't do that here (look in ClawRotateCommand)

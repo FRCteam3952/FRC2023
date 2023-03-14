@@ -80,7 +80,7 @@ public class NetworkTablesUtil {
     // Gets key from keyboard
     public static int getKeyInteger() {
         NetworkTable table = INSTANCE.getTable("robogui");
-        return (int) table.getEntry("key_int").getInteger(0);
+        return (int) table.getEntry("key_int").getNumber(0).intValue();
     }
 
     /**

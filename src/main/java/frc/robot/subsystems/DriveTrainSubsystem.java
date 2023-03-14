@@ -22,7 +22,6 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.TrajectoryConstants;
-import frc.robot.Constants.FieldConstants.AprilTagConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.PortConstants;
@@ -125,7 +123,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         //System.out.println("L VOLTS: " + leftVolts + ", R VOLTS; " + rightVolts);
         this.leftMotorGroup.setVoltage(leftVolts);
-        this.rightMotorGroup.setVoltage(leftVolts);
+        this.rightMotorGroup.setVoltage(rightVolts);
         this.tankDrive.feed();
     }
 
@@ -196,7 +194,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         TrajectoryConfig config = new TrajectoryConfig(TrajectoryConstants.MAX_SPEED_METERS_PER_SECOND, TrajectoryConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
                 // Add kinematics to ensure max speed is actually obeyed
                 .setKinematics(DriveConstants.DRIVE_KINEMATICS)
-                // Apply the voltage constraint
+                // Apply the voltage constraint   
                 .addConstraint(autoVoltageConstraint)
                 // Set reversed
                 .setReversed(reversed);
@@ -240,20 +238,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        /*if (RobotContainer.inTeleop) {
-            if (Math.abs(this.joystick.getHorizontalMovement()) < 0.1 && Math.abs(this.joystick.getLateralMovement()) < 0.1) {
-                var gyroRad = Math.toRadians(RobotGyro.getGyroAngleDegreesYaw());
-                odometry.resetPosition(new Rotation2d(gyroRad), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition(), new Pose2d(NetworkTablesUtil.getJetsonPoseMeters(), new Rotation2d(gyroRad)));
-            }
-        }*/
         updateOdometry();
 
         Pose2d pose = getPoseMeters();
         double[] sendPose = {pose.getX(), pose.getY(), pose.getRotation().getRadians()};
         NetworkTablesUtil.getEntry("robot", "drive_odometry").setDoubleArray(sendPose);
-
-        var wheelspeeds = getWheelSpeeds();
-        // System.out.println("CURRENT VELOCITY: L " + wheelspeeds.leftMetersPerSecond + ", R " + wheelspeeds.rightMetersPerSecond);
 
         // System.out.println("Gyro Yaw: " + RobotGyro.getGyroAngleDegreesYaw());
         // System.out.println("Gyro Roll: " + RobotGyro.getGyroAngleDegreesRoll());

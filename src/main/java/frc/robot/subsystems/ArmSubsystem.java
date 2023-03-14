@@ -7,7 +7,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.Constants.ArmConstants;
@@ -151,27 +150,9 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
     }
 
-    public void setMaxAndMinOutput1(double speed) {
-        this.minOutput = -speed;
-        this.maxOutput = speed;
-    }
-    public void setMaxAndMinOutput2(double speed){
-        this.minOutput2 = -speed;
-        this.maxOutput2 = speed;
-    }
-
     public double resetTurretEncoder() {
         return this.turretEncoder.getPosition();
     }
-
-    public PIDController getPID1() {
-        return this.pidController1;
-    }
-
-    public PIDController getPID2() {
-        return this.pidController2;
-    }
-
 
     /**
      * Changes the intended coordinates by dx, dy, and dz
@@ -192,7 +173,7 @@ public class ArmSubsystem extends SubsystemBase {
         double angle2 = pivot2Encoder.getPosition();
         double angle3 = turretEncoder.getPosition();
 
-        if (flipped) { //offset for when arm is flipped because our gearbox is lose for some reason
+        if (flipped) { //offset for when arm is flipped because our gearbox is loose for some reason
             angle1 -= 8;
         }
 
@@ -216,7 +197,9 @@ public class ArmSubsystem extends SubsystemBase {
     public double getTurretAngleDeg() {
         return this.turretEncoder.getPosition();
     }
-
+    /*
+     * All the Setter methods below
+     */
 
     public void setPivot1Speed(double speed) {
         this.pivot1.set(speed);
@@ -231,6 +214,14 @@ public class ArmSubsystem extends SubsystemBase {
 
     }
 
+    public void setArm1SpeedMultiplier(double mult) {
+        this.arm1SpeedMultiplier = mult;
+    }
+
+    public void setArm2SpeedMultiplier(double mult) {
+        this.arm2SpeedMultiplier = mult;
+    }
+
     public void setManualControlMode(boolean isManual){
         this.isManual = isManual;
     }
@@ -239,10 +230,13 @@ public class ArmSubsystem extends SubsystemBase {
         this.is2D = is2D;
     }
 
-    public void stopAllMotors() {
-        this.pivot1.set(0);
-        this.pivot2.set(0);
-        this.turret.set(0);
+    public void setMaxAndMinOutput1(double speed) {
+        this.minOutput = -speed;
+        this.maxOutput = speed;
+    }
+    public void setMaxAndMinOutput2(double speed){
+        this.minOutput2 = -speed;
+        this.maxOutput2 = speed;
     }
 
     public void setTargetAngle1(double angle) {
@@ -251,6 +245,12 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void setTargetAngle2(double angle) {
         this.targetAngle2 = angle;
+    }
+    
+    public void stopAllMotors() {
+        this.pivot1.set(0);
+        this.pivot2.set(0);
+        this.turret.set(0);
     }
 
     public boolean getControlMode(){
@@ -297,14 +297,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     public boolean getTurretLimitPressed(){
         return !this.turretLimit.get();
-    }
-
-    public void setArm1SpeedMultiplier(double mult) {
-        this.arm1SpeedMultiplier = mult;
-    }
-
-    public void setArm2SpeedMultiplier(double mult) {
-        this.arm2SpeedMultiplier = mult;
     }
 
     public void goTowardTargetCoordinates() {
@@ -384,22 +376,6 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetZ = adjustedCoordinates[2];
     }
 
-    public CommandBase calibrateArm() {
-        pidOn = false;
-        return this.runOnce(() -> {
-            while (!getPivot2LimitPressed()) {
-                setPivot2Speed(-0.2);
-            }
-            setPivot2Speed(0);
-            while (!getPivot1LimitPressed()) {
-                setPivot1Speed(-0.2);
-            }
-            setPivot1Speed(0);
-            resetCoords();
-            pidOn = true;
-        });
-    }
-
     /**
      * Sets the usage of PID control for the arm.
      * @param value True for enabled PID, False for disabled.
@@ -452,20 +428,14 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
         // System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
         // System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
+        // System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed() + ", Turret Limit: " + getTurretLimitPressed());
+
         boolean resetPivot1 = getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle1 - ArmConstants.ARM_1_INITIAL_ANGLE) < 5;
         boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
-        // System.out.println("TURRET SPEED: " + turret.get() + ", ANG: " + getTurretAngleDeg());
-        
+                
         if(getTurretLimitPressed()){
-            //if(tempAngle < 180 && tempAngle > -180){
-                //System.out.println("RESET TURRTE");
-                this.turretEncoder.setPosition(0);
-            //}
+            this.turretEncoder.setPosition(0);
         }
-
-        // System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed());
-        // System.out.println("Turret Limit: " + getTurretLimitPressed());
-        // handles limit switches
 
         if (resetPivot1) {
             this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
@@ -478,75 +448,6 @@ public class ArmSubsystem extends SubsystemBase {
         if(resetPivot1 && resetPivot2) {
             resetCoords();
         }
-
-        
-
-
-        /*
-         * Moves arm to specific positions for placing game pieces. The robot is assumed to be positioned directly in front of an april tag.
-         * Each key corresponds to a specific position on a 3x3 grid, as shown below:
-         *          [7  8  9]
-         *          [4  5  6]
-         *          [1  2  3]
-         *              ^
-         *            robot
-         * 
-         * There are 3 of these 3x3 grids.
-         * 
-         * A check for a joystick button pressed or something similar can be added if we want to add another check other than the key on the keyboard being pressed
-         */
-
-        //TODO: fix - ebay kid, 3-1-2023. the constants are wrong
-        /*
-        double[] coordinates = new double[3];
-        int currKey = NetworkTablesUtil.getKeyInteger();
-        switch (currKey) {
-            case 1:
-                coordinates = PositionConstants.BOTTOM_LEFT_POS;
-                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
-                break;
-            case 2:
-                coordinates = PositionConstants.BOTTOM_MIDDLE_POS;
-                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
-                break;
-            case 3:
-                coordinates = PositionConstants.BOTTOM_RIGHT_POS;
-                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
-                break;
-            case 4:
-                coordinates = PositionConstants.CENTER_LEFT_POS;
-                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
-                break;
-            case 5:
-                coordinates = PositionConstants.CENTER_MIDDLE_POS;
-                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
-                break;
-            case 6:
-                coordinates = PositionConstants.CENTER_RIGHT_POS;
-                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
-                break;
-            case 7:
-                coordinates = PositionConstants.TOP_LEFT_POS;
-                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
-                break;
-            case 8:
-                coordinates = PositionConstants.TOP_CENTER_POS;
-                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
-                break;
-            case 9:
-                coordinates = PositionConstants.TOP_RIGHT_POS;
-                setIntendedCoordinates(coordinates[0], coordinates[1], coordinates[2], false);
-                break;
-            default:
-                System.out.println("A key within 1-9 was not pressed");
-                break;
-                
-        }
-        */
-        // double[] angles = InverseKinematicsUtil.getAnglesFromCoordinates(30, ArmConstants.ORIGIN_HEIGHT, 30, false);
-        // System.out.println(angles[0] + " " + angles[1] + " " + angles[2]);
-        // double[] coords = ForwardKinematicsUtil.getCoordinatesFromAngles(angles[0], angles[1], angles[2]);
-        // System.out.println(coords[0] + " " + coords[1] + " " + coords[2]);
 
         //handles PID
         // System.out.println("PID STATE: " + pidOn);
