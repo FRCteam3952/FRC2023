@@ -219,16 +219,24 @@ public final class Autos {
 
     // Places cube on top center platform
     public static CommandBase placeGamePieceAuto(RobotContainer robot) {
-        return Commands.runOnce(() -> { // Closes the claw around pre-loaded cube
-            System.out.println("Place Game Piece Auto Start");
-            robot.clawGrip.setClawOpened(false); // Closes claw
-        }, robot.clawGrip)
+        return Commands.runOnce(
+            () -> { // Closes the claw around pre-loaded cube
+                System.out.println("Place Game Piece Auto Start");
+                robot.clawGrip.setClawOpened(false); // Closes claw
+            }, 
+            robot.clawGrip
+        )
         .andThen(robot.goToTopCenter.get()) // Moves arm to top center position on grid to place cube
         .andThen(waitCommand(0.2)) // Waits 0.2 seconds
-        .andThen(Commands.runOnce(() -> { // Opens claw to drop pre-loaded cube onto top center platform
-            System.out.println("Place Game Piece Auto Running");
-            robot.clawGrip.setClawOpened(true); // Opens claw
-        }, robot.clawGrip))
+        .andThen(
+            Commands.runOnce(
+                () -> { // Opens claw to drop pre-loaded cube onto top center platform
+                    System.out.println("Place Game Piece Auto Running");
+                    robot.clawGrip.setClawOpened(true); // Opens claw
+                }, 
+                robot.clawGrip
+            )
+        )
         .andThen(waitCommand(0.2)) // Waits 0.2 seconds
         .andThen(robot.goToStartingPos.get()); // Moves arm to starting position
     }
