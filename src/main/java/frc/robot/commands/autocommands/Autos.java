@@ -131,7 +131,7 @@ public final class Autos {
                 RobotGyro.resetGyroAngle();
             }
         )
-        .andThen( resetTimerCommand() )
+        .andThen(resetTimerCommand())
         .andThen(
                 Commands.run(
                 () -> {// Drive until the robot is on the far edge of the charge station
@@ -154,7 +154,7 @@ public final class Autos {
         .until(
             () -> (Math.abs(RobotGyro.getGyroAngleDegreesPitch()) < 2 || timer.get() > 2.8) // TODO CHECK TIMER VALUES
         )
-        .andThen( resetTimerCommand() )
+        .andThen(resetTimerCommand())
         .andThen(
             Commands.run(
                 () -> { // Drive until the robot is at the far edge again
@@ -197,7 +197,7 @@ public final class Autos {
             robot.clawGrip
         )
         .andThen(robot.goToTopCenter.get()) // Moves arm to top center position on grid to place cube
-        .andThen( waitCommand(0.2) ) // Waits 0.5 seconds
+        .andThen(waitCommand(0.2)) // Waits 0.5 seconds
         .andThen(
             Commands.runOnce(
                 () -> { // Opens claw to drop pre-loaded cube onto top center platform
@@ -207,7 +207,7 @@ public final class Autos {
                 robot.clawGrip
             )
         )
-        .andThen( waitCommand(0.2) ) // Waits 0.5 seconds
+        .andThen(waitCommand(0.2)) // Waits 0.5 seconds
         .andThen(robot.goToStartingPos.get()); // Moves arm to starting position
     }
 
@@ -248,7 +248,7 @@ public final class Autos {
                 System.out.println("Taxi Auto then Balance Start");
             }
         )
-        .andThen( resetTimerCommand() ) // I just added this while reformatting, it seems like it should be here
+        .andThen(resetTimerCommand()) // I just added this while reformatting, it seems like it should be here
         .andThen(
             taxiForBalanceAuto(robot)
             .until(() -> timer.get() > 5) // reformatting, does this need to be in the andThen block?
@@ -259,7 +259,7 @@ public final class Autos {
     // Double placement: places cube on top center platform, drives backwards to pick up cone, drives forward towards grid, places cone on top right pole
     public static CommandBase placeCubeThenConeAuto(RobotContainer robot) {
         return placeCubeAuto(robot) // Places cube on top center section of grid
-        .andThen( resetTimerCommand() ) // Resets timer
+        .andThen(resetTimerCommand()) // Resets timer
         .andThen(
             Commands.run(
                 () -> {
@@ -287,7 +287,7 @@ public final class Autos {
         )
         .andThen(robot.aimAssist.get()) // Guides claw to game piece
         .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
-        .andThen( waitCommand(0.5) ) // Waits 0.5 seconds
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
         .andThen(
             Commands.runOnce(
                 () -> { // Closes claw around game piece
@@ -297,7 +297,7 @@ public final class Autos {
                 robot.clawGrip
             )
         )
-        .andThen( waitCommand(0.5) ) // Waits 0.5 seconds
+        .andThen(waitCommand(0.5)) // Waits 0.5 seconds
         .andThen(
             robot.goToStartingPos.get() // Arm goes to starting position
             .alongWith(
@@ -309,7 +309,7 @@ public final class Autos {
                     }, 
                     robot.driveTrain
                 )
-                .until( () -> timer.get() > 4.25) )
+                .until(() -> timer.get() > 4.25))
             )
         )
         .andThen(
@@ -337,7 +337,7 @@ public final class Autos {
                     System.out.println("Waiting for " + seconds + " seconds | " + timer.get());
                 }
             )
-            .until( () -> timer.get() > seconds )
+            .until(() -> timer.get() > seconds)
         );
     }
 
