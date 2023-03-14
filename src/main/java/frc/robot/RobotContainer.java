@@ -219,7 +219,7 @@ public class RobotContainer {
 
         // These autons use Pathweaver, not using right now
         m_chooser.addOption("Move one meter test", moveOneMeter.get());
-        m_chooser.addOption("Double placement blue test", driveForwardsToGridBlue.get().andThen(driveBackwardsToCubeBlue.get()));
+        m_chooser.addOption("Double placement blue test", driveForwardsToGridBlue.get().andThen(driveBackwardsToConeBlue.get()));
         m_chooser.addOption("Balance Charge Station Auto", balanceChargeStationAuto);
         m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
