@@ -143,10 +143,11 @@ public final class Constants {
      * Constants relating to the drive train
      */
     public static class DriveConstants {// All constants below are examples; must correct to robot's specification when it is finished being built
-        public static final double KS_VOLTS = 0.94462; // 0.23433;
-        public static final double KV_VOLTS_SECONDS_PER_METER = 3.3159; // 3.1434;
-        public static final double KA_VOLTS_SECONDS_SQ_PER_METER = 0.58863; // 0.38465;
-        public static final double P_DRIVE_VEL = 4.8822; // 3.9965;
+        // bigger values were when we did turn testing.
+        public static final double KS_VOLTS = 0.23433; // 0.94462;
+        public static final double KV_VOLTS_SECONDS_PER_METER = 3.1434; //3.3159;
+        public static final double KA_VOLTS_SECONDS_SQ_PER_METER = 0.38465; //0.58863;
+        public static final double P_DRIVE_VEL = 3.9965; //4.8822;
         public static final double K_WHEEL_RADIUS = 0.0508;
 
         public static final double TRACKWIDTH_METERS = 1.9248;
