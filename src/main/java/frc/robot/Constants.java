@@ -29,7 +29,7 @@ public final class Constants {
         /**
          * Measured from the floor to the pivot of arm 1.
          */
-        public static final double ORIGIN_HEIGHT = 50d;
+        public static final double ORIGIN_HEIGHT = 49.5;
         /**
          * Measured from the pivot of arm 1 to the pivot of arm 2.
          */
@@ -37,13 +37,11 @@ public final class Constants {
         /**
          * Measured from the pivot of arm 2 to the middle of the claw.
          */
-        public static final double LIMB2_LENGTH = 32d;
-
-        public static final double HUMAN_PLAYER_HEIGHT = 39;
+        public static final double LIMB2_LENGTH = 31.5;
 
         public static final double ANGLE_DELTA = 5.0;
-        public static final double MAX_REACH_REDUCTION = 0; // change to be correct later
-        public static final double MIN_HOR_DISTANCE = 6; // change to be correct later
+        public static final double HUMAN_PLAYER_HEIGHT = 39; // the height the arm should be for human player station
+        public static final double MAX_HEIGHT = 75; // maximum height the arm can go
 
         public static final double PIVOT_SPEED = 0.1;
         public static final double TURRET_SPEED = 0.1;
@@ -58,8 +56,8 @@ public final class Constants {
 
         public static final double ARM_1_INITIAL_ANGLE = 10.0;
         public static final double ARM_2_INITIAL_ANGLE = 20.0;
-        public static final double MAX_OUTPUT = 0.8;
-        public static final double MIN_OUTPUT = -0.8;
+        public static final double MAX_OUTPUT = 0.2;
+        public static final double MIN_OUTPUT = -0.2;
         public static final double SPEED_DEC_ON_UNFLIP = 0.2;
         public static final double SPEED_DEC_ON_FLIP = 1.0;
         public static final double COMPLEMENTING_FLIP_SPEED = 1.2;
@@ -183,7 +181,8 @@ public final class Constants {
         public static final double Y_TOP_PLATFORM_HEIGHT = 35.5;
 
         public static final double Y_FLOOR = 0.0; // obvious
-        public static final double VERTICAL_PLACEMENT_OFFSET = 10;
+        public static final double VERTICAL_PLACEMENT_OFFSET_PLAT = 14.5; // Makes it so that when going to top row, the arm is parallel to ground
+        public static final double VERTICAL_PLACEMENT_OFFSET_POLE = 4;  // Makes it so that when going to top row, the arm is parallel to ground
 
         public static final double X_MIDDLE_DISTANCE = 22.75 + (ROBOT_LENGTH / 2);
         public static final double X_TOP_DISTANCE = 39.75 + (ROBOT_LENGTH / 2);
@@ -201,17 +200,17 @@ public final class Constants {
         public static final double Z_RIGHT = -Z_DISTANCE_TO_SIDE;
 
         // relative to the center of the robot
-        public static final double[] BOTTOM_LEFT_POS = {X_BOTTOM_DISTANCE, Y_FLOOR + VERTICAL_PLACEMENT_OFFSET, Z_LEFT};
-        public static final double[] BOTTOM_MIDDLE_POS = {X_BOTTOM_DISTANCE, Y_FLOOR + VERTICAL_PLACEMENT_OFFSET, Z_MIDDLE};
-        public static final double[] BOTTOM_RIGHT_POS = {X_BOTTOM_DISTANCE, Y_FLOOR + VERTICAL_PLACEMENT_OFFSET, Z_RIGHT};
+        public static final double[] BOTTOM_LEFT_POS = {X_BOTTOM_DISTANCE, Y_FLOOR + VERTICAL_PLACEMENT_OFFSET_POLE, Z_LEFT};
+        public static final double[] BOTTOM_MIDDLE_POS = {X_BOTTOM_DISTANCE, Y_FLOOR + VERTICAL_PLACEMENT_OFFSET_PLAT, Z_MIDDLE};
+        public static final double[] BOTTOM_RIGHT_POS = {X_BOTTOM_DISTANCE, Y_FLOOR + VERTICAL_PLACEMENT_OFFSET_POLE, Z_RIGHT};
 
-        public static final double[] CENTER_LEFT_POS = {X_MIDDLE_DISTANCE, Y_MIDDLE_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_LEFT};
-        public static final double[] CENTER_MIDDLE_POS = {X_MIDDLE_DISTANCE, Y_MIDDLE_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_MIDDLE};
-        public static final double[] CENTER_RIGHT_POS = {X_MIDDLE_DISTANCE, Y_MIDDLE_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_RIGHT};
+        public static final double[] CENTER_LEFT_POS = {X_MIDDLE_DISTANCE, Y_MIDDLE_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET_POLE, Z_LEFT};
+        public static final double[] CENTER_MIDDLE_POS = {X_MIDDLE_DISTANCE, Y_MIDDLE_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET_PLAT, Z_MIDDLE};
+        public static final double[] CENTER_RIGHT_POS = {X_MIDDLE_DISTANCE, Y_MIDDLE_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET_POLE, Z_RIGHT};
 
-        public static final double[] TOP_LEFT_POS = {X_TOP_DISTANCE, Y_TOP_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_LEFT};
-        public static final double[] TOP_CENTER_POS = {X_TOP_DISTANCE, Y_TOP_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_MIDDLE};
-        public static final double[] TOP_RIGHT_POS = {X_TOP_DISTANCE, Y_TOP_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET, Z_RIGHT};
+        public static final double[] TOP_LEFT_POS = {X_TOP_DISTANCE, Y_TOP_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET_POLE, Z_LEFT};
+        public static final double[] TOP_CENTER_POS = {X_TOP_DISTANCE, Y_TOP_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET_PLAT, Z_MIDDLE};
+        public static final double[] TOP_RIGHT_POS = {X_TOP_DISTANCE, Y_TOP_PLATFORM_HEIGHT + VERTICAL_PLACEMENT_OFFSET_POLE, Z_RIGHT};
     }
 
     /**

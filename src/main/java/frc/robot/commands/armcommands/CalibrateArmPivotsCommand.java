@@ -70,10 +70,10 @@ public class CalibrateArmPivotsCommand extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        this.arm.resetCoords();
-        this.arm.setPIDControlState(true);
         this.arm.setPivot1Speed(0);
         this.arm.setPivot2Speed(0);
+        this.arm.resetCoords();
+        this.arm.setPIDControlState(true);
     }
 
     // Returns true when the command should end.

@@ -29,7 +29,6 @@ public class AimAssistCommand extends CommandBase{
     @Override
     public void execute() {
         if(!this.arm.getFlipped()){
-            arm.setControlDimensions(false);
             double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
             // arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
             this.arm.setTurretSpeed(adjustments[2]);  

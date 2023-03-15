@@ -84,7 +84,7 @@ public class NetworkTablesUtil {
     }
 
     /**
-     * Returns the current robot pose according to AprilTags on Jetson, in meters since that's what they want
+     * Returns the current robot pose according to AprilTags on Jetson, in meters since that's what they want. The rotation is really the gyro's rotation, since we know that the gyro is accurate.
      *
      * @return A {@link Translation2d} representing the robot's pose ([x, y, radians])
      */

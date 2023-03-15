@@ -68,7 +68,6 @@ public class ArmSubsystem extends SubsystemBase {
     private double arm2SpeedMultiplier = 1;
 
     private boolean isManual = true;
-    private boolean is2D = true;
 
     private double maxOutput = ArmConstants.MAX_OUTPUT;
     private double minOutput = ArmConstants.MIN_OUTPUT;
@@ -158,7 +157,6 @@ public class ArmSubsystem extends SubsystemBase {
      * Changes the intended coordinates by dx, dy, and dz
      */
     public void moveVector(double dx, double dy, double dz) {
-        updateCurrentCoordinates();
         setTargetCoordinates(targetX + dx, targetY + dy, targetZ + dz);
     }
 
@@ -169,7 +167,6 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double[] getCurrentAnglesDeg() {
         double angle1 = pivot1Encoder.getPosition();
-        //double angle2 = (90 + angle1 + (MPU6050.getRoll()-80));
         double angle2 = pivot2Encoder.getPosition();
         double angle3 = turretEncoder.getPosition();
 
@@ -187,7 +184,6 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double[] getCurrentAnglesRad() {
         double angle1 = Math.toRadians(pivot1Encoder.getPosition());
-        //double angle2 = Math.toRadians((90 + angle1 + (MPU6050.getRoll()-80)));
         double angle2 = pivot2Encoder.getPosition();
         double angle3 = Math.toRadians(turretEncoder.getPosition());
 
@@ -224,10 +220,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void setManualControlMode(boolean isManual){
         this.isManual = isManual;
-    }
-
-    public void setControlDimensions(boolean is2D){
-        this.is2D = is2D;
     }
 
     public void setMaxAndMinOutput1(double speed) {
@@ -310,29 +302,23 @@ public class ArmSubsystem extends SubsystemBase {
         // gets PID control calculations
         double p1Speed = pidController1.calculate(angles[0], targetAngle1) * arm1SpeedMultiplier;
         double p2Speed = pidController2.calculate(angles[1], targetAngle2) * arm2SpeedMultiplier;
-        double turretSpeed = 0;
+        double turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
 
         // if power is NaN, don't run it :D
-        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
+        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed) || Double.isNaN(turretSpeed)) {
             System.out.println("PID is NaN, so skip");
             return;
         }
 
         p1Speed = Math.min(maxOutput, Math.max(p1Speed, minOutput));
         p2Speed = Math.min(maxOutput2, Math.max(p2Speed, minOutput2));
+        turretSpeed = Math.min(maxOutput, Math.max(turretSpeed, minOutput));
 
-        if (!is2D) { //only control turret or Z axis when auto
-            turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
-            turretSpeed = Math.min(maxOutput, Math.max(turretSpeed, minOutput));
-            if(Double.isNaN(turretSpeed)){
-                return;
-            }
-            setTurretSpeed(turretSpeed);
-        }
+        setTurretSpeed(turretSpeed);
         setPivot1Speed(p1Speed);
         setPivot2Speed(p2Speed);
 
-        // System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
+        //System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
     }
 
     /**
@@ -347,13 +333,6 @@ public class ArmSubsystem extends SubsystemBase {
         if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
             return;
         }
-        if(y > 75){
-            y = 75;
-        }
-
-        if(this.is2D){
-            z = 0;
-        }
 
         // Updates target Angles
         double[] targetAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, getFlipped());
@@ -363,6 +342,10 @@ public class ArmSubsystem extends SubsystemBase {
             System.out.println("Hi this is the Arm Death Prevention Hotline @copyright setIntendedCoordinates");
             return;
         }
+        double[] adjustedCoordinates = ForwardKinematicsUtil.getCoordinatesFromAngles(targetAngle1, targetAngle2, targetAngleTurret);
+
+        //update current coordinates
+        updateCurrentCoordinates();
 
         // Updates target angles
         targetAngle1 = targetAngles[0];
@@ -370,7 +353,6 @@ public class ArmSubsystem extends SubsystemBase {
         targetAngleTurret = targetAngles[2];
 
         // Updates target coordinates
-        double[] adjustedCoordinates = ForwardKinematicsUtil.getCoordinatesFromAngles(targetAngle1, targetAngle2, targetAngleTurret);
         this.targetX = adjustedCoordinates[0];
         this.targetY = adjustedCoordinates[1];
         this.targetZ = adjustedCoordinates[2];
@@ -424,7 +406,7 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
-        // System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
+        System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
         // System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
         // System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);

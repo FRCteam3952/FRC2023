@@ -326,9 +326,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
             RobotGyro.resetGyroAngle();
         }
 
-        // System.out.println(pose);
-
-        // System.out.println("FL: " + frontLeftEncoder.getPosition() + ", FR: " + frontRightEncoder.getPosition() + ", RL: " + rearLeftEncoder.getPosition() + ", RR: " + rearRightEncoder.getPosition());
+        //System.out.println("FL: " + frontLeftEncoder.getPosition() + ", FR: " + frontRightEncoder.getPosition() + ", RL: " + rearLeftEncoder.getPosition() + ", RR: " + rearRightEncoder.getPosition());
 
         // String currKey = NetworkTablesUtil.getKeyString();
         
