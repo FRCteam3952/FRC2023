@@ -58,7 +58,7 @@ public class ArmControlCommand extends CommandBase {
             armAimAssist();
 
             this.arm.moveVector(-controller.getLeftLateralMovement() * X_SPEED, -controller.getRightLateralMovement() * Y_SPEED, 0);
-            //this.arm.setTurretSpeed(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust); 
+            this.arm.setTurretSpeed(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust); 
             
         }
         if(this.controller.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)) { //toggle PID on and off

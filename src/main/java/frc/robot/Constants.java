@@ -37,7 +37,7 @@ public final class Constants {
         /**
          * Measured from the pivot of arm 2 to the middle of the claw.
          */
-        public static final double LIMB2_LENGTH = 32;
+        public static final double LIMB2_LENGTH = 31.5;
 
         public static final double HUMAN_PLAYER_HEIGHT = 39;
 

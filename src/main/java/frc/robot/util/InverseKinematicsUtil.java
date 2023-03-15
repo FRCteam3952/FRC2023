@@ -23,7 +23,6 @@ public final class InverseKinematicsUtil {
         double pivot1Angle, pivot2Angle, turretAngle;
         double adjusted_y = y - ArmConstants.ORIGIN_HEIGHT;
         double adjusted_x = x;
-        double adjusted_z = z;
 
         if(x < 5){
             x = 5;
