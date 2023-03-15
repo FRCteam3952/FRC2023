@@ -189,24 +189,25 @@ public final class Autos {
 
     // Places cube on top center platform
     public static CommandBase placeCubeAuto(RobotContainer robot) {
-        System.out.println("Place Cube Auto Start");
         return Commands.runOnce(
             () -> { // Closes the claw around pre-loaded cube
+                System.out.println("Place Cube Auto Start");
                 robot.clawGrip.setClawOpened(false); // Closes claw
             }, 
             robot.clawGrip
         )
         .andThen(robot.goToTopCenter.get()) // Moves arm to top center position on grid to place cube
-        .andThen(waitCommand(0.1)) // Waits 0.1 seconds
+        .andThen( waitCommand(0.2) ) // Waits 0.5 seconds
         .andThen(
             Commands.runOnce(
                 () -> { // Opens claw to drop pre-loaded cube onto top center platform
+                    System.out.println("Place Cube Auto Running");
                     robot.clawGrip.setClawOpened(true); // Opens claw
                 }, 
                 robot.clawGrip
             )
         )
-        .andThen( waitCommand(0.1) ) // Waits 0.1 seconds
+        .andThen( waitCommand(0.2) ) // Waits 0.5 seconds
         .andThen(robot.goToStartingPos.get()); // Moves arm to starting position
     }
 
@@ -254,15 +255,20 @@ public final class Autos {
         .andThen(
             Commands.run(
                 () -> {
-                    if(blueTeam){
-                        robot.driveForwardsToGridBlue.get();
-                    }
-                    else{
-                        robot.driveForwardsToGridRed.get();
-                    }
-                }
+                    // driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.25 seconds to pick up cone
+                }, 
+                robot.driveTrain
             )
-        .alongWith(robot.goToAbovePickupPos.get()) // Goes to 10 inches above pickup position
+            .until(() -> timer.get() > 4.25)
+            .andThen(
+                Commands.runOnce(
+                    () -> {
+                        robot.driveTrain.tankDrive(0, 0);
+                    }, 
+                    robot.driveTrain
+                )
+            )
+            .alongWith(robot.goToAbovePickupPos.get()) // Goes to 10 inches above pickup position
         ) 
         .andThen(
             Commands.runOnce(
@@ -273,40 +279,40 @@ public final class Autos {
         )
         .andThen(robot.aimAssist.get()) // Guides claw to game piece
         .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
+        .andThen( waitCommand(0.5) ) // Waits 0.5 seconds
         .andThen(
             Commands.runOnce(
                 () -> { // Closes claw around game piece
+                    System.out.println("Place Cube then Cone Auto Running");
                     robot.clawGrip.setClawOpened(false); // Closes claw
                 }, 
                 robot.clawGrip
             )
         )
-        .andThen( waitCommand(0.1) ) // Waits 0.1 seconds
-        .andThen(robot.goToStartingPos.get() // Arm goes to starting position
-                .alongWith(
+        .andThen( waitCommand(0.5) ) // Waits 0.5 seconds
+        .andThen(
+            robot.goToStartingPos.get() // Arm goes to starting position
+            .alongWith(
+                resetTimerCommand() // Resets timer
+                .andThen(
                     Commands.run(
                         () -> {
-                            if(blueTeam){
-                                robot.driveBackwardsToConeBlue.get();
-                            }
-                            else{
-                                robot.driveBackwardsToCubeRed.get();
-                            }
-                        }
-                    )
+                        // driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.25 seconds towards grid
+                    }, 
+                    robot.driveTrain
                 )
-        )
-        .andThen(robot.goToTopRight.get()) // Arm goes to top right pole to place cone
-        .andThen( waitCommand(0.1))
-        .andThen(
-            Commands.runOnce(
-                () -> { // Closes claw around game piece
-                    robot.clawGrip.setClawOpened(true); // Closes claw
-                }, 
-                robot.clawGrip
+                .until( () -> timer.get() > 4.25) )
             )
         )
-        .andThen(robot.goToStartingPos.get());
+        .andThen(
+            Commands.runOnce(
+                () -> {
+                    robot.driveTrain.tankDrive(0, 0);
+                }, 
+                robot.driveTrain
+            )
+        )
+        .andThen(robot.goToTopRight.get()); // Arm goes to top right pole to place cone
     }
 
     public static CommandBase placeCubeThenTaxiThenBalanceAuto(RobotContainer robot) {
