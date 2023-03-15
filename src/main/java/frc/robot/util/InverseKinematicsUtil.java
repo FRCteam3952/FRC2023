@@ -24,8 +24,8 @@ public final class InverseKinematicsUtil {
         double adjusted_y = y - ArmConstants.ORIGIN_HEIGHT;
         double adjusted_x = x;
 
-        if(x < 5){
-            x = 5;
+        if(x < ArmConstants.MIN_HOR_DISTANCE){
+            x = ArmConstants.MIN_HOR_DISTANCE;
         }
 
         // Turret angle calculations
@@ -40,7 +40,7 @@ public final class InverseKinematicsUtil {
 
         //inverse kinematics but it looks "simple"
         pivot2Angle = MathUtil.lawOfCosinesForAngle(ArmConstants.LIMB1_LENGTH, ArmConstants.LIMB2_LENGTH, dist3d); // pivot2Angle is angle between 1st arm segment to 2nd arm segment
-        pivot1Angle = (90 + Math.toDegrees(Math.atan(adjusted_y/x))) - MathUtil.lawOfCosinesForAngle(dist3d, ArmConstants.LIMB1_LENGTH, ArmConstants.LIMB2_LENGTH);   // pivot1Angle is angle between verticle to 1st arm segment
+        pivot1Angle = (90 + Math.toDegrees(Math.atan(adjusted_y/MathUtil.distance(adjusted_x, 0, z, 0)))) - MathUtil.lawOfCosinesForAngle(dist3d, ArmConstants.LIMB1_LENGTH, ArmConstants.LIMB2_LENGTH);   // pivot1Angle is angle between verticle to 1st arm segment
        
         // If flipped is true, return angles that are "flipped" 
         if(flipped){
