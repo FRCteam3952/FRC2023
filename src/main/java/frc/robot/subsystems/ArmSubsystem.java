@@ -158,7 +158,9 @@ public class ArmSubsystem extends SubsystemBase {
      * Changes the intended coordinates by dx, dy, and dz
      */
     public void moveVector(double dx, double dy, double dz) {
-        updateCurrentCoordinates();
+        if(targetX < ArmConstants.MIN_HOR_DISTANCE){
+            dx = Math.max(0, dx);
+        }
         setTargetCoordinates(targetX + dx, targetY + dy, targetZ + dz);
     }
 
@@ -169,7 +171,6 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double[] getCurrentAnglesDeg() {
         double angle1 = pivot1Encoder.getPosition();
-        //double angle2 = (90 + angle1 + (MPU6050.getRoll()-80));
         double angle2 = pivot2Encoder.getPosition();
         double angle3 = turretEncoder.getPosition();
 
@@ -187,7 +188,6 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double[] getCurrentAnglesRad() {
         double angle1 = Math.toRadians(pivot1Encoder.getPosition());
-        //double angle2 = Math.toRadians((90 + angle1 + (MPU6050.getRoll()-80)));
         double angle2 = pivot2Encoder.getPosition();
         double angle3 = Math.toRadians(turretEncoder.getPosition());
 
@@ -332,7 +332,7 @@ public class ArmSubsystem extends SubsystemBase {
         setPivot1Speed(p1Speed);
         setPivot2Speed(p2Speed);
 
-        // System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
+        //System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
     }
 
     /**
@@ -363,6 +363,10 @@ public class ArmSubsystem extends SubsystemBase {
             System.out.println("Hi this is the Arm Death Prevention Hotline @copyright setIntendedCoordinates");
             return;
         }
+        double[] adjustedCoordinates = ForwardKinematicsUtil.getCoordinatesFromAngles(targetAngle1, targetAngle2, targetAngleTurret);
+
+        //update current coordinates
+        updateCurrentCoordinates();
 
         // Updates target angles
         targetAngle1 = targetAngles[0];
@@ -370,7 +374,6 @@ public class ArmSubsystem extends SubsystemBase {
         targetAngleTurret = targetAngles[2];
 
         // Updates target coordinates
-        double[] adjustedCoordinates = ForwardKinematicsUtil.getCoordinatesFromAngles(targetAngle1, targetAngle2, targetAngleTurret);
         this.targetX = adjustedCoordinates[0];
         this.targetY = adjustedCoordinates[1];
         this.targetZ = adjustedCoordinates[2];
@@ -424,7 +427,7 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
-        // System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
+        System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
         // System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
         // System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);

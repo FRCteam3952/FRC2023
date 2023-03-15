@@ -29,7 +29,7 @@ public final class Constants {
         /**
          * Measured from the floor to the pivot of arm 1.
          */
-        public static final double ORIGIN_HEIGHT = 50d;
+        public static final double ORIGIN_HEIGHT = 49.5;
         /**
          * Measured from the pivot of arm 1 to the pivot of arm 2.
          */
@@ -37,7 +37,7 @@ public final class Constants {
         /**
          * Measured from the pivot of arm 2 to the middle of the claw.
          */
-        public static final double LIMB2_LENGTH = 29d;
+        public static final double LIMB2_LENGTH = 32;
 
         public static final double HUMAN_PLAYER_HEIGHT = 39;
 
@@ -58,8 +58,8 @@ public final class Constants {
 
         public static final double ARM_1_INITIAL_ANGLE = 10.0;
         public static final double ARM_2_INITIAL_ANGLE = 20.0;
-        public static final double MAX_OUTPUT = 0.8;
-        public static final double MIN_OUTPUT = -0.8;
+        public static final double MAX_OUTPUT = 0.2;
+        public static final double MIN_OUTPUT = -0.2;
         public static final double SPEED_DEC_ON_UNFLIP = 0.2;
         public static final double SPEED_DEC_ON_FLIP = 1.0;
         public static final double COMPLEMENTING_FLIP_SPEED = 1.2;

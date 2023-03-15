@@ -25,31 +25,23 @@ public final class InverseKinematicsUtil {
         double adjusted_x = x;
         double adjusted_z = z;
 
+        if(x < 5){
+            x = 5;
+        }
+
         // Turret angle calculations
         double angleCalc = Math.toDegrees(Math.atan2(z, x));
         turretAngle = angleCalc < 0 ? 360 + angleCalc : angleCalc;
-        double turretAngleRad = Math.toRadians(turretAngle);
 
-        if (flipped) { 
-            if (MathUtil.distance(x, 0, z, 0) < ArmConstants.MIN_HOR_DISTANCE) {
-                return new double[]{Double.NaN, Double.NaN, Double.NaN};
-            } 
-        } else { 
-            double a = Math.cos(Math.toRadians(ArmConstants.ARM_1_INITIAL_ANGLE)) * ArmConstants.LIMB1_LENGTH; // Vertical distance from arm origin point to first pivot point
-            double b = Math.sin(Math.toRadians(ArmConstants.ARM_1_INITIAL_ANGLE)) * ArmConstants.LIMB1_LENGTH; // Horizontal distance from arm origin point to first pivot point
-            if (MathUtil.distance(x, Math.sin(turretAngleRad) * b, y, ArmConstants.ORIGIN_HEIGHT - a, z, Math.cos(turretAngleRad) * b) < ArmConstants.LIMB2_LENGTH){ // Makes sure the arm isn't unrealistically close to the base arm segment
-                return new double[]{Double.NaN, Double.NaN, Double.NaN};
-            }
-        }
-
+        // distance reach boundar
         double dist3d = MathUtil.distance(0, adjusted_x, 0, adjusted_y, 0, z); // calc distance in 3d from top pivot point
-        if(dist3d > ArmConstants.LIMB1_LENGTH + ArmConstants.LIMB2_LENGTH - ArmConstants.MAX_REACH_REDUCTION) { // If distance reach is impossible then just return saved angles
+        if(dist3d > ArmConstants.LIMB1_LENGTH + ArmConstants.LIMB2_LENGTH) { // If distance reach is impossible then just return saved angles
             return new double[]{Double.NaN, Double.NaN, Double.NaN};
         }
 
         //inverse kinematics but it looks "simple"
         pivot2Angle = MathUtil.lawOfCosinesForAngle(ArmConstants.LIMB1_LENGTH, ArmConstants.LIMB2_LENGTH, dist3d); // pivot2Angle is angle between 1st arm segment to 2nd arm segment
-        pivot1Angle = MathUtil.angleBetweenLines(0, -1, 0, adjusted_x, adjusted_y, adjusted_z) - MathUtil.lawOfSinesForAngle(pivot2Angle, dist3d, ArmConstants.LIMB2_LENGTH);   // pivot1Angle is angle between verticle to 1st arm segment
+        pivot1Angle = (90 + Math.toDegrees(Math.atan(adjusted_y/x))) - MathUtil.lawOfCosinesForAngle(dist3d, ArmConstants.LIMB1_LENGTH, ArmConstants.LIMB2_LENGTH);   // pivot1Angle is angle between verticle to 1st arm segment
        
         // If flipped is true, return angles that are "flipped" 
         if(flipped){
@@ -60,16 +52,16 @@ public final class InverseKinematicsUtil {
             if (pivot1Angle > 350) {
                 pivot1Angle = 350;
             }
-            if(pivot2Angle > 345) {
-                pivot2Angle = 345;
+            if(pivot2Angle > 340) {
+                pivot2Angle = 340;
             }
         }
         else{
-            if (pivot1Angle < 10) {
-                pivot1Angle = 10;
+            if (pivot1Angle < ArmConstants.ARM_1_INITIAL_ANGLE) {
+                pivot1Angle = ArmConstants.ARM_1_INITIAL_ANGLE;
             }
-            if(pivot2Angle < 15) {
-                pivot2Angle = 15;
+            if(pivot2Angle < ArmConstants.ARM_2_INITIAL_ANGLE) {
+                pivot2Angle = ArmConstants.ARM_2_INITIAL_ANGLE;
             }
         }
 
