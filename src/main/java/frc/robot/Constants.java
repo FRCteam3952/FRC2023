@@ -332,7 +332,7 @@ public final class Constants {
 
             static {
                 for(int i = 0; i < 3; i++) { // POLE
-                    for(int j = 0; j < 5; j++) {
+                    for(int j = 0; j < 6; j++) {
                         POLE_POSITIONS[i][j] = new Pose3d(X_COORDS[i], POLE_Y_COORDS[j], POLE_Z_COORDS[i], new Rotation3d());
                     }
                 }
