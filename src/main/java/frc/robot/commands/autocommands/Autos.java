@@ -220,16 +220,16 @@ public final class Autos {
     // Places cube on top center platform
     public static CommandBase placeGamePieceAuto(RobotContainer robot) {
         return Commands.runOnce(() -> { // Closes the claw around pre-loaded cube
-            System.out.println("Place Cube Auto Start");
+            System.out.println("Place Game Piece Auto Start");
             robot.clawGrip.setClawOpened(false); // Closes claw
         }, robot.clawGrip)
         .andThen(robot.goToTopCenter.get()) // Moves arm to top center position on grid to place cube
-        .andThen(waitCommand(0.2)) // Waits 0.5 seconds
+        .andThen(waitCommand(0.2)) // Waits 0.2 seconds
         .andThen(Commands.runOnce(() -> { // Opens claw to drop pre-loaded cube onto top center platform
-            System.out.println("Place Cube Auto Running");
+            System.out.println("Place Game Piece Auto Running");
             robot.clawGrip.setClawOpened(true); // Opens claw
         }, robot.clawGrip))
-        .andThen(waitCommand(0.2)) // Waits 0.5 seconds
+        .andThen(waitCommand(0.2)) // Waits 0.2 seconds
         .andThen(robot.goToStartingPos.get()); // Moves arm to starting position
     }
 
@@ -514,11 +514,11 @@ public final class Autos {
                     System.out.println("Double Placement Auto Red Start");
                 }
             )
-            .andThen(placeConeAuto(robot)) // Drops pre-loaded cone onto top right pole
+            .andThen(placeGamePieceAuto(robot)) // Drops pre-loaded cube onto top center platform
             .andThen(
                 robot.driveBackwardsToConeRed.get() // Drives backwards to cone
-                .alongWith(robot.goToAbovePickupPos.get())
-            ) // Goes to 10 inches above pickup position
+                .alongWith(robot.goToAbovePickupPos.get()) // Goes to 10 inches above pickup position
+            ) 
             .andThen(
                 Commands.runOnce(
                     () -> {
