@@ -21,17 +21,16 @@ public final class InverseKinematicsUtil {
     public static double[] getAnglesFromCoordinates(double x, double y, double z, boolean flipped) {
         
         double pivot1Angle, pivot2Angle, turretAngle;
-        double adjusted_y = y - ArmConstants.ORIGIN_HEIGHT;
-        double adjusted_x = x;
+        
+        y = Math.min(y, ArmConstants.MAX_HEIGHT); //cap arm height at MAX_HEIGHT inches above the ground
 
-        if(x < ArmConstants.MIN_HOR_DISTANCE){
-            x = ArmConstants.MIN_HOR_DISTANCE;
-        }
+        double adjusted_y = y - ArmConstants.ORIGIN_HEIGHT;
+        double adjusted_x = Math.abs(x);
 
         // Turret angle calculations
         double angleCalc = Math.toDegrees(Math.atan2(z, x));
         turretAngle = angleCalc < 0 ? 360 + angleCalc : angleCalc;
-
+        
         // distance reach boundar
         double dist3d = MathUtil.distance(0, adjusted_x, 0, adjusted_y, 0, z); // calc distance in 3d from top pivot point
         if(dist3d > ArmConstants.LIMB1_LENGTH + ArmConstants.LIMB2_LENGTH) { // If distance reach is impossible then just return saved angles

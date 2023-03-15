@@ -39,11 +39,9 @@ public final class Constants {
          */
         public static final double LIMB2_LENGTH = 31.5;
 
-        public static final double HUMAN_PLAYER_HEIGHT = 39;
-
         public static final double ANGLE_DELTA = 5.0;
-        public static final double MAX_REACH_REDUCTION = 0; // change to be correct later
-        public static final double MIN_HOR_DISTANCE = 6; // change to be correct later
+        public static final double HUMAN_PLAYER_HEIGHT = 39; // the height the arm should be for human player station
+        public static final double MAX_HEIGHT = 75; // maximum height the arm can go
 
         public static final double PIVOT_SPEED = 0.1;
         public static final double TURRET_SPEED = 0.1;

@@ -68,7 +68,6 @@ public class ArmSubsystem extends SubsystemBase {
     private double arm2SpeedMultiplier = 1;
 
     private boolean isManual = true;
-    private boolean is2D = true;
 
     private double maxOutput = ArmConstants.MAX_OUTPUT;
     private double minOutput = ArmConstants.MIN_OUTPUT;
@@ -158,9 +157,6 @@ public class ArmSubsystem extends SubsystemBase {
      * Changes the intended coordinates by dx, dy, and dz
      */
     public void moveVector(double dx, double dy, double dz) {
-        if(targetX < ArmConstants.MIN_HOR_DISTANCE){
-            dx = Math.max(0, dx);
-        }
         setTargetCoordinates(targetX + dx, targetY + dy, targetZ + dz);
     }
 
@@ -224,10 +220,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void setManualControlMode(boolean isManual){
         this.isManual = isManual;
-    }
-
-    public void setControlDimensions(boolean is2D){
-        this.is2D = is2D;
     }
 
     public void setMaxAndMinOutput1(double speed) {
@@ -310,25 +302,19 @@ public class ArmSubsystem extends SubsystemBase {
         // gets PID control calculations
         double p1Speed = pidController1.calculate(angles[0], targetAngle1) * arm1SpeedMultiplier;
         double p2Speed = pidController2.calculate(angles[1], targetAngle2) * arm2SpeedMultiplier;
-        double turretSpeed = 0;
+        double turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
 
         // if power is NaN, don't run it :D
-        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
+        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed) || Double.isNaN(turretSpeed)) {
             System.out.println("PID is NaN, so skip");
             return;
         }
 
         p1Speed = Math.min(maxOutput, Math.max(p1Speed, minOutput));
         p2Speed = Math.min(maxOutput2, Math.max(p2Speed, minOutput2));
+        turretSpeed = Math.min(maxOutput, Math.max(turretSpeed, minOutput));
 
-        if (!is2D) { //only control turret or Z axis when auto
-            turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
-            turretSpeed = Math.min(maxOutput, Math.max(turretSpeed, minOutput));
-            if(Double.isNaN(turretSpeed)){
-                return;
-            }
-            setTurretSpeed(turretSpeed);
-        }
+        setTurretSpeed(turretSpeed);
         setPivot1Speed(p1Speed);
         setPivot2Speed(p2Speed);
 
@@ -346,13 +332,6 @@ public class ArmSubsystem extends SubsystemBase {
     public void setTargetCoordinates(double x, double y, double z) {
         if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
             return;
-        }
-        if(y > 75){
-            y = 75;
-        }
-
-        if(this.is2D){
-            z = 0;
         }
 
         // Updates target Angles

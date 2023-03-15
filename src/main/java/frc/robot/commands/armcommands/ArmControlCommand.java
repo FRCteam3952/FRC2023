@@ -1,5 +1,6 @@
 package frc.robot.commands.armcommands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
@@ -21,7 +22,7 @@ public class ArmControlCommand extends CommandBase {
     // Inches per 20ms
     private static final double X_SPEED = 0.9;
     private static final double Y_SPEED = 0.9;
-    private static final double TURRET_SPEED = 0.2;
+    private static final double TURRET_SPEED = 0.9;
     private static double turret_adjust = 0.0;
 
     public ArmControlCommand(ArmSubsystem arm, ClawGripSubsystem claw, XboxController controller) {
@@ -52,13 +53,12 @@ public class ArmControlCommand extends CommandBase {
     private void primaryArmControl() {
         
         if(this.arm.getControlMode()) { // only run when arm is in manual control
-
-            this.arm.setControlDimensions(true); //manual arm control is in 2D (no Z axis calculations)
             
             armAimAssist();
 
-            this.arm.moveVector(-controller.getLeftLateralMovement() * X_SPEED, -controller.getRightLateralMovement() * Y_SPEED, 0);
-            this.arm.setTurretSpeed(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust); 
+            double zMagnitude = MathUtil.clamp(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust,-1,1);
+            
+            this.arm.moveVector(-controller.getLeftLateralMovement() * X_SPEED, -controller.getRightLateralMovement() * Y_SPEED, zMagnitude);
             
         }
         if(this.controller.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)) { //toggle PID on and off
@@ -81,7 +81,6 @@ public class ArmControlCommand extends CommandBase {
         }
         if(rightTrigger || leftTrigger) {
             if(!this.arm.getFlipped()){
-                arm.setControlDimensions(false);
                 double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
                 //arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
                 turret_adjust = adjustments[2];
