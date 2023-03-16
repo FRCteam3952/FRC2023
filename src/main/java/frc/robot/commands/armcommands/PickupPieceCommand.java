@@ -10,7 +10,7 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
 /**
  * This is here for implementation in Autonomous mode, for teleop there is already an implementation in ArmControlCommand
  */
-public class PickupPieceCommand extends CommandBase{
+public class PickupPieceCommand extends CommandBase {
     private final ArmSubsystem arm;
     private final ClawGripSubsystem claw;
     private final XboxController controller;
@@ -19,15 +19,17 @@ public class PickupPieceCommand extends CommandBase{
     //private final double Y_SPEED = 0.8;
     private final double TURRET_SPEED = 1;
     private Timer timer = new Timer();
+
     private enum states {
         AIM,
         CLOSE_CLAW,
         RETRACT,
         END
     }
+
     private states currentState;
     private double height;
-    
+
     public PickupPieceCommand(ArmSubsystem arm, ClawGripSubsystem claw, XboxController controller, double height) {
         this.arm = arm;
         this.claw = claw;
@@ -49,13 +51,13 @@ public class PickupPieceCommand extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        switch(currentState){ //use limelight and ultrasonic sensor to move to cone or cube
+        switch (currentState) { //use limelight and ultrasonic sensor to move to cone or cube
             case AIM:
-                double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped()); 
+                double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
                 this.arm.moveVector(adjustments[0] * X_SPEED, 0, 0);
-                this.arm.setTurretSpeed(TURRET_SPEED * adjustments[2]); 
+                this.arm.setTurretSpeed(TURRET_SPEED * adjustments[2]);
 
-                if(adjustments[0] + adjustments[1] + adjustments[2] < 5){
+                if (adjustments[0] + adjustments[1] + adjustments[2] < 5) {
                     this.currentState = states.CLOSE_CLAW;
                     timer.reset();
                 }
@@ -63,7 +65,7 @@ public class PickupPieceCommand extends CommandBase{
 
             case CLOSE_CLAW: //close claw
                 claw.setClawOpened(false);
-                if (timer.get() > 0.2){
+                if (timer.get() > 0.2) {
                     this.currentState = states.RETRACT;
                 }
                 break;
@@ -76,7 +78,7 @@ public class PickupPieceCommand extends CommandBase{
             default:
                 break;
         }
-  
+
 
     }
 

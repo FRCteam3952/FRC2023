@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClawConstants;
@@ -19,7 +18,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
     private final CANSparkMax clawRotator;
     private final RelativeEncoder clawRotationEncoder;
 
-    
+
     private final PIDController clawPIDController;
     private final float kp = 0.002f;
     private final float ki = 0f;
@@ -37,7 +36,8 @@ public class ClawRotationSubsystem extends SubsystemBase {
         this.targetAngle = 0;
         this.clawRotationEncoder.setPosition(0.0);
     }
-    public void changeAngle(double changeBy){
+
+    public void changeAngle(double changeBy) {
         targetAngle += changeBy;
     }
 
@@ -46,7 +46,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-        double clawSpeed = clawPIDController.calculate(getClawAngle(),angle);
+        double clawSpeed = clawPIDController.calculate(getClawAngle(), angle);
         clawSpeed = Math.min(ClawConstants.ROTATE_MAX_OUTPUT, Math.max(clawSpeed, ClawConstants.ROTATE_MIN_OUTPUT));
         //System.out.println("CLAW SPEED: " + clawSpeed);
         //System.out.println("CLAW ENCODERS: " + this.getClawAngle());
@@ -58,7 +58,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
     }
 
     // Automatically rotates claw to match angle when designated button is held down
-    public void autoRotateClaw(){
+    public void autoRotateClaw() {
         this.targetAngle = LimeLight.getAngle();
     }
 
