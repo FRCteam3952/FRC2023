@@ -35,11 +35,11 @@ import frc.robot.Constants.DriveConstants.TrajectoryConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.PortConstants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
-import frc.robot.Constants.PositionConstants.FieldConstants.GamePiecePlacementLocationConstants;
-import edu.wpi.first.networktables.*;
-import edu.wpi.first.math.geometry.Pose2d.*;
+import frc.robot.Constants.FieldConstants.GamePiecePlacementLocationConstants;
+
 
 import java.util.List;
 
@@ -294,9 +294,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
             case 7:
                 tmp = GamePiecePlacementLocationConstants.PLATFORM_POSITIONS[z_row][2];
             default:
-                while(true) {
-                    System.out.println("something broke...NetworkTables did not provide the correct platform/pole index.");
-                }
+                tmp = new Pose3d();
+                System.out.println("something broke...NetworkTables did not provide the correct platform/pole index.");
+                
         }
         return new Pose2d(
                     tmp.getX(),
@@ -308,8 +308,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        generateRamseteCommand(getStartPose(), getEndPose(), false);
-        
         //get starting pose         
         updateOdometry();
 
