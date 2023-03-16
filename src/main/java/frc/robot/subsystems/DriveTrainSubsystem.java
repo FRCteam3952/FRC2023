@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.controller.PIDController;
@@ -17,7 +16,6 @@ import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -34,7 +32,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.TrajectoryConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
-import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.RobotContainer;
@@ -100,13 +97,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.rearLeftMotor.setInverted(false);
 
         this.m_poseEstimator = new DifferentialDrivePoseEstimator(
-            DriveConstants.DRIVE_KINEMATICS,
-            RobotGyro.getRotation2d(),
-            frontLeftEncoder.getPosition(), 
-            frontRightEncoder.getPosition(), 
-            new Pose2d(), 
-            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02,0.02,0.01), 
-            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1,0.1,0.01)
+                DriveConstants.DRIVE_KINEMATICS,
+                RobotGyro.getRotation2d(),
+                frontLeftEncoder.getPosition(),
+                frontRightEncoder.getPosition(),
+                new Pose2d(),
+                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01),
+                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.01)
         );
         this.joystick = joystick;
 
@@ -172,7 +169,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     public void updateOdometry() {
         m_poseEstimator.update(RobotGyro.getRotation2d(), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition()); //update pose
-    
+
         // Also apply vision measurements
         // m_poseEstimator.addVisionMeasurement(
         //     NetworkTablesUtil.getJetsonPoseMeters(),
@@ -199,9 +196,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     /**
      * A wrapper around {@link TrajectoryGenerator#generateTrajectory(Pose2d, List, Pose2d, TrajectoryConfig) that handles the config internally.
-     * @param start The start Pose2d
+     *
+     * @param start     The start Pose2d
      * @param waypoints A list of Translation2d waypoints to follow. Pass in {@link List#of()} if you don't want any waypoints.
-     * @param end The end Pose2d
+     * @param end       The end Pose2d
      * @return A trajectory. Use this to generate a follow command with {@link #generateRamseteCommand(Trajectory)}.
      */
     public Trajectory generateTrajectory(Pose2d start, List<Translation2d> waypoints, Pose2d end, boolean reversed) {
@@ -223,10 +221,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     /**
      * Generates a command that will follow a trajectory. This command should be run immediately, and the given trajectory should begin at the current robot position.
+     *
      * @param trajectory the trajectory to follow
      * @return the command to follow the trajectory
      */
-    
+
     public Command generateRamseteCommand(Trajectory trajectory) {
         RamseteCommand ramseteCommand = new RamseteCommand(
                 trajectory,
@@ -342,14 +341,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
         //System.out.println("FL: " + frontLeftEncoder.getPosition() + ", FR: " + frontRightEncoder.getPosition() + ", RL: " + rearLeftEncoder.getPosition() + ", RR: " + rearRightEncoder.getPosition());
 
         // String currKey = NetworkTablesUtil.getKeyString();
-        
+
         // var pose = odometry.getPoseMeters();
 
         // System.out.println("pose: " + pose.getX() + ", " + pose.getY() + ", " + pose.getRotation().getDegrees() + ", gyro: " + RobotGyro.getGyroAngleDegrees());
 
         // System.out.println("FL: " + getFrontLeftEncoder() + ", FR: " + getFrontRightEncoder() + ", RL: " + getRearLeftEncoder() + ", RR: " + getRearRightEncoder());
         // System.out.println("FL: " + frontLeft.get() + ", FR: " + frontRight.get() + ", RL: " + rearLeft.get() + ", RR: " + rearRight.get());
-        
+
 
     }
 

@@ -16,7 +16,7 @@ public class BalanceChargeStationCommand extends CommandBase {
 
     private final DriveTrainSubsystem driveTrain;
 
-    private final double kP = 1d/120d;
+    private final double kP = 1d / 120d;
     private final double MAX_SPEED = 0.3; // not nice
     private final double MIN_SPEED = 0;
     private final double ANGLE_DELTA = 3;

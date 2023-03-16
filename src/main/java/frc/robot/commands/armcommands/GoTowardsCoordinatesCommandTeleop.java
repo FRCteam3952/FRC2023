@@ -1,11 +1,11 @@
 package frc.robot.commands.armcommands;
 
-import frc.robot.controllers.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class GoTowardsCoordinatesCommandTeleop extends CommandBase{
+public class GoTowardsCoordinatesCommandTeleop extends CommandBase {
 
     private final ArmSubsystem arm;
     private final XboxController xboxController;
@@ -14,7 +14,7 @@ public class GoTowardsCoordinatesCommandTeleop extends CommandBase{
     private double[] newArmPosition;
     private double speed1;
     private double speed2;
-    
+
     public GoTowardsCoordinatesCommandTeleop(ArmSubsystem arm, double[] newArmPosition, XboxController xboxController, double speed1, double speed2) {
         this.arm = arm;
         this.newArmPosition = newArmPosition;
@@ -23,6 +23,7 @@ public class GoTowardsCoordinatesCommandTeleop extends CommandBase{
         this.speed2 = speed2;
         addRequirements(arm);
     }
+
     public GoTowardsCoordinatesCommandTeleop(ArmSubsystem arm, double[] newArmPosition, XboxController xboxController, double speed1, double speed2, boolean is2D) {
         this.arm = arm;
         this.newArmPosition = newArmPosition;
@@ -57,10 +58,9 @@ public class GoTowardsCoordinatesCommandTeleop extends CommandBase{
     @Override
     public boolean isFinished() {
         // Allowed error subject to change
-        return arm.isAtCoords() || Math.abs(xboxController.getLeftHorizontalMovement()) > 0.1 || Math.abs(xboxController.getLeftLateralMovement()) > 0.1 || 
+        return arm.isAtCoords() || Math.abs(xboxController.getLeftHorizontalMovement()) > 0.1 || Math.abs(xboxController.getLeftLateralMovement()) > 0.1 ||
                 Math.abs(xboxController.getRightHorizontalMovement()) > 0.1 || Math.abs(xboxController.getRightLateralMovement()) > 0.1;
     }
-
 
 
 }

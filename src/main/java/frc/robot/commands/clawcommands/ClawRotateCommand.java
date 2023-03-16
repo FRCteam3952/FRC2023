@@ -1,4 +1,5 @@
 package frc.robot.commands.clawcommands;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ClawRotationSubsystem;
@@ -18,15 +19,14 @@ public class ClawRotateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if(this.joystick.controller.getRightTriggerAxis() > 0.9 && !(this.joystick.controller.getLeftTriggerAxis() > 0.2)) { // if > 0.9 we do PID and also rotate
+        if (this.joystick.controller.getRightTriggerAxis() > 0.9 && !(this.joystick.controller.getLeftTriggerAxis() > 0.2)) { // if > 0.9 we do PID and also rotate
             // this.claw.autoRotateClaw();
-        }
-        else{
+        } else {
             int fov = this.joystick.controller.getHID().getPOV();
 
-            if(fov == 0) {
+            if (fov == 0) {
                 this.claw.changeAngle(CLAW_ROTATION_SPEED); // clockwise
-            } else if(fov == 180) {
+            } else if (fov == 180) {
                 this.claw.changeAngle(-CLAW_ROTATION_SPEED); // counterclockwise
             }
         }

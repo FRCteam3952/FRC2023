@@ -4,14 +4,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class GoTowardsCoordinatesCommandAuto extends CommandBase{
+public class GoTowardsCoordinatesCommandAuto extends CommandBase {
 
     private final ArmSubsystem arm;
 
     private double[] newArmPosition;
     private double speed1;
     private double speed2;
-    
+
     public GoTowardsCoordinatesCommandAuto(ArmSubsystem arm, double[] newArmPosition, double speed1, double speed2) {
         this.arm = arm;
         this.newArmPosition = newArmPosition;
@@ -46,7 +46,6 @@ public class GoTowardsCoordinatesCommandAuto extends CommandBase{
         // Allowed error subject to change
         return arm.isAtCoords();
     }
-
 
 
 }
