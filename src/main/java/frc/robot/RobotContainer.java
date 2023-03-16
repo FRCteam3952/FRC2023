@@ -76,7 +76,6 @@ public class RobotContainer {
 
     public final Supplier<GoTowardsCoordinatesCommandAuto> goToTopCenter           = () -> new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_CENTER_POS, 0.4, 0.4);
     public final Supplier<GoTowardsCoordinatesCommandAuto> goToCenterMiddle        = () -> new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.CENTER_MIDDLE_POS, 0.4, 0.4);
-    public final Supplier<GoTowardsCoordinatesCommandAuto> goToTopRight            = () -> new GoTowardsCoordinatesCommandAuto(arm,   PositionConstants.TOP_RIGHT_POS, 0.4, 0.4);
     public final Supplier<GoTowardsCoordinatesCommandAuto> goToCenterRight         = () -> new GoTowardsCoordinatesCommandAuto(arm,   PositionConstants.CENTER_RIGHT_POS, 0.4, 0.4);
     public final Supplier<GoTowardsCoordinatesCommandAuto> goToStartingPos         = () -> new GoTowardsCoordinatesCommandAuto(arm,  ArmConstants.STARTING_COORDS , 0.2, 0.4);
     public final Supplier<BalanceChargeStationCommand>     balanceCommand          = () -> new BalanceChargeStationCommand(driveTrain);
@@ -106,15 +105,14 @@ public class RobotContainer {
     private Command testAuto = Autos.exampleAuto(/*pass in parameters */);   // placeholder, pass in subsystems or commands if needed
     private Command taxiAuto;
     private Command taxiForBalanceAuto;
-    private Command taxiThenBalanceAuto;
+    private Command balanceAuto;
     private Command placeCubeThenTaxiAuto;
-    private Command placeCubeThenTaxiThenBalanceAuto;
-    private Command placeCubeThenConeAuto;
-    private Command placeConeCommandAuto;
-    private Command balanceChargeStationAuto; 
+    private Command placeCubeThenBalanceAuto;
     private Command doublePlacementAuto;
-    private Command placeConeThenBalanceAuto;
-    private Command doublePlacementThenBalanceAuto;
+    private Command balanceAutoPW; 
+    private Command doublePlacementAutoPW;
+    private Command placeCubeThenBalanceAutoPW;
+    private Command doublePlacementThenBalanceAutoPW;
     
     private Command m_autonomousCommand;
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -187,16 +185,15 @@ public class RobotContainer {
         taxiAuto                         = Autos.taxiAuto(this);
         taxiForBalanceAuto               = Autos.taxiForBalanceAuto(this);
         placeCubeThenTaxiAuto            = Autos.placeCubeThenTaxiAuto(this);
-        taxiThenBalanceAuto              = Autos.taxiThenBalanceAuto(this);
-        placeCubeThenTaxiThenBalanceAuto = Autos.placeCubeThenTaxiThenBalanceAuto(this);
-        placeCubeThenConeAuto            = Autos.placeCubeThenConeAuto(this);
+        balanceAuto                      = Autos.balanceAuto(this);
+        placeCubeThenBalanceAuto         = Autos.placeCubeThenBalanceAuto(this);
+        doublePlacementAuto              = Autos.doublePlacementAuto(this);
 
         // All below autos use Pathweaver trajectories and probably don't work right now
-        balanceChargeStationAuto         = Autos.balanceAuto(this);
-        placeConeCommandAuto             = Autos.placeConeAuto(this);
-        doublePlacementAuto              = Autos.doublePlacementAuto(this);
-        placeConeThenBalanceAuto         = Autos.placeConeThenBalanceAuto(this);
-        doublePlacementThenBalanceAuto   = Autos.doublePlacementThenBalanceAuto(this);
+        balanceAutoPW                      = Autos.balanceAutoPW(this);
+        doublePlacementAutoPW              = Autos.doublePlacementAutoPW(this);
+        placeCubeThenBalanceAutoPW         = Autos.placeCubeThenBalanceAutoPW(this);
+        doublePlacementThenBalanceAutoPW   = Autos.doublePlacementThenBalanceAutoPW(this);
 
 
         // Adds autonomous options to dashboard
@@ -204,19 +201,17 @@ public class RobotContainer {
         m_chooser.addOption("Test Auto", testAuto);
         m_chooser.addOption("Taxi Auto", taxiAuto);
         m_chooser.addOption("Taxi for Balance Auto", taxiForBalanceAuto);
-        m_chooser.addOption("Taxi then Balance Auto", taxiThenBalanceAuto);
+        m_chooser.addOption("Balance Auto", balanceAuto);
         m_chooser.addOption("Place Cube then Taxi Auto", placeCubeThenTaxiAuto);
-        m_chooser.addOption("Place Cube then Taxi then Balance Auto", placeCubeThenTaxiThenBalanceAuto);
-        m_chooser.addOption("Place Cube then Cone Auto", placeCubeThenConeAuto);
-
-        // These autons use Pathweaver, not using right now
-        m_chooser.addOption("Move one meter test", moveOneMeter.get());
-        m_chooser.addOption("Double placement blue test", driveForwardsToGridBlue.get().andThen(driveBackwardsToConeBlue.get()));
-        m_chooser.addOption("Balance Charge Station Auto", balanceChargeStationAuto);
-        m_chooser.addOption("Place Cone Auto", placeConeCommandAuto);
+        m_chooser.addOption("Place Cube then Balance Auto", placeCubeThenBalanceAuto);
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
-        m_chooser.addOption("Place Cone Then Balance Auto", placeConeThenBalanceAuto);
-        m_chooser.addOption("Double Placement Then Balance Auto", doublePlacementThenBalanceAuto);
+
+        // These autons use Pathweaver
+        m_chooser.addOption("Balance Auto (PathWeaver)", balanceAutoPW);
+        m_chooser.addOption("Double Placement Auto (PathWeaver)", doublePlacementAutoPW);
+        m_chooser.addOption("Place Cube then Balance Auto (PathWeaver)", placeCubeThenBalanceAutoPW);
+        m_chooser.addOption("Double Placement Then Balance Auto (PathWeaver)", doublePlacementThenBalanceAutoPW);
+        m_chooser.addOption("Move one meter test (PathWeaver", moveOneMeter.get());
 
         SmartDashboard.putData("Auto choices", m_chooser);
 }
