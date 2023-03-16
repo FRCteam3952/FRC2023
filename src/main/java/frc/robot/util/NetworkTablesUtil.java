@@ -31,33 +31,33 @@ public class NetworkTablesUtil {
     public static NetworkTable getTable(String tableName) {
         return INSTANCE.getTable(tableName);
     }
-    public static void setLimelightPipeline(int pipeline){
+
+    public static void setLimelightPipeline(int pipeline) {
         NetworkTable table = INSTANCE.getTable("limelight");
         table.getEntry("pipeline").setNumber(pipeline);
     }
-    public static int getLimeLightPipeline(){
+
+    public static int getLimeLightPipeline() {
         NetworkTable table = INSTANCE.getTable("limelight");
         return table.getEntry("getpipe").getNumber(1).intValue();
     }
 
     public static float getLimeLightErrorX() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        if (getLimeLightPipeline() == 1){
+        if (getLimeLightPipeline() == 1) {
             return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[1].floatValue() - 160.0f;
+        } else {
+            return table.getEntry("tx").getNumber(0.0).floatValue() * 5.369f;
         }
-        else{
-            return table.getEntry("tx").getNumber(0.0).floatValue()*5.369f;
-        }
-        
+
     }
 
     public static float getLimeLightErrorY() {
         NetworkTable table = INSTANCE.getTable("limelight");
-        if (getLimeLightPipeline() == 1){
+        if (getLimeLightPipeline() == 1) {
             return table.getEntry("llpython").getNumberArray(new Number[]{0, 0, 0, 0})[2].floatValue() - 120.0f;
-        }
-        else{
-            return table.getEntry("ty").getNumber(0.0).floatValue()*5.2516f;
+        } else {
+            return table.getEntry("ty").getNumber(0.0).floatValue() * 5.2516f;
         }
     }
 
@@ -91,8 +91,8 @@ public class NetworkTablesUtil {
     public static Pose2d getJetsonPoseMeters() {
         NetworkTable table = INSTANCE.getTable("jetson");
         double[] jetsonPoseXYZ = MathUtil.inchesArrayToMetersArray(table.getEntry("pose").getDoubleArray(new double[]{0.0, 0.0, 0.0})); // X, Y, Z
-        return new Pose2d(jetsonPoseXYZ[0],jetsonPoseXYZ[2],RobotGyro.getRotation2d());
-    }  
+        return new Pose2d(jetsonPoseXYZ[0], jetsonPoseXYZ[2], RobotGyro.getRotation2d());
+    }
 
     public static boolean getIfOnBlueTeam() {
         NetworkTable table = INSTANCE.getTable("FMSInfo");

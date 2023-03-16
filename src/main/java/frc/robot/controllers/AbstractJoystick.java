@@ -13,5 +13,5 @@ public abstract class AbstractJoystick {
     public abstract boolean getRawButtonWrapper(int button);
 
     public abstract boolean getRawButtonReleasedWrapper(int button);
-    
+
 }

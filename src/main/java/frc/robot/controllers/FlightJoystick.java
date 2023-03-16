@@ -51,7 +51,7 @@ public class FlightJoystick extends AbstractJoystick {
     }
 
     @Override
-    public boolean getRawButtonReleasedWrapper(int button){
+    public boolean getRawButtonReleasedWrapper(int button) {
         return this.joystick.getHID().getRawButtonReleased(button);
     }
 

@@ -16,7 +16,6 @@ public class ClawGripSubsystem extends SubsystemBase {
         this.clawClosed = false;
         this.compressor = new Compressor(12, PneumaticsModuleType.REVPH);
         this.compressor.enableDigital();
-
     }
 
     public void setForward() {

@@ -1,17 +1,18 @@
 package frc.robot.commands.armcommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-//import frc.robot.Constants.PositionConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 //import frc.robot.util.NetworkTablesUtil;
 
-public class PoseAimArmCommand extends CommandBase{
+public class PoseAimArmCommand extends CommandBase {
     private final ArmSubsystem arm;
     private final DriveTrainSubsystem drive;
     private Translation3d armPose;
-    public PoseAimArmCommand(ArmSubsystem arm, DriveTrainSubsystem drive, Translation3d armPose){
+
+    public PoseAimArmCommand(ArmSubsystem arm, DriveTrainSubsystem drive, Translation3d armPose) {
         this.arm = arm;
         this.drive = drive;
         this.armPose = armPose;
