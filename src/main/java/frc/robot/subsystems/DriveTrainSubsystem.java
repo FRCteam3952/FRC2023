@@ -22,6 +22,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,6 +33,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.TrajectoryConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
+import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.RobotContainer;
@@ -332,7 +334,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // System.out.println("Gyro Pitch: " + RobotGyro.getGyroAngleDegreesPitch());
         //System.out.println("Drive motor value: " + this.getWheelSpeeds());
 
-        if (joystick.getRawButtonReleasedWrapper(ControllerConstants.RESET_GYRO_BUTTON_NUMBER)) {
+        if (Joystick.getRawButtonReleasedWrapper(ControllerConstants.RESET_GYRO_BUTTON_NUMBER)) {
             RobotGyro.resetGyroAngle();
         }
 
