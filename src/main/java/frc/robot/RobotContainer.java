@@ -86,19 +86,19 @@ public class RobotContainer {
     public final Supplier<GoTowardsCoordinatesCommandAuto> goTowardsPickupCommand  = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Implement later during downtime
 
 
-    public CommandGenerator driveForwardOverChargeStationBlue     = new CommandGenerator("DriveForwardOverChargeStationBlue");
-    public CommandGenerator driveBackwardsOntoChargeStationBlue   = new CommandGenerator("DriveBackwardsOntoChargeStationBlue");
-    public CommandGenerator driveForwardOverChargeStationRed      = new CommandGenerator("DriveForwardOverChargeStationRed");
-    public CommandGenerator driveBackwardsOntoChargeStationRed    = new CommandGenerator("DriveBackwardsOntoChargeStationRed");
-    public CommandGenerator driveBackwardsToConeBlue              = new CommandGenerator("DriveBackwardsToConeBlue");
-    public CommandGenerator driveForwardsToGridBlue               = new CommandGenerator("DriveForwardsToGridBlue");
-    public CommandGenerator driveBackwardsToConeRed               = new CommandGenerator("DriveBackwardsToConeRed");
-    public CommandGenerator driveForwardsToGridRed                = new CommandGenerator("DriveForwardsToGridRed");
-    public CommandGenerator driveBackwardsOntoChargeStationDPRed  = new CommandGenerator("DriveBackwardsOntoChargeStationDPRed");
-    public CommandGenerator driveBackwardsOntoChargeStationDPBlue = new CommandGenerator("DriveBackwardsOntoChargeStationDPBlue");
-    public CommandGenerator moveOneMeter                          = new CommandGenerator("MoveOneMeter");
-    public CommandGenerator driveBackwardsToCubeBlue              = new CommandGenerator("DriveBackwardsToCubeBlue");
-    public CommandGenerator driveBackwardsToCubeRed               = new CommandGenerator("DriveBackwardsToCubeRed");
+    public final CommandGenerator driveForwardOverChargeStationBlue     = new CommandGenerator("DriveForwardOverChargeStationBlue");
+    public final CommandGenerator driveBackwardsOntoChargeStationBlue   = new CommandGenerator("DriveBackwardsOntoChargeStationBlue");
+    public final CommandGenerator driveForwardOverChargeStationRed      = new CommandGenerator("DriveForwardOverChargeStationRed");
+    public final CommandGenerator driveBackwardsOntoChargeStationRed    = new CommandGenerator("DriveBackwardsOntoChargeStationRed");
+    public final CommandGenerator driveBackwardsToConeBlue              = new CommandGenerator("DriveBackwardsToConeBlue");
+    public final CommandGenerator driveForwardsToGridBlue               = new CommandGenerator("DriveForwardsToGridBlue");
+    public final CommandGenerator driveBackwardsToConeRed               = new CommandGenerator("DriveBackwardsToConeRed");
+    public final CommandGenerator driveForwardsToGridRed                = new CommandGenerator("DriveForwardsToGridRed");
+    public final CommandGenerator driveBackwardsOntoChargeStationDPRed  = new CommandGenerator("DriveBackwardsOntoChargeStationDPRed");
+    public final CommandGenerator driveBackwardsOntoChargeStationDPBlue = new CommandGenerator("DriveBackwardsOntoChargeStationDPBlue");
+    public final CommandGenerator moveOneMeter                          = new CommandGenerator("MoveOneMeter");
+    public final CommandGenerator driveBackwardsToCubeBlue              = new CommandGenerator("DriveBackwardsToCubeBlue");
+    public final CommandGenerator driveBackwardsToCubeRed               = new CommandGenerator("DriveBackwardsToCubeRed");
 
 
     private Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
