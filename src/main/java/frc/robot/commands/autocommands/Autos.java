@@ -80,7 +80,7 @@ public final class Autos {
                         System.out.println("Slow Drive");
                         robot.driveTrain.tankDrive(0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
                     } else {
-                        robot.driveTrain.tankDrive(0, 0);
+                        robot.driveTrain.tankDrive(0, 0); // Stops driving
                         System.out.println("Taxi Auto Finish");          
                     }
                 }, 
@@ -112,7 +112,7 @@ public final class Autos {
                         System.out.println("Fast Drive Forwards");
                         robot.driveTrain.tankDrive(-0.5, 0); // Drives forwards onto charge station for 1.5 seconds
                     } else {
-                        robot.driveTrain.tankDrive(0, 0);
+                        robot.driveTrain.tankDrive(0, 0); // Stops driving
                         System.out.println("Taxi For Balance Auto Finish");          
                     }
                 }, 
@@ -187,27 +187,42 @@ public final class Autos {
         );
     }
 
-    // Places cube on top center platform
-    public static CommandBase placeCubeAuto(RobotContainer robot) {
+    // Gets taxi points and balances charge station
+    public static CommandBase balanceAuto(RobotContainer robot) {
         return Commands.runOnce(
-            () -> { // Closes the claw around pre-loaded cube
+            () -> {
+                System.out.println("Taxi Auto then Balance Start");
+            }
+        )
+        .andThen( resetTimerCommand() ) // Resets timer
+        .andThen(
+            taxiForBalanceAuto(robot) // Robot taxi's then moves into position to balance
+            .until(() -> timer.get() > 5)
+        )
+        .andThen(robot.balanceCommand.get());
+    }
+
+    // Places game piece on top center platform/pole, depending on robot's position
+    public static CommandBase placeGamePieceAuto(RobotContainer robot) {
+        return Commands.runOnce(
+            () -> { // Makese sure that the claw is closed around game piece
                 System.out.println("Place Cube Auto Start");
                 robot.clawGrip.setClawOpened(false); // Closes claw
             }, 
             robot.clawGrip
         )
-        .andThen(robot.goToTopCenter.get()) // Moves arm to top center position on grid to place cube
-        .andThen( waitCommand(0.2) ) // Waits 0.5 seconds
+        .andThen(robot.goToTopCenter.get()) // Moves arm to top center position on grid to place game piece
+        .andThen( waitCommand(0.2) ) // Waits 0.2 seconds
         .andThen(
             Commands.runOnce(
-                () -> { // Opens claw to drop pre-loaded cube onto top center platform
+                () -> { // Opens claw to drop game piece onto top center platform
                     System.out.println("Place Cube Auto Running");
                     robot.clawGrip.setClawOpened(true); // Opens claw
                 }, 
                 robot.clawGrip
             )
         )
-        .andThen( waitCommand(0.2) ) // Waits 0.5 seconds
+        .andThen( waitCommand(0.2) ) // Waits 0.2 seconds
         .andThen(robot.goToStartingPos.get()); // Moves arm to starting position
     }
 
@@ -217,45 +232,16 @@ public final class Autos {
         .andThen(taxiAuto(robot)); // Initiates taxi (drives backwards)
     }
 
-    // Places cube on top center platform
-    public static CommandBase placeGamePieceAuto(RobotContainer robot) {
-        return Commands.runOnce(() -> { // Closes the claw around pre-loaded cube
-            System.out.println("Place Game Piece Auto Start");
-            robot.clawGrip.setClawOpened(false); // Closes claw
-        }, robot.clawGrip)
-        .andThen(robot.goToTopCenter.get()) // Moves arm to top center position on grid to place cube
-        .andThen(waitCommand(0.2)) // Waits 0.2 seconds
-        .andThen(Commands.runOnce(() -> { // Opens claw to drop pre-loaded cube onto top center platform
-            System.out.println("Place Game Piece Auto Running");
-            robot.clawGrip.setClawOpened(true); // Opens claw
-        }, robot.clawGrip))
-        .andThen(waitCommand(0.2)) // Waits 0.2 seconds
-        .andThen(robot.goToStartingPos.get()); // Moves arm to starting position
-    }
-
-    // Runs taxi for balance then balances charge station
-    public static CommandBase taxiThenBalanceAuto(RobotContainer robot) {
-        return Commands.runOnce(
-            () -> {
-                System.out.println("Taxi Auto then Balance Start");
-            }
-        )
-        .andThen( resetTimerCommand() ) // I just added this while reformatting, it seems like it should be here
-        .andThen(
-            taxiForBalanceAuto(robot)
-            .until(() -> timer.get() > 5) // reformatting, does this need to be in the andThen block?
-        )
-        .andThen(robot.balanceCommand.get());
-    }
+    
 
     // Double placement: places cube on top center platform, drives backwards to pick up cone, drives forward towards grid, places cone on top right pole
-    public static CommandBase placeCubeThenConeAuto(RobotContainer robot) {
-        return placeCubeAuto(robot) // Places cube on top center section of grid
+    public static CommandBase doublePlacementAuto(RobotContainer robot) {
+        return placeGamePieceAuto(robot) // Places cube on top center section of grid
         .andThen( resetTimerCommand() ) // Resets timer
         .andThen(
             Commands.run(
                 () -> {
-                    // driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.25 seconds to pick up cone
+                    robot.driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.25 seconds to pick up cone
                 }, 
                 robot.driveTrain
             )
@@ -263,7 +249,7 @@ public final class Autos {
             .andThen(
                 Commands.runOnce(
                     () -> {
-                        robot.driveTrain.tankDrive(0, 0);
+                        robot.driveTrain.tankDrive(0, 0); // Stops driving
                     }, 
                     robot.driveTrain
                 )
@@ -297,7 +283,7 @@ public final class Autos {
                 .andThen(
                     Commands.run(
                         () -> {
-                        // driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.25 seconds towards grid
+                        robot.driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.25 seconds towards grid
                     }, 
                     robot.driveTrain
                 )
@@ -307,17 +293,29 @@ public final class Autos {
         .andThen(
             Commands.runOnce(
                 () -> {
-                    robot.driveTrain.tankDrive(0, 0);
+                    robot.driveTrain.tankDrive(0, 0); // Stops driving
                 }, 
                 robot.driveTrain
             )
         )
-        .andThen(robot.goToTopRight.get()); // Arm goes to top right pole to place cone
+        .andThen( robot.goToCenterRight.get() ) // Arm goes to center right pole to place cone
+        .andThen( waitCommand(0.2) ) // Waits 0.2 seconds
+        .andThen(
+            Commands.runOnce(
+                () -> { // Opens claw to drop game piece on center right pole
+                    System.out.println("Place Cube then Cone Auto Running");
+                    robot.clawGrip.setClawOpened(true); // Opens claw
+                }, 
+                robot.clawGrip
+            )
+        )
+        .andThen( waitCommand(0.2) ) // Waits 0.2 seconds
+        .andThen( robot.goToStartingPos.get() );
     }
 
-    public static CommandBase placeCubeThenTaxiThenBalanceAuto(RobotContainer robot) {
+    public static CommandBase placeCubeThenBalanceAuto(RobotContainer robot) {
         return placeGamePieceAuto(robot)
-        .andThen(taxiThenBalanceAuto(robot));
+        .andThen(balanceAuto(robot));
     }
 
     // Has the robot do nothing for a set time (in seconds)
@@ -345,15 +343,11 @@ public final class Autos {
      * EVERYTHING BELOW USES PATHWEAVER TRAJECTORIES, WHICH CURRENTLY MIGHT WORK
      * TRY TO GET THEM WORKING BEFORE LA REGIONALS, BUT IS NOW PRETTY IMPORTANT
      * THERES A LOT OF THINGS THAT NEED TO BE ADJUSTED (STILL TRUE)
+     * ALL PATHWEAVER AUTONS ARE LABELED WITH PW
      */
 
-    public static CommandBase moveOneMeter(Command moveOneMeter) {
-        return (CommandBase) moveOneMeter;
-    }
-
-
     // First half of balance auto
-    public static CommandBase balanceAutoFirstHalf(RobotContainer robot) {
+    public static CommandBase balanceAutoFirstHalfPW(RobotContainer robot) {
 
         if (blueTeam) {
             return Commands.runOnce(
@@ -376,7 +370,7 @@ public final class Autos {
     }
 
     // Second half of balance auto
-    public static CommandBase balanceAutoSecondHalf(RobotContainer robot) {
+    public static CommandBase balanceAutoSecondHalfPW(RobotContainer robot) {
         
         if (blueTeam) {    
             return robot.driveBackwardsOntoChargeStationBlue.get()
@@ -407,7 +401,7 @@ public final class Autos {
     }
 
     // Autonomous mode for taxi points + balancing charge station
-    public static CommandBase balanceAuto(RobotContainer robot) {
+    public static CommandBase balanceAutoPW(RobotContainer robot) {
 
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
         return Commands.runOnce(
@@ -416,10 +410,10 @@ public final class Autos {
                 }
             )
             .andThen(
-                balanceAutoFirstHalf(robot) // Drive forward over charge station
+                balanceAutoFirstHalfPW(robot) // Drive forward over charge station
             ) 
             .andThen(
-                balanceAutoSecondHalf(robot) // Drive backwards onto charge station and balance it continuously
+                balanceAutoSecondHalfPW(robot) // Drive backwards onto charge station and balance it continuously
             ) 
             .andThen(
                 Commands.runOnce(
@@ -430,40 +424,11 @@ public final class Autos {
             );
     }
 
-    // Assumes robot is at a AprilTag
-    // Might need to add calibration 
-    // Places cone on top right pole
-    public static CommandBase placeConeAuto(RobotContainer robot) {
-        return Commands.runOnce(
-            () -> {
-                // Any neccessary calibration code
-                System.out.println("Place Cone Auto Start");
-            }
-        )
-        .andThen(robot.goToTopRight.get()) // Arm goes to top right position on grid
-        .andThen(
-            Commands.runOnce(
-                () -> {
-                    robot.clawGrip.setClawOpened(false); // Opens claw
-                }, 
-                robot.clawGrip
-            )
-            .andThen(robot.goToStartingPos.get())
-        ) // Returns arm to starting position
-        .andThen(
-            Commands.runOnce(
-                () -> {
-                    System.out.println("Place Cone Auto Finish");
-                }
-            )
-        );
-    }
-
     // Position values on trajectories may need to be adjusted
     // Adjustments can be made later lol
     // Might need to add calibration 
     // Places pre-loaded cone, drives backwards to pick up cube, drives forwards to place cube on grid
-    public static CommandBase doublePlacementAuto(RobotContainer robot) {
+    public static CommandBase doublePlacementAutoPW(RobotContainer robot) {
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
         // TODO someone make this code into smaller chunks or something
         if (blueTeam) {
@@ -484,7 +449,7 @@ public final class Autos {
             )
             .andThen(robot.aimAssist.get()) // Guides claw to game piece
             .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
-            .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+            .andThen(waitCommand(0.2)) // Waits 0.2 seconds
             .andThen(
                 Commands.runOnce(
                     () -> { // Closes claw around game piece
@@ -494,7 +459,7 @@ public final class Autos {
                     robot.clawGrip
                 )
             )
-            .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+            .andThen(waitCommand(0.2)) // Waits 0.2 seconds
             .andThen(
                 robot.goToStartingPos.get() // Arm goes to starting position
                 .alongWith(robot.driveForwardsToGridBlue.get())
@@ -528,7 +493,7 @@ public final class Autos {
             )
             .andThen(robot.aimAssist.get()) // Guides claw to game piece
             .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
-            .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+            .andThen(waitCommand(0.2)) // Waits 0.2 seconds
             .andThen(
                 Commands.runOnce(
                     () -> { // Closes claw around game piece
@@ -538,7 +503,7 @@ public final class Autos {
                     robot.clawGrip
                 )
             )
-            .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+            .andThen(waitCommand(0.2)) // Waits 0.2 seconds
             .andThen(
                 robot.goToStartingPos.get() // Arm goes to starting position
                 .alongWith(robot.driveForwardsToGridRed.get()) // Drive forwards to grid
@@ -555,7 +520,7 @@ public final class Autos {
     }
 
     // Might need to add calibration
-    public static CommandBase placeConeThenBalanceAuto(RobotContainer robot) {
+    public static CommandBase placeCubeThenBalanceAutoPW(RobotContainer robot) {
 
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
 
@@ -564,11 +529,11 @@ public final class Autos {
                     System.out.println("Place Cone then Balance Auto Start");
                 }
             )
-            .andThen(balanceAutoFirstHalf(robot)) // Drives forward over charge station to grid
-            .andThen(placeConeAuto(robot)) // Places pre-loaded cone on top right pole
+            .andThen(balanceAutoFirstHalfPW(robot)) // Drives forward over charge station to grid
+            .andThen(placeGamePieceAuto(robot)) // Places pre-loaded cube on top center platform
             .andThen(
-                balanceAutoSecondHalf(robot) // Drives backwards onto charge station and balances it continuously
-                .andThen(
+                balanceAutoSecondHalfPW(robot) // Drives backwards onto charge station and balances it continuously
+                .alongWith(
                     Commands.runOnce(
                         () -> {
                             System.out.println("Place Cone then Balance Auto Finish"); // Shouldn't print until auton is over, if at all
@@ -581,8 +546,7 @@ public final class Autos {
     
 
     // Runs double placement then balances charge station
-    // Might not use, don't know if there is enough time
-    public static CommandBase doublePlacementThenBalanceAuto(RobotContainer robot) {
+    public static CommandBase doublePlacementThenBalanceAutoPW(RobotContainer robot) {
         
         blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
         return Commands.runOnce(
@@ -590,7 +554,7 @@ public final class Autos {
                     System.out.println("Double Placement then Balance Auto Start");
                 }
             )
-            .andThen(doublePlacementAuto(robot)) // Runs double placement command
+            .andThen(doublePlacementAutoPW(robot)) // Runs double placement command
             .andThen(blueTeam ? robot.driveBackwardsOntoChargeStationDPBlue.get() : robot.driveBackwardsOntoChargeStationDPRed.get()) // Drives backwards onto charge station
             .andThen(robot.balanceCommand.get()) // Balances the charge station continuously
             .andThen(
