@@ -37,7 +37,7 @@ import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.PortConstants;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
-import frc.robot.Constants.FieldConstants.GamePiecePlacementLocationConstants;
+import frc.robot.Constants.PositionConstants.FieldConstants.GamePiecePlacementLocationConstants;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.math.geometry.Pose2d.*;
 
