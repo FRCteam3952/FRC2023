@@ -345,73 +345,89 @@ public final class Autos {
      */
 
     // First half of balance auto
-    public static CommandBase balanceAutoFirstHalfPW(RobotContainer robot) {
+    public static CommandBase balanceAutoFirstHalfPWBlue(RobotContainer robot) {
+        return Commands.runOnce(
+                        () -> {
+                            // Any neccessary calibration code
+                            System.out.println("Balance Auto Blue Start");
+                        }
+                )/*.alongWith(arm.calibrateArm())*/
+                .andThen(robot.driveForwardOverChargeStationBlue.get()); // Drives forward over charge station
+    }
 
-        if (blueTeam) {
-            return Commands.runOnce(
-                            () -> {
-                                // Any neccessary calibration code
-                                System.out.println("Balance Auto Blue Start");
-                            }
-                    )/*.alongWith(arm.calibrateArm())*/
-                    .andThen(robot.driveForwardOverChargeStationBlue.get()); // Drives forward over charge station
-
-        } else {
-            return Commands.runOnce(
-                            () -> {
-                                System.out.println("Balance Auto Red Start");
-                                // Any neccessary calibration code
-                            }
-                    )/*.alongWith(arm.calibrateArm())*/
-                    .andThen(robot.driveForwardOverChargeStationRed.get()); // Drives forward over charge station
-        }
+    public static CommandBase balanceAutoFirstHalfPWRed(RobotContainer robot) {
+        return Commands.runOnce(
+                        () -> {
+                            System.out.println("Balance Auto Red Start");
+                            // Any neccessary calibration code
+                        }
+                )/*.alongWith(arm.calibrateArm())*/
+                .andThen(robot.driveForwardOverChargeStationRed.get()); // Drives forward over charge station
     }
 
     // Second half of balance auto
-    public static CommandBase balanceAutoSecondHalfPW(RobotContainer robot) {
+    public static CommandBase balanceAutoSecondHalfPWBlue(RobotContainer robot) {
+        return robot.driveBackwardsOntoChargeStationBlue.get()
+                .andThen(
+                        robot.balanceCommand.get() // Balances charge station (Runs until the end of autonomous)
+                                .alongWith(
+                                        Commands.runOnce(
+                                                () -> {
+                                                    System.out.println("Balance Auto Blue Finish");
+                                                }
+                                        )
+                                )
+                );
+    }
 
-        if (blueTeam) {
-            return robot.driveBackwardsOntoChargeStationBlue.get()
-                    .andThen(
-                            robot.balanceCommand.get() // Balances charge station (Runs until the end of autonomous)
-                                    .alongWith(
-                                            Commands.runOnce(
-                                                    () -> {
-                                                        System.out.println("Balance Auto Blue Finish");
-                                                    }
-                                            )
-                                    )
-                    );
-
-        } else {
-            return robot.driveBackwardsOntoChargeStationRed.get()
-                    .andThen(
-                            robot.balanceCommand.get() // Balances charge station (Runs until the end of autonomous)
-                                    .alongWith(
-                                            Commands.runOnce(
-                                                    () -> {
-                                                        System.out.println("Balance Auto Red Finish");
-                                                    }
-                                            )
-                                    )
-                    );
-        }
+    public static CommandBase balanceAutoSecondHalfPWRed(RobotContainer robot) {
+        return robot.driveBackwardsOntoChargeStationRed.get()
+                .andThen(
+                        robot.balanceCommand.get() // Balances charge station (Runs until the end of autonomous)
+                                .alongWith(
+                                        Commands.runOnce(
+                                                () -> {
+                                                    System.out.println("Balance Auto Red Finish");
+                                                }
+                                        )
+                                )
+                );
     }
 
     // Autonomous mode for taxi points + balancing charge station
-    public static CommandBase balanceAutoPW(RobotContainer robot) {
-
-        blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
+    public static CommandBase balanceAutoPWBlue(RobotContainer robot) {
         return Commands.runOnce(
                         () -> {
                             System.out.println("Balance Auto Start");
                         }
                 )
                 .andThen(
-                        balanceAutoFirstHalfPW(robot) // Drive forward over charge station
+                        balanceAutoFirstHalfPWBlue(robot) // Drive forward over charge station
                 )
                 .andThen(
-                        balanceAutoSecondHalfPW(robot) // Drive backwards onto charge station and balance it continuously
+                        balanceAutoSecondHalfPWBlue(robot) // Drive backwards onto charge station and balance it continuously
+                )
+                .andThen(
+                        Commands.runOnce(
+                                () -> {
+                                    System.out.println("Balance Auto Finish"); // Shouldn't print until auton is over, if at all
+                                }
+                        )
+                );
+    }
+
+    // Autonomous mode for taxi points + balancing charge station
+    public static CommandBase balanceAutoPWRed(RobotContainer robot) {
+        return Commands.runOnce(
+                        () -> {
+                            System.out.println("Balance Auto Start");
+                        }
+                )
+                .andThen(
+                        balanceAutoFirstHalfPWRed(robot) // Drive forward over charge station
+                )
+                .andThen(
+                        balanceAutoSecondHalfPWRed(robot) // Drive backwards onto charge station and balance it continuously
                 )
                 .andThen(
                         Commands.runOnce(
@@ -518,19 +534,36 @@ public final class Autos {
     }
 
     // Might need to add calibration
-    public static CommandBase placeCubeThenBalanceAutoPW(RobotContainer robot) {
-
-        blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
-
+    public static CommandBase placeCubeThenBalanceAutoPWBlue(RobotContainer robot) {
         return Commands.runOnce(
                         () -> {
                             System.out.println("Place Cone then Balance Auto Start");
                         }
                 )
-                .andThen(balanceAutoFirstHalfPW(robot)) // Drives forward over charge station to grid
+                .andThen(balanceAutoFirstHalfPWBlue(robot)) // Drives forward over charge station to grid
                 .andThen(placeGamePieceAuto(robot)) // Places pre-loaded cube on top center platform
                 .andThen(
-                        balanceAutoSecondHalfPW(robot) // Drives backwards onto charge station and balances it continuously
+                        balanceAutoSecondHalfPWBlue(robot) // Drives backwards onto charge station and balances it continuously
+                                .alongWith(
+                                        Commands.runOnce(
+                                                () -> {
+                                                    System.out.println("Place Cone then Balance Auto Finish"); // Shouldn't print until auton is over, if at all
+                                                }
+                                        )
+                                )
+                );
+    }
+
+    public static CommandBase placeCubeThenBalanceAutoPWRed(RobotContainer robot) {
+        return Commands.runOnce(
+                        () -> {
+                            System.out.println("Place Cone then Balance Auto Start");
+                        }
+                )
+                .andThen(balanceAutoFirstHalfPWRed(robot)) // Drives forward over charge station to grid
+                .andThen(placeGamePieceAuto(robot)) // Places pre-loaded cube on top center platform
+                .andThen(
+                        balanceAutoSecondHalfPWRed(robot) // Drives backwards onto charge station and balances it continuously
                                 .alongWith(
                                         Commands.runOnce(
                                                 () -> {

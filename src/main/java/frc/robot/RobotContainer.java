@@ -99,7 +99,7 @@ public class RobotContainer {
     public final CommandGenerator driveForwardsToGridRed                = new CommandGenerator("DriveForwardsToGridRed");
     public final CommandGenerator driveBackwardsOntoChargeStationDPRed  = new CommandGenerator("DriveBackwardsOntoChargeStationDPRed");
     public final CommandGenerator driveBackwardsToCubeRed               = new CommandGenerator("DriveBackwardsToCubeRed");
-    
+
     public final CommandGenerator moveOneMeter                          = new CommandGenerator("MoveOneMeter");
 
 
@@ -111,9 +111,11 @@ public class RobotContainer {
     private Command placeCubeThenTaxiAuto;
     private Command placeCubeThenBalanceAuto;
     private Command doublePlacementAuto;
-    private Command balanceAutoPW; 
+    private Command balanceAutoPWRed; 
+    private Command balanceAutoPWBlue; 
     private Command doublePlacementAutoPW;
-    private Command placeCubeThenBalanceAutoPW;
+    private Command placeCubeThenBalanceAutoPWRed;
+    private Command placeCubeThenBalanceAutoPWBlue;
     private Command doublePlacementThenBalanceAutoPW;
     
     private Command m_autonomousCommand;
@@ -192,9 +194,11 @@ public class RobotContainer {
         doublePlacementAuto              = Autos.doublePlacementAuto(this);
 
         // All below autos use Pathweaver trajectories and probably don't work right now
-        balanceAutoPW                      = Autos.balanceAutoPW(this);
+        balanceAutoPWRed                       = Autos.balanceAutoPWRed(this);
+        balanceAutoPWBlue                      = Autos.balanceAutoPWBlue(this);
         doublePlacementAutoPW              = Autos.doublePlacementAutoPW(this);
-        placeCubeThenBalanceAutoPW         = Autos.placeCubeThenBalanceAutoPW(this);
+        placeCubeThenBalanceAutoPWRed          = Autos.placeCubeThenBalanceAutoPWRed(this);
+        placeCubeThenBalanceAutoPWBlue         = Autos.placeCubeThenBalanceAutoPWBlue(this);
         doublePlacementThenBalanceAutoPW   = Autos.doublePlacementThenBalanceAutoPW(this);
 
 
@@ -209,9 +213,11 @@ public class RobotContainer {
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
 
         // These autons use Pathweaver
-        m_chooser.addOption("Balance Auto (PathWeaver)", balanceAutoPW);
+        m_chooser.addOption("Red Balance Auto (PathWeaver)",  balanceAutoPWRed);
+        m_chooser.addOption("Blue Balance Auto (PathWeaver)", balanceAutoPWBlue);
         m_chooser.addOption("Double Placement Auto (PathWeaver)", doublePlacementAutoPW);
-        m_chooser.addOption("Place Cube then Balance Auto (PathWeaver)", placeCubeThenBalanceAutoPW);
+        m_chooser.addOption("Red Place Cube then Balance Auto (PathWeaver)",  placeCubeThenBalanceAutoPWRed);
+        m_chooser.addOption("Blue Place Cube then Balance Auto (PathWeaver)", placeCubeThenBalanceAutoPWBlue);
         m_chooser.addOption("Double Placement Then Balance Auto (PathWeaver)", doublePlacementThenBalanceAutoPW);
         m_chooser.addOption("Move one meter test (PathWeaver", moveOneMeter.get());
 
