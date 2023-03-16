@@ -1,4 +1,5 @@
 package frc.robot.subsystems.staticsubsystems;
+
 import edu.wpi.first.math.controller.PIDController;
 import frc.robot.util.NetworkTablesUtil;
 
@@ -29,7 +30,7 @@ public class LimeLight {
     }
 
     public static double getYAdjustment() {
-        double ty =  adjustmentPID2.calculate(NetworkTablesUtil.getLimeLightErrorY());
+        double ty = adjustmentPID2.calculate(NetworkTablesUtil.getLimeLightErrorY());
 
         // if ty is too big, return the max of 1 or -1
         if (Math.abs(ty) > 1) {
@@ -46,41 +47,40 @@ public class LimeLight {
 
     public static double getAngle() {
         float angle = (NetworkTablesUtil.getConeOrientation());
-        angle = angle > 180?angle-360:angle;
+        angle = angle > 180 ? angle - 360 : angle;
 
         // calculate the PID for the steering adjustment
-        return angle; 
+        return angle;
         // If cone angle measures greater than 180 (tip pointing towards right), it goes towards 360. If it measures less than 180 (tip pointing towards left), it goes towards 0. (360 and 0 both represent the cone pointing straight up)
     }
 
     // Gets adjustments from limelight and converts them to position adjustments
     // Super messy right now, TODO: clean up later
-    public static double[] getAdjustmentFromError(boolean flipped){
+    public static double[] getAdjustmentFromError(boolean flipped) {
         double[] adjustments = new double[3];
 
-        if(flipped){
-    
-            adjustments[0] = UltrasonicSensor.getDistanceInches(); // x-axis adjustment
-    
-            adjustments[1] = 0; // y-axis adjustment
-    
-            adjustments[2] = getXAdjustment(); // z-axis adjustment
-    
-        }
-        else{
+        if (flipped) {
 
-            double xAdjustment = NetworkTablesUtil.getLimeLightPipeline() == 1 ? (DESIRED_AREA_CONE - getArea()) / DESIRED_AREA_CONE : 
+            adjustments[0] = UltrasonicSensor.getDistanceInches(); // x-axis adjustment
+
+            adjustments[1] = 0; // y-axis adjustment
+
+            adjustments[2] = getXAdjustment(); // z-axis adjustment
+
+        } else {
+
+            double xAdjustment = NetworkTablesUtil.getLimeLightPipeline() == 1 ? (DESIRED_AREA_CONE - getArea()) / DESIRED_AREA_CONE :
                     (DESIRED_AREA_CUBE - getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
             xAdjustment = xAdjustment > 1 ? 1 : xAdjustment;
-    
+
             adjustments[0] = getYAdjustment(); // x-axis adjustment
-    
+
             adjustments[1] = UltrasonicSensor.getDistanceInches(); // y-axis adjustment
-    
+
             adjustments[2] = getXAdjustment(); // z-axis adjustment
-    
+
         }
-            
+
         return adjustments;
 
     }

@@ -40,10 +40,10 @@ public class ArmControlCommand extends CommandBase {
     private void setYPosition() {
         if (controller.getRawButtonPressedWrapper(ControllerConstants.HUMAN_STATION_HEIGHT_BUTTON_NUMBER)) {
             (new PickupPieceCommand(this.arm, this.claw, this.controller, ArmConstants.HUMAN_PLAYER_HEIGHT)).schedule();
-    
+
         } else if (controller.getRawButtonPressedWrapper(ControllerConstants.PICK_UP_HEIGHT_BUTTON_NUMBER)) {
             double[] currentCoords = arm.getTargetCoordinates();
-            (new GoTowardsCoordinatesCommandTeleop(this.arm,(new double[]{currentCoords[0],ArmConstants.PICK_UP_POSITION_Y,currentCoords[2]}),this.controller,0.2,0.4)).schedule();
+            (new GoTowardsCoordinatesCommandTeleop(this.arm, (new double[]{currentCoords[0], ArmConstants.PICK_UP_POSITION_Y, currentCoords[2]}), this.controller, 0.2, 0.4)).schedule();
         }
     }
 
@@ -51,36 +51,36 @@ public class ArmControlCommand extends CommandBase {
      * Primary arm control
      */
     private void primaryArmControl() {
-        
-        if(this.arm.getControlMode()) { // only run when arm is in manual control
-            
+
+        if (this.arm.getControlMode()) { // only run when arm is in manual control
+
             armAimAssist();
 
-            double zMagnitude = MathUtil.clamp(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust,-1,1);
-            
+            double zMagnitude = MathUtil.clamp(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust, -1, 1);
+
             this.arm.moveVector(-controller.getLeftLateralMovement() * X_SPEED, -controller.getRightLateralMovement() * Y_SPEED, zMagnitude);
-            
+
         }
-        if(this.controller.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)) { //toggle PID on and off
+        if (this.controller.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)) { //toggle PID on and off
             this.arm.setPIDControlState(false);
         }
-        
+
     }
 
     /*
      * Handles Limelight aim assist for arm
      */
-    private void armAimAssist(){
+    private void armAimAssist() {
         boolean rightTrigger = this.controller.controller.getRightTriggerAxis() > 0.2, leftTrigger = this.controller.controller.getLeftTriggerAxis() > 0.2;
-        if(rightTrigger && leftTrigger) {
+        if (rightTrigger && leftTrigger) {
             NetworkTablesUtil.setLimelightPipeline(4);
-        } else if(rightTrigger) { // cone PID, if > 0.9 do rotation as well but we don't do that here (look in ClawRotateCommand)
+        } else if (rightTrigger) { // cone PID, if > 0.9 do rotation as well but we don't do that here (look in ClawRotateCommand)
             NetworkTablesUtil.setLimelightPipeline(1);
-        } else if(leftTrigger) { // just cube PID
+        } else if (leftTrigger) { // just cube PID
             NetworkTablesUtil.setLimelightPipeline(3);
         }
-        if(rightTrigger || leftTrigger) {
-            if(!this.arm.getFlipped()){
+        if (rightTrigger || leftTrigger) {
+            if (!this.arm.getFlipped()) {
                 double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
                 //arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
                 turret_adjust = adjustments[2];

@@ -119,6 +119,7 @@ public final class MathUtil {
 
     /**
      * Mirrors a coordinate across the middle of the field's X-axis (for when we are on red alliance).
+     *
      * @param value The value to mirror (likely a blue alliance coordinate, but can be either alliance)
      * @return The mirrored value
      * @see {@link #mirrorPoseOnFieldForOppositeSide(Pose3d)}
@@ -129,6 +130,7 @@ public final class MathUtil {
 
     /**
      * Mirrors the pose across the middle of the field's X-axis (for when we are on red alliance).
+     *
      * @param pose
      * @return A new Pose3d with the mirrored value(s).
      * @see {@link #mirrorValueOnFieldForOppositeSide(double)}
@@ -138,9 +140,10 @@ public final class MathUtil {
     }
 
     /**
-     * Given the robot's field relative position, and the claw's robot relative position, find the claw's field relative position. 
+     * Given the robot's field relative position, and the claw's robot relative position, find the claw's field relative position.
+     *
      * @param robotPoseFieldRelative The robot's field relative position.
-     * @param clawPoseRobotRelative The claw's robot relative position (rotation not necessary). This could be anything, but we only use it for the claw.
+     * @param clawPoseRobotRelative  The claw's robot relative position (rotation not necessary). This could be anything, but we only use it for the claw.
      * @return The claw's field relative position
      */
     public static Pose2d findFieldRelativePose(Pose2d robotPoseFieldRelative, Pose2d clawPoseRobotRelative) {
