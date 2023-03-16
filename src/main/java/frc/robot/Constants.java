@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import frc.robot.util.ForwardKinematicsUtil;
+import frc.robot.util.MathUtil;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -223,6 +224,8 @@ public final class Constants {
         public static final double ROBOT_WIDTH = 30.0;
         public static final double ROBOT_LENGTH = 35.0;
         public static final double ROBOT_DIAGONAL_RADIUS = Math.sqrt(Math.pow(ROBOT_WIDTH / 2, 2) + Math.pow(ROBOT_LENGTH / 2, 2)); // about 23.05 inches
+        public static final double CAMERA_SIDE_OFFSET_FROM_CENTER_IN = 7.5;
+        public static final double CAMERA_SIDE_OFFSET_FROM_CENTER_M = MathUtil.inchesToMeters(CAMERA_SIDE_OFFSET_FROM_CENTER_IN);
     }
 
     /**
