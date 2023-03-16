@@ -17,6 +17,7 @@ import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -36,6 +37,7 @@ import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.Constants.PortConstants;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
 import frc.robot.Constants.FieldConstants.GamePiecePlacementLocationConstants;
@@ -175,6 +177,17 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // m_poseEstimator.addVisionMeasurement(
         //     NetworkTablesUtil.getJetsonPoseMeters(),
         //    Timer.getFPGATimestamp() - AprilTagConstants.LATENCY);
+    }
+
+    /**
+     * The camera is slightly offset from the center of the robot. This needs to be accounted for in the real robot pose.
+     */
+    public Pose2d getCenteredJetsonPose() {
+        var pose = NetworkTablesUtil.getJetsonPoseMeters();
+        double xShift = Math.cos(Math.toRadians(RobotGyro.getGyroAngleDegreesYaw())) * RobotConstants.CAMERA_SIDE_OFFSET_FROM_CENTER_M;
+        double zShift = Math.sin(Math.toRadians(RobotGyro.getGyroAngleDegreesYaw())) * RobotConstants.CAMERA_SIDE_OFFSET_FROM_CENTER_M;
+
+        return new Pose2d(pose.getX() + xShift, pose.getY() + zShift, pose.getRotation());
     }
 
     // Generate command for following a trajectory
@@ -323,6 +336,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
         if (joystick.getRawButtonReleasedWrapper(ControllerConstants.RESET_GYRO_BUTTON_NUMBER)) {
             RobotGyro.resetGyroAngle();
         }
+
+        NetworkTablesUtil.getConnections();
 
         //System.out.println("FL: " + frontLeftEncoder.getPosition() + ", FR: " + frontRightEncoder.getPosition() + ", RL: " + rearLeftEncoder.getPosition() + ", RR: " + rearRightEncoder.getPosition());
 
