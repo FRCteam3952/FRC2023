@@ -109,8 +109,7 @@ public final class Constants {
             public static final int AUTO_ROTATE_BUTTON_NUMBER               = 8; // change to whatever it is
             public static final int CALIBRATE_ARM_BUTTON_NUMBER             = 9; // change to whatever it is
             public static final int MOVE_ARM_UP_BUTTON_NUMBER               = 10;
-
-            public static final int CONFIRM_RAMSETE_SELECTION = 20;
+            public static final int CONFIRM_RAMSETE_SELECTION               = 20;
 
             // Xbox Controller (2)
 
