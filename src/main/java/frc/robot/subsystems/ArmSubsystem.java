@@ -60,6 +60,9 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetAngle1;
     private double targetAngle2;
     private double targetAngleTurret;
+    private double targetAngleTurretPrev;
+
+    private int turretAngleOffset = 0;
 
     private boolean pidOn = false;
     private boolean flipped = false;
@@ -147,6 +150,8 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+        this.turretAngleOffset = 0;
+        this.targetAngleTurretPrev = 0.0;
     }
 
     public double resetTurretEncoder() {
@@ -321,6 +326,20 @@ public class ArmSubsystem extends SubsystemBase {
         //System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
     }
 
+    /*
+     * Hopefully fixes the 180 limit issue with turret
+     */
+    public void calcTurretOffset(){
+        if(this.targetAngleTurret - this.targetAngleTurret > 300){
+            this.turretAngleOffset--;
+        }
+        else if(this.targetAngleTurret - this.targetAngleTurret < -300){
+            this.turretAngleOffset++;
+        }
+        this.targetAngleTurret += (this.turretAngleOffset * 360);
+        this.targetAngleTurretPrev = this.targetAngleTurret;
+    }
+
     /**
      * sets the coordinate in which the arm "should" move towards
      * 
@@ -343,6 +362,9 @@ public class ArmSubsystem extends SubsystemBase {
             return;
         }
         double[] adjustedCoordinates = ForwardKinematicsUtil.getCoordinatesFromAngles(targetAngle1, targetAngle2, targetAngleTurret);
+
+        //make turret spin more than -180 to 180
+        calcTurretOffset();
 
         //update current coordinates
         updateCurrentCoordinates();

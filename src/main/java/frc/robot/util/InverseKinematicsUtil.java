@@ -68,7 +68,6 @@ public final class InverseKinematicsUtil {
         } else if(turretAngle < -180) {
             turretAngle += 360;
         }
-
         return new double[] {pivot1Angle, pivot2Angle, turretAngle};
     }
 }
