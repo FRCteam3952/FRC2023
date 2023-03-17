@@ -151,6 +151,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
         return m_poseEstimator.getEstimatedPosition();
     }
 
+    public Command stopCommand() {
+        return new InstantCommand(() -> tankDrive(0, 0), this);
+    }
+
     public Pose2d getPoseInches() {
         Pose2d poseMeters = getPoseMeters();
         double conversionFactor = 39.3700787402;

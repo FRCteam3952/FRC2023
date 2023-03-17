@@ -14,7 +14,7 @@ import frc.robot.util.NetworkTablesUtil;
 
 public final class Autos {
     private static boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam(); // Whether we are on the blue team or not
-    private static Timer timer = new Timer();
+    private static final Timer timer = new Timer();
 
     /**
      * Example static factory for an autonomous command.

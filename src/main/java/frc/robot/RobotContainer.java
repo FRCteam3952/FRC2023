@@ -25,6 +25,7 @@ import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandTeleop;
 import frc.robot.commands.armcommands.PickupPieceCommand;
 import frc.robot.commands.armcommands.PoseAimArmCommand;
 import frc.robot.commands.autocommands.Autos;
+import frc.robot.commands.autocommands.SimpleAutos;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
 import frc.robot.commands.drivecommands.BalanceChargeStationCommand;
@@ -209,6 +210,9 @@ public class RobotContainer {
         m_chooser.addOption("Place Cube then Taxi Auto", placeCubeThenTaxiAuto);
         m_chooser.addOption("Place Cube then Balance Auto", placeCubeThenBalanceAuto);
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
+        m_chooser.addOption("Double Placement Auto Using Raw Trajectories (coded at 3am)", SimpleAutos.doublePlacementAuto(this));
+        m_chooser.addOption("Move one meter using raw trajectories", SimpleAutos.moveOneMeter(this));
+        m_chooser.addOption("Go to estimated cone position using raw trajectories", SimpleAutos.goToEstimatedConeLocation(this));
 
         // These autons use Pathweaver
         m_chooser.addOption("Balance Auto (PathWeaver)", balanceAutoPW);

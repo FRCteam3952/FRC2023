@@ -10,9 +10,9 @@ public class GoTowardsCoordinatesCommandAuto extends CommandBase {
 
     private final ArmSubsystem arm;
 
-    private double[] newArmPosition;
-    private double speed1;
-    private double speed2;
+    private final double[] newArmPosition;
+    private final double speed1;
+    private final double speed2;
 
     public GoTowardsCoordinatesCommandAuto(ArmSubsystem arm, double[] newArmPosition, double speed1, double speed2) {
         this.arm = arm;
