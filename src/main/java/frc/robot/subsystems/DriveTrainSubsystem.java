@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -21,20 +22,26 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.TrajectoryConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.RobotContainer;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
+import frc.robot.Constants.FieldConstants.GamePiecePlacementLocationConstants;
+
 
 import java.util.List;
 
@@ -247,10 +254,76 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // Run path following command, then stop at the end.
         // return ramseteCommand.andThen(() -> this.tankDriveVolts(0, 0));
     }
+    
+    public static final String PoseUnit = "IN";
+    //Use "IN" or "M" for inches or meters
+
+    public Pose2d getStartPose() {
+        if(PoseUnit == "IN") {
+            return getPoseInches();
+        }
+        else if(PoseUnit == "M") {
+            return getPoseMeters();
+        }
+        return new Pose2d();
+    }
+
+    public Pose2d getEndPose() {
+        int idx = (int) NetworkTablesUtil.getEntry("robogui","selectedPlacementPosition").getInteger(0);
+        
+        int x_col = idx % 9;
+        int z_row = x_col % 3;
+        
+        if(z_row==0) { //TODO: What to do with ground nodes
+            return new Pose2d();
+        }
+
+        Pose3d tmp;
+        switch(x_col) {
+            // POLES:
+            case 0:
+                tmp = GamePiecePlacementLocationConstants.POLE_POSITIONS[z_row][0];
+                break;
+            case 2:
+                tmp = GamePiecePlacementLocationConstants.POLE_POSITIONS[z_row][1];
+                break;
+            case 3:
+                tmp = GamePiecePlacementLocationConstants.POLE_POSITIONS[z_row][2];
+                break;
+            case 5:
+                tmp = GamePiecePlacementLocationConstants.POLE_POSITIONS[z_row][3];
+                break;
+            case 6:
+                tmp = GamePiecePlacementLocationConstants.POLE_POSITIONS[z_row][4];
+                break;
+            case 8:
+                tmp = GamePiecePlacementLocationConstants.POLE_POSITIONS[z_row][5];
+                break;
+            
+            // PLATFORMS:
+            case 1:
+                tmp = GamePiecePlacementLocationConstants.PLATFORM_POSITIONS[z_row][0];
+                break;
+            case 4:
+                tmp = GamePiecePlacementLocationConstants.PLATFORM_POSITIONS[z_row][1];
+            case 7:
+                tmp = GamePiecePlacementLocationConstants.PLATFORM_POSITIONS[z_row][2];
+            default:
+                tmp = new Pose3d();
+                System.out.println("something broke...NetworkTables did not provide the correct platform/pole index.");
+                
+        }
+        return new Pose2d(
+                    tmp.getX(),
+                    tmp.getY(),
+                    tmp.getRotation().toRotation2d()
+                );
+    } 
+
 
     @Override
     public void periodic() {
-
+        //get starting pose         
         updateOdometry();
 
         Pose2d pose = getPoseMeters();
@@ -262,7 +335,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // System.out.println("Gyro Pitch: " + RobotGyro.getGyroAngleDegreesPitch());
         //System.out.println("Drive motor value: " + this.getWheelSpeeds());
 
-        if (joystick.getRawButtonReleasedWrapper(ControllerConstants.RESET_GYRO_BUTTON_NUMBER)) {
+        if (Joystick.getRawButtonReleasedWrapper(ControllerConstants.RESET_GYRO_BUTTON_NUMBER)) {
             RobotGyro.resetGyroAngle();
         }
 

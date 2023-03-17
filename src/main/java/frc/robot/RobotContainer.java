@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -157,6 +158,7 @@ public class RobotContainer {
         driverController.joystick.button(ControllerConstants.BALANCE_CHARGE_STATION_BUTTON_NUMBER).whileTrue(new BalanceChargeStationCommand(driveTrain));
 
         driverController.joystick.button(7).onTrue(new GoTowardsCoordinatesCommandTeleop(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, xboxController, 0.2, 0.2, false));
+        xboxController.controller.button(ControllerConstants.CONFIRM_RAMSETE_SELECTION).onTrue(driveTrain.generateRamseteCommand(driveTrain.getStartPose(), driveTrain.getEndPose(), false));
         //driverController.joystick.button(1).whileTrue(new PoseAimArmCommand(arm, driveTrain, new Translation3d(20,60,0)));
     }
 
