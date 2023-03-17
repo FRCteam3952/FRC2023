@@ -57,8 +57,8 @@ public final class Constants {
 
         public static final double ARM_1_INITIAL_ANGLE      = 10.0;
         public static final double ARM_2_INITIAL_ANGLE      = 20.0;
-        public static final double MAX_OUTPUT               = 0.2;
-        public static final double MIN_OUTPUT               = -0.2;
+        public static final double MAX_OUTPUT               = 0.6;
+        public static final double MIN_OUTPUT               = -0.6;
         public static final double SPEED_DEC_ON_UNFLIP      = 0.2;
         public static final double SPEED_DEC_ON_FLIP        = 1.0;
         public static final double COMPLEMENTING_FLIP_SPEED = 1.2;
@@ -136,9 +136,9 @@ public final class Constants {
         public static final int PIVOT_2_LIMIT_PORT              = 0;
         public static final int TURRET_LIMIT_PORT               = 2;
 
-        public static final int PIVOT_1_ABSOLUTE_ENCDOER_PORT   = 4;
-        public static final int PIVOT_2_ABSOLUTE_ENCDOER_PORT   = 5;
-        public static final int TURRET_ABSOLUTE_ENCDOER_PORT    = 6;
+        public static final int PIVOT_1_ABSOLUTE_ENCDOER_PORT   = 5;
+        public static final int PIVOT_2_ABSOLUTE_ENCDOER_PORT   = 4;
+        public static final int TURRET_ABSOLUTE_ENCDOER_PORT    = 3;
     }
 
     /**

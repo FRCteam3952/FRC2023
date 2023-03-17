@@ -22,7 +22,12 @@ public class ClawOpenandCloseCommand extends CommandBase {
         // System.out.println("CLAW TOGGLE: " + toggle);
         if (this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER) && toggle) {
             // System.out.println("BUTTON PRESSED");
-            this.claw.setClawOpened(!this.claw.getClawClosed());
+            // this.claw.setClawOpened(!this.claw.getClawClosed());
+            if(this.claw.getClawClosed()) {
+                this.claw.setClawOpened(false);
+            } else {
+                this.claw.setClawOpened(true);
+            }
             toggle = false;
         }
         if (this.joystick.getRawButtonReleasedWrapper(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER)) {

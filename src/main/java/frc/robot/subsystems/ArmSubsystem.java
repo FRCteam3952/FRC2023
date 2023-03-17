@@ -13,9 +13,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.commands.armcommands.FlipArmCommand;
+import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 import frc.robot.util.MathUtil;
+import frc.robot.util.NetworkTablesUtil;
 
 /*
  * Arm axis control scheme:
@@ -106,6 +108,10 @@ public class ArmSubsystem extends SubsystemBase {
         this.arm2AbsoluteEncoder = new DutyCycleEncoder(PortConstants.PIVOT_2_ABSOLUTE_ENCDOER_PORT);
         this.turretAbsoluteEncoder = new DutyCycleEncoder(PortConstants.TURRET_ABSOLUTE_ENCDOER_PORT);
 
+        //this.arm1AbsoluteEncoder.setDistancePerRotation(360);
+        //this.arm2AbsoluteEncoder.setDistancePerRotation(360);
+        //this.turretAbsoluteEncoder.setDistancePerRotation(360);
+
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
         this.turretEncoder.setPosition(0);
@@ -114,7 +120,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.pidController1.setTolerance(ArmConstants.PID_TOLERANCE);
         this.pidController2 = new PIDController(1.6e-2, 0, 0);
         this.pidController2.setTolerance(ArmConstants.PID_TOLERANCE);
-        this.pidController3 = new PIDController(1e-2, 0, 0);
+        this.pidController3 = new PIDController(3e-2, 0, 0);
         this.pidController3.setTolerance(ArmConstants.PID_TOLERANCE);
         // END
 
@@ -132,12 +138,8 @@ public class ArmSubsystem extends SubsystemBase {
         resetCoords();
     }
 
-    public void reset() {
-        this.pidOn = false;
-        resetCoords();
-    }
-
     public void resetCoords() {
+        System.out.println("IOHWEROFHOISD WE HAV ERSRE THE COORDS");
         this.targetX = ArmConstants.STARTING_COORDS[0];
         this.targetY = ArmConstants.STARTING_COORDS[1];
         this.targetZ = ArmConstants.STARTING_COORDS[2];
@@ -146,8 +148,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.cur_z = ArmConstants.STARTING_COORDS[2];
         this.targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
         this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
-        this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
-        this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+        this.targetAngleTurret = 0;
     }
 
     public double resetTurretEncoder() {
@@ -167,26 +168,9 @@ public class ArmSubsystem extends SubsystemBase {
      * @return [pivot1Angle, pivot2Angle, turretAngle]
      */
     public double[] getCurrentAnglesDeg() {
-        double angle1 = pivot1Encoder.getPosition();
-        double angle2 = pivot2Encoder.getPosition();
-        double angle3 = turretEncoder.getPosition();
-
-        if (flipped) { //offset for when arm is flipped because our gearbox is loose for some reason
-            angle1 -= 8;
-        }
-
-        return new double[]{angle1, angle2, angle3};
-    }
-
-    /**
-     * Get the current angles from motor encoders in radians
-     *
-     * @return [pivot1Angle, pivot2Angle, turretAngle]
-     */
-    public double[] getCurrentAnglesRad() {
-        double angle1 = Math.toRadians(pivot1Encoder.getPosition());
-        double angle2 = pivot2Encoder.getPosition();
-        double angle3 = Math.toRadians(turretEncoder.getPosition());
+        double angle1 = getArm1ConvertedAbsoluteDistance();
+        double angle2 = getArm2ConvertedAbsoluteDistance();
+        double angle3 = getTurretConvertedAbsoluteDistance();
 
         return new double[]{angle1, angle2, angle3};
     }
@@ -304,7 +288,8 @@ public class ArmSubsystem extends SubsystemBase {
         // gets PID control calculations
         double p1Speed = pidController1.calculate(angles[0], targetAngle1) * arm1SpeedMultiplier;
         double p2Speed = pidController2.calculate(angles[1], targetAngle2) * arm2SpeedMultiplier;
-        double turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
+        double turretSpeed = pidController3.calculate(angles[2], MathUtil.roundNearestHundredth(targetAngleTurret + RobotGyro.getGyroAngleDegreesYaw()));
+        System.out.println("tat - rgggady: " + (MathUtil.roundNearestHundredth(targetAngleTurret + RobotGyro.getGyroAngleDegreesYaw())));
 
         // if power is NaN, don't run it :D
         if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed) || Double.isNaN(turretSpeed)) {
@@ -314,7 +299,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         p1Speed = Math.min(maxOutput, Math.max(p1Speed, minOutput));
         p2Speed = Math.min(maxOutput2, Math.max(p2Speed, minOutput2));
-        turretSpeed = Math.min(maxOutput, Math.max(turretSpeed, minOutput));
+        // turretSpeed = Math.min(maxOutput, Math.max(turretSpeed, minOutput));
 
         setTurretSpeed(turretSpeed);
         setPivot1Speed(p1Speed);
@@ -331,10 +316,6 @@ public class ArmSubsystem extends SubsystemBase {
      * @param z       the target z coordinate
      */
     public void setTargetCoordinates(double x, double y, double z) {
-        if (this.targetX == x && this.targetY == y && this.targetZ == z) { // if intended coordinates are same, then don't change target
-            return;
-        }
-
         // Updates target Angles
         double[] targetAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, getFlipped());
 
@@ -392,8 +373,15 @@ public class ArmSubsystem extends SubsystemBase {
         (new FlipArmCommand(this, flipped)).withInterruptBehavior(InterruptionBehavior.kCancelSelf).schedule();
     }
 
+    public double[] getTargetAngles(){
+        return new double[] {targetAngle1, targetAngle2, targetAngleTurret};
+    }
+
     public boolean isAtCoords() {
         double[] curAngles = getCurrentAnglesDeg();
+        System.out.println("ARM1 at pos: " + (Math.abs(targetAngle1 - curAngles[0]) < ArmConstants.ANGLE_DELTA));
+        System.out.println("ARM2 at pos: " + (Math.abs(targetAngle2 - curAngles[1]) < ArmConstants.ANGLE_DELTA));
+        System.out.println("TURR at pos: " + (Math.abs(targetAngleTurret - curAngles[2]) < ArmConstants.ANGLE_DELTA));
         return (Math.abs(targetAngle1 - curAngles[0]) < ArmConstants.ANGLE_DELTA) && (Math.abs(targetAngle2 - curAngles[1]) < ArmConstants.ANGLE_DELTA) && (Math.abs(targetAngleTurret - curAngles[2]) < ArmConstants.ANGLE_DELTA);
     }
 
@@ -407,6 +395,30 @@ public class ArmSubsystem extends SubsystemBase {
         return new Pose3d(MathUtil.inchesToMeters(this.cur_x), MathUtil.inchesToMeters(this.cur_z), MathUtil.inchesToMeters(this.cur_y), new Rotation3d()); // z and y are swapped to handle our global coordinate system (the final coord parameter is the height).
     }
 
+    public double getArm1AbsoluteRawDistance() {
+        return -(this.arm1AbsoluteEncoder.get() - 0.062);
+    }
+
+    public double getArm2AbsoluteRawDistance() {
+        return -(this.arm2AbsoluteEncoder.get() - 0.822);
+    }
+
+    public double getTurretAbsoluteRawDistance() {
+        return this.turretAbsoluteEncoder.get() - 0.683;
+    }
+
+    public double getArm1ConvertedAbsoluteDistance() {
+        return getArm1AbsoluteRawDistance() * 360 + ArmConstants.ARM_1_INITIAL_ANGLE;
+    }
+
+    public double getArm2ConvertedAbsoluteDistance() {
+        return getArm2AbsoluteRawDistance() * 360 + ArmConstants.ARM_2_INITIAL_ANGLE;
+    }
+
+    public double getTurretConvertedAbsoluteDistance() {
+        return getTurretAbsoluteRawDistance() * 360d / 4d - 21.25;
+    }
+
     @Override
     public void periodic() {
         // System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
@@ -415,26 +427,10 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
         // System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
         // System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed() + ", Turret Limit: " + getTurretLimitPressed());
-        System.out.println("A1: " + this.arm1AbsoluteEncoder.getAbsolutePosition() + ", A2: " + this.arm2AbsoluteEncoder.getAbsolutePosition() + ", T: " + this.turretAbsoluteEncoder.getAbsolutePosition());
 
-        boolean resetPivot1 = getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle1 - ArmConstants.ARM_1_INITIAL_ANGLE) < 5;
-        boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
-
-        if (getTurretLimitPressed()) {
-            this.turretEncoder.setPosition(0);
-        }
-
-        if (resetPivot1) {
-            this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
-        }
-
-        if (resetPivot2) {
-            this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
-        }
-
-        if (resetPivot1 && resetPivot2) {
-            resetCoords();
-        }
+        // System.out.println("A1: " + getArm1ConvertedAbsoluteDistance() + ", A2: " + getArm2ConvertedAbsoluteDistance() + ", T: " + getTurretConvertedAbsoluteDistance());
+        // System.out.println("lim1: " + resetPivot1 + ", lim2: " + resetPivot2);
+        NetworkTablesUtil.getEntry("robot", "target").setDoubleArray(new double[] {targetX, targetY, targetZ});
 
         //handles PID
         // System.out.println("PID STATE: " + pidOn);

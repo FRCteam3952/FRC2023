@@ -7,6 +7,7 @@ package frc.robot.commands.autocommands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
@@ -222,6 +223,7 @@ public final class Autos {
                         )
                 )
                 .andThen(waitCommand(0.2)) // Waits 0.2 seconds
+                .andThen(new InstantCommand( () -> System.out.println("AHKFAHKJHDJKJHAGKFHDJKSHGJKHGSJDFHGHSGHJSDGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG BALLS")))
                 .andThen(robot.goToStartingPos.get()); // Moves arm to starting position
     }
 
@@ -234,16 +236,18 @@ public final class Autos {
 
     // Double placement: places cube on top center platform, drives backwards to pick up cone, drives forward towards grid, places cone on top right pole
     public static CommandBase doublePlacementAuto(RobotContainer robot) {
-        return placeGamePieceAuto(robot) // Places cube on top center section of grid
-                .andThen(resetTimerCommand()) // Resets timer
-                .andThen(
+        return // placeGamePieceAuto(robot) // Places cube on top center section of grid
+                // .andThen(resetTimerCommand()) // Resets timer
+                // .andThen(
                         Commands.run(
                                         () -> {
+                                                timer.reset();
+                                                timer.start();
                                             robot.driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.25 seconds to pick up cone
                                         },
                                         robot.driveTrain
                                 )
-                                .until(() -> timer.get() > 4.25)
+                                .until(() -> timer.get() > 1)
                                 .andThen(
                                         Commands.runOnce(
                                                 () -> {
@@ -252,8 +256,8 @@ public final class Autos {
                                                 robot.driveTrain
                                         )
                                 )
-                                .alongWith(robot.goToAbovePickupPos.get()) // Goes to 10 inches above pickup position
-                )
+                                // .alongWith(robot.goToAbovePickupPos.get()) // Goes to 10 inches above pickup position
+                // )
                 .andThen(
                         Commands.runOnce(
                                 () -> {
@@ -261,8 +265,8 @@ public final class Autos {
                                 }
                         )
                 )
-                .andThen(robot.aimAssist.get()) // Guides claw to game piece
-                .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
+                // .andThen(robot.aimAssist.get()) // Guides claw to game piece
+                // .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
                 .andThen(waitCommand(0.5)) // Waits 0.5 seconds
                 .andThen(
                         Commands.runOnce(
@@ -296,7 +300,7 @@ public final class Autos {
                                 robot.driveTrain
                         )
                 )
-                .andThen(robot.goToCenterRight.get()) // Arm goes to center right pole to place cone
+                // .andThen(robot.goToCenterRight.get()) // Arm goes to center right pole to place cone
                 .andThen(waitCommand(0.2)) // Waits 0.2 seconds
                 .andThen(
                         Commands.runOnce(
@@ -308,7 +312,8 @@ public final class Autos {
                         )
                 )
                 .andThen(waitCommand(0.2)) // Waits 0.2 seconds
-                .andThen(robot.goToStartingPos.get());
+                // .andThen(robot.goToStartingPos.get());
+                ;
     }
 
     public static CommandBase placeCubeThenBalanceAuto(RobotContainer robot) {
@@ -427,7 +432,7 @@ public final class Autos {
     // Might need to add calibration 
     // Places pre-loaded cone, drives backwards to pick up cube, drives forwards to place cube on grid
     public static CommandBase doublePlacementAutoPW(RobotContainer robot) {
-        blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
+        blueTeam = true;// NetworkTablesUtil.getIfOnBlueTeam();
         // TODO someone make this code into smaller chunks or something
         if (blueTeam) {
             return Commands.runOnce(
@@ -437,7 +442,8 @@ public final class Autos {
                     )
                     .andThen(placeGamePieceAuto(robot)) // Drops pre-loaded cube onto top center platform
                     .andThen(robot.driveBackwardsToConeBlue.get() // Drives backwards to cone
-                            .alongWith(robot.goToAbovePickupPos.get())) // Goes to 10 inches above pickup position
+                            // .alongWith(robot.goToAbovePickupPos.get())
+                        ) // Goes to 10 inches above pickup position
                     .andThen(
                             Commands.runOnce(
                                     () -> {
@@ -445,8 +451,8 @@ public final class Autos {
                                     }
                             )
                     )
-                    .andThen(robot.aimAssist.get()) // Guides claw to game piece
-                    .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
+                    // .andThen(robot.aimAssist.get()) // Guides claw to game piece
+                    // .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
                     .andThen(waitCommand(0.2)) // Waits 0.2 seconds
                     .andThen(
                             Commands.runOnce(
@@ -489,8 +495,8 @@ public final class Autos {
                                     }
                             )
                     )
-                    .andThen(robot.aimAssist.get()) // Guides claw to game piece
-                    .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
+                    // .andThen(robot.aimAssist.get()) // Guides claw to game piece
+                    // .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
                     .andThen(waitCommand(0.2)) // Waits 0.2 seconds
                     .andThen(
                             Commands.runOnce(

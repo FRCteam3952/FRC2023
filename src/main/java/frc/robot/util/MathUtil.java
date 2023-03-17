@@ -158,4 +158,22 @@ public final class MathUtil {
         double fieldClawY = newClawY + robotY;
         return new Pose2d(fieldClawX, fieldClawY, new Rotation2d());
     }
+
+    /**
+     * Rotates a point around the origin
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param angle Angle to rotate by, in deg
+     */
+    public static double[] rotatePoint(double x, double y, double angle) {
+        double[] rotatedPoint = new double[2];
+        rotatedPoint[0] = x * Math.cos(Math.toRadians(angle)) - y * Math.sin(Math.toRadians(angle));
+        rotatedPoint[1] = x * Math.sin(Math.toRadians(angle)) + y * Math.cos(Math.toRadians(angle));
+        return rotatedPoint;
+    }
+
+    public static double roundNearestHundredth(double d) {
+        return Math.floor(d * 100) / 100d;
+    }
 }
