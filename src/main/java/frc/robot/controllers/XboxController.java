@@ -10,12 +10,13 @@ public class XboxController extends AbstractJoystick {
 
     public final CommandXboxController controller;
 
-    public XboxController(CommandXboxController controller){
+    public XboxController(CommandXboxController controller) {
         this.controller = controller;
     }
 
     /**
      * The XBox controller sometimes returns a value of 0.01 to 0.03 when at rest. To avoid floating point errors, this method corrects for that.
+     *
      * @param value The value to correct
      * @return 0.0 if the value is within the deadzone {@link #IGNORE_DELTA}, otherwise the value
      */
@@ -35,11 +36,11 @@ public class XboxController extends AbstractJoystick {
         return correctDeadzone(controller.getRightY());
     }
 
-    public double getLeftHorizontalMovement(){
+    public double getLeftHorizontalMovement() {
         return correctDeadzone(controller.getLeftX());
     }
-    
-    public double getLeftLateralMovement(){
+
+    public double getLeftLateralMovement() {
         return correctDeadzone(controller.getLeftY());
     }
 
@@ -63,7 +64,7 @@ public class XboxController extends AbstractJoystick {
         return controller.getHID().getRawButtonReleased(button);
     }
 
-    public boolean getRawButtonPressedWrapper(int button){
+    public boolean getRawButtonPressedWrapper(int button) {
         return controller.getHID().getRawButtonPressed(button);
     }
 }

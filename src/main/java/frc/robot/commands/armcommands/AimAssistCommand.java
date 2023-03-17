@@ -7,14 +7,14 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
 /**
  * This is here for implementation in Autonomous mode, for teleop there is already an implementation in ArmControlCommand
  */
-public class AimAssistCommand extends CommandBase{
+public class AimAssistCommand extends CommandBase {
     private final ArmSubsystem arm;
 
     // Inches per 20ms
     //private static final double X_SPEED = 0.8;
     //private static final double Y_SPEED = 0.8;
     private static final double TURRET_SPEED = 1;
-    
+
     public AimAssistCommand(ArmSubsystem arm) {
         this.arm = arm;
         addRequirements(arm);
@@ -28,13 +28,12 @@ public class AimAssistCommand extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if(!this.arm.getFlipped()){
+        if (!this.arm.getFlipped()) {
             double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
             // arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
-            this.arm.setTurretSpeed(adjustments[2]);  
-            System.out.println(LimeLight.getXAdjustment() * TURRET_SPEED); 
-        }
-        else{
+            this.arm.setTurretSpeed(adjustments[2]);
+            System.out.println(LimeLight.getXAdjustment() * TURRET_SPEED);
+        } else {
             System.out.println("yo mama");
         }
     }

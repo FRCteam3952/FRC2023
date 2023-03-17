@@ -1,9 +1,9 @@
 package frc.robot.commands.armcommands;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ArmTestCommand extends CommandBase {
     private final ArmSubsystem arm;
@@ -27,9 +27,9 @@ public class ArmTestCommand extends CommandBase {
         arm.setPivot1Speed(-joystick.getRightLateralMovement() / 2);
         arm.setPivot2Speed(joystick.getLeftLateralMovement() / 2);
 
-        arm.setTurretSpeed((joystick.controller.getLeftTriggerAxis() - joystick.controller.getRightTriggerAxis()) * 0.5);
+        arm.setTurretSpeed((joystick.controller.getLeftTriggerAxis() - joystick.controller.getRightTriggerAxis()) * 1);
 
-        if(this.joystick.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)){
+        if (this.joystick.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)) {
             this.arm.setPIDControlState(true);
         }
         /*

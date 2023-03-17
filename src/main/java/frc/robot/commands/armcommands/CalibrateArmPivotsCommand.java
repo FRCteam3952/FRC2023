@@ -1,8 +1,8 @@
 package frc.robot.commands.armcommands;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class CalibrateArmPivotsCommand extends CommandBase {
     private static final double INIT_SPEED = -0.2;
@@ -40,12 +40,12 @@ public class CalibrateArmPivotsCommand extends CommandBase {
     public void execute() {
         this.arm.setPIDControlState(false);
         double speed = INIT_SPEED;
-        if(this.controller.getRawButtonWrapper(4)) {
+        if (this.controller.getRawButtonWrapper(4)) {
             speed += BOOST;
         }
-        switch(this.calibrationState) {
+        switch (this.calibrationState) {
             case CALIB_PIVOT_2:
-                if(!this.arm.getPivot2LimitPressed()) {
+                if (!this.arm.getPivot2LimitPressed()) {
                     this.arm.setPivot2Speed(speed);
                 } else {
                     this.arm.setPivot2Speed(0);
@@ -53,7 +53,7 @@ public class CalibrateArmPivotsCommand extends CommandBase {
                 }
                 break;
             case CALIB_PIVOT_1:
-                if(!this.arm.getPivot1LimitPressed()) {
+                if (!this.arm.getPivot1LimitPressed()) {
                     this.arm.setPivot1Speed(speed);
                 } else {
                     this.arm.setPivot1Speed(0);

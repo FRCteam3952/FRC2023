@@ -20,17 +20,17 @@ public class ClawOpenandCloseCommand extends CommandBase {
     @Override
     public void execute() {
         // System.out.println("CLAW TOGGLE: " + toggle);
-        if(this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER) && toggle){
+        if (this.joystick.getRawButtonWrapper(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER) && toggle) {
             // System.out.println("BUTTON PRESSED");
-            if(this.claw.getClawClosed()){
+            // this.claw.setClawOpened(!this.claw.getClawClosed());
+            if(this.claw.getClawClosed()) {
                 this.claw.setClawOpened(false);
-            }
-            else{
+            } else {
                 this.claw.setClawOpened(true);
             }
             toggle = false;
         }
-        if(this.joystick.getRawButtonReleasedWrapper(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER)){
+        if (this.joystick.getRawButtonReleasedWrapper(ControllerConstants.CLAW_GRIP_OR_RELEASE_BUTTON_NUMBER)) {
             // System.out.println("BUTTON RELEASED");
             toggle = true;
         }
@@ -40,7 +40,7 @@ public class ClawOpenandCloseCommand extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        
+
     }
 
     // Returns true when the command should end.

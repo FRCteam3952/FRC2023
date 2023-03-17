@@ -25,7 +25,7 @@ public class RobotGyro {
 
     private static double angleAdjust = 0;
 
-    public static Rotation2d getRotation2d(){
+    public static Rotation2d getRotation2d() {
         return new Rotation2d(Math.toRadians(gyro.getAngle() + angleAdjust));
     }
 
@@ -40,7 +40,7 @@ public class RobotGyro {
     public static double getGyroAngleDegreesPitch() {
         return gyro.getYComplementaryAngle() + angleAdjust;
     }
-    
+
 
     public static void setGyroAxis(ADIS16470_IMU.IMUAxis axis) {
         gyro.setYawAxis(axis);
@@ -60,7 +60,7 @@ public class RobotGyro {
         gyro.calibrate();
     }
 
-    public static double getGyroGeneralAcceleration(){
+    public static double getGyroGeneralAcceleration() {
         return gyro.getAccelX() + gyro.getAccelY();
     }
 }

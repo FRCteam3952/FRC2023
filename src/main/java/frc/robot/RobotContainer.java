@@ -22,8 +22,10 @@ import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.armcommands.CalibrateArmPivotsCommand;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandTeleop;
+import frc.robot.commands.armcommands.PickupPieceCommand;
 import frc.robot.commands.armcommands.PoseAimArmCommand;
 import frc.robot.commands.autocommands.Autos;
+import frc.robot.commands.autocommands.SimpleAutos;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
 import frc.robot.commands.clawcommands.ClawRotateCommand;
 import frc.robot.commands.drivecommands.BalanceChargeStationCommand;
@@ -68,7 +70,7 @@ public class RobotContainer {
     
     // Command suppliers
     public final Supplier<ArmTestCommand>                  testArmControl          = () -> new ArmTestCommand(arm, xboxController);
-    public final Supplier<ArmControlCommand>               armControl              = () -> new ArmControlCommand(arm, clawGrip, xboxController);
+    public final Supplier<ArmControlCommand>               armControl              = () -> new ArmControlCommand(arm, xboxController);
     public final Supplier<AimAssistCommand>                aimAssist               = () -> new AimAssistCommand(arm);
 
     public final Supplier<ClawOpenandCloseCommand>         clawOpenandCloseCommand = () -> new ClawOpenandCloseCommand(clawGrip, xboxController);
@@ -85,6 +87,7 @@ public class RobotContainer {
 
     public final Supplier<GoTowardsCoordinatesCommandAuto> goTowardsPickupCommand  = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Implement later during downtime
 
+    public final Supplier<PickupPieceCommand> pickupPieceCommand                   = () -> new PickupPieceCommand(arm, clawGrip, xboxController, ArmConstants.HUMAN_PLAYER_HEIGHT);
 
     public CommandGenerator driveForwardOverChargeStationBlue     = new CommandGenerator("DriveForwardOverChargeStationBlue");
     public CommandGenerator driveBackwardsOntoChargeStationBlue   = new CommandGenerator("DriveBackwardsOntoChargeStationBlue");
@@ -99,6 +102,7 @@ public class RobotContainer {
     public CommandGenerator moveOneMeter                          = new CommandGenerator("MoveOneMeter");
     public CommandGenerator driveBackwardsToCubeBlue              = new CommandGenerator("DriveBackwardsToCubeBlue");
     public CommandGenerator driveBackwardsToCubeRed               = new CommandGenerator("DriveBackwardsToCubeRed");
+    public CommandGenerator turn                                  = new CommandGenerator("Turn");
 
 
     private Command defaultAuto = Autos.defaultAuto(/* pass in parameters */); // placeholder, pass in subsystems or commands if needed
@@ -158,6 +162,7 @@ public class RobotContainer {
 
         //driverController.joystick.button(7).onTrue(new GoTowardsCoordinatesCommandTeleop(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, xboxController, 0.2, 0.2, false));
         //driverController.joystick.button(1).whileTrue(new PoseAimArmCommand(arm, driveTrain, new Translation3d(20,60,0)));
+        xboxController.controller.button(ControllerConstants.HUMAN_STATION_HEIGHT_BUTTON_NUMBER).onTrue(pickupPieceCommand.get());
     }
 
     /**
@@ -205,6 +210,9 @@ public class RobotContainer {
         m_chooser.addOption("Place Cube then Taxi Auto", placeCubeThenTaxiAuto);
         m_chooser.addOption("Place Cube then Balance Auto", placeCubeThenBalanceAuto);
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
+        m_chooser.addOption("Double Placement Auto Using Raw Trajectories (coded at 3am)", SimpleAutos.doublePlacementAuto(this));
+        m_chooser.addOption("Move one meter using raw trajectories", SimpleAutos.moveOneMeter(this));
+        m_chooser.addOption("Go to estimated cone position using raw trajectories", SimpleAutos.goToEstimatedConeLocation(this));
 
         // These autons use Pathweaver
         m_chooser.addOption("Balance Auto (PathWeaver)", balanceAutoPW);
@@ -212,6 +220,8 @@ public class RobotContainer {
         m_chooser.addOption("Place Cube then Balance Auto (PathWeaver)", placeCubeThenBalanceAutoPW);
         m_chooser.addOption("Double Placement Then Balance Auto (PathWeaver)", doublePlacementThenBalanceAutoPW);
         m_chooser.addOption("Move one meter test (PathWeaver", moveOneMeter.get());
+        m_chooser.addOption("turn", turn.get());
+        m_chooser.addOption("driv back to con erejd tedst", driveBackwardsToConeRed.get());
 
         SmartDashboard.putData("Auto choices", m_chooser);
 }
@@ -236,6 +246,7 @@ public class RobotContainer {
         
         this.driveTrain.setDefaultCommand(this.manualDrive);
         this.arm.setDefaultCommand(this.armControl.get());
+        // this.arm.setDefaultCommand(this.testArmControl.get());
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand.get());
         this.clawRotation.setDefaultCommand(this.clawRotateCommand.get());
     }

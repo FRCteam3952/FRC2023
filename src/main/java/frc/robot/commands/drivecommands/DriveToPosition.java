@@ -4,10 +4,8 @@
 
 package frc.robot.commands.drivecommands;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.staticsubsystems.RobotGyro;
 
 /**
  * The command to drive the robot manually with joysticks.
@@ -27,13 +25,13 @@ public class DriveToPosition extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        
+
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        
+
     }
 
     // Called once the command ends or is interrupted.
