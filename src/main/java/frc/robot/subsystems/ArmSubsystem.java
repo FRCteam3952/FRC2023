@@ -461,7 +461,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getArm2ConvertedAbsoluteDistance() {
-        return Math.abs(arm2AbsoluteEncoder.getAbsolutePosition()) * -360 + 337; // getArm2AbsoluteRawDistance() * 360 + ArmConstants.ARM_2_INITIAL_ANGLE + 295.69;
+        return Math.abs(arm2AbsoluteEncoder.getAbsolutePosition()) * -360 + 361.5; // getArm2AbsoluteRawDistance() * 360 + ArmConstants.ARM_2_INITIAL_ANGLE + 295.69;
     }
 
     public Command flipTurretCommand(XboxController xboxController) {
