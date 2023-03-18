@@ -6,9 +6,9 @@ import frc.robot.util.NetworkTablesUtil;
 public class LimeLight {
     private static final double DESIRED_AREA_CONE = 5000; // tentative measurement, pixels
     private static final double DESIRED_AREA_CUBE = 420; // measure later
-    private static final double kp = 0.003;
+    private static final double kp = 0.0015;
     private static final double ki = 0.00;
-    private static final double kd = 0.001;
+    private static final double kd = 0.00;
     private static final PIDController adjustmentPID = new PIDController(kp, ki, kd);
     private static final PIDController adjustmentPID2 = new PIDController(kp, ki, kd);
 
@@ -61,7 +61,7 @@ public class LimeLight {
 
         if (flipped) {
 
-            adjustments[0] = UltrasonicSensor.getDistanceInches(); // x-axis adjustment
+            adjustments[0] = 0;
 
             adjustments[1] = 0; // y-axis adjustment
 
@@ -73,9 +73,9 @@ public class LimeLight {
                     (DESIRED_AREA_CUBE - getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
             xAdjustment = xAdjustment > 1 ? 1 : xAdjustment;
 
-            adjustments[0] = getYAdjustment(); // x-axis adjustment
+            adjustments[0] = 0; // x-axis adjustment
 
-            adjustments[1] = UltrasonicSensor.getDistanceInches(); // y-axis adjustment
+            adjustments[1] = 0;
 
             adjustments[2] = getXAdjustment(); // z-axis adjustment
 

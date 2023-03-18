@@ -1,19 +1,27 @@
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import frc.robot.controllers.XboxController;
+import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.armcommands.FlipArmCommand;
-import frc.robot.subsystems.staticsubsystems.RobotGyro;
+import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandTeleop;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 import frc.robot.util.MathUtil;
@@ -49,7 +57,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final DutyCycleEncoder arm1AbsoluteEncoder;
     private final DutyCycleEncoder arm2AbsoluteEncoder;
-    private final DutyCycleEncoder turretAbsoluteEncoder;
 
     private final DigitalInput arm1Limit;
     private final DigitalInput arm2Limit;
@@ -68,9 +75,6 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetAngle1;
     private double targetAngle2;
     private double targetAngleTurret;
-    private double targetAngleTurretPrev;
-
-    private int turretAngleOffset = 0;
 
     private boolean pidOn = false;
     private boolean flipped = false;
@@ -79,14 +83,21 @@ public class ArmSubsystem extends SubsystemBase {
     private double arm2SpeedMultiplier = 1;
 
     private boolean isManual = true;
+    private boolean is2D = true;
+
+    private boolean isAtHumanPlayer = false;
 
     private double maxOutput = ArmConstants.MAX_OUTPUT;
     private double minOutput = ArmConstants.MIN_OUTPUT;
     private double maxOutput2 = ArmConstants.MAX_OUTPUT;
     private double minOutput2 = ArmConstants.MIN_OUTPUT;
 
+    private final Supplier<Pose2d> robotPoseSupplier;
+
     // arm control constructor
-    public ArmSubsystem() {
+    public ArmSubsystem(Supplier<Pose2d> robotPoseSupplier) {
+        this.robotPoseSupplier = robotPoseSupplier;
+
         // Initialize arm motors
         this.pivot1 = new CANSparkMax(PortConstants.PIVOT1_PORT, MotorType.kBrushless);
         this.pivot2 = new CANSparkMax(PortConstants.PIVOT2_PORT, MotorType.kBrushless);
@@ -104,26 +115,21 @@ public class ArmSubsystem extends SubsystemBase {
         // Arm Angle Conversion Factors
         this.pivot1Encoder.setPositionConversionFactor(2.7); // 125:1 gearbox
         this.pivot2Encoder.setPositionConversionFactor(3.65); // 125:1 gearbox
-        this.turretEncoder.setPositionConversionFactor(1); // 60:1 gearbox with drive wheel to lazy susan ratio
+        this.turretEncoder.setPositionConversionFactor(0.64); // 125:1 gearbox with drive wheel to lazy susan ratio
         // END
 
         this.arm1AbsoluteEncoder = new DutyCycleEncoder(PortConstants.PIVOT_1_ABSOLUTE_ENCDOER_PORT);
         this.arm2AbsoluteEncoder = new DutyCycleEncoder(PortConstants.PIVOT_2_ABSOLUTE_ENCDOER_PORT);
-        this.turretAbsoluteEncoder = new DutyCycleEncoder(PortConstants.TURRET_ABSOLUTE_ENCDOER_PORT);
-
-        //this.arm1AbsoluteEncoder.setDistancePerRotation(360);
-        //this.arm2AbsoluteEncoder.setDistancePerRotation(360);
-        //this.turretAbsoluteEncoder.setDistancePerRotation(360);
 
         this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
         this.turretEncoder.setPosition(0);
         // TODO: TUNE
-        this.pidController1 = new PIDController(1.6e-2, 0, 0); // nice
+        this.pidController1 = new PIDController(1.8e-2, 0, 0); // nice
         this.pidController1.setTolerance(ArmConstants.PID_TOLERANCE);
         this.pidController2 = new PIDController(1.6e-2, 0, 0);
         this.pidController2.setTolerance(ArmConstants.PID_TOLERANCE);
-        this.pidController3 = new PIDController(3e-2, 0, 0);
+        this.pidController3 = new PIDController(2.8e-2, 0, 0);
         this.pidController3.setTolerance(ArmConstants.PID_TOLERANCE);
         // END
 
@@ -139,10 +145,10 @@ public class ArmSubsystem extends SubsystemBase {
 
         // Get starting coords from the initial angle constants
         resetCoords();
+        correctMotorEncoders();
     }
 
     public void resetCoords() {
-        System.out.println("IOHWEROFHOISD WE HAV ERSRE THE COORDS");
         this.targetX = ArmConstants.STARTING_COORDS[0];
         this.targetY = ArmConstants.STARTING_COORDS[1];
         this.targetZ = ArmConstants.STARTING_COORDS[2];
@@ -154,8 +160,19 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetAngleTurret = 0;
     }
 
-    public double resetTurretEncoder() {
-        return this.turretEncoder.getPosition();
+    public void resetArm1Encoder() {
+        this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
+    }
+
+    public void resetArm2Encoder() {
+        this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+    }
+
+    public boolean is2D(){
+        return this.is2D;
+    }
+    public void setis2D(boolean is2D){
+        this.is2D = is2D;
     }
 
     /**
@@ -171,9 +188,9 @@ public class ArmSubsystem extends SubsystemBase {
      * @return [pivot1Angle, pivot2Angle, turretAngle]
      */
     public double[] getCurrentAnglesDeg() {
-        double angle1 = getArm1ConvertedAbsoluteDistance();
-        double angle2 = getArm2ConvertedAbsoluteDistance();
-        double angle3 = getTurretConvertedAbsoluteDistance();
+        double angle1 = pivot1Encoder.getPosition();
+        double angle2 = pivot2Encoder.getPosition();
+        double angle3 = turretEncoder.getPosition();
 
         return new double[]{angle1, angle2, angle3};
     }
@@ -291,11 +308,10 @@ public class ArmSubsystem extends SubsystemBase {
         // gets PID control calculations
         double p1Speed = pidController1.calculate(angles[0], targetAngle1) * arm1SpeedMultiplier;
         double p2Speed = pidController2.calculate(angles[1], targetAngle2) * arm2SpeedMultiplier;
-        double turretSpeed = pidController3.calculate(angles[2], MathUtil.roundNearestHundredth(targetAngleTurret + RobotGyro.getGyroAngleDegreesYaw()));
-        System.out.println("tat - rgggady: " + (MathUtil.roundNearestHundredth(targetAngleTurret + RobotGyro.getGyroAngleDegreesYaw())));
+        // System.out.println("tat - rgggady: " + (MathUtil.roundNearestHundredth(targetAngleTurret + RobotGyro.getGyroAngleDegreesYaw())));
 
         // if power is NaN, don't run it :D
-        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed) || Double.isNaN(turretSpeed)) {
+        if (Double.isNaN(p1Speed) || Double.isNaN(p2Speed)) {
             System.out.println("PID is NaN, so skip");
             return;
         }
@@ -304,25 +320,18 @@ public class ArmSubsystem extends SubsystemBase {
         p2Speed = Math.min(maxOutput2, Math.max(p2Speed, minOutput2));
         // turretSpeed = Math.min(maxOutput, Math.max(turretSpeed, minOutput));
 
-        setTurretSpeed(turretSpeed);
         setPivot1Speed(p1Speed);
         setPivot2Speed(p2Speed);
 
-        //System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
-    }
+        if(!this.is2D){
+            double turretSpeed = pidController3.calculate(angles[2], targetAngleTurret);
+            if(Double.isNaN(turretSpeed)){
+                return;
+            }
+            setTurretSpeed(turretSpeed);
+        }
 
-    /*
-     * Hopefully fixes the 180 limit issue with turret
-     */
-    public void calcTurretOffset(){
-        if(this.targetAngleTurret - this.targetAngleTurret > 300){
-            this.turretAngleOffset--;
-        }
-        else if(this.targetAngleTurret - this.targetAngleTurret < -300){
-            this.turretAngleOffset++;
-        }
-        this.targetAngleTurret += (this.turretAngleOffset * 360);
-        this.targetAngleTurretPrev = this.targetAngleTurret;
+        //System.out.println("SPEEDS: " + p1Speed + " " + p2Speed + " " + turretSpeed);
     }
 
     /**
@@ -332,7 +341,22 @@ public class ArmSubsystem extends SubsystemBase {
      * @param y       the target y coordinate (height)
      * @param z       the target z coordinate
      */
+    public void setTargetAngles(double pivot1Angle, double pivot2Angle){
+        if(is2D){
+            double[] newCoords = ForwardKinematicsUtil.getCoordinatesFromAngles(pivot1Angle, pivot2Angle, 0);
+            this.targetAngle1 = pivot1Angle;
+            this.targetAngle2 = pivot2Angle;
+            this.targetX = newCoords[0];
+            this.targetY = newCoords[1];
+        }
+    }
     public void setTargetCoordinates(double x, double y, double z) {
+
+        if(this.is2D){
+            x = Math.max(x, 0);
+            z = 0;
+        }
+
         // Updates target Angles
         double[] targetAngles = InverseKinematicsUtil.getAnglesFromCoordinates(x, y, z, getFlipped());
 
@@ -343,8 +367,13 @@ public class ArmSubsystem extends SubsystemBase {
         }
         double[] adjustedCoordinates = ForwardKinematicsUtil.getCoordinatesFromAngles(targetAngle1, targetAngle2, targetAngleTurret);
 
-        //make turret spin more than -180 to 180
-        calcTurretOffset();
+        /*if (!isAtHumanPlayer){
+            if (targetAngleTurret > 180) {
+                targetAngleTurret -= 360;
+            } else if (targetAngleTurret < -180) {
+                targetAngleTurret += 360;
+            }
+        }*/
 
         //update current coordinates
         updateCurrentCoordinates();
@@ -355,9 +384,20 @@ public class ArmSubsystem extends SubsystemBase {
         targetAngleTurret = targetAngles[2];
 
         // Updates target coordinates
+        if(this.is2D) {
+            adjustedCoordinates[0] = Math.abs(adjustedCoordinates[0]);
+        }
         this.targetX = adjustedCoordinates[0];
         this.targetY = adjustedCoordinates[1];
         this.targetZ = adjustedCoordinates[2];
+    }
+
+    public void setIsAtHumanPlayer(boolean atHumanPlayer) {
+        this.isAtHumanPlayer = atHumanPlayer;
+    }
+
+    public boolean isAtHumanPlayer() {
+        return this.isAtHumanPlayer;
     }
 
     /**
@@ -405,38 +445,36 @@ public class ArmSubsystem extends SubsystemBase {
         return (Math.abs(targetAngle1 - curAngles[0]) < ArmConstants.ANGLE_DELTA) && (Math.abs(targetAngle2 - curAngles[1]) < ArmConstants.ANGLE_DELTA) && (Math.abs(targetAngleTurret - curAngles[2]) < ArmConstants.ANGLE_DELTA);
     }
 
+    public void correctMotorEncoders(){
+        double[] curAngles = getCurrentAnglesDeg();
+        if(Math.abs(curAngles[0] - getArm1ConvertedAbsoluteDistance()) > 4){
+            pivot1Encoder.setPosition(getArm1ConvertedAbsoluteDistance());
+        }
+        if(Math.abs(curAngles[1] - getArm2ConvertedAbsoluteDistance()) > 4){
+            pivot2Encoder.setPosition(getArm2ConvertedAbsoluteDistance());
+        }
+    }
+
     /**
      * Returns the current claw pose. Note that the claw pose is stored as {x, z, y}, where y is the height of the claw. This allows you to use {@link Pose3d#toPose2d()} to get a correct 2D pose.
      *
      * @return A Pose3d object representing the current claw pose.
      */
-    public Pose3d getClawPose() {
+    public Pose3d getRobotClawPose3d() {
         this.updateCurrentCoordinates(); // Make sure the coordinates are the latest ones.
         return new Pose3d(MathUtil.inchesToMeters(this.cur_x), MathUtil.inchesToMeters(this.cur_z), MathUtil.inchesToMeters(this.cur_y), new Rotation3d()); // z and y are swapped to handle our global coordinate system (the final coord parameter is the height).
     }
 
-    public double getArm1AbsoluteRawDistance() {
-        return -(this.arm1AbsoluteEncoder.get() - 0.062);
-    }
-
-    public double getArm2AbsoluteRawDistance() {
-        return -(this.arm2AbsoluteEncoder.get() - 0.822);
-    }
-
-    public double getTurretAbsoluteRawDistance() {
-        return this.turretAbsoluteEncoder.get() - 0.683;
-    }
-
     public double getArm1ConvertedAbsoluteDistance() {
-        return getArm1AbsoluteRawDistance() * 360 + ArmConstants.ARM_1_INITIAL_ANGLE;
+        return arm1AbsoluteEncoder.getAbsolutePosition() * -360 + 335; // getArm1AbsoluteRawDistance();// * 360; // + 2* ArmConstants.ARM_1_INITIAL_ANGLE + 23.5
     }
 
     public double getArm2ConvertedAbsoluteDistance() {
-        return getArm2AbsoluteRawDistance() * 360 + ArmConstants.ARM_2_INITIAL_ANGLE;
+        return Math.abs(arm2AbsoluteEncoder.getAbsolutePosition()) * -360 + 361.5; // getArm2AbsoluteRawDistance() * 360 + ArmConstants.ARM_2_INITIAL_ANGLE + 295.69;
     }
 
-    public double getTurretConvertedAbsoluteDistance() {
-        return getTurretAbsoluteRawDistance() * 360d / 4d - 21.25;
+    public Command flipTurretCommand(XboxController xboxController) {
+        return new GoTowardsCoordinatesCommandTeleop(this, new double[] {ArmConstants.STARTING_COORDS[0] * (isAtHumanPlayer ? -1 : 1), ArmConstants.STARTING_COORDS[1], ArmConstants.STARTING_COORDS[2]}, xboxController, 0.2, 0.2);
     }
 
     @Override
@@ -444,19 +482,51 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
         // System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
-        // System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
-        // System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
+        //System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
+        //System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
         // System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed() + ", Turret Limit: " + getTurretLimitPressed());
-
+        //System.out.println("CURRENT COORDS: " + Arrays.toString(getCurrentCoordinates()));
+        //System.out.println("is at human pakyter: " + this.isAtHumanPlayer);
         // System.out.println("A1: " + getArm1ConvertedAbsoluteDistance() + ", A2: " + getArm2ConvertedAbsoluteDistance() + ", T: " + getTurretConvertedAbsoluteDistance());
         // System.out.println("lim1: " + resetPivot1 + ", lim2: " + resetPivot2);
+        // System.out.println("Arm1: " + getArm1ConvertedAbsoluteDistance() + ", Arm2: " + getArm2ConvertedAbsoluteDistance());
+        // System.out.println("Abs Enc 1: " + getArm1ConvertedAbsoluteDistance() + ", motor enc 1: " + pivot1Encoder.getPosition());
+        // System.out.println("Abs Enc 2: " + getArm2ConvertedAbsoluteDistance() + ", motor enc 2: " + pivot2Encoder.getPosition());
+        System.out.println("ABS 1: " + getArm1ConvertedAbsoluteDistance() + ", ABS 2: " + getArm2ConvertedAbsoluteDistance());
         NetworkTablesUtil.getEntry("robot", "target").setDoubleArray(new double[] {targetX, targetY, targetZ});
+        NetworkTablesUtil.getEntry("robot", "arm_angles").setDoubleArray(getCurrentAnglesDeg());
+        NetworkTablesUtil.getEntry("robot", "arm_p1_ang").setDouble(MathUtil.roundNearestHundredth(getCurrentAnglesDeg()[0]));
+        NetworkTablesUtil.getEntry("robot", "arm_p2_ang").setDouble(MathUtil.roundNearestHundredth(getCurrentAnglesDeg()[1]));
+        NetworkTablesUtil.getEntry("robot", "arm_tu_ang").setDouble(MathUtil.roundNearestHundredth(getCurrentAnglesDeg()[2]));
+
+        correctMotorEncoders();
 
         //handles PID
         // System.out.println("PID STATE: " + pidOn);
+        
         if (pidOn) {
             goTowardTargetCoordinates();
         }
+    }
+
+    public double[] getArmCameraOffsetFromRobotCenter() {
+        // The turret uses CCW -, but the RobotGyro uses CCW +
+        // So, negate the turret's value to match the RobotGyro
+        double turretAngleCCWPos = -this.getTurretAngleDeg();
+        double gyroAngle = RobotGyro.getGyroAngleDegreesYaw();
+
+        double fullRotation = gyroAngle + turretAngleCCWPos;
+        
+        // Now, we need to rotate the camera's offset by the fullRotation so that the robot's position isn't shifted by the camera.
+        return MathUtil.rotatePoint(0, -RobotConstants.CAMERA_SIDE_OFFSET_FROM_CENTER_M, fullRotation);
+    }
+
+    public Pose2d getClawFieldPose2d() {
+        Pose2d claw = this.getRobotClawPose3d().toPose2d();
+        Pose2d robot = this.robotPoseSupplier.get();
+
+        double[] rotatedClawPosition = MathUtil.rotatePoint(claw.getX(), claw.getY(), robot.getRotation().getDegrees());
+        return new Pose2d(new Translation2d(rotatedClawPosition[0] + robot.getX(), rotatedClawPosition[1] + robot.getY()), robot.getRotation());
     }
 
     @Override

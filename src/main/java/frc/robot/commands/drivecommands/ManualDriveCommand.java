@@ -39,8 +39,6 @@ public class ManualDriveCommand extends CommandBase {
         this.driveTrain.tankDrive(-this.joystick.getLateralMovement(), this.joystick.getRotation());
         // this.driveTrain.tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(this.joystick.getHorizontalMovement(), this.joystick.getLateralMovement());
 
-
-        // TODO: DISABLE THIS WHEN WE GO TO MECANUM x TANK DRIVE.
         int pov = this.joystick.joystick.getHID().getPOV();
         if (pov == 0) {
             this.driveTrain.tankDrive(MICRO_PP, 0);

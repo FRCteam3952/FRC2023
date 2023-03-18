@@ -14,7 +14,7 @@ import frc.robot.util.MathUtil;
  */
 public class SimpleAutos {
     /**
-     * Is moving away from the drivers (positive) or negative?
+     * Is moving away from the drivers (should be positive) or does it need to be negative?
      */
     public static final boolean POSITIVE_IS_FORWARD = true; // pls work
 
@@ -28,10 +28,14 @@ public class SimpleAutos {
      * @return A Command that moves the robot n meters
      */
     public static Command moveNMeters(double meters, RobotContainer robot) {
-        Pose2d currentPose = new Pose2d();
-        Pose2d newPose = new Pose2d(currentPose.getTranslation().getX() + (POSITIVE_IS_FORWARD ? meters : -meters), currentPose.getTranslation().getY(), currentPose.getRotation());
+        Pose2d start = robot.driveTrain.getPoseMeters();
+        Pose2d end = new Pose2d(
+                start.getTranslation().getX() + (POSITIVE_IS_FORWARD ? meters : -meters), 
+                start.getTranslation().getY(), 
+                start.getRotation()
+        );
 
-        return robot.driveTrain.generateRamseteCommand(currentPose, newPose, false);
+        return robot.driveTrain.generateRamseteCommand(start, end, false);
     }
 
     /**
@@ -45,11 +49,25 @@ public class SimpleAutos {
     }
 
     public static Command goToEstimatedConeLocation(RobotContainer robot) {
-        return moveNMeters(MathUtil.inchesToMeters(PICKUP_CONE_POS), robot);
+        Pose2d curr = new Pose2d();
+        Pose2d end = new Pose2d(
+                curr.getTranslation().getX() + MathUtil.inchesToMeters(PICKUP_CONE_POS),
+                curr.getTranslation().getY(),
+                curr.getRotation()
+        );
+        return robot.driveTrain.generateRamseteCommand(curr, end, false);
+        // return moveNMeters(MathUtil.inchesToMeters(PICKUP_CONE_POS), robot);
     }
 
     public static Command returnFromEstimatedConeLocationToStart(RobotContainer robot) {
-        return moveNMeters(MathUtil.inchesToMeters(-PICKUP_CONE_POS), robot);
+        Pose2d end = new Pose2d();
+        Pose2d start = new Pose2d(
+                end.getTranslation().getX() + MathUtil.inchesToMeters(PICKUP_CONE_POS),
+                end.getTranslation().getY(),
+                end.getRotation()
+        );
+        return robot.driveTrain.generateRamseteCommand(start, end, true);
+        // return moveNMeters(MathUtil.inchesToMeters(-PICKUP_CONE_POS), robot);
     }
 
     /**

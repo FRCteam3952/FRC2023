@@ -57,8 +57,8 @@ public final class Constants {
 
         public static final double ARM_1_INITIAL_ANGLE      = 10.0;
         public static final double ARM_2_INITIAL_ANGLE      = 20.0;
-        public static final double MAX_OUTPUT               = 0.6;
-        public static final double MIN_OUTPUT               = -0.6;
+        public static final double MAX_OUTPUT               = 0.4;
+        public static final double MIN_OUTPUT               = -0.4; //changed from 0.7 for testing angle setter
         public static final double SPEED_DEC_ON_UNFLIP      = 0.2;
         public static final double SPEED_DEC_ON_FLIP        = 1.0;
         public static final double COMPLEMENTING_FLIP_SPEED = 1.2;
@@ -97,8 +97,8 @@ public final class Constants {
 
             // Xbox Controller
             public static final int HUMAN_STATION_HEIGHT_BUTTON_NUMBER      = 1;
-            public static final int PICK_UP_HEIGHT_BUTTON_NUMBER            = 2;
-            public static final int EXTEND_ARM_BUTTON_NUMBER                = 3; // change to up arrow on d-pad
+            public static final int PICK_UP_HEIGHT_BUTTON_NUMBER            = 3;
+            public static final int GROUND_HEIGHT_BUTTON_NUMBER             = 2; // change to up arrow on d-pad
             public static final int FLIP_TURRET_BUTTON_NUMBER               = 5;
             public static final int TOGGLE_PID_BUTTON_NUMBER                = 4;
             public static final int TOGGLE_PIPELINES                        = 10;
@@ -378,5 +378,9 @@ public final class Constants {
 
             public static final double LATENCY = 0.2; //average april tag latency (I'm guessing in seconds)
         }
+    }
+
+    public static class Preferences {
+
     }
 }
