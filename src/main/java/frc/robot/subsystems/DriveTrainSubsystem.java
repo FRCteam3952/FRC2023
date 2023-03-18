@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.TrajectoryConstants;
+import frc.robot.Constants.FieldConstants.AprilTagConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.controllers.FlightJoystick;
@@ -36,6 +37,7 @@ import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class DriveTrainSubsystem extends SubsystemBase {
 
@@ -62,8 +64,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
     //private boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam();
 
     private final DifferentialDrivePoseEstimator m_poseEstimator;
+    private final Supplier<Pose2d> aprilTagsPoseSupplier;
 
-    public DriveTrainSubsystem(FlightJoystick joystick) {
+    public DriveTrainSubsystem(FlightJoystick joystick, Supplier<Pose2d> aprilTagsPoseSupplier) {
         this.frontLeftMotor = new CANSparkMax(PortConstants.FRONT_LEFT_MOTOR_PORT, MotorType.kBrushless);
         this.frontRightMotor = new CANSparkMax(PortConstants.FRONT_RIGHT_MOTOR_PORT, MotorType.kBrushless);
         this.rearLeftMotor = new CANSparkMax(PortConstants.REAR_LEFT_MOTOR_PORT, MotorType.kBrushless);
@@ -96,16 +99,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
                 RobotGyro.getRotation2d(),
                 frontLeftEncoder.getPosition(),
                 frontRightEncoder.getPosition(),
-                new Pose2d(),
+                new Pose2d(new Translation2d(648, 14), new Rotation2d()),
                 new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01),
                 new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.01)
         );
         this.joystick = joystick;
+        this.aprilTagsPoseSupplier = aprilTagsPoseSupplier;
 
         this.tankDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
         tankDrive.setSafetyEnabled(false);
-
-
     }
 
     /**
@@ -169,10 +171,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
     public void updateOdometry() {
         m_poseEstimator.update(RobotGyro.getRotation2d(), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition()); //update pose
 
-        // Also apply vision measurements
-        // m_poseEstimator.addVisionMeasurement(
-        //     NetworkTablesUtil.getJetsonPoseMeters(),
-        //    Timer.getFPGATimestamp() - AprilTagConstants.LATENCY);
+        if(NetworkTablesUtil.jetsonHasPose()) {
+            this.m_poseEstimator.addVisionMeasurement(aprilTagsPoseSupplier.get(), AprilTagConstants.LATENCY);
+        }
     }
 
     // Generate command for following a trajectory

@@ -95,7 +95,11 @@ public class NetworkTablesUtil {
     public static Pose2d getJetsonPoseMeters() {
         NetworkTable table = INSTANCE.getTable("jetson");
         double[] jetsonPoseXYZ = MathUtil.inchesArrayToMetersArray(table.getEntry("pose").getDoubleArray(new double[]{0.0, 0.0, 0.0})); // X, Y, Z
-        return new Pose2d(jetsonPoseXYZ[0], jetsonPoseXYZ[2], RobotGyro.getRotation2d());
+        return new Pose2d(jetsonPoseXYZ[2], jetsonPoseXYZ[0], RobotGyro.getRotation2d());
+    }
+
+    public static boolean jetsonHasPose() {
+        return getEntry("jetson", "has_pose").getBoolean(false);
     }
 
     public static boolean getIfOnBlueTeam() {

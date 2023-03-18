@@ -5,6 +5,7 @@
 package frc.robot;
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,7 +23,6 @@ import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.armcommands.CalibrateArmPivotsCommand;
 import frc.robot.commands.armcommands.FlipTurretCommand;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
-import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandTeleop;
 import frc.robot.commands.armcommands.PickupPieceCommand;
 import frc.robot.commands.autocommands.Autos;
 import frc.robot.commands.autocommands.SimpleAutos;
@@ -41,6 +41,7 @@ import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.wrappers.TrajectoryReader;
 
 import frc.robot.util.CommandGenerator;
+import frc.robot.util.NetworkTablesUtil;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -58,8 +59,8 @@ public class RobotContainer {
     public final XboxController xboxController = new XboxController(new CommandXboxController(OperatorConstants.XBOX_CONTROLLER_PORT));
 
     // The robot's subsystems and commands are defined here...
-    public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem(driverController);
-    public final ArmSubsystem arm = new ArmSubsystem();
+    public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem(driverController, this::getApriltagEstimatedPose);
+    public final ArmSubsystem arm = new ArmSubsystem(this::getDriveOdometryPose);
     public final ClawGripSubsystem clawGrip = new ClawGripSubsystem();
     public final ClawRotationSubsystem clawRotation = new ClawRotationSubsystem();
 
@@ -263,5 +264,15 @@ public class RobotContainer {
         //this.arm.setDefaultCommand(this.testArmControl.get());
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand.get());
         this.clawRotation.setDefaultCommand(this.clawRotateCommand.get());
+    }
+
+    public Pose2d getApriltagEstimatedPose() {
+        Pose2d pose = NetworkTablesUtil.getJetsonPoseMeters();
+        double[] offset = this.arm.getArmCameraOffsetFromRobotCenter();
+        return new Pose2d(pose.getX() + offset[0], pose.getY() + offset[1], pose.getRotation());
+    }
+
+    public Pose2d getDriveOdometryPose() {
+        return this.driveTrain.getPoseMeters();
     }
 }
