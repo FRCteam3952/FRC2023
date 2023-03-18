@@ -60,7 +60,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final DigitalInput arm1Limit;
     private final DigitalInput arm2Limit;
-    private final DigitalInput turretLimit;
 
     private final PIDController pidController1, pidController2, pidController3;
 
@@ -136,7 +135,6 @@ public class ArmSubsystem extends SubsystemBase {
         // Initialize arm limit switches
         this.arm1Limit = new DigitalInput(PortConstants.PIVOT_1_LIMIT_PORT);
         this.arm2Limit = new DigitalInput(PortConstants.PIVOT_2_LIMIT_PORT);
-        this.turretLimit = new DigitalInput(PortConstants.TURRET_LIMIT_PORT);
 
         // Set starting arm angles
         this.targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
@@ -158,6 +156,14 @@ public class ArmSubsystem extends SubsystemBase {
         this.targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
         this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
         this.targetAngleTurret = 0;
+    }
+    public void reset2DCoords(){
+        this.targetX = ArmConstants.STARTING_COORDS[0];
+        this.targetY = ArmConstants.STARTING_COORDS[1];
+        this.cur_x = ArmConstants.STARTING_COORDS[0];
+        this.cur_y = ArmConstants.STARTING_COORDS[1];
+        this.targetAngle1 = ArmConstants.ARM_1_INITIAL_ANGLE;
+        this.targetAngle2 = ArmConstants.ARM_2_INITIAL_ANGLE;
     }
 
     public void resetArm1Encoder() {
@@ -291,10 +297,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     public boolean getPivot2LimitPressed() {
         return !this.arm2Limit.get();
-    }
-
-    public boolean getTurretLimitPressed() {
-        return !this.turretLimit.get();
     }
 
     public void goTowardTargetCoordinates() {
@@ -507,6 +509,7 @@ public class ArmSubsystem extends SubsystemBase {
         NetworkTablesUtil.getEntry("robot", "arm_p2_ang").setDouble(MathUtil.roundNearestHundredth(getCurrentAnglesDeg()[1]));
         NetworkTablesUtil.getEntry("robot", "arm_tu_ang").setDouble(MathUtil.roundNearestHundredth(getCurrentAnglesDeg()[2]));
 
+        checkLimits();
         //correctMotorEncoders();
 
         //handles PID
@@ -515,6 +518,25 @@ public class ArmSubsystem extends SubsystemBase {
         if (pidOn) {
             goTowardTargetCoordinates();
         }
+    }
+
+    public void checkLimits(){
+        
+        boolean resetPivot1 = getPivot1LimitPressed() && Math.abs(this.pivot1Encoder.getPosition() - ArmConstants.ARM_1_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle1 - ArmConstants.ARM_1_INITIAL_ANGLE) < 5;
+        boolean resetPivot2 = getPivot2LimitPressed() && Math.abs(this.pivot2Encoder.getPosition() - ArmConstants.ARM_2_INITIAL_ANGLE) > 0.1 && Math.abs(targetAngle2 - ArmConstants.ARM_2_INITIAL_ANGLE) < 5;
+
+        if (resetPivot1) {
+            this.pivot1Encoder.setPosition(ArmConstants.ARM_1_INITIAL_ANGLE);
+        }
+
+        if (resetPivot2) {
+            this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
+        }
+
+        if(resetPivot1 && resetPivot2) {
+            reset2DCoords();
+        }
+
     }
 
     public double[] getArmCameraOffsetFromRobotCenter() {
