@@ -16,9 +16,9 @@ public class BalanceChargeStationCommand extends CommandBase {
 
     private final DriveTrainSubsystem driveTrain;
 
-    private final double kP = 1d / 120d;
-    private final double MAX_SPEED = 0.3; // not nice
-    private final double MIN_SPEED = -0.3;
+    private final double kP = 1d / 180d;
+    private final double MAX_SPEED = 0.1; // not nice
+    private final double MIN_SPEED = -0.1;
     private final double ANGLE_DELTA = 3;
 
     public BalanceChargeStationCommand(DriveTrainSubsystem driveTrain) {
@@ -35,7 +35,7 @@ public class BalanceChargeStationCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        System.out.println("BALANCING DEEZ NUTS");
+        System.out.println("BALANCING DEEZ NUTS pitch: " + RobotGyro.getGyroAngleDegreesPitch());
         double pitch = RobotGyro.getGyroAngleDegreesPitch();
         double speed = pitch * kP;
         speed = MathUtil.clamp(speed, MIN_SPEED, MAX_SPEED);

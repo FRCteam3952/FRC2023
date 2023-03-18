@@ -77,16 +77,16 @@ public final class Autos {
                 .andThen(
                         Commands.run(
                                 () -> {
-                                    if (timer.get() < 5.5) {
+                                    if (timer.get() < 3.5) {
                                         System.out.println("Slow Drive");
-                                        robot.driveTrain.tankDrive(0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
+                                        robot.driveTrain.tankDrive(0.4, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
                                     } else {
                                         robot.driveTrain.tankDrive(0, 0); // Stops driving
                                         System.out.println("Taxi Auto Finish");
                                     }
                                 },
                                 robot.driveTrain
-                        ).until(() -> timer.get() > 5.5)
+                        ).until(() -> timer.get() > 3.5)
                 );
     }
 
@@ -234,13 +234,13 @@ public final class Autos {
                 .andThen(taxiAuto(robot)); // Initiates taxi (drives backwards)
     }
 
-    public static CommandBase placeCubeThenBalance(RobotContainer robot) {
+    public static CommandBase placeCubeThenBalance(RobotContainer robot) { //FINDERNUTS
         return placeCubeThenTaxiAuto(robot)
                 .andThen(resetTimerCommand())
                 .andThen(
                         Commands.run(
                                 () -> {
-                                    if (timer.get() < 2.4) {
+                                    if (timer.get() < 3) {
                                         System.out.println("Slow Drive: " + timer.get());
                                         robot.driveTrain.tankDrive(-0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
                                     } else {
@@ -249,7 +249,7 @@ public final class Autos {
                                     }
                                 },
                                 robot.driveTrain
-                ).until(() -> timer.get() > 2.4)
+                ).until(() -> timer.get() > 3)
                 )
                 .andThen(new BalanceChargeStationCommand(robot.driveTrain));
     }
