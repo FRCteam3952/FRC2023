@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
+import frc.robot.commands.drivecommands.BalanceChargeStationCommand;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
 
@@ -76,7 +77,7 @@ public final class Autos {
                 .andThen(
                         Commands.run(
                                 () -> {
-                                    if (timer.get() < 6) {
+                                    if (timer.get() < 5.5) {
                                         System.out.println("Slow Drive");
                                         robot.driveTrain.tankDrive(0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
                                     } else {
@@ -85,7 +86,7 @@ public final class Autos {
                                     }
                                 },
                                 robot.driveTrain
-                        )
+                        ).until(() -> timer.get() > 5.5)
                 );
     }
 
@@ -231,6 +232,39 @@ public final class Autos {
     public static CommandBase placeCubeThenTaxiAuto(RobotContainer robot) {
         return placeGamePieceAuto(robot) // Places cube on top center grid position
                 .andThen(taxiAuto(robot)); // Initiates taxi (drives backwards)
+    }
+
+    public static CommandBase placeCubeThenBalance(RobotContainer robot) {
+        return placeCubeThenTaxiAuto(robot)
+                .andThen(resetTimerCommand())
+                .andThen(
+                        Commands.run(
+                                () -> {
+                                    if (timer.get() < 2.4) {
+                                        System.out.println("Slow Drive: " + timer.get());
+                                        robot.driveTrain.tankDrive(-0.25, 0); // Drives backwards slowly to edge of charge station for 1.15 seconds
+                                    } else {
+                                        robot.driveTrain.tankDrive(0, 0); // Stops driving
+                                        System.out.println("Taxi Auto Finish");
+                                    }
+                                },
+                                robot.driveTrain
+                ).until(() -> timer.get() > 2.4)
+                )
+                .andThen(new BalanceChargeStationCommand(robot.driveTrain));
+    }
+
+    public static CommandBase placeCubeThenTaxiThenBalanceChargeAuto(RobotContainer robot) {
+        return placeCubeThenBalanceAuto(robot)
+                .andThen(resetTimerCommand())
+                .andThen(
+                        Commands.run(
+                                () -> {// Drive until the robot is on the far edge of the charge station
+                                    robot.driveTrain.tankDrive(0.3, 0);
+                                },
+                                robot.driveTrain
+                        )
+                );
     }
 
 
