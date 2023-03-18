@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
@@ -185,6 +186,48 @@ public final class Autos {
                                 robot.driveTrain
                         )
                 );
+    }
+
+    public static CommandBase overChargeStationAndBackGyroAuto(RobotContainer robot) {
+        return Commands.run(() -> {
+            robot.driveTrain.tankDrive(0.25, 0);
+        }, robot.driveTrain)
+        .until(
+            () -> (RobotGyro.getGyroAngleDegreesPitch() < -5)
+        )
+        .andThen(Commands.run(() -> {
+            robot.driveTrain.tankDrive(0.5, 0);
+        }, robot.driveTrain))
+        .until(
+            () -> (Math.abs(RobotGyro.getGyroAngleDegreesPitch()) < 2)
+        )
+        .andThen(Commands.run(() -> {
+            robot.driveTrain.tankDrive(0.25, 0);
+        }, robot.driveTrain))
+        .until(
+            () -> (RobotGyro.getGyroAngleDegreesPitch() > 5)
+        )
+        .andThen(Commands.run(() -> {
+            robot.driveTrain.tankDrive(0.25, 0);
+        }, robot.driveTrain))
+        .until(
+            () -> (Math.abs(RobotGyro.getGyroAngleDegreesPitch()) < 2)
+        )
+        .andThen(Commands.run(() -> {
+            robot.driveTrain.tankDrive(-0.25, 0);
+        }, robot.driveTrain))
+        .until(
+            () -> (RobotGyro.getGyroAngleDegreesPitch() > 5)
+        )
+        .andThen(Commands.run(() -> {
+            robot.driveTrain.tankDrive(-0.5, 0);
+        }, robot.driveTrain))
+        .until(
+            () -> (Math.abs(RobotGyro.getGyroAngleDegreesPitch()) < 2)
+        )
+        .andThen(
+            balanceAuto(robot)
+        );
     }
 
     // Gets taxi points and balances charge station

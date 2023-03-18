@@ -117,6 +117,7 @@ public class RobotContainer {
     private Command doublePlacementAutoPW;
     private Command placeCubeThenBalanceAutoPW;
     private Command doublePlacementThenBalanceAutoPW;
+    private Command overChargeStationAndBackGyroAuto;
     
     private Command m_autonomousCommand;
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -193,12 +194,14 @@ public class RobotContainer {
         balanceAuto                      = Autos.balanceAuto(this);
         placeCubeThenBalanceAuto         = Autos.placeCubeThenBalanceAuto(this);
         doublePlacementAuto              = Autos.doublePlacementAuto(this);
+        overChargeStationAndBackGyroAuto = Autos.overChargeStationAndBackGyroAuto(this);
 
         // All below autos use Pathweaver trajectories and probably don't work right now
         balanceAutoPW                      = Autos.balanceAutoPW(this);
         doublePlacementAutoPW              = Autos.doublePlacementAutoPW(this);
         placeCubeThenBalanceAutoPW         = Autos.placeCubeThenBalanceAutoPW(this);
         doublePlacementThenBalanceAutoPW   = Autos.doublePlacementThenBalanceAutoPW(this);
+        
 
 
         // Adds autonomous options to dashboard
@@ -213,6 +216,7 @@ public class RobotContainer {
         m_chooser.addOption("Double Placement Auto Using Raw Trajectories (coded at 3am)", SimpleAutos.doublePlacementAuto(this));
         m_chooser.addOption("Move one meter using raw trajectories", SimpleAutos.moveOneMeter(this));
         m_chooser.addOption("Go to estimated cone position using raw trajectories", SimpleAutos.goToEstimatedConeLocation(this));
+        m_chooser.addOption("new untested Over Charge Station and Back Auto Then Balance using Gyro", overChargeStationAndBackGyroAuto);
 
         // These autons use Pathweaver
         m_chooser.addOption("Balance Auto (PathWeaver)", balanceAutoPW);
