@@ -4,6 +4,7 @@
 
 package frc.robot.commands.autocommands;
 
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -12,6 +13,8 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.drivecommands.BalanceChargeStationCommand;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.NetworkTablesUtil;
+import frc.robot.commands.armcommands.FlipTurretCommand;
+import frc.robot.subsystems.ArmSubsystem;
 
 public final class Autos {
     private static boolean blueTeam = NetworkTablesUtil.getIfOnBlueTeam(); // Whether we are on the blue team or not
@@ -267,88 +270,168 @@ public final class Autos {
                 );
     }
 
-
-    // Double placement: places cube on top center platform, drives backwards to pick up cone, drives forward towards grid, places cone on top right pole
     public static CommandBase doublePlacementAuto(RobotContainer robot) {
-        return // placeGamePieceAuto(robot) // Places cube on top center section of grid
-                // .andThen(resetTimerCommand()) // Resets timer
-                // .andThen(
-                        Commands.run(
-                                        () -> {
-                                                timer.reset();
-                                                timer.start();
-                                            robot.driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.25 seconds to pick up cone
-                                        },
-                                        robot.driveTrain
-                                )
-                                .until(() -> timer.get() > 1)
-                                .andThen(
-                                        Commands.runOnce(
-                                                () -> {
-                                                    robot.driveTrain.tankDrive(0, 0); // Stops driving
-                                                },
-                                                robot.driveTrain
-                                        )
-                                )
-                                // .alongWith(robot.goToAbovePickupPos.get()) // Goes to 10 inches above pickup position
-                // )
-                .andThen(
-                        Commands.runOnce(
-                                () -> {
-                                    NetworkTablesUtil.setLimelightPipeline(1); // Changes pipeline to detect cones
-                                }
-                        )
-                )
-                // .andThen(robot.aimAssist.get()) // Guides claw to game piece
-                // .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
-                .andThen(waitCommand(0.5)) // Waits 0.5 seconds
-                .andThen(
-                        Commands.runOnce(
-                                () -> { // Closes claw around game piece
-                                    System.out.println("Place Cube then Cone Auto Running");
-                                    robot.clawGrip.setClawOpened(false); // Closes claw
-                                },
-                                robot.clawGrip
-                        )
-                )
-                .andThen(waitCommand(0.5)) // Waits 0.5 seconds
-                .andThen(
-                        robot.goToStartingPos.get() // Arm goes to starting position
-                                .alongWith(
-                                        resetTimerCommand() // Resets timer
-                                                .andThen(
-                                                        Commands.run(
-                                                                        () -> {
-                                                                            robot.driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.25 seconds towards grid
-                                                                        },
-                                                                        robot.driveTrain
-                                                                )
-                                                                .until(() -> timer.get() > 4.25))
-                                )
-                )
-                .andThen(
-                        Commands.runOnce(
-                                () -> {
-                                    robot.driveTrain.tankDrive(0, 0); // Stops driving
-                                },
-                                robot.driveTrain
-                        )
-                )
-                // .andThen(robot.goToCenterRight.get()) // Arm goes to center right pole to place cone
-                .andThen(waitCommand(0.2)) // Waits 0.2 seconds
-                .andThen(
-                        Commands.runOnce(
-                                () -> { // Opens claw to drop game piece on center right pole
-                                    System.out.println("Place Cube then Cone Auto Running");
-                                    robot.clawGrip.setClawOpened(true); // Opens claw
-                                },
-                                robot.clawGrip
-                        )
-                )
-                .andThen(waitCommand(0.2)) // Waits 0.2 seconds
-                // .andThen(robot.goToStartingPos.get());
-                ;
-    }
+        return placeGamePieceAuto(robot)
+        .andThen(new InstantCommand ( () -> System.out.println("Double Placement Auto Start. 180 turn Begin")))
+        .andThen(new FlipTurretCommand(robot.arm, robot.xboxController, 0.2, 0.2))
+
+        .andThen(new InstantCommand ( () -> System.out.println("Moveforward Begin")))
+        .andThen(robot.goToPickupPosX30.get())
+        .andThen(Commands.runOnce(
+                () -> { // Opens claw 
+                    System.out.println("Pickp Begin");
+                    robot.clawGrip.setClawOpened(true); // Opens claw
+                },
+                robot.clawGrip))
+
+        .andThen(Commands.run(
+                () -> {
+                    if (timer.get() < 2.4) {
+                        System.out.println("Drive: " + timer.get());
+                        robot.driveTrain.tankDrive(0.25, 0); // Drives forwards slowly for 1.15 seconds
+                    } else {
+                        robot.driveTrain.tankDrive(0, 0); // Stops driving
+                        System.out.println("Finish");
+                    }},robot.driveTrain)
+        .until(() -> timer.get() > 2.4)) //move forward to game piece (backward actully )
+
+        .andThen(Commands.runOnce(
+                () -> {
+                    System.out.println("close Begin");
+                    robot.clawGrip.setClawOpened(false); // close claw
+                },
+                robot.clawGrip))
+
+        .andThen(robot.goToStartingPos.get())
+
+        .andThen(new InstantCommand ( () -> System.out.println("Moveforward Begin")))
+                .andThen(Commands.run(
+                        () -> {
+                            if (timer.get() < 2.4) {
+                                System.out.println("Drive: " + timer.get());
+                                robot.driveTrain.tankDrive(-0.25, 0); // Drives forwards slowly for 1.15 seconds
+                            } else {
+                                robot.driveTrain.tankDrive(0, 0); // Stops driving
+                                System.out.println("Finish");
+                            }
+                        },
+                        robot.driveTrain
+        ).until(() -> timer.get() > 2.4))
+        
+        .andThen(new FlipTurretCommand(robot.arm, robot.xboxController, 0.2, 0.2))
+        .andThen(placeGamePieceAuto(robot))
+        .andThen(new InstantCommand ( () -> System.out.println("Double auton end")));
+        }
+
+
+//     // Double placement: places cube on top center platform, drives backwards to pick up cone, drives forward towards grid, places cone on top right pole
+//     public static CommandBase doublePlacementAuto(RobotContainer robot) {
+//         return Commands.runOnce(
+//                 () -> { // Makes sure that the claw is closed around game piece
+//                     System.out.println("Double Placement Auto Start. Place Cube begin");
+//                     robot.clawGrip.setClawOpened(false); // Closes claw
+//                 },
+//                 robot.clawGrip
+//         )
+//         .andThen(robot.goToTopCenter.get()) // Moves arm to top center position on grid to place game piece
+//         .andThen(waitCommand(0.2)) // Waits 0.2 seconds
+//         .andThen(
+//                 Commands.runOnce(
+//                         () -> { // Opens claw to drop game piece onto top center platform
+//                             System.out.println("Place Cube Now Running");
+//                             robot.clawGrip.setClawOpened(true); // Opens claw
+//                         },
+//                         robot.clawGrip
+//                 )
+//         )
+//         .andThen(waitCommand(0.2)) // Waits 0.2 seconds
+//         .andThen(new InstantCommand( () -> System.out.println("done")))
+//         .andThen(robot.goToStartingPos.get()) // Moves arm to starting position
+       
+//         .andThen(resetTimerCommand())
+//         .andThen(new InstantCommand( () -> System.out.println("180 turn Begin")))
+//         .andThen(Commands.run(
+//                 () -> {
+//                         robot.flipTurretCommand(arm, xboxController, 0.2, 0.2)
+//                 }
+//         )
+                
+//                         Commands.run(
+//                                         () -> {
+//                                                 timer.reset();
+//                                                 timer.start();
+//                                             robot.driveTrain.tankDrive(0.25, 0); // Drives backwards for 4.25 seconds to pick up cone
+//                                         },
+//                                         robot.driveTrain
+//                                 )
+//                                 .until(() -> timer.get() > 1)
+//                                 .andThen(
+//                                         Commands.runOnce(
+//                                                 () -> {
+//                                                     robot.driveTrain.tankDrive(0, 0); // Stops driving
+//                                                 },
+//                                                 robot.driveTrain
+//                                         )
+//                                 )
+//                                 // .alongWith(robot.goToAbovePickupPos.get()) // Goes to 10 inches above pickup position
+//                 // )
+//                 .andThen(
+//                         Commands.runOnce(
+//                                 () -> {
+//                                     NetworkTablesUtil.setLimelightPipeline(1); // Changes pipeline to detect cones
+//                                 }
+//                         )
+//                 )
+//                 // .andThen(robot.aimAssist.get()) // Guides claw to game piece
+//                 // .andThen(robot.goToPickupPosX30.get()) // Goes to pickup position
+//                 .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+//                 .andThen(
+//                         Commands.runOnce(
+//                                 () -> { // Closes claw around game piece
+//                                     System.out.println("Place Cube then Cone Auto Running");
+//                                     robot.clawGrip.setClawOpened(false); // Closes claw
+//                                 },
+//                                 robot.clawGrip
+//                         )
+//                 )
+//                 .andThen(waitCommand(0.5)) // Waits 0.5 seconds
+//                 .andThen(
+//                         robot.goToStartingPos.get() // Arm goes to starting position
+//                                 .alongWith(
+//                                         resetTimerCommand() // Resets timer
+//                                                 .andThen(
+//                                                         Commands.run(
+//                                                                         () -> {
+//                                                                             robot.driveTrain.tankDrive(-0.25, 0); // Drives forwards for 4.25 seconds towards grid
+//                                                                         },
+//                                                                         robot.driveTrain
+//                                                                 )
+//                                                                 .until(() -> timer.get() > 4.25))
+//                                 )
+//                 )
+//                 .andThen(
+//                         Commands.runOnce(
+//                                 () -> {
+//                                     robot.driveTrain.tankDrive(0, 0); // Stops driving
+//                                 },
+//                                 robot.driveTrain
+//                         )
+//                 )
+//                 // .andThen(robot.goToCenterRight.get()) // Arm goes to center right pole to place cone
+//                 .andThen(waitCommand(0.2)) // Waits 0.2 seconds
+//                 .andThen(
+//                         Commands.runOnce(
+//                                 () -> { // Opens claw to drop game piece on center right pole
+//                                     System.out.println("Place Cube then Cone Auto Running");
+//                                     robot.clawGrip.setClawOpened(true); // Opens claw
+//                                 },
+//                                 robot.clawGrip
+//                         )
+//                 )
+//                 .andThen(waitCommand(0.2)) // Waits 0.2 seconds
+//                 // .andThen(robot.goToStartingPos.get());
+//                 ;
+//     }
 
     public static CommandBase placeCubeThenBalanceAuto(RobotContainer robot) {
         return placeGamePieceAuto(robot)
@@ -367,6 +450,7 @@ public final class Autos {
                                 .until(() -> timer.get() > seconds)
                 );
     }
+
 
     // Resets the timer
     public static CommandBase resetTimerCommand() {
