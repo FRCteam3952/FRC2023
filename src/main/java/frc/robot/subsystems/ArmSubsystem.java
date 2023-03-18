@@ -1,22 +1,27 @@
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.controllers.XboxController;
+import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.armcommands.FlipArmCommand;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandTeleop;
-import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import frc.robot.util.ForwardKinematicsUtil;
 import frc.robot.util.InverseKinematicsUtil;
 import frc.robot.util.MathUtil;
@@ -87,8 +92,12 @@ public class ArmSubsystem extends SubsystemBase {
     private double maxOutput2 = ArmConstants.MAX_OUTPUT;
     private double minOutput2 = ArmConstants.MIN_OUTPUT;
 
+    private final Supplier<Pose2d> robotPoseSupplier;
+
     // arm control constructor
-    public ArmSubsystem() {
+    public ArmSubsystem(Supplier<Pose2d> robotPoseSupplier) {
+        this.robotPoseSupplier = robotPoseSupplier;
+
         // Initialize arm motors
         this.pivot1 = new CANSparkMax(PortConstants.PIVOT1_PORT, MotorType.kBrushless);
         this.pivot2 = new CANSparkMax(PortConstants.PIVOT2_PORT, MotorType.kBrushless);
@@ -451,7 +460,7 @@ public class ArmSubsystem extends SubsystemBase {
      *
      * @return A Pose3d object representing the current claw pose.
      */
-    public Pose3d getClawPose() {
+    public Pose3d getRobotClawPose3d() {
         this.updateCurrentCoordinates(); // Make sure the coordinates are the latest ones.
         return new Pose3d(MathUtil.inchesToMeters(this.cur_x), MathUtil.inchesToMeters(this.cur_z), MathUtil.inchesToMeters(this.cur_y), new Rotation3d()); // z and y are swapped to handle our global coordinate system (the final coord parameter is the height).
     }
@@ -498,6 +507,26 @@ public class ArmSubsystem extends SubsystemBase {
         if (pidOn) {
             goTowardTargetCoordinates();
         }
+    }
+
+    public double[] getArmCameraOffsetFromRobotCenter() {
+        // The turret uses CCW -, but the RobotGyro uses CCW +
+        // So, negate the turret's value to match the RobotGyro
+        double turretAngleCCWPos = -this.getTurretAngleDeg();
+        double gyroAngle = RobotGyro.getGyroAngleDegreesYaw();
+
+        double fullRotation = gyroAngle + turretAngleCCWPos;
+        
+        // Now, we need to rotate the camera's offset by the fullRotation so that the robot's position isn't shifted by the camera.
+        return MathUtil.rotatePoint(0, -RobotConstants.CAMERA_SIDE_OFFSET_FROM_CENTER_M, fullRotation);
+    }
+
+    public Pose2d getClawFieldPose2d() {
+        Pose2d claw = this.getRobotClawPose3d().toPose2d();
+        Pose2d robot = this.robotPoseSupplier.get();
+
+        double[] rotatedClawPosition = MathUtil.rotatePoint(claw.getX(), claw.getY(), robot.getRotation().getDegrees());
+        return new Pose2d(new Translation2d(rotatedClawPosition[0] + robot.getX(), rotatedClawPosition[1] + robot.getY()), robot.getRotation());
     }
 
     @Override
