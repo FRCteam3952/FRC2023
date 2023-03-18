@@ -63,11 +63,15 @@ public final class InverseKinematicsUtil {
             }
         }
 
-        if (turretAngle > 180) {
-            turretAngle -= 360;
-        } else if (turretAngle < -180) {
-            turretAngle += 360;
+        if(NetworkTablesUtil.getIfOnBlueTeam()){ //flips the direction of the turning of the arm based on team color so we don't get disabled ; <
+            if(turretAngle < 0.1 && turretAngle > -0.1){
+                turretAngle = 0;
+            }
+            else{
+                turretAngle -= 360; 
+            }
         }
+
 
         return new double[]{pivot1Angle, pivot2Angle, turretAngle};
     }

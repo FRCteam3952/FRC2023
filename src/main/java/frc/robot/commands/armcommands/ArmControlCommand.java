@@ -2,11 +2,9 @@ package frc.robot.commands.armcommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
 import frc.robot.util.NetworkTablesUtil;
 
@@ -19,9 +17,9 @@ public class ArmControlCommand extends CommandBase {
     private final XboxController controller;
 
     // Inches per 20ms
-    private static final double X_SPEED = 1.1;
-    private static final double Y_SPEED = 1.1;
-    private static final double TURRET_SPEED = 1.1;
+    private static final double X_SPEED = 2;
+    private static final double Y_SPEED = 2;
+    private static final double TURRET_SPEED = 0.25;
     private static double turret_adjust = 0.0;
 
     public ArmControlCommand(ArmSubsystem arm, XboxController controller) {
@@ -37,15 +35,18 @@ public class ArmControlCommand extends CommandBase {
     private void primaryArmControl() {
 
         if (this.arm.getControlMode()) { // only run when arm is in manual control
-
+            this.arm.setis2D(true);
             armAimAssist();
 
-            double zMagnitude = -MathUtil.clamp(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust, -1, 1);
-
-            this.arm.moveVector(controller.getLeftLateralMovement() * X_SPEED, -controller.getRightLateralMovement() * Y_SPEED, zMagnitude);
+            int mult = this.arm.isAtHumanPlayer() ? -1 : 1;
+            this.arm.setTurretSpeed(mult * -MathUtil.clamp(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust, -1, 1));
+            this.arm.moveVector(controller.getLeftLateralMovement() * X_SPEED * mult, -controller.getRightLateralMovement() * Y_SPEED, 0);
 
         }
-        if (this.controller.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)) { //toggle PID on and off
+        else{
+            this.arm.setis2D(false);
+        }
+        if (this.controller.getRawButtonPressedWrapper(ControllerConstants.TOGGLE_PID_BUTTON_NUMBER)) { //toggle PID off
             this.arm.setPIDControlState(false);
         }
 
@@ -68,10 +69,9 @@ public class ArmControlCommand extends CommandBase {
                 double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
                 //arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
                 turret_adjust = adjustments[2];
-            } else {
             }
         } else {
-            turret_adjust = 0;
+            turret_adjust = 0.0;
         }
     }
 

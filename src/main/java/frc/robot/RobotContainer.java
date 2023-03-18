@@ -5,10 +5,10 @@
 package frc.robot;
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -20,10 +20,10 @@ import frc.robot.commands.armcommands.AimAssistCommand;
 import frc.robot.commands.armcommands.ArmControlCommand;
 import frc.robot.commands.armcommands.ArmTestCommand;
 import frc.robot.commands.armcommands.CalibrateArmPivotsCommand;
+import frc.robot.commands.armcommands.FlipTurretCommand;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandAuto;
 import frc.robot.commands.armcommands.GoTowardsCoordinatesCommandTeleop;
 import frc.robot.commands.armcommands.PickupPieceCommand;
-import frc.robot.commands.armcommands.PoseAimArmCommand;
 import frc.robot.commands.autocommands.Autos;
 import frc.robot.commands.autocommands.SimpleAutos;
 import frc.robot.commands.clawcommands.ClawOpenandCloseCommand;
@@ -157,12 +157,26 @@ public class RobotContainer {
         // armController.joystick.button(ControllerConstants.CLAW_ROTATE_LEFT_BUTTON_NUMBER).whileTrue(clawRotation.rotateClawLeft());
         // armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
         // xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
-        xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmPivotsCommand(arm, xboxController));
+        // xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmPivotsCommand(arm, xboxController));
+        xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmPivotsCommand(arm, xboxController)); // new GoTowardsCoordinatesCommandTeleop(arm, new double[] {ArmConstants.STARTING_X, ArmConstants.STARTING_Y, ArmConstants.STARTING_Z}, xboxController, 0.2, 0.2)
         driverController.joystick.button(ControllerConstants.BALANCE_CHARGE_STATION_BUTTON_NUMBER).whileTrue(new BalanceChargeStationCommand(driveTrain));
-
+        // xboxController.controller.button(ControllerConstants.FLIP_TURRET_BUTTON_NUMBER).onTrue(new FlipTurretCommand(arm, xboxController));
+        xboxController.controller.button(ControllerConstants.FLIP_TURRET_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
+                arm.setIsAtHumanPlayer(!arm.isAtHumanPlayer());
+            }, arm)
+            .andThen(
+                new FlipTurretCommand(arm, xboxController, 0.2, 0.2)
+                )
+            );
+        xboxController.controller.button(ControllerConstants.GROUND_HEIGHT_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
+            arm.setTargetAngles(10,60);
+        }));
+        xboxController.controller.button(ControllerConstants.PICK_UP_HEIGHT_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
+            arm.setTargetAngles(65, 125);
+        }));
         //driverController.joystick.button(7).onTrue(new GoTowardsCoordinatesCommandTeleop(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, xboxController, 0.2, 0.2, false));
         //driverController.joystick.button(1).whileTrue(new PoseAimArmCommand(arm, driveTrain, new Translation3d(20,60,0)));
-        xboxController.controller.button(ControllerConstants.HUMAN_STATION_HEIGHT_BUTTON_NUMBER).onTrue(pickupPieceCommand.get());
+        //xboxController.controller.button(ControllerConstants.HUMAN_STATION_HEIGHT_BUTTON_NUMBER).onTrue(pickupPieceCommand.get());
     }
 
     /**
@@ -246,7 +260,7 @@ public class RobotContainer {
         
         this.driveTrain.setDefaultCommand(this.manualDrive);
         this.arm.setDefaultCommand(this.armControl.get());
-        // this.arm.setDefaultCommand(this.testArmControl.get());
+        //this.arm.setDefaultCommand(this.testArmControl.get());
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand.get());
         this.clawRotation.setDefaultCommand(this.clawRotateCommand.get());
     }

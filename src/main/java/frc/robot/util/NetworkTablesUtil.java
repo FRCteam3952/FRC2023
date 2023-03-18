@@ -52,6 +52,10 @@ public class NetworkTablesUtil {
 
     }
 
+    public static float getLimelightTX() {
+        return getEntry("limelight", "tx").getNumber(0.0).floatValue();
+    }
+
     public static float getLimeLightErrorY() {
         NetworkTable table = INSTANCE.getTable("limelight");
         if (getLimeLightPipeline() == 1) {

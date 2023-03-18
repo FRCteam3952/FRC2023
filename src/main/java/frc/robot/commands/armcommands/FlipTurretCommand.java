@@ -5,31 +5,19 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class GoTowardsCoordinatesCommandTeleop extends CommandBase {
+public class FlipTurretCommand extends CommandBase {
 
     private final ArmSubsystem arm;
     private final XboxController xboxController;
 
 
-    private double[] newArmPosition;
     private double speed1;
     private double speed2;
 
-    private boolean is2D = false;
+    private double[] coords;
 
-    public GoTowardsCoordinatesCommandTeleop(ArmSubsystem arm, double[] newArmPosition, XboxController xboxController, double speed1, double speed2) {
+    public FlipTurretCommand(ArmSubsystem arm, XboxController xboxController, double speed1, double speed2) {
         this.arm = arm;
-        this.newArmPosition = newArmPosition;
-        this.xboxController = xboxController;
-        this.speed1 = speed1;
-        this.speed2 = speed2;
-        addRequirements(arm);
-    }
-
-    public GoTowardsCoordinatesCommandTeleop(ArmSubsystem arm, double[] newArmPosition, XboxController xboxController, double speed1, double speed2, boolean is2D) {
-        this.is2D = is2D;
-        this.arm = arm;
-        this.newArmPosition = newArmPosition;
         this.xboxController = xboxController;
         this.speed1 = speed1;
         this.speed2 = speed2;
@@ -39,30 +27,27 @@ public class GoTowardsCoordinatesCommandTeleop extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        arm.setis2D(is2D);
+        coords = ArmConstants.STARTING_COORDS;
         arm.setManualControlMode(false);
+        arm.setis2D(false);
         arm.setMaxAndMinOutput1(speed1);
         arm.setMaxAndMinOutput2(speed2);
-        if (is2D){
-            arm.setTargetCoordinates(newArmPosition[0], newArmPosition[1], 0);
-        }
-        else{
-            arm.setTargetCoordinates(newArmPosition[0], newArmPosition[1], newArmPosition[2]);
-        }
-
+        arm.setTargetCoordinates(coords[0] * (arm.isAtHumanPlayer() ? -1 : 1), coords[1], 0);
     }
 
     @Override
     public void execute() {
-        System.out.println("RNIGNAUU");
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        System.out.println(arm.getTargetAngles()[2]);
         arm.setMaxAndMinOutput1(ArmConstants.MAX_OUTPUT);
         arm.setMaxAndMinOutput2(ArmConstants.MAX_OUTPUT);
         arm.setManualControlMode(true);
+        arm.setis2D(true);
+        arm.setTargetCoordinates(coords[0], coords[1], 0);
     }
 
     // Returns true when the command should end.
