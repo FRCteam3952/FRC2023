@@ -54,7 +54,7 @@ public class FlipTurretCommand extends CommandBase {
     @Override
     public boolean isFinished() {
         // Allowed error subject to change
-        return arm.isAtCoords() || Math.abs(xboxController.getLeftHorizontalMovement()) > 0.1 || Math.abs(xboxController.getLeftLateralMovement()) > 0.1 ||
+        return arm.isAtCoords3D() || Math.abs(xboxController.getLeftHorizontalMovement()) > 0.1 || Math.abs(xboxController.getLeftLateralMovement()) > 0.1 ||
                 Math.abs(xboxController.getRightHorizontalMovement()) > 0.1 || Math.abs(xboxController.getRightLateralMovement()) > 0.1;
     }
 

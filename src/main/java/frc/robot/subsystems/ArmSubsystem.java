@@ -125,7 +125,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.pivot2Encoder.setPosition(ArmConstants.ARM_2_INITIAL_ANGLE);
         this.turretEncoder.setPosition(0);
         // TODO: TUNE
-        this.pidController1 = new PIDController(1.8e-2, 0, 0); // nice
+        this.pidController1 = new PIDController(2.4e-2, 0, 0); // nice
         this.pidController1.setTolerance(ArmConstants.PID_TOLERANCE);
         this.pidController2 = new PIDController(1.6e-2, 0, 0);
         this.pidController2.setTolerance(ArmConstants.PID_TOLERANCE);
@@ -442,6 +442,14 @@ public class ArmSubsystem extends SubsystemBase {
         System.out.println("ARM1 at pos: " + (Math.abs(targetAngle1 - curAngles[0]) < ArmConstants.ANGLE_DELTA));
         System.out.println("ARM2 at pos: " + (Math.abs(targetAngle2 - curAngles[1]) < ArmConstants.ANGLE_DELTA));
         System.out.println("TURR at pos: " + (Math.abs(targetAngleTurret - curAngles[2]) < ArmConstants.ANGLE_DELTA));
+        return (Math.abs(targetAngle1 - curAngles[0]) < ArmConstants.ANGLE_DELTA) && (Math.abs(targetAngle2 - curAngles[1]) < ArmConstants.ANGLE_DELTA);
+    }
+
+    public boolean isAtCoords3D() {
+        double[] curAngles = getCurrentAnglesDeg();
+        System.out.println("ARM1 at pos: " + (Math.abs(targetAngle1 - curAngles[0]) < ArmConstants.ANGLE_DELTA));
+        System.out.println("ARM2 at pos: " + (Math.abs(targetAngle2 - curAngles[1]) < ArmConstants.ANGLE_DELTA));
+        System.out.println("TURR at pos: " + (Math.abs(targetAngleTurret - curAngles[2]) < ArmConstants.ANGLE_DELTA));
         return (Math.abs(targetAngle1 - curAngles[0]) < ArmConstants.ANGLE_DELTA) && (Math.abs(targetAngle2 - curAngles[1]) < ArmConstants.ANGLE_DELTA) && (Math.abs(targetAngleTurret - curAngles[2]) < ArmConstants.ANGLE_DELTA);
     }
 
@@ -470,7 +478,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getArm2ConvertedAbsoluteDistance() {
-        return Math.abs(arm2AbsoluteEncoder.getAbsolutePosition()) * -360 + 361.5; // getArm2AbsoluteRawDistance() * 360 + ArmConstants.ARM_2_INITIAL_ANGLE + 295.69;
+        return Math.abs(arm2AbsoluteEncoder.getAbsolutePosition()) * -360 + 361.5 + 18; // getArm2AbsoluteRawDistance() * 360 + ArmConstants.ARM_2_INITIAL_ANGLE + 295.69;
     }
 
     public Command flipTurretCommand(XboxController xboxController) {
@@ -492,14 +500,14 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("Arm1: " + getArm1ConvertedAbsoluteDistance() + ", Arm2: " + getArm2ConvertedAbsoluteDistance());
         // System.out.println("Abs Enc 1: " + getArm1ConvertedAbsoluteDistance() + ", motor enc 1: " + pivot1Encoder.getPosition());
         // System.out.println("Abs Enc 2: " + getArm2ConvertedAbsoluteDistance() + ", motor enc 2: " + pivot2Encoder.getPosition());
-        System.out.println("ABS 1: " + getArm1ConvertedAbsoluteDistance() + ", ABS 2: " + getArm2ConvertedAbsoluteDistance());
+        //System.out.println("ABS 1: " + getArm1ConvertedAbsoluteDistance() + ", ABS 2: " + getArm2ConvertedAbsoluteDistance());
         NetworkTablesUtil.getEntry("robot", "target").setDoubleArray(new double[] {targetX, targetY, targetZ});
         NetworkTablesUtil.getEntry("robot", "arm_angles").setDoubleArray(getCurrentAnglesDeg());
         NetworkTablesUtil.getEntry("robot", "arm_p1_ang").setDouble(MathUtil.roundNearestHundredth(getCurrentAnglesDeg()[0]));
         NetworkTablesUtil.getEntry("robot", "arm_p2_ang").setDouble(MathUtil.roundNearestHundredth(getCurrentAnglesDeg()[1]));
         NetworkTablesUtil.getEntry("robot", "arm_tu_ang").setDouble(MathUtil.roundNearestHundredth(getCurrentAnglesDeg()[2]));
 
-        correctMotorEncoders();
+        //correctMotorEncoders();
 
         //handles PID
         // System.out.println("PID STATE: " + pidOn);

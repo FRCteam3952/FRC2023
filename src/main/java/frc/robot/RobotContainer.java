@@ -241,6 +241,7 @@ public class RobotContainer {
         m_chooser.addOption("Move one meter test (PathWeaver", moveOneMeter.get());
         m_chooser.addOption("turn", turn.get());
         m_chooser.addOption("driv back to con erejd tedst", driveBackwardsToConeRed.get());
+        m_chooser.addOption("place cube then balance", Autos.placeCubeThenBalance(this));
 
         SmartDashboard.putData("Auto choices", m_chooser);
 }
@@ -265,7 +266,7 @@ public class RobotContainer {
         
         this.driveTrain.setDefaultCommand(this.manualDrive);
         this.arm.setDefaultCommand(this.armControl.get());
-        //this.arm.setDefaultCommand(this.testArmControl.get());
+        // this.arm.setDefaultCommand(this.testArmControl.get());
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand.get());
         this.clawRotation.setDefaultCommand(this.clawRotateCommand.get());
     }
