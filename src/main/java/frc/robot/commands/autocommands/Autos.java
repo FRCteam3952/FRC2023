@@ -246,11 +246,11 @@ public final class Autos {
                                     System.out.println("Place Cube Auto Running");
                                     robot.clawGrip.setClawOpened(true); // Opens claw
                                 },
-                                robot.clawGrip
+                                robot.clawGrip  
                         )
                 )
                 .andThen(waitCommand(0.2)) // Waits 0.2 seconds
-                .andThen(new InstantCommand( () -> System.out.println("AHKFAHKJHDJKJHAGKFHDJKSHGJKHGSJDFHGHSGHJSDGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG BALLS")))
+                .andThen(new InstantCommand( () -> System.out.println("BALLS")))
                 .andThen(robot.goToStartingPos.get()); // Moves arm to starting position
     }
 
