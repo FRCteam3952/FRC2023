@@ -19,6 +19,7 @@ public class LimeLight {
     public LimeLight() {
     }
 
+
     public static double getXAdjustment() {
         double tx = adjustmentPID.calculate(NetworkTablesUtil.getLimeLightErrorX());
         // if tx is too big, return the max of 1 or -1
@@ -27,6 +28,9 @@ public class LimeLight {
             return Math.copySign(1, tx);
         }
         return tx;
+    }
+    public static double getDistance(){
+        return 0;
     }
 
     public static double getYAdjustment() {
@@ -73,7 +77,7 @@ public class LimeLight {
                     (DESIRED_AREA_CUBE - getArea()) / DESIRED_AREA_CUBE; // z axis from perspective of the camera
             xAdjustment = xAdjustment > 1 ? 1 : xAdjustment;
 
-            adjustments[0] = 0; // x-axis adjustment
+            adjustments[0] = getDistance(); // x-axis adjustment
 
             adjustments[1] = 0;
 

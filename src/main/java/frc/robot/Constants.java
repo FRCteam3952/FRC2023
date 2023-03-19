@@ -370,10 +370,10 @@ public final class Constants {
                     {610.77, 108.19, 18.22, 180},
                     {610.77, 174.19, 18.22, 180},
                     {636.96, 265.74, 27.38, 180}, // RED SIDE, BLUE HUMAN PLAYER TAG
-                    {14.25,  265.74, 27.38, 0}, // BLUE SIDE COMMUNITY TAGS
+                    {14.25,  265.74, 27.38, 0}, // BLUE SIDE COMMUNITY TAGS, RED HUMAN PLAYER TAG
                     {40.45,  174.19, 18.22, 0},
                     {40.45,  108.19, 18.22, 0},
-                    {40.45,  42.19,  18.22, 0}  // BLUE SIDE, RED HUMAN PLAYER TAG
+                    {40.45,  42.19,  18.22, 0}
             };
 
             public static final double LATENCY = 0.2; //average april tag latency (I'm guessing in seconds)

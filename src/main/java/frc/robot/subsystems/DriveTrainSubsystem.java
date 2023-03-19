@@ -21,10 +21,12 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.networktables.GenericSubscriber;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,7 +37,6 @@ import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
-import frc.robot.util.MathUtil;
 import frc.robot.util.NetworkTablesUtil;
 
 import java.util.List;
@@ -67,6 +68,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     private final DifferentialDrivePoseEstimator m_poseEstimator;
     private final Supplier<Pose2d> aprilTagsPoseSupplier;
+
+    private final GenericSubscriber jetsonPoseSub = NetworkTablesUtil.getSubscriber("jetson", "pose");
 
     public DriveTrainSubsystem(FlightJoystick joystick, Supplier<Pose2d> aprilTagsPoseSupplier) {
         this.frontLeftMotor = new CANSparkMax(PortConstants.FRONT_LEFT_MOTOR_PORT, MotorType.kBrushless);
@@ -174,7 +177,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         m_poseEstimator.update(RobotGyro.getRotation2d(), frontLeftEncoder.getPosition(), frontRightEncoder.getPosition()); //update pose
 
         if(NetworkTablesUtil.jetsonHasPose()) {
-            this.m_poseEstimator.addVisionMeasurement(aprilTagsPoseSupplier.get(), AprilTagConstants.LATENCY);
+            this.m_poseEstimator.addVisionMeasurement(aprilTagsPoseSupplier.get(), jetsonPoseSub.getLastChange() / 1000d + 1d/30);
         }
     }
 
@@ -243,6 +246,31 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // return ramseteCommand.andThen(() -> this.tankDriveVolts(0, 0));
     }
 
+    private static int humanPlayerTagIndex() {
+        return NetworkTablesUtil.getIfOnBlueTeam() ? 3 : 4;
+    }
+
+    /**
+     * Assumes that we are parallel to the field's X axis
+     */
+    private double getDistanceFromHumanPlayerTag() {
+        return Math.abs(getPoseInches().getX() - AprilTagConstants.APRILTAG_LOCATIONS[humanPlayerTagIndex()][0]);
+    }
+
+    public Command driveToHumanPlayerPickupLocation() {
+        final double TARGET_DISTANCE = 30; // inches
+        final double DISTANCE_DELTA = 5; // inches
+
+        return Commands.run(() -> {
+            double dist = getDistanceFromHumanPlayerTag() - TARGET_DISTANCE;
+            if(Math.abs(dist) > DISTANCE_DELTA) {
+                this.tankDrive(Math.copySign(0.1, dist), 0);
+            }
+        }, this)
+            .until(() -> Math.abs(getDistanceFromHumanPlayerTag() - TARGET_DISTANCE) < DISTANCE_DELTA)
+            .andThen(this.stopCommand());
+    }
+
     @Override
     public void periodic() {
 
@@ -260,12 +288,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
         if (joystick.getRawButtonReleasedWrapper(ControllerConstants.RESET_GYRO_BUTTON_NUMBER)) {
             RobotGyro.resetGyroAngle();
         }
-
-        boolean isBlue = NetworkTablesUtil.getIfOnBlueTeam();
-
-        //double dist = MathUtil.distance()
-
-        //SmartDashboard.putNumber("DISTANCE TO HUMAN PLAYER STATION", false);
+        
+        SmartDashboard.putNumber("DISTANCE TO HUMAN PLAYER STATION", getDistanceFromHumanPlayerTag());
 
         //System.out.println("FL: " + frontLeftEncoder.getPosition() + ", FR: " + frontRightEncoder.getPosition() + ", RL: " + rearLeftEncoder.getPosition() + ", RR: " + rearRightEncoder.getPosition());
 

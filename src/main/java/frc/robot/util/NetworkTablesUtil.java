@@ -3,6 +3,7 @@ package frc.robot.util;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
 
 import java.util.HashMap;
@@ -101,6 +102,7 @@ public class NetworkTablesUtil {
     public static boolean jetsonHasPose() {
         return getEntry("jetson", "has_pose").getBoolean(false);
     }
+
 
     public static boolean getIfOnBlueTeam() {
         NetworkTable table = INSTANCE.getTable("FMSInfo");
