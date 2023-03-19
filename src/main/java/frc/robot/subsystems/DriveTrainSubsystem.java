@@ -23,6 +23,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -34,6 +35,7 @@ import frc.robot.Constants.OperatorConstants.ControllerConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.subsystems.staticsubsystems.RobotGyro;
+import frc.robot.util.MathUtil;
 import frc.robot.util.NetworkTablesUtil;
 
 import java.util.List;
@@ -258,6 +260,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
         if (joystick.getRawButtonReleasedWrapper(ControllerConstants.RESET_GYRO_BUTTON_NUMBER)) {
             RobotGyro.resetGyroAngle();
         }
+
+        boolean isBlue = NetworkTablesUtil.getIfOnBlueTeam();
+
+        //double dist = MathUtil.distance()
+
+        //SmartDashboard.putNumber("DISTANCE TO HUMAN PLAYER STATION", false);
 
         //System.out.println("FL: " + frontLeftEncoder.getPosition() + ", FR: " + frontRightEncoder.getPosition() + ", RL: " + rearLeftEncoder.getPosition() + ", RR: " + rearRightEncoder.getPosition());
 

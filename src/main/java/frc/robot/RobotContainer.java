@@ -82,7 +82,7 @@ public class RobotContainer {
     public final Supplier<GoTowardsCoordinatesCommandAuto> goToCenterRight         = () -> new GoTowardsCoordinatesCommandAuto(arm,   PositionConstants.CENTER_RIGHT_POS, 0.4, 0.4);
     public final Supplier<GoTowardsCoordinatesCommandAuto> goToStartingPos         = () -> new GoTowardsCoordinatesCommandAuto(arm,  ArmConstants.STARTING_COORDS , 0.2, 0.4);
     public final Supplier<BalanceChargeStationCommand>     balanceCommand          = () -> new BalanceChargeStationCommand(driveTrain);
-    public final Supplier<GoTowardsCoordinatesCommandAuto> goToPickupPosX30        = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4);
+    public final Supplier<GoTowardsCoordinatesCommandAuto> goToPickupPosX30        = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4, false);
     public final Supplier<GoTowardsCoordinatesCommandAuto> goToPickupPosX35        = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); 
     public final Supplier<GoTowardsCoordinatesCommandAuto> goToAbovePickupPos      = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y + 10, 0}, 0.4, 0.4); 
 
@@ -170,10 +170,15 @@ public class RobotContainer {
                 )
             );
         xboxController.controller.button(ControllerConstants.GROUND_HEIGHT_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
-            arm.setTargetAngles(10,60);
+            arm.setTargetAngles(10,60); // height for making motion smoother and also MID cone
         }));
         xboxController.controller.button(ControllerConstants.PICK_UP_HEIGHT_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
-            arm.setTargetAngles(65, 125);
+            if(arm.isAtHumanPlayer()){
+                arm.setTargetAngles(85, 160); //height for human player
+            }
+            else{
+                arm.setTargetAngles(100, 170); //height for placing high
+            }
         }));
         //driverController.joystick.button(7).onTrue(new GoTowardsCoordinatesCommandTeleop(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, xboxController, 0.2, 0.2, false));
         //driverController.joystick.button(1).whileTrue(new PoseAimArmCommand(arm, driveTrain, new Translation3d(20,60,0)));
@@ -222,12 +227,12 @@ public class RobotContainer {
         m_chooser.addOption("Taxi Auto", taxiAuto);
         m_chooser.addOption("Taxi for Balance Auto", taxiForBalanceAuto);
         m_chooser.addOption("Balance Auto", balanceAuto);
-        m_chooser.addOption("Place Cube then Taxi Auto", placeCubeThenTaxiAuto);
-        m_chooser.addOption("Place Cube then Balance Auto", placeCubeThenBalanceAuto);
+        m_chooser.addOption("Place Cube then Taxi Auto", placeCubeThenTaxiAuto); // KEEP
+        m_chooser.addOption("Place Cube then Balance Auto", placeCubeThenBalanceAuto); // KEEP
         m_chooser.addOption("Double Placement Auto", doublePlacementAuto);
-        m_chooser.addOption("Double Placement Auto Using Raw Trajectories (coded at 3am)", SimpleAutos.doublePlacementAuto(this));
-        m_chooser.addOption("Move one meter using raw trajectories", SimpleAutos.moveOneMeter(this));
-        m_chooser.addOption("Go to estimated cone position using raw trajectories", SimpleAutos.goToEstimatedConeLocation(this));
+        m_chooser.addOption("Double Placement Auto Using Raw Trajectories (coded at 3am)", SimpleAutos.doublePlacementAuto(this)); // MAYBE KEEP
+        m_chooser.addOption("Move one meter using raw trajectories", SimpleAutos.moveOneMeter(this)); // TEST, MAYBE KEEP
+        m_chooser.addOption("Go to estimated cone position using raw trajectories", SimpleAutos.goToEstimatedConeLocation(this)); // MAYBE EKEP
 
         // These autons use Pathweaver
         m_chooser.addOption("Balance Auto (PathWeaver)", balanceAutoPW);

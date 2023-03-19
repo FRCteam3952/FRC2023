@@ -37,17 +37,18 @@ public class FlipTurretCommand extends CommandBase {
 
     @Override
     public void execute() {
+        System.out.println("flipping turret");
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        System.out.println(arm.getTargetAngles()[2]);
         arm.setMaxAndMinOutput1(ArmConstants.MAX_OUTPUT);
         arm.setMaxAndMinOutput2(ArmConstants.MAX_OUTPUT);
         arm.setManualControlMode(true);
         arm.setis2D(true);
         arm.setTargetCoordinates(coords[0], coords[1], 0);
+        arm.setTurretSpeed(0);
     }
 
     // Returns true when the command should end.
