@@ -120,8 +120,8 @@ public final class Constants {
      */
     public static class PortConstants {
         // CAN
-        public static final int FRONT_RIGHT_MOTOR_PORT          = 1;
-        public static final int REAR_RIGHT_MOTOR_PORT           = 3;
+        public static final int FRONT_RIGHT_MOTOR_PORT          = 5;
+        public static final int REAR_RIGHT_MOTOR_PORT           = 7;
         public static final int REAR_LEFT_MOTOR_PORT            = 4;
         public static final int FRONT_LEFT_MOTOR_PORT           = 2;
 

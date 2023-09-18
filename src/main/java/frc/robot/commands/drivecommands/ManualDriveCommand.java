@@ -36,8 +36,8 @@ public class ManualDriveCommand extends CommandBase {
         if (this.joystick.getRawButtonWrapper(8)) {
             RobotGyro.resetGyroAngle();
         }
-        this.driveTrain.tankDrive(-this.joystick.getLateralMovement(), this.joystick.getRotation());
-        // this.driveTrain.tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(this.joystick.getHorizontalMovement(), this.joystick.getLateralMovement());
+        this.driveTrain.tankDrive(-this.joystick.getVerticalMovement(), this.joystick.getRotation());
+        // this.driveTrain.tankDriveAndMecanumDriveHaveAHorrificAmalgamationOfAChild(this.joystick.getHorizontalMovement(), this.joystick.getVerticalMovement());
 
         int pov = this.joystick.joystick.getHID().getPOV();
         if (pov == 0) {

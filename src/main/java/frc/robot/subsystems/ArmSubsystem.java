@@ -494,7 +494,7 @@ public class ArmSubsystem extends SubsystemBase {
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
         //System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
         //System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
-        // System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed() + ", Turret Limit: " + getTurretLimitPressed());
+        System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed());
         //System.out.println("CURRENT COORDS: " + Arrays.toString(getCurrentCoordinates()));
         //System.out.println("is at human pakyter: " + this.isAtHumanPlayer);
         // System.out.println("A1: " + getArm1ConvertedAbsoluteDistance() + ", A2: " + getArm2ConvertedAbsoluteDistance() + ", T: " + getTurretConvertedAbsoluteDistance());

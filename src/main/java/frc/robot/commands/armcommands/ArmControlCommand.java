@@ -40,7 +40,7 @@ public class ArmControlCommand extends CommandBase {
 
             int mult = this.arm.isAtHumanPlayer() ? -1 : 1;
             this.arm.setTurretSpeed(mult * -MathUtil.clamp(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust, -1, 1));
-            this.arm.moveVector(controller.getLeftLateralMovement() * X_SPEED * mult, -controller.getRightLateralMovement() * Y_SPEED, 0);
+            this.arm.moveVector(controller.getLeftVerticalMovement() * X_SPEED * mult, -controller.getRightVerticalMovement() * Y_SPEED, 0);
 
         }
         else{

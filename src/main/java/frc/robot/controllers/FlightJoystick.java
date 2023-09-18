@@ -33,7 +33,7 @@ public class FlightJoystick extends AbstractJoystick {
     }
 
     @Override
-    public double getLateralMovement() {
+    public double getVerticalMovement() {
         double y = joystick.getY();
 
         return Math.abs(y) >= deadzone ? k * Math.signum(y) * (Math.log(Math.abs(y) + 1 - deadzone) + c) : 0;

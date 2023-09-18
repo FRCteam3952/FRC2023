@@ -8,7 +8,7 @@ public abstract class AbstractJoystick {
 
     public abstract double getHorizontalMovement();
 
-    public abstract double getLateralMovement();
+    public abstract double getVerticalMovement();
 
     public abstract boolean getRawButtonWrapper(int button);
 

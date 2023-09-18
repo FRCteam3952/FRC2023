@@ -32,7 +32,7 @@ public class XboxController extends AbstractJoystick {
         return correctDeadzone(controller.getRightX());
     }
 
-    public double getRightLateralMovement() {
+    public double getRightVerticalMovement() {
         return correctDeadzone(controller.getRightY());
     }
 
@@ -40,7 +40,7 @@ public class XboxController extends AbstractJoystick {
         return correctDeadzone(controller.getLeftX());
     }
 
-    public double getLeftLateralMovement() {
+    public double getLeftVerticalMovement() {
         return correctDeadzone(controller.getLeftY());
     }
 
@@ -50,8 +50,8 @@ public class XboxController extends AbstractJoystick {
     }
 
     @Override
-    public double getLateralMovement() {
-        return this.getRightLateralMovement();
+    public double getVerticalMovement() {
+        return this.getRightVerticalMovement();
     }
 
     @Override

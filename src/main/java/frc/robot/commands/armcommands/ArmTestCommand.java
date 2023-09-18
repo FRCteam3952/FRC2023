@@ -24,8 +24,8 @@ public class ArmTestCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        arm.setPivot1Speed(-joystick.getRightLateralMovement() / 2);
-        arm.setPivot2Speed(joystick.getLeftLateralMovement() / 2);
+        arm.setPivot1Speed(-joystick.getRightVerticalMovement() / 2);
+        arm.setPivot2Speed(joystick.getLeftVerticalMovement() / 2);
 
         arm.setTurretSpeed((joystick.controller.getLeftTriggerAxis() - joystick.controller.getRightTriggerAxis()) * 1);
 
