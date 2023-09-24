@@ -17,6 +17,7 @@ import frc.robot.subsystems.staticsubsystems.RobotGyro;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.RobotConstants;
@@ -489,12 +490,14 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // System.out.println(RobotContainer.instance.nintendoProController.getHorizontalMovement());
+        
         // System.out.println("ARM MOTOR ENCODERS: PIV1: " + this.pivot1Encoder.getPosition() + ", PIV2: " + this.pivot2Encoder.getPosition() + ", TURRET: " + this.turretEncoder.getPosition());
         // System.out.println("TARGET COORDS: " + targetX + ", " + targetY + ", " + targetZ);
         // System.out.println("ARM IKU FLIP STATE: " + this.flipped);
         //System.out.println("TARGET ANGLES: " + targetAngle1 + ", " + targetAngle2 + ", " + targetAngleTurret);
         //System.out.println("CURRENT ANGLES " + getCurrentAnglesDeg()[0] + " " + getCurrentAnglesDeg()[1] + " " + getCurrentAnglesDeg()[2]);
-        System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed());
+        // System.out.println("LIMIT 1: " + getPivot1LimitPressed() + ", LIMIT 2: " + getPivot2LimitPressed());
         //System.out.println("CURRENT COORDS: " + Arrays.toString(getCurrentCoordinates()));
         //System.out.println("is at human pakyter: " + this.isAtHumanPlayer);
         // System.out.println("A1: " + getArm1ConvertedAbsoluteDistance() + ", A2: " + getArm2ConvertedAbsoluteDistance() + ", T: " + getTurretConvertedAbsoluteDistance());
@@ -508,6 +511,8 @@ public class ArmSubsystem extends SubsystemBase {
         NetworkTablesUtil.getEntry("robot", "arm_p1_ang").setDouble(MathUtil.roundNearestHundredth(getCurrentAnglesDeg()[0]));
         NetworkTablesUtil.getEntry("robot", "arm_p2_ang").setDouble(MathUtil.roundNearestHundredth(getCurrentAnglesDeg()[1]));
         NetworkTablesUtil.getEntry("robot", "arm_tu_ang").setDouble(MathUtil.roundNearestHundredth(getCurrentAnglesDeg()[2]));
+        NetworkTablesUtil.getEntry("robot", "atHumanPlayer").setBoolean(this.isAtHumanPlayer);
+        NetworkTablesUtil.getEntry("robot", "2dMode").setBoolean(this.is2D);
 
         checkLimits();
         //correctMotorEncoders();

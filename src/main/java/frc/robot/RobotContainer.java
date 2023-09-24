@@ -32,6 +32,7 @@ import frc.robot.commands.drivecommands.BalanceChargeStationCommand;
 import frc.robot.commands.drivecommands.ManualDriveCommand;
 import frc.robot.controllers.FlightJoystick;
 import frc.robot.controllers.XboxController;
+import frc.robot.controllers.NintendoProController;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
@@ -52,11 +53,13 @@ import frc.robot.util.NetworkTablesUtil;
 
 public class RobotContainer {
     public static boolean inTeleop = false;
+    public static RobotContainer instance;
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     public final FlightJoystick driverController = new FlightJoystick(new CommandJoystick(OperatorConstants.RIGHT_JOYSTICK_PORT));
     // public final FlightJoystick armController = new FlightJoystick(new CommandJoystick(OperatorConstants.LEFT_JOYSTICK_PORT));
     public final XboxController xboxController = new XboxController(new CommandXboxController(OperatorConstants.XBOX_CONTROLLER_PORT));
+    public final NintendoProController nintendoProController = new NintendoProController(new CommandXboxController(4));
 
     // The robot's subsystems and commands are defined here...
     public final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem(driverController, this::getApriltagEstimatedPose);
@@ -70,12 +73,12 @@ public class RobotContainer {
 
     
     // Command suppliers
-    public final Supplier<ArmTestCommand>                  testArmControl          = () -> new ArmTestCommand(arm, xboxController);
-    public final Supplier<ArmControlCommand>               armControl              = () -> new ArmControlCommand(arm, xboxController);
+    public final Supplier<ArmTestCommand>                  testArmControl          = () -> new ArmTestCommand(arm, nintendoProController);
+    public final Supplier<ArmControlCommand>               armControl              = () -> new ArmControlCommand(arm, nintendoProController);
     public final Supplier<AimAssistCommand>                aimAssist               = () -> new AimAssistCommand(arm);
 
-    public final Supplier<ClawOpenandCloseCommand>         clawOpenandCloseCommand = () -> new ClawOpenandCloseCommand(clawGrip, xboxController);
-    public final Supplier<ClawRotateCommand>               clawRotateCommand       = () -> new ClawRotateCommand(clawRotation, xboxController);
+    public final Supplier<ClawOpenandCloseCommand>         clawOpenandCloseCommand = () -> new ClawOpenandCloseCommand(clawGrip, nintendoProController);
+    public final Supplier<ClawRotateCommand>               clawRotateCommand       = () -> new ClawRotateCommand(clawRotation, nintendoProController);
 
     public final Supplier<GoTowardsCoordinatesCommandAuto> goToTopCenter           = () -> new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.TOP_CENTER_POS, 0.4, 0.4);
     public final Supplier<GoTowardsCoordinatesCommandAuto> goToCenterMiddle        = () -> new GoTowardsCoordinatesCommandAuto(arm,  PositionConstants.CENTER_MIDDLE_POS, 0.4, 0.4);
@@ -88,7 +91,7 @@ public class RobotContainer {
 
     public final Supplier<GoTowardsCoordinatesCommandAuto> goTowardsPickupCommand  = () -> new GoTowardsCoordinatesCommandAuto(arm, new double[] {-30, ArmConstants.PICK_UP_POSITION_Y, 0}, 0.4, 0.4); // Implement later during downtime
 
-    public final Supplier<PickupPieceCommand> pickupPieceCommand                   = () -> new PickupPieceCommand(arm, clawGrip, xboxController, ArmConstants.HUMAN_PLAYER_HEIGHT);
+    public final Supplier<PickupPieceCommand> pickupPieceCommand                   = () -> new PickupPieceCommand(arm, clawGrip, nintendoProController, ArmConstants.HUMAN_PLAYER_HEIGHT);
 
     public CommandGenerator driveForwardOverChargeStationBlue     = new CommandGenerator("DriveForwardOverChargeStationBlue");
     public CommandGenerator driveBackwardsOntoChargeStationBlue   = new CommandGenerator("DriveBackwardsOntoChargeStationBlue");
@@ -132,6 +135,8 @@ public class RobotContainer {
         // Poke the static classes so their static initializers are run at startup.
         LimeLight.poke();
         RobotGyro.poke();
+
+        instance = this;
     }
 
     /**
@@ -159,14 +164,14 @@ public class RobotContainer {
         // armController.joystick.button(ControllerConstants.AUTO_ROTATE_BUTTON_NUMBER).whileTrue(clawRotation.autoRotate());
         // xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(arm.calibrateArm());
         // xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmPivotsCommand(arm, xboxController));
-        xboxController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmPivotsCommand(arm, xboxController)); // new GoTowardsCoordinatesCommandTeleop(arm, new double[] {ArmConstants.STARTING_X, ArmConstants.STARTING_Y, ArmConstants.STARTING_Z}, xboxController, 0.2, 0.2)
+        nintendoProController.controller.button(ControllerConstants.CALIBRATE_ARM_BUTTON_NUMBER).onTrue(new CalibrateArmPivotsCommand(arm, nintendoProController)); // new GoTowardsCoordinatesCommandTeleop(arm, new double[] {ArmConstants.STARTING_X, ArmConstants.STARTING_Y, ArmConstants.STARTING_Z}, xboxController, 0.2, 0.2)
         driverController.joystick.button(ControllerConstants.BALANCE_CHARGE_STATION_BUTTON_NUMBER).whileTrue(new BalanceChargeStationCommand(driveTrain));
         // xboxController.controller.button(ControllerConstants.FLIP_TURRET_BUTTON_NUMBER).onTrue(new FlipTurretCommand(arm, xboxController));
-        xboxController.controller.button(ControllerConstants.FLIP_TURRET_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
+        nintendoProController.controller.button(ControllerConstants.FLIP_TURRET_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
                 arm.setIsAtHumanPlayer(!arm.isAtHumanPlayer());
             }, arm)
             .andThen(
-                new FlipTurretCommand(arm, xboxController, 0.2, 0.2)
+                new FlipTurretCommand(arm, nintendoProController, 0.2, 0.2)
                 )
             );
         xboxController.controller.button(ControllerConstants.GROUND_HEIGHT_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
@@ -180,6 +185,7 @@ public class RobotContainer {
                 arm.setTargetAngles(100, 170); //height for placing high
             }
         }));
+
         //driverController.joystick.button(7).onTrue(new GoTowardsCoordinatesCommandTeleop(arm, new double[] {-35, ArmConstants.PICK_UP_POSITION_Y, 0}, xboxController, 0.2, 0.2, false));
         //driverController.joystick.button(1).whileTrue(new PoseAimArmCommand(arm, driveTrain, new Translation3d(20,60,0)));
         //xboxController.controller.button(ControllerConstants.HUMAN_STATION_HEIGHT_BUTTON_NUMBER).onTrue(pickupPieceCommand.get());
@@ -266,8 +272,8 @@ public class RobotContainer {
         this.arm.setPIDControlState(false);
         
         this.driveTrain.setDefaultCommand(this.manualDrive);
-        // this.arm.setDefaultCommand(this.armControl.get());
-        this.arm.setDefaultCommand(this.testArmControl.get());
+        this.arm.setDefaultCommand(this.armControl.get());
+        // this.arm.setDefaultCommand(this.testArmControl.get());
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand.get());
         this.clawRotation.setDefaultCommand(this.clawRotateCommand.get());
     }

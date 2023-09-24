@@ -1,6 +1,7 @@
 package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.controllers.NintendoProController;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 
@@ -9,7 +10,7 @@ public class CalibrateArmPivotsCommand extends CommandBase {
     private static final double BOOST = -0.2;
 
     private final ArmSubsystem arm;
-    private final XboxController controller;
+    private final NintendoProController controller;
 
     private static enum CalibrationStates {
         CALIB_PIVOT_2,
@@ -19,11 +20,13 @@ public class CalibrateArmPivotsCommand extends CommandBase {
 
     private CalibrationStates calibrationState;
 
-    public CalibrateArmPivotsCommand(ArmSubsystem arm, XboxController controller) {
+    public CalibrateArmPivotsCommand(ArmSubsystem arm, NintendoProController controller) {
         this.arm = arm;
         this.controller = controller;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(arm);
+
+        System.out.println("CALIBRATING ARM");
     }
 
     // Called when the command is initially scheduled.
@@ -38,6 +41,7 @@ public class CalibrateArmPivotsCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        System.out.println("CALIBRATING ARM");
         // this.arm.setPIDControlState(false);
         double speed = INIT_SPEED;
         if (this.controller.getRawButtonWrapper(4)) {

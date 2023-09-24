@@ -3,6 +3,7 @@ package frc.robot.commands.armcommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OperatorConstants.ControllerConstants;
+import frc.robot.controllers.NintendoProController;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.staticsubsystems.LimeLight;
@@ -14,7 +15,7 @@ import frc.robot.util.NetworkTablesUtil;
 public class ArmControlCommand extends CommandBase {
 
     private final ArmSubsystem arm;
-    private final XboxController controller;
+    private final NintendoProController controller;
 
     // Inches per 20ms
     private static final double X_SPEED = 2;
@@ -22,7 +23,7 @@ public class ArmControlCommand extends CommandBase {
     private static final double TURRET_SPEED = 0.25;
     private static double turret_adjust = 0.0;
 
-    public ArmControlCommand(ArmSubsystem arm, XboxController controller) {
+    public ArmControlCommand(ArmSubsystem arm, NintendoProController controller) {
         this.arm = arm;
         this.controller = controller;
 
@@ -33,14 +34,14 @@ public class ArmControlCommand extends CommandBase {
      * Primary arm control
      */
     private void primaryArmControl() {
-
         if (this.arm.getControlMode()) { // only run when arm is in manual control
             this.arm.setis2D(true);
-            armAimAssist();
+            // armAimAssist();
+            System.out.println("left movement: " + controller.getLeftVerticalMovement());
 
             int mult = this.arm.isAtHumanPlayer() ? -1 : 1;
             this.arm.setTurretSpeed(mult * -MathUtil.clamp(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust, -1, 1));
-            this.arm.moveVector(controller.getLeftVerticalMovement() * X_SPEED * mult, -controller.getRightVerticalMovement() * Y_SPEED, 0);
+            this.arm.moveVector(controller.getLeftVerticalMovement() * X_SPEED * mult, controller.getRightVerticalMovement() * Y_SPEED, 0);
 
         }
         else{

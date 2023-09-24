@@ -2,13 +2,14 @@ package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.controllers.NintendoProController;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class FlipTurretCommand extends CommandBase {
 
     private final ArmSubsystem arm;
-    private final XboxController xboxController;
+    private final NintendoProController xboxController;
 
 
     private double speed1;
@@ -16,7 +17,7 @@ public class FlipTurretCommand extends CommandBase {
 
     private double[] coords;
 
-    public FlipTurretCommand(ArmSubsystem arm, XboxController xboxController, double speed1, double speed2) {
+    public FlipTurretCommand(ArmSubsystem arm, NintendoProController xboxController, double speed1, double speed2) {
         this.arm = arm;
         this.xboxController = xboxController;
         this.speed1 = speed1;

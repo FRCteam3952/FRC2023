@@ -31,36 +31,45 @@ public class NintendoProController extends AbstractJoystick {
         }
     }
 
-    private double getControllerLeftX() {
-        double val = controller.getLeftX();
-        if(val < 0) {
-            return val / 0.89;
+    private double deadzoneRawVals(double val) {
+        return val;
+        /*
+        if(val > 0) {
+            return val - 0.15;
         }
-        return val / 0.67;
+        return val + 0.15;*/
+    }
+
+    private double getControllerLeftX() {
+        double val = deadzoneRawVals(controller.getRawAxis(0));
+        if(val < 0) {
+            return val / deadzoneRawVals(0.89);
+        }
+        return val / deadzoneRawVals(0.67);
     }
 
     private double getControllerLeftY() {
-        double val = -controller.getLeftY(); // inverted
+        double val = deadzoneRawVals(-controller.getRawAxis(1)); // inverted
         if(val < 0) {
-            return val / 0.84;
+            return val / deadzoneRawVals(0.84);
         }
-        return val / 0.74;
+        return val / deadzoneRawVals(0.74);
     }
 
     private double getControllerRightX() {
-        double val = controller.getRightX();
+        double val = deadzoneRawVals(controller.getRawAxis(2));
         if(val < 0) {
-            return val / 0.76;
+            return val / deadzoneRawVals(0.76);
         }
         return val / 0.74;
     }
 
     private double getControllerRightY() {
-        double val = -controller.getRightY();
+        double val = deadzoneRawVals(-controller.getRawAxis(3));
         if(val < 0) {
-            return val / 0.76;
+            return val / deadzoneRawVals(0.76);
         }
-        return val / 0.8;
+        return val / deadzoneRawVals(0.8);
     }
 
     public double getRightHorizontalMovement() {

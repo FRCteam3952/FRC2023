@@ -1,16 +1,16 @@
 package frc.robot.commands.clawcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.controllers.XboxController;
+import frc.robot.controllers.NintendoProController;
 import frc.robot.subsystems.ClawRotationSubsystem;
 
 public class ClawRotateCommand extends CommandBase {
     private static final double CLAW_ROTATION_SPEED = 4;
 
     private final ClawRotationSubsystem claw;
-    private final XboxController joystick;
+    private final NintendoProController joystick;
 
-    public ClawRotateCommand(ClawRotationSubsystem claw, XboxController joystick) {
+    public ClawRotateCommand(ClawRotationSubsystem claw, NintendoProController joystick) {
         this.claw = claw;
         this.joystick = joystick;
 

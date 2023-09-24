@@ -300,7 +300,7 @@ public final class Autos {
         return placeGamePieceAuto(robot)
         .andThen(new InstantCommand ( () -> System.out.println("Double Placement Auto Start. 180 turn Begin")))
         .andThen(new InstantCommand ( () -> robot.arm.setIsAtHumanPlayer(true),robot.arm))
-        .andThen(new FlipTurretCommand(robot.arm, robot.xboxController, 0.2, 0.2))
+        .andThen(new FlipTurretCommand(robot.arm, robot.nintendoProController, 0.2, 0.2))
         .andThen(new InstantCommand ( () -> System.out.println("Moveforward Begin")))
         .andThen(robot.goToPickupPosX30.get())
         .andThen(Commands.runOnce(
@@ -346,7 +346,7 @@ public final class Autos {
                         robot.driveTrain
         ).until(() -> timer.get() > 2.4))
         .andThen(new InstantCommand ( () -> robot.arm.setIsAtHumanPlayer(false),robot.arm))
-        .andThen(new FlipTurretCommand(robot.arm, robot.xboxController, 0.2, 0.2))
+        .andThen(new FlipTurretCommand(robot.arm, robot.nintendoProController, 0.2, 0.2))
         .andThen(placeGamePieceAuto(robot))
         .andThen(new InstantCommand ( () -> System.out.println("Double auton end")));
     }

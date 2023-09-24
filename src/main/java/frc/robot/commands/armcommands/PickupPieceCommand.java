@@ -2,6 +2,7 @@ package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.controllers.NintendoProController;
 import frc.robot.controllers.XboxController;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawGripSubsystem;
@@ -13,7 +14,7 @@ import frc.robot.subsystems.staticsubsystems.LimeLight;
 public class PickupPieceCommand extends CommandBase {
     private final ArmSubsystem arm;
     private final ClawGripSubsystem claw;
-    private final XboxController controller;
+    private final NintendoProController controller;
 
     private final double X_SPEED = 0.8;
     //private final double Y_SPEED = 0.8;
@@ -30,7 +31,7 @@ public class PickupPieceCommand extends CommandBase {
     private states currentState;
     private double height;
 
-    public PickupPieceCommand(ArmSubsystem arm, ClawGripSubsystem claw, XboxController controller, double height) {
+    public PickupPieceCommand(ArmSubsystem arm, ClawGripSubsystem claw, NintendoProController controller, double height) {
         this.arm = arm;
         this.claw = claw;
         this.controller = controller;
