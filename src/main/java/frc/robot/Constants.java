@@ -185,7 +185,7 @@ public final class Constants {
         public static final double Y_TOP_PLATFORM_HEIGHT            = 35.5;
 
         public static final double Y_FLOOR                          = 0.0; // obvious
-        public static final double VERTICAL_PLACEMENT_OFFSET_PLAT   = 14.5; // Makes it so that when going to top row, the arm is parallel to ground
+        public static final double VERTICAL_PLACEMENT_OFFSET_PLAT   = 14.5 + 1; // MAKES IT SO THAT WHEN GOING TO TOP ROW IT GOES HIGHER THAN PARALLEL BECAUSE IT GOT CAUGHT ONE TIME // Makes it so that when going to top row, the arm is parallel to ground
         public static final double VERTICAL_PLACEMENT_OFFSET_POLE   = 4;  // Makes it so that when going to top row, the arm is parallel to ground
 
         public static final double X_MIDDLE_DISTANCE                = 22.75 + (ROBOT_LENGTH / 2);

@@ -37,9 +37,10 @@ public class ArmControlCommand extends CommandBase {
         if (this.arm.getControlMode()) { // only run when arm is in manual control
             this.arm.setis2D(true);
             // armAimAssist();
-            System.out.println("left movement: " + controller.getLeftVerticalMovement());
+            // System.out.println("left movement: " + controller.getLeftVerticalMovement());
 
             int mult = this.arm.isAtHumanPlayer() ? -1 : 1;
+            System.out.println("left hor mov: " + controller.getLeftHorizontalMovement());
             this.arm.setTurretSpeed(mult * -MathUtil.clamp(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust, -1, 1));
             this.arm.moveVector(controller.getLeftVerticalMovement() * X_SPEED * mult, controller.getRightVerticalMovement() * Y_SPEED, 0);
 
@@ -57,7 +58,7 @@ public class ArmControlCommand extends CommandBase {
      * Handles Limelight aim assist for arm
      */
     private void armAimAssist() {
-        boolean rightTrigger = this.controller.controller.getRightTriggerAxis() > 0.2, leftTrigger = this.controller.controller.getLeftTriggerAxis() > 0.2;
+        boolean rightTrigger = this.controller.getRawButtonWrapper(8), leftTrigger = this.controller.getRawButtonWrapper(7);
         if (rightTrigger && leftTrigger) {
             NetworkTablesUtil.setLimelightPipeline(4);
         } else if (rightTrigger) { // cone PID, if > 0.9 do rotation as well but we don't do that here (look in ClawRotateCommand)
@@ -69,7 +70,7 @@ public class ArmControlCommand extends CommandBase {
             if (!this.arm.getFlipped()) {
                 double[] adjustments = LimeLight.getAdjustmentFromError(this.arm.getFlipped());
                 //arm.moveVector(adjustments[0] * X_SPEED, adjustments[1] * Y_SPEED, 0);
-                turret_adjust = adjustments[2];
+                // turret_adjust = adjustments[2];
             }
         } else {
             turret_adjust = 0.0;

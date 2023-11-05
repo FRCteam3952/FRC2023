@@ -174,10 +174,10 @@ public class RobotContainer {
                 new FlipTurretCommand(arm, nintendoProController, 0.2, 0.2)
                 )
             );
-        xboxController.controller.button(ControllerConstants.GROUND_HEIGHT_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
+        nintendoProController.controller.button(ControllerConstants.GROUND_HEIGHT_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
             arm.setTargetAngles(10,60); // height for making motion smoother and also MID cone
         }));
-        xboxController.controller.button(ControllerConstants.PICK_UP_HEIGHT_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
+        nintendoProController.controller.button(ControllerConstants.PICK_UP_HEIGHT_BUTTON_NUMBER).onTrue(Commands.runOnce(() -> {
             if(arm.isAtHumanPlayer()){
                 arm.setTargetAngles(85, 160); //height for human player
             }
@@ -273,7 +273,7 @@ public class RobotContainer {
         
         this.driveTrain.setDefaultCommand(this.manualDrive);
         this.arm.setDefaultCommand(this.armControl.get());
-        // this.arm.setDefaultCommand(this.testArmControl.get());
+        //this.arm.setDefaultCommand(this.testArmControl.get());
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand.get());
         this.clawRotation.setDefaultCommand(this.clawRotateCommand.get());
     }
