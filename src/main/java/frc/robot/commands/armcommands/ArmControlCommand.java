@@ -40,7 +40,7 @@ public class ArmControlCommand extends CommandBase {
             // System.out.println("left movement: " + controller.getLeftVerticalMovement());
 
             int mult = this.arm.isAtHumanPlayer() ? -1 : 1;
-            System.out.println("left hor mov: " + controller.getLeftHorizontalMovement());
+            // System.out.println("left hor mov: " + controller.getLeftHorizontalMovement());
             this.arm.setTurretSpeed(mult * -MathUtil.clamp(controller.getLeftHorizontalMovement() * TURRET_SPEED + turret_adjust, -1, 1));
             this.arm.moveVector(controller.getLeftVerticalMovement() * X_SPEED * mult, controller.getRightVerticalMovement() * Y_SPEED, 0);
 

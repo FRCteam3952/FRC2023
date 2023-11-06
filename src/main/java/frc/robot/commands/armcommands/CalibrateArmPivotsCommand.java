@@ -41,7 +41,7 @@ public class CalibrateArmPivotsCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        System.out.println("CALIBRATING ARM");
+        // System.out.println("CALIBRATING ARM");
         // this.arm.setPIDControlState(false);
         double speed = INIT_SPEED;
         if (this.controller.getRawButtonWrapper(4)) {

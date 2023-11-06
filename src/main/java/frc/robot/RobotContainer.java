@@ -121,6 +121,8 @@ public class RobotContainer {
     private Command doublePlacementAutoPW;
     private Command placeCubeThenBalanceAutoPW;
     private Command doublePlacementThenBalanceAutoPW;
+
+    private Command placeCubeAuto;
     
     private Command m_autonomousCommand;
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -220,6 +222,8 @@ public class RobotContainer {
         placeCubeThenBalanceAuto         = Autos.placeCubeThenBalanceAuto(this);
         doublePlacementAuto              = Autos.doublePlacementAuto(this);
 
+        placeCubeAuto                    = Autos.placeGamePieceAuto(this);
+
         // All below autos use Pathweaver trajectories and probably don't work right now
         balanceAutoPW                      = Autos.balanceAutoPW(this);
         doublePlacementAutoPW              = Autos.doublePlacementAutoPW(this);
@@ -231,6 +235,7 @@ public class RobotContainer {
         m_chooser.setDefaultOption("Default Auto", defaultAuto);
         m_chooser.addOption("Test Auto", testAuto);
         m_chooser.addOption("Taxi Auto", taxiAuto);
+        m_chooser.addOption("Place Cube Auto", placeCubeAuto);
         m_chooser.addOption("Taxi for Balance Auto", taxiForBalanceAuto);
         m_chooser.addOption("Balance Auto", balanceAuto);
         m_chooser.addOption("Place Cube then Taxi Auto", placeCubeThenTaxiAuto); // KEEP
@@ -273,7 +278,7 @@ public class RobotContainer {
         
         this.driveTrain.setDefaultCommand(this.manualDrive);
         this.arm.setDefaultCommand(this.armControl.get());
-        //this.arm.setDefaultCommand(this.testArmControl.get());
+        // this.arm.setDefaultCommand(this.testArmControl.get());
         this.clawGrip.setDefaultCommand(this.clawOpenandCloseCommand.get());
         this.clawRotation.setDefaultCommand(this.clawRotateCommand.get());
     }
